@@ -1,3 +1,14 @@
 packages:
   - 'apps/*'
   - 'packages/*'
+allowBuilds:
+  '@scarf/scarf': set this to true or false
+minimumReleaseAge: 0
+verifyDepsBeforeRun: false
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - '@scarf/scarf'
+  - prisma
+  - sharp
+  - unrs-resolver

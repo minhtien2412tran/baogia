@@ -1,36 +1,34 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+import Link from 'next/link';
+import { SubPageLayout } from '../../../components/layout/SubPageLayout';
+import { api, safeApi } from '../../../lib/api';
+import { buildMetadata } from '../../../lib/metadata';
+import { navHref } from '../../../config/navigation';
 
-export default function Page(props: any) {
+export async function generateMetadata() {
+  return buildMetadata({ title: 'Jet Card', description: 'Prepaid private jet hours with J-TA Jet Card.' });
+}
+
+export default async function JetCardPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const data = await safeApi(() => api.getJetCardPlans(), { plans: [] });
+
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>Jet Card Membership</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Public Web route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/web/src/app/[locale]/jet-card/page.tsx</code>
+    <SubPageLayout locale={locale} title="Jet Card Membership" description="Prepaid flight hours with transparent pricing." tag="Membership">
+      <div className="jb-jetcard-grid">
+        {data.plans.map((p: Record<string, unknown>) => (
+          <div key={String(p.id)} className="jb-jetcard-item">
+            <div className="jb-jetcard-hours">{String(p.hours)} Hour</div>
+            <div style={{ fontWeight: 600 }}>{String(p.name)}</div>
+            <div className="jb-jetcard-subtitle">USD {Number(p.price).toLocaleString()}</div>
+            <p style={{ fontSize: 14, color: 'var(--jb-text-muted)' }}>
+              {String(p.validityYears)} year validity · Min notice {String(p.minNoticeHours)}h
+            </p>
+          </div>
+        ))}
       </div>
-    </div>
+      <div className="jb-cta-row" style={{ marginTop: 24 }}>
+        <Link href={navHref(locale, '/login')} className="jb-btn-primary">Apply for Jet Card</Link>
+      </div>
+    </SubPageLayout>
   );
 }

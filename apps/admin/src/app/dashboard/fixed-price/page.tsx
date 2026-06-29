@@ -1,36 +1,48 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+'use client';
 
-export default function Page(props: any) {
+import { useEffect, useState } from 'react';
+import { SectionTitle, DataTable, Muted } from '@j-ta/ui';
+import { AdminShell } from '../../../components/AdminShell';
+import { adminApi } from '../../../lib/api';
+
+export default function FixedPricePage() {
+  const [rows, setRows] = useState<Record<string, React.ReactNode>[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    adminApi
+      .getFixedPriceRoutes()
+      .then((res) => {
+        const routes = (res as { routes: Record<string, unknown>[] }).routes ?? [];
+        setRows(
+          routes.map((r) => ({
+            slug: String(r.slug),
+            route: `${(r.fromAirport as { iata: string })?.iata ?? '?'} → ${(r.toAirport as { iata: string })?.iata ?? '?'}`,
+            region: String(r.region ?? '—'),
+            status: r.isActive === false ? 'inactive' : 'active',
+          })),
+        );
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>Manage Fixed Price Routes</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Admin Dashboard route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/admin/src/app/dashboard/fixed-price/page.tsx</code>
-      </div>
-    </div>
+    <AdminShell active="/dashboard/fixed-price">
+      <SectionTitle>Fixed Price Routes</SectionTitle>
+      {loading ? (
+        <Muted>Loading routes...</Muted>
+      ) : (
+        <DataTable
+          columns={[
+            { key: 'slug', label: 'Slug' },
+            { key: 'route', label: 'Route' },
+            { key: 'region', label: 'Region' },
+            { key: 'status', label: 'Status' },
+          ]}
+          rows={rows}
+        />
+      )}
+    </AdminShell>
   );
 }

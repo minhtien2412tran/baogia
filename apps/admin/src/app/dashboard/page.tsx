@@ -1,36 +1,48 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+'use client';
 
-export default function Page(props: any) {
+import { useEffect, useState } from 'react';
+import { Card, SectionTitle, DataTable, Muted, colors } from '@j-ta/ui';
+import { AdminShell } from '../../components/AdminShell';
+import { adminApi } from '../../lib/api';
+
+export default function DashboardPage() {
+  const [stats, setStats] = useState<Record<string, number> | null>(null);
+  const [quotes, setQuotes] = useState<unknown[]>([]);
+  const [bookings, setBookings] = useState<unknown[]>([]);
+  const [revenue, setRevenue] = useState<Record<string, unknown> | null>(null);
+
+  useEffect(() => {
+    Promise.all([
+      adminApi.getStats(),
+      adminApi.getRecentQuotes(),
+      adminApi.getRecentBookings(),
+      adminApi.getRevenue(),
+    ]).then(([s, q, b, r]) => { setStats(s); setQuotes(q); setBookings(b); setRevenue(r); }).catch(console.error);
+  }, []);
+
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>Admin Overview Dashboard</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Admin Dashboard route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/admin/src/app/dashboard/page.tsx</code>
+    <AdminShell active="/dashboard">
+      <SectionTitle>Dashboard Overview</SectionTitle>
+      {stats ? (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 12, marginBottom: 24 }}>
+          {Object.entries(stats).filter(([k]) => k !== 'generatedAt').map(([k, v]) => (
+            <Card key={k}><div style={{ fontSize: 24, color: colors.accent }}>{v}</div><Muted>{k}</Muted></Card>
+          ))}
+        </div>
+      ) : <Muted>Loading stats...</Muted>}
+      {revenue && <Card style={{ marginBottom: 24 }}><strong>Revenue (demo):</strong> USD {Number(revenue.totalRevenue).toLocaleString()}</Card>}
+      <SectionTitle>Recent Quotes</SectionTitle>
+      <DataTable
+        columns={[{ key: 'id', label: 'ID' }, { key: 'email', label: 'Email' }, { key: 'status', label: 'Status' }, { key: 'route', label: 'Route' }]}
+        rows={(quotes as Record<string, React.ReactNode>[]).map((q) => ({ id: q.id, email: q.email, status: q.status, route: q.route ?? '—' }))}
+      />
+      <div style={{ marginTop: 24 }}>
+        <SectionTitle>Recent Bookings</SectionTitle>
+        <DataTable
+          columns={[{ key: 'id', label: 'ID' }, { key: 'email', label: 'Email' }, { key: 'status', label: 'Status' }]}
+          rows={(bookings as Record<string, React.ReactNode>[]).map((b) => ({ id: b.id, email: b.email, status: b.status }))}
+        />
       </div>
-    </div>
+    </AdminShell>
   );
 }

@@ -397,10 +397,11 @@ model ContentCategory {
 
 model ContentArticle {
   id           Int              @id @default(autoincrement())
-  type         String           // NEWS, BLOG, LEGAL
+  type         String           // NEWS, BLOG, LEGAL, PAGE
   slug         String           @unique
   categoryId   Int?
   author       String?
+  thumbnail    String?
   isPublished  Boolean          @default(false)
   shareEnabled Boolean          @default(true)
   publishedAt  DateTime?
@@ -411,11 +412,12 @@ model ContentArticle {
 
 model ContentTranslation {
   id             Int     @id @default(autoincrement())
-  entityType     String  // ARTICLE, VIDEO, PLAN
+  entityType     String  // ARTICLE, VIDEO, PLAN, DESTINATION
   entityId       Int
   locale         String
   title          String
   body           String
+  excerpt        String?
   seoTitle       String?
   seoDescription String?
   
@@ -426,11 +428,25 @@ model Video {
   id          Int       @id @default(autoincrement())
   slug        String    @unique
   videoUrl    String
+  thumbnail   String?
   duration    Int       @default(0) // in seconds
   viewCount   Int       @default(0)
   isPublished Boolean   @default(false)
   publishedAt DateTime?
   createdAt   DateTime  @default(now())
+}
+
+model Destination {
+  id          Int       @id @default(autoincrement())
+  slug        String    @unique
+  category    String    // ISLAND, SKI, GOLF
+  city        String
+  country     String
+  thumbnail   String?
+  isPublished Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 // --- CAMPAIGNS ---

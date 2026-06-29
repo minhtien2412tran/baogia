@@ -1,36 +1,63 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+import Link from 'next/link';
+import { SubPageLayout } from '../../../../components/layout/SubPageLayout';
+import { api, safeApi } from '../../../../lib/api';
+import { buildMetadata } from '../../../../lib/metadata';
+import { navHref } from '../../../../config/navigation';
 
-export default function Page(props: any) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const route = await safeApi(() => api.getFixedPriceRoute(slug), null);
+  const title = route
+    ? `${(route.fromAirport as { city: string })?.city} → ${(route.toAirport as { city: string })?.city}`
+    : 'Fixed Price Route';
+  return buildMetadata({ title, description: 'Fixed-price private jet charter route.' });
+}
+
+export default async function FixedPriceDetailPage({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
+  const { locale, slug } = await params;
+  const route = await safeApi(() => api.getFixedPriceRoute(slug), null);
+
+  if (!route) {
+    return (
+      <SubPageLayout locale={locale} title="Route not found">
+        <p>This route is no longer available.</p>
+        <Link href={navHref(locale, '/fixed-price-charter')} className="jb-link-gold">← All routes</Link>
+      </SubPageLayout>
+    );
+  }
+
+  const from = route.fromAirport as { city: string; iata: string };
+  const to = route.toAirport as { city: string; iata: string };
+  const tiers = (route.priceOptions as Array<{ category: string; price: number; paxLimit: number }>) ?? [];
+
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>Fixed Price Route Detail</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Public Web route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/web/src/app/[locale]/fixed-price-charter/[slug]/page.tsx</code>
+    <SubPageLayout
+      locale={locale}
+      title={`${from.city} → ${to.city}`}
+      description={`Fixed-price charter from ${from.iata} to ${to.iata}`}
+      tag="Fixed Price"
+      breadcrumb={[
+        { label: 'Home', href: '' },
+        { label: 'Fixed Price', href: '/fixed-price-charter' },
+        { label: `${from.iata} → ${to.iata}` },
+      ]}
+    >
+      {tiers.map((t) => (
+        <div key={t.category} className="jb-tier" style={{ maxWidth: 480 }}>
+          <div>
+            <div className="jb-tier-label">{t.category} Jets</div>
+            <div className="jb-tier-pax">Up to {t.paxLimit} passengers</div>
+          </div>
+          <div className="jb-tier-price">USD {t.price.toLocaleString()}</div>
+        </div>
+      ))}
+      <div className="jb-cta-row" style={{ marginTop: 24 }}>
+        <Link href={navHref(locale, '/')} className="jb-btn-primary">Book This Route</Link>
       </div>
-    </div>
+    </SubPageLayout>
   );
 }

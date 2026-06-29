@@ -1,36 +1,50 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+'use client';
 
-export default function Page(props: any) {
+import { useEffect, useState } from 'react';
+import { SectionTitle, DataTable, Muted } from '@j-ta/ui';
+import { AdminShell } from '../../../components/AdminShell';
+import { adminApi } from '../../../lib/api';
+
+export default function BookingsPage() {
+  const [rows, setRows] = useState<Record<string, React.ReactNode>[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    adminApi
+      .getBookings()
+      .then((res) => {
+        const data = (res as { data: Record<string, unknown>[] }).data ?? [];
+        setRows(
+          data.map((b) => ({
+            id: String(b.id),
+            email: String(b.email ?? b.userEmail ?? '—'),
+            type: String(b.bookingType ?? '—'),
+            status: String(b.status ?? b.bookingStatus ?? '—'),
+            created: b.createdAt ? String(b.createdAt).slice(0, 10) : '—',
+          })),
+        );
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>Manage Bookings</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Admin Dashboard route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/admin/src/app/dashboard/bookings/page.tsx</code>
-      </div>
-    </div>
+    <AdminShell active="/dashboard/bookings">
+      <SectionTitle>Manage Bookings</SectionTitle>
+      {loading ? (
+        <Muted>Loading bookings...</Muted>
+      ) : (
+        <DataTable
+          columns={[
+            { key: 'id', label: 'ID' },
+            { key: 'email', label: 'Email' },
+            { key: 'type', label: 'Type' },
+            { key: 'status', label: 'Status' },
+            { key: 'created', label: 'Created' },
+          ]}
+          rows={rows}
+        />
+      )}
+    </AdminShell>
   );
 }

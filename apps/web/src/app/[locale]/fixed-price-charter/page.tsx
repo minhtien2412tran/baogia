@@ -1,36 +1,47 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+import Link from 'next/link';
+import { SubPageLayout } from '../../../components/layout/SubPageLayout';
+import { api, safeApi } from '../../../lib/api';
+import { buildMetadata } from '../../../lib/metadata';
+import { navHref } from '../../../config/navigation';
 
-export default function Page(props: any) {
+export async function generateMetadata() {
+  return buildMetadata({ title: 'Fixed Price Charter', description: 'Transparent fixed-price private jet routes.' });
+}
+
+export default async function FixedPricePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const data = await safeApi(() => api.getFixedPriceRoutes(), { routes: [] });
+
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>Fixed Price Charter Index</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Public Web route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/web/src/app/[locale]/fixed-price-charter/page.tsx</code>
+    <SubPageLayout
+      locale={locale}
+      title="Fixed-Price Charter Routes"
+      description="Experience price certainty on our most requested global routes."
+      tag="Deals"
+    >
+      <div className="jb-routes-scroll" style={{ flexWrap: 'wrap', overflow: 'visible' }}>
+        {data.routes.map((r: Record<string, unknown>) => {
+          const from = r.fromAirport as { city: string; iata: string };
+          const to = r.toAirport as { city: string; iata: string };
+          const tiers = (r.priceOptions as Array<{ category: string; price: number; paxLimit: number }>) ?? [];
+          return (
+            <div key={String(r.slug)} className="jb-route-card" style={{ flex: '1 1 300px' }}>
+              <div className="jb-route-airports">
+                <div><div className="jb-iata">{from?.iata}</div><div className="jb-city">{from?.city}</div></div>
+                <span className="jb-route-arrow">→</span>
+                <div><div className="jb-iata">{to?.iata}</div><div className="jb-city">{to?.city}</div></div>
+              </div>
+              {tiers.map((t) => (
+                <div key={t.category} className="jb-tier">
+                  <div><div className="jb-tier-label">{t.category} Jets</div><div className="jb-tier-pax">Up to {t.paxLimit} pax</div></div>
+                  <div className="jb-tier-price">USD {t.price.toLocaleString()}</div>
+                </div>
+              ))}
+              <Link href={navHref(locale, `/fixed-price-charter/${r.slug}`)} className="jb-book-btn">Book Now</Link>
+            </div>
+          );
+        })}
       </div>
-    </div>
+    </SubPageLayout>
   );
 }

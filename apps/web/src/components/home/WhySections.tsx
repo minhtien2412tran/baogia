@@ -1,0 +1,60 @@
+const WHY_CHARTER = [
+  'Access 10,000+ aircraft across 1,000+ operators',
+  '24/7 global concierge support',
+  'AI-driven aircraft matching',
+  'Transparent end-to-end booking support',
+];
+
+const FEATURES = [
+  { icon: '🕐', title: '24/7 Availability', desc: 'Support is available whenever you need to fly.' },
+  { icon: '🛡️', title: 'Trusted Safety', desc: 'Flights arranged with vetted operators and high standards.' },
+  { icon: '✨', title: 'Luxury Experience', desc: 'Enjoy premium comfort, privacy, and flexibility onboard.' },
+  { icon: '🤝', title: 'Dedicated Service', desc: 'Receive attentive support throughout your journey.' },
+  { icon: '🌍', title: 'Global Network', desc: 'Fly across major cities and destinations worldwide.' },
+  { icon: '⚙️', title: 'Flexible & Tailored', desc: 'Choose flight solutions built around your travel plans.' },
+];
+
+export function WhySections({ locale }: { locale: string }) {
+  const p = `/${locale}`;
+  return (
+    <>
+      <section className="jb-section" style={{ background: 'var(--jb-bg-elevated)' }}>
+        <div className="jb-container">
+          <div className="jb-split">
+            <div>
+              <span className="jb-tag">About Us</span>
+              <h2 className="jb-section-title">Why Charter with J-TA?</h2>
+              <p className="jb-section-desc">J-TA offers bespoke charter solutions, connecting you to a global fleet.</p>
+              <ul style={{ margin: '20px 0', paddingLeft: 20, color: 'var(--jb-text-muted)', lineHeight: 2 }}>
+                {WHY_CHARTER.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <a href={`${p}/about-us`} className="jb-btn-outline">Learn More About J-TA</a>
+            </div>
+            <div className="jb-split-visual">[Image: Private jet]</div>
+          </div>
+        </div>
+      </section>
+
+      <section className="jb-section">
+        <div className="jb-container">
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+            <span className="jb-tag">What Sets Us Apart</span>
+            <h2 className="jb-section-title">Why Choose J-TA?</h2>
+            <p className="jb-section-desc">Excellence in Every Detail</p>
+          </div>
+          <div className="jb-features-grid">
+            {FEATURES.map((f) => (
+              <div key={f.title} className="jb-feature">
+                <div className="jb-feature-icon">{f.icon}</div>
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}

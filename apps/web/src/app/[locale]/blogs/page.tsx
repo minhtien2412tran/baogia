@@ -1,36 +1,27 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+import Link from 'next/link';
+import { SubPageLayout } from '../../../components/layout/SubPageLayout';
+import { api, safeApi } from '../../../lib/api';
+import { buildMetadata } from '../../../lib/metadata';
+import { navHref } from '../../../config/navigation';
 
-export default function Page(props: any) {
+export async function generateMetadata() {
+  return buildMetadata({ title: 'Blogs', description: 'Private aviation insights and travel guides.' });
+}
+
+export default async function BlogsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const data = await safeApi(() => api.getBlogs(), { blogs: [] });
+
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>Blogs Hub</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Public Web route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/web/src/app/[locale]/blogs/page.tsx</code>
+    <SubPageLayout locale={locale} title="Blogs" description="Insights, guides, and stories from the world of private aviation." tag="Company">
+      <div className="jb-article-list">
+        {data.blogs.map((b: Record<string, unknown>) => (
+          <Link key={String(b.slug)} href={navHref(locale, `/blogs/${b.slug}`)} className="jb-article-card">
+            <h3>{String(b.title)}</h3>
+            <p>{String(b.excerpt ?? '')}</p>
+          </Link>
+        ))}
       </div>
-    </div>
+    </SubPageLayout>
   );
 }

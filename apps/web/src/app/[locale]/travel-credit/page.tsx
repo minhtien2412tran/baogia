@@ -1,36 +1,29 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+import { SubPageLayout } from '../../../components/layout/SubPageLayout';
+import { api, safeApi } from '../../../lib/api';
+import { buildMetadata } from '../../../lib/metadata';
 
-export default function Page(props: any) {
+export async function generateMetadata() {
+  return buildMetadata({ title: 'Travel Credits', description: 'Prepaid travel credits for flexible private jet bookings.' });
+}
+
+export default async function TravelCreditPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const data = await safeApi(() => api.getTravelCreditPackages(), { packages: [] });
+
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>Travel Credit Program</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Public Web route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/web/src/app/[locale]/travel-credit/page.tsx</code>
+    <SubPageLayout locale={locale} title="Travel Credits" description="Purchase credits upfront and redeem on eligible routes." tag="Membership">
+      <div className="jb-jetcard-grid">
+        {data.packages.map((pkg: Record<string, unknown>) => (
+          <div key={String(pkg.id)} className="jb-jetcard-item">
+            <div className="jb-jetcard-hours">{String(pkg.name)}</div>
+            <div className="jb-jetcard-subtitle">Credit USD {Number(pkg.creditAmount).toLocaleString()}</div>
+            <p style={{ fontSize: 14, color: 'var(--jb-text-muted)' }}>
+              Price USD {Number(pkg.priceUsd).toLocaleString()}
+              {pkg.bonusPct != null ? ` · ${String(pkg.bonusPct)}% bonus` : ''}
+            </p>
+          </div>
+        ))}
       </div>
-    </div>
+    </SubPageLayout>
   );
 }

@@ -1,36 +1,27 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+import { SubPageLayout } from '../../../components/layout/SubPageLayout';
+import { api, safeApi } from '../../../lib/api';
+import { buildMetadata } from '../../../lib/metadata';
 
-export default function Page(props: any) {
+export async function generateMetadata() {
+  return buildMetadata({ title: 'Video Centre', description: 'Aircraft tours and destination videos.' });
+}
+
+export default async function VideoCentrePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const data = await safeApi(() => api.getVideos(), { videos: [] });
+
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>Video Centre</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Public Web route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/web/src/app/[locale]/video-centre/page.tsx</code>
+    <SubPageLayout locale={locale} title="Video Centre" description="Explore our fleet and destinations on video." tag="Media">
+      <div className="jb-dest-grid">
+        {data.videos.map((v: Record<string, unknown>) => (
+          <div key={String(v.slug)} className="jb-dest-card">
+            <div className="jb-dest-img">▶ {String(v.title)}</div>
+            <div className="jb-dest-body">
+              <p className="jb-dest-meta">{String(v.duration ?? '')}</p>
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
+    </SubPageLayout>
   );
 }

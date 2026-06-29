@@ -8,6 +8,7 @@
     "build": "pnpm --filter \"*\" build",
     "start": "pnpm --filter \"*\" start",
     "test": "pnpm --filter \"*\" test",
+    "test:api": "pnpm --filter api test",
     "test:e2e": "playwright test",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down"

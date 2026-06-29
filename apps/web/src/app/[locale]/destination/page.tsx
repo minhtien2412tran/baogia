@@ -1,36 +1,54 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+import Link from 'next/link';
+import { SubPageLayout } from '../../../components/layout/SubPageLayout';
+import { api, safeApi } from '../../../lib/api';
+import { buildMetadata } from '../../../lib/metadata';
+import { navHref } from '../../../config/navigation';
 
-export default function Page(props: any) {
+export async function generateMetadata() {
+  return buildMetadata({ title: 'Destinations', description: 'Curated private jet destinations worldwide.' });
+}
+
+export default async function DestinationHubPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ slug?: string; category?: string }>;
+}) {
+  const { locale } = await params;
+  const { slug, category } = await searchParams;
+
+  if (slug) {
+    const dest = await safeApi(() => api.getDestinations(), { destinations: [] });
+    const item = dest.destinations.find((d: Record<string, unknown>) => d.slug === slug);
+    if (item) {
+      return (
+        <SubPageLayout locale={locale} title={String(item.title ?? item.city)} tag="Destination">
+          <div className="jb-content-block">
+            <p>{String(item.tagline ?? `${item.city}, ${item.country}`)}</p>
+            <p className="jb-section-desc">Charter a private jet to {String(item.city)} with J-TA concierge support.</p>
+            <Link href={navHref(locale, '/')} className="jb-btn-primary">Search Flights to {String(item.city)}</Link>
+          </div>
+        </SubPageLayout>
+      );
+    }
+  }
+
+  const data = await safeApi(() => api.getDestinations(category), { destinations: [] });
+
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>Destinations</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Public Web route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/web/src/app/[locale]/destination/page.tsx</code>
+    <SubPageLayout locale={locale} title="All Destinations" description="Explore curated getaways by private jet." tag="Destinations">
+      <div className="jb-dest-grid">
+        {data.destinations.map((d: Record<string, unknown>) => (
+          <Link key={String(d.slug)} href={navHref(locale, `/destination?slug=${d.slug}`)} className="jb-dest-card">
+            <div className="jb-dest-img">[Image: {String(d.city)}]</div>
+            <div className="jb-dest-body">
+              <h3 className="jb-dest-name">{String(d.title ?? d.city)}</h3>
+              <p className="jb-dest-meta">{String(d.city)}, {String(d.country)}</p>
+            </div>
+          </Link>
+        ))}
       </div>
-    </div>
+    </SubPageLayout>
   );
 }

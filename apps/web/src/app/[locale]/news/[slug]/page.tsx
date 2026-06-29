@@ -1,36 +1,45 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+import Link from 'next/link';
+import { SubPageLayout } from '../../../../components/layout/SubPageLayout';
+import { api, safeApi } from '../../../../lib/api';
+import { buildMetadata } from '../../../../lib/metadata';
+import { navHref } from '../../../../config/navigation';
 
-export default function Page(props: any) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const article = await safeApi(() => api.getNewsArticle(slug), null);
+  return buildMetadata({
+    title: article ? String(article.title) : 'News',
+    description: article ? String(article.excerpt ?? '') : '',
+  });
+}
+
+export default async function NewsArticlePage({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
+  const { locale, slug } = await params;
+  const article = await safeApi(() => api.getNewsArticle(slug), null);
+
+  if (!article) {
+    return (
+      <SubPageLayout locale={locale} title="Article not found">
+        <Link href={navHref(locale, '/news')} className="jb-link-gold">← News</Link>
+      </SubPageLayout>
+    );
+  }
+
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>News Article Detail</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Public Web route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/web/src/app/[locale]/news/[slug]/page.tsx</code>
-      </div>
-    </div>
+    <SubPageLayout
+      locale={locale}
+      title={String(article.title)}
+      tag="News"
+      breadcrumb={[{ label: 'Home', href: '' }, { label: 'News', href: '/news' }, { label: String(article.title) }]}
+    >
+      <article className="jb-content-block">
+        <p className="jb-section-desc">{String(article.publishedAt ?? '').slice(0, 10)}</p>
+        <div className="jb-prose">{String(article.body ?? article.excerpt ?? '')}</div>
+      </article>
+    </SubPageLayout>
   );
 }

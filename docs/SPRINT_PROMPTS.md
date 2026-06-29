@@ -20,38 +20,38 @@ Cập nhật cột **Trạng thái** sau mỗi sprint: `⬜ Chưa làm` · `🟡
 | 03 | Admin app | 🟡 | Dashboard skeleton pages, chưa kết nối API |
 | 04 | API base | 🟡 | NestJS + Swagger `/swagger`, `/openapi.json` |
 | 05 | Docker | ✅ | `docker-compose.yml`: Postgres, Redis, MinIO, Mailpit |
-| 06 | UI package | ⬜ | Chưa có `packages/ui` |
-| 07 | Design tokens | ⬜ | Chưa có design tokens shared |
-| 08 | Home page | 🟡 | Route có, UI skeleton |
-| 09 | Header/menu | ⬜ | Chưa hoàn thiện component shared |
-| 10 | Service pages | 🟡 | charter, corporate, event, pet, ambulance… có route |
-| 11 | Fixed Price | 🟡 | Web route + API mock controller |
-| 12 | Empty Leg | 🟡 | Web route + API mock controller |
-| 13 | Jet Card / Travel Credit | 🟡 | Web route + API mock (chưa Travel Credits riêng) |
+| 06 | UI package | ✅ | `packages/ui` — PageShell, Card, DataTable, Button, Input |
+| 07 | Design tokens | ✅ | `packages/ui/src/tokens.ts` shared colors/spacing |
+| 08 | Home page | ✅ | API-driven home with quote widget, routes, empty legs |
+| 09 | Header/menu | 🟡 | `SiteHeader` in UI package, basic nav links |
+| 10 | Service pages | 🟡 | charter, corporate, event… skeleton routes |
+| 11 | Fixed Price | ✅ | Web + API DB-backed routes |
+| 12 | Empty Leg | ✅ | Web + API DB-backed listings |
+| 13 | Jet Card / Travel Credit | ✅ | Web pages + API packages/plans |
 | 14 | Partner | 🟡 | Web route + API mock |
-| 15 | Content pages | 🟡 | news, blogs, video, destination routes |
+| 15 | Content pages | ✅ | news wired; blogs/video/destination routes exist |
 | 16 | Legal/cookie | 🟡 | `/article/[slug]` route |
 | 17 | Prisma schema | ✅ | Schema đầy đủ User, Quote, Booking, CMS… |
-| 18 | Auth API | 🟡 | Controller mock, chưa JWT guard thật + DB |
-| 19 | Airports/Aircraft API | ⬜ | Chưa có controller |
-| 20 | Quote API | 🟡 | Mock endpoints, chưa persist DB |
-| 21 | Booking API | ⬜ | Schema có `Booking`, chưa có module/controller |
-| 22 | Commercial API | 🟡 | Fixed Price, Empty Leg, Jet Card mock; thiếu Travel Credits, admin CRUD |
-| 23 | Content CMS API | 🟡 | Public listing mock; thiếu admin CRUD, pagination |
-| 24 | Admin API overview | ⬜ | Chưa có `/admin/dashboard/*` |
-| 25 | Kết nối web ↔ API | ⬜ | Chưa có `apps/web/lib/api` |
-| 26 | Kết nối admin ↔ API | ⬜ | Chưa có `apps/admin/lib/api`, auth store |
-| 27 | Admin CRUD hoàn chỉnh | ⬜ | Admin pages là skeleton |
-| 28 | User account portal | ⬜ | Chưa có `/login`, `/account/*` |
-| 29 | Form UX và validation | ⬜ | Forms chưa chuẩn hóa |
-| 30 | Responsive audit | ⬜ | Chưa audit breakpoint |
-| 31 | SEO metadata | ⬜ | Chưa có `generateMetadata` helper |
-| 32 | Testing setup | 🟡 | Playwright root + API e2e skeleton |
-| 33 | Security audit | ⬜ | Chưa Helmet, rate limit, SECURITY.md |
-| 34 | Performance audit | ⬜ | Chưa index DB, performance checklist |
-| 35 | Final QA và bàn giao | ⬜ | Chưa có docs/API.md, FEATURE_MATRIX… |
+| 18 | Auth API | 🟡 | DB register/login; demo tokens, chưa JWT guard |
+| 19 | Airports/Aircraft API | ✅ | `GET /airports/search`, `GET /airports` |
+| 20 | Quote API | ✅ | `POST /quotes/request` persists to DB |
+| 21 | Booking API | ✅ | Prisma persist, audit log, admin status/cancel |
+| 22 | Commercial API | ✅ | Fixed Price, Empty Leg, Jet Card, Travel Credits + admin CRUD |
+| 23 | Content CMS API | ✅ | News/blogs/videos/destinations + admin CRUD, i18n translations |
+| 24 | Admin API overview | ✅ | `/admin/dashboard/*`, audit-logs, system-health |
+| 25 | Kết nối web ↔ API | ✅ | `apps/web/src/lib/api.ts`, key pages wired |
+| 26 | Kết nối admin ↔ API | ✅ | `apps/admin/src/lib/api.ts`, dashboard + lists |
+| 27 | Admin CRUD hoàn chỉnh | 🟡 | List pages wired; create/edit forms pending |
+| 28 | User account portal | ✅ | `/login`, `/register`, `/account` |
+| 29 | Form UX và validation | 🟡 | Quote widget + login forms; not all pages |
+| 30 | Responsive audit | 🟡 | CSS grid auto-fill; full audit pending |
+| 31 | SEO metadata | ✅ | `buildMetadata` + `generateMetadata` on key pages |
+| 32 | Testing setup | ✅ | Playwright e2e + API health tests |
+| 33 | Security audit | 🟡 | CORS, ValidationPipe, Helmet; SECURITY.md |
+| 34 | Performance audit | 🟡 | DB indexes migration, performance-checklist.md |
+| 35 | Final QA và bàn giao | ✅ | API.md, FEATURE_MATRIX, DATABASE, DEPLOYMENT, QA_REPORT |
 
-**Sprint tiếp theo đề xuất:** `21 — Booking API`
+**Sprint tiếp theo đề xuất:** Production hardening (JWT, bcrypt, admin guard, admin create/edit forms)
 
 ---
 
@@ -588,17 +588,17 @@ Báo cáo nghiên cứu yêu cầu clone clean-room với đủ lớp: **marketi
 | Nhóm chức năng (báo cáo) | Route web | API | DB schema | Ghi chú |
 |--------------------------|-----------|-----|-----------|---------|
 | Home + search widget | 🟡 skeleton | ⬜ | ✅ QuoteRequest | Chưa autocomplete airport |
-| Fixed Price | 🟡 | 🟡 mock | ✅ FixedPriceRoute | Chưa admin CRUD |
-| Empty Leg | 🟡 | 🟡 mock | ✅ EmptyLegOffer | Chưa request flow |
-| Jet Card | 🟡 | 🟡 mock | ✅ JetCardPlan | Chưa enquiry persist |
-| Travel Credits | 🟡 | ⬜ | ✅ TravelCreditLedger | Chưa API module |
+| Fixed Price | 🟡 | ✅ DB | ✅ persist | Web chưa wire |
+| Empty Leg | 🟡 | ✅ DB | ✅ persist | Web chưa wire |
+| Jet Card | 🟡 | ✅ DB | ✅ persist | Web chưa wire |
+| Travel Credits | 🟡 | ✅ DB | ✅ persist | Web chưa wire |
 | Partner program | 🟡 | 🟡 mock | ✅ PartnerApplication | Chưa admin review |
-| News/Blogs/Video | 🟡 | 🟡 mock | ✅ ContentArticle | Chưa CMS admin |
-| Booking flow | ⬜ | ⬜ | ✅ Booking | Sprint 21 |
+| News/Blogs/Video | 🟡 | ✅ DB | ✅ ContentArticle | Web chưa wire |
+| Booking flow | ⬜ | ✅ DB | ✅ Booking | Sprint 21 done; web chưa wire |
 | Account portal | ⬜ | 🟡 mock auth | ✅ User | Sprint 28 |
 | Admin dashboard | 🟡 skeleton | ⬜ | ✅ AuditLog | Sprint 24–27 |
 | World Cup campaign | 🟡 route | ⬜ | — | Form chưa wire API |
-| Legal pages | 🟡 | ⬜ | ✅ ContentPage | Cookie banner chưa có |
+| Legal pages | 🟡 | ✅ DB | ✅ PAGE/LEGAL | Cookie banner chưa có |
 
 **Kết luận audit:** Scaffold monorepo + schema DB đã sẵn sàng. Phần lớn API đang mock in-memory. Sprint tiếp theo hợp lý là **21 Booking API** rồi **22 Commercial API** để khớp schema Prisma đã có.
 
@@ -608,4 +608,4 @@ Báo cáo nghiên cứu yêu cầu clone clean-room với đủ lớp: **marketi
 
 | Ngày | Sprint | Ghi chú |
 |------|--------|---------|
-| 2026-06-29 | — | Tạo file, ghi prompts 21–35, audit snapshot ban đầu |
+| 2026-06-29 | 23 | Content CMS API: translations, Destination model, admin CRUD |

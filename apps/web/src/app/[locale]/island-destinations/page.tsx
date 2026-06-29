@@ -1,36 +1,31 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+import Link from 'next/link';
+import { SubPageLayout } from '../../../components/layout/SubPageLayout';
+import { api, safeApi } from '../../../lib/api';
+import { buildMetadata } from '../../../lib/metadata';
+import { navHref } from '../../../config/navigation';
 
-export default function Page(props: any) {
+export async function generateMetadata() {
+  return buildMetadata({ title: 'Island Destinations', description: 'Private jet access to leading island destinations.' });
+}
+
+export default async function IslandDestinationsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const data = await safeApi(() => api.getDestinations('ISLAND'), { destinations: [] });
+
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>Island Destinations</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Public Web route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/web/src/app/[locale]/island-destinations/page.tsx</code>
+    <SubPageLayout locale={locale} title="Island Escapes" description="Private jet access to the world's finest islands." tag="Destinations">
+      <div className="jb-dest-grid">
+        {data.destinations.map((d: Record<string, unknown>) => (
+          <Link key={String(d.slug)} href={navHref(locale, `/destination?slug=${d.slug}`)} className="jb-dest-card">
+            <div className="jb-dest-img">[Image: {String(d.city)}]</div>
+            <div className="jb-dest-body">
+              <span className="jb-dest-tag">{String(d.category)}</span>
+              <h3 className="jb-dest-name">{String(d.title ?? d.city)}</h3>
+              <p className="jb-dest-meta">{String(d.city)}, {String(d.country)}</p>
+            </div>
+          </Link>
+        ))}
       </div>
-    </div>
+    </SubPageLayout>
   );
 }

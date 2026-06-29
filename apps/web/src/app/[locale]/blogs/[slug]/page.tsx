@@ -1,36 +1,44 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+import Link from 'next/link';
+import { SubPageLayout } from '../../../../components/layout/SubPageLayout';
+import { api, safeApi } from '../../../../lib/api';
+import { buildMetadata } from '../../../../lib/metadata';
+import { navHref } from '../../../../config/navigation';
 
-export default function Page(props: any) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = await safeApi(() => api.getBlog(slug), null);
+  return buildMetadata({
+    title: post ? String(post.title) : 'Blog',
+    description: post ? String(post.excerpt ?? '') : '',
+  });
+}
+
+export default async function BlogPostPage({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
+  const { locale, slug } = await params;
+  const post = await safeApi(() => api.getBlog(slug), null);
+
+  if (!post) {
+    return (
+      <SubPageLayout locale={locale} title="Post not found">
+        <Link href={navHref(locale, '/blogs')} className="jb-link-gold">← Blogs</Link>
+      </SubPageLayout>
+    );
+  }
+
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>Blog Post Detail</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Public Web route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/web/src/app/[locale]/blogs/[slug]/page.tsx</code>
-      </div>
-    </div>
+    <SubPageLayout
+      locale={locale}
+      title={String(post.title)}
+      tag="Blog"
+      breadcrumb={[{ label: 'Home', href: '' }, { label: 'Blogs', href: '/blogs' }, { label: String(post.title) }]}
+    >
+      <article className="jb-content-block">
+        <div className="jb-prose">{String(post.body ?? post.excerpt ?? '')}</div>
+      </article>
+    </SubPageLayout>
   );
 }
