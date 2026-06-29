@@ -1,0 +1,489 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// --- AUTH & USERS ---
+
+model User {
+  id                   Int                   @id @default(autoincrement())
+  email                String                @unique
+  passwordHash         String?
+  firstName            String?
+  lastName             String?
+  phone                String?
+  accountType          String                @default("INDIVIDUAL") // INDIVIDUAL, COMPANY
+  companyId            Int?
+  status               String                @default("ACTIVE") // ACTIVE, SUSPENDED
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  
+  company              Company?              @relation(fields: [companyId], references: [id])
+  authProviders        UserAuthProvider[]
+  consentLogs          ConsentLog[]
+  savedSearches        SavedSearch[]
+  quoteRequests        QuoteRequest[]
+  bookings             Booking[]
+  jetCardAccounts      JetCardAccount[]
+  travelCredits        TravelCreditLedger[]
+  partnerApplications  PartnerApplication[]
+  partnerAccounts      PartnerAccount[]
+  auditLogs            AuditLog[]
+}
+
+model UserAuthProvider {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  provider        String   // GOOGLE, APPLE
+  providerSubject String   @unique
+  email           String?
+  createdAt       DateTime @default(now())
+  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Company {
+  id              Int                   @id @default(autoincrement())
+  legalName       String
+  billingEmail    String
+  taxCountry      String
+  status          String                @default("ACTIVE")
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  
+  users           User[]
+  authorizedUsers CompanyAuthorizedUser[]
+  travelCredits   TravelCreditLedger[]
+  partnerAccounts PartnerAccount[]
+  bookings        Booking[]
+}
+
+model CompanyAuthorizedUser {
+  id            Int      @id @default(autoincrement())
+  companyId     Int
+  userId        Int
+  permissionSet String   @default("READ") // READ, WRITE, ADMIN
+  createdAt     DateTime @default(now())
+  
+  company       Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// --- QUOTES & BOOKINGS ---
+
+model QuoteRequest {
+  id                Int                  @id @default(autoincrement())
+  userId            Int?
+  email             String
+  phone             String
+  firstName         String
+  lastName          String
+  tripType          String               @default("ONE_WAY") // ONE_WAY, ROUND_TRIP, MULTI_CITY
+  sourcePage        String?
+  status            String               @default("PENDING") // PENDING, OFFERED, EXPIRED, CONVERTED, CANCELLED
+  locale            String               @default("en")
+  currency          String               @default("USD")
+  message           String?
+  isConsentAccepted Boolean              @default(false)
+  createdAt         DateTime             @default(now())
+  
+  user              User?                @relation(fields: [userId], references: [id])
+  legs              QuoteLeg[]
+  offers            QuoteOffer[]
+  bookings          Booking[]
+  worldCupItinerary WorldCupItinerary?
+}
+
+model QuoteLeg {
+  id                 Int          @id @default(autoincrement())
+  quoteRequestId     Int
+  seq                Int          @default(0)
+  fromAirportId      Int
+  toAirportId        Int
+  departureLocalAt   DateTime
+  passengers         Int          @default(1)
+  relatedMatchId     Int?
+  
+  quoteRequest       QuoteRequest @relation(fields: [quoteRequestId], references: [id], onDelete: Cascade)
+  fromAirport        Airport      @relation("LegFromAirport", fields: [fromAirportId], references: [id])
+  toAirport          Airport      @relation("LegToAirport", fields: [toAirportId], references: [id])
+  relatedMatch       WorldCupMatch? @relation(fields: [relatedMatchId], references: [id])
+}
+
+model QuoteOffer {
+  id               Int          @id @default(autoincrement())
+  quoteRequestId   Int
+  aircraftModelId  Int
+  operatorId       Int
+  price            Decimal      @db.Decimal(12, 2)
+  pricingBreakdown Json?
+  expiresAt        DateTime
+  status           String       @default("ACTIVE") // ACTIVE, EXPIRED, ACCEPTED
+  createdAt        DateTime     @default(now())
+  
+  quoteRequest     QuoteRequest @relation(fields: [quoteRequestId], references: [id], onDelete: Cascade)
+  aircraftModel    AircraftModel @relation(fields: [aircraftModelId], references: [id])
+  operator         Operator     @relation(fields: [operatorId], references: [id])
+  bookings         Booking[]
+}
+
+model Booking {
+  id              Int                @id @default(autoincrement())
+  quoteOfferId    Int?
+  quoteRequestId  Int?
+  userId          Int
+  companyId       Int?
+  bookingType     String             @default("CHARTER") // CHARTER, FIXED_PRICE, EMPTY_LEG
+  agreementStatus String             @default("PENDING") // PENDING, SIGNED, BYPASSED
+  bookingStatus   String             @default("PENDING") // PENDING, CONFIRMED, COMPLETED, CANCELLED
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  
+  quoteOffer      QuoteOffer?        @relation(fields: [quoteOfferId], references: [id])
+  quoteRequest    QuoteRequest?      @relation(fields: [quoteRequestId], references: [id])
+  user            User               @relation(fields: [userId], references: [id])
+  company         Company?           @relation(fields: [companyId], references: [id])
+  passengers      BookingPassenger[]
+  payments        Payment[]
+  documents       Document[]
+  travelCredits   TravelCreditLedger[]
+  jetCardTxns     JetCardTransaction[]
+}
+
+model BookingPassenger {
+  id             Int      @id @default(autoincrement())
+  bookingId      Int
+  firstName      String
+  lastName       String
+  passportNumber String?
+  dateOfBirth    DateTime?
+  nationality    String?
+  
+  booking        Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+}
+
+model Payment {
+  id             Int      @id @default(autoincrement())
+  bookingId      Int
+  method         String   // BANK_TRANSFER, CREDIT_CARD, HOLD
+  amount         Decimal  @db.Decimal(12, 2)
+  currency       String   @default("USD")
+  status         String   @default("PENDING") // PENDING, PAID, FAILED, REFUNDED
+  transactionRef String?
+  createdAt      DateTime @default(now())
+  
+  booking        Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+}
+
+model Document {
+  id            Int      @id @default(autoincrement())
+  bookingId     Int
+  documentType  String   // CHARTER_AGREEMENT, TERM_AND_CONDITION
+  policyVersion String
+  signedAt      DateTime?
+  signerId      Int?
+  fileUrl       String
+  status        String   @default("PENDING") // PENDING, SIGNED, EXPIRED
+  createdAt     DateTime @default(now())
+  
+  booking       Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+}
+
+// --- AIRCRAFT & AIRPORTS ---
+
+model Airport {
+  id                  Int                  @id @default(autoincrement())
+  iata                String               @unique
+  icao                String
+  name                String
+  city                String
+  country             String
+  timezone            String
+  status              String               @default("ACTIVE")
+  
+  legsFrom            QuoteLeg[]           @relation("LegFromAirport")
+  legsTo              QuoteLeg[]           @relation("LegToAirport")
+  fixedRoutesFrom     FixedPriceRoute[]    @relation("RouteFromAirport")
+  fixedRoutesTo       FixedPriceRoute[]    @relation("RouteToAirport")
+  emptyLegsFrom       EmptyLegOffer[]      @relation("EmptyFromAirport")
+  emptyLegsTo         EmptyLegOffer[]      @relation("EmptyToAirport")
+}
+
+model AircraftCategory {
+  id            Int             @id @default(autoincrement())
+  code          String          @unique // LIGHT, MIDSIZE, HEAVY, etc.
+  label         String
+  maxPassengers Int             @default(8)
+  
+  models        AircraftModel[]
+  fixedOptions  FixedPriceOption[]
+}
+
+model AircraftModel {
+  id             Int              @id @default(autoincrement())
+  manufacturer   String
+  model          String
+  categoryId     Int
+  rangeKm        Int?
+  speedKmh       Int?
+  sleepCapacity  Int?
+  cabinWidth     Decimal?         @db.Decimal(4, 2)
+  cabinHeight    Decimal?         @db.Decimal(4, 2)
+  cabinLength    Decimal?         @db.Decimal(4, 2)
+  
+  category       AircraftCategory @relation(fields: [categoryId], references: [id])
+  quoteOffers    QuoteOffer[]
+  emptyLegs      EmptyLegOffer[]
+}
+
+model Operator {
+  id                Int          @id @default(autoincrement())
+  name              String
+  region            String
+  complianceProfile Json?
+  status            String       @default("ACTIVE")
+  
+  quoteOffers       QuoteOffer[]
+}
+
+// --- COMMERCIAL PROGRAMS ---
+
+model FixedPriceRoute {
+  id            Int                @id @default(autoincrement())
+  slug          String             @unique
+  fromAirportId Int
+  toAirportId   Int
+  region        String
+  status        String             @default("ACTIVE")
+  createdAt     DateTime           @default(now())
+  
+  fromAirport   Airport            @relation("RouteFromAirport", fields: [fromAirportId], references: [id])
+  toAirport     Airport            @relation("RouteToAirport", fields: [toAirportId], references: [id])
+  options       FixedPriceOption[]
+}
+
+model FixedPriceOption {
+  id            Int              @id @default(autoincrement())
+  routeId       Int
+  categoryId    Int
+  price         Decimal          @db.Decimal(12, 2)
+  paxLimit      Int              @default(8)
+  includedTerms String?
+  
+  route         FixedPriceRoute  @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  category      AircraftCategory @relation(fields: [categoryId], references: [id])
+}
+
+model EmptyLegOffer {
+  id              Int           @id @default(autoincrement())
+  slug            String        @unique
+  fromAirportId   Int
+  toAirportId     Int
+  departAt        DateTime
+  aircraftModelId Int
+  price           Decimal       @db.Decimal(12, 2)
+  status          String        @default("ACTIVE") // ACTIVE, EXPIRED, BOOKED
+  discountPct     Int           @default(0)
+  createdAt       DateTime      @default(now())
+  
+  fromAirport     Airport       @relation("EmptyFromAirport", fields: [fromAirportId], references: [id])
+  toAirport       Airport       @relation("EmptyToAirport", fields: [toAirportId], references: [id])
+  aircraftModel   AircraftModel @relation(fields: [aircraftModelId], references: [id])
+}
+
+model JetCardPlan {
+  id            Int              @id @default(autoincrement())
+  name          String
+  hours         Int
+  validityYears Int              @default(2)
+  minNoticeHours Int             @default(24)
+  dailyMinHours Decimal          @db.Decimal(3, 1)
+  price         Decimal          @db.Decimal(12, 2)
+  
+  accounts      JetCardAccount[]
+}
+
+model JetCardAccount {
+  id             Int                  @id @default(autoincrement())
+  userId         Int
+  planId         Int
+  purchasedAt    DateTime             @default(now())
+  expiresAt      DateTime
+  remainingHours Decimal              @db.Decimal(6, 2)
+  
+  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan           JetCardPlan          @relation(fields: [planId], references: [id])
+  transactions   JetCardTransaction[]
+}
+
+model JetCardTransaction {
+  id               Int            @id @default(autoincrement())
+  jetCardAccountId Int
+  txnType          String         // DEDUCTION, TOP_UP, FEE
+  hoursDelta       Decimal        @db.Decimal(6, 2)
+  bookingId        Int?
+  note             String?
+  createdAt        DateTime       @default(now())
+  
+  jetCardAccount   JetCardAccount @relation(fields: [jetCardAccountId], references: [id], onDelete: Cascade)
+  booking          Booking?       @relation(fields: [bookingId], references: [id])
+}
+
+model TravelCreditLedger {
+  id           Int      @id @default(autoincrement())
+  userId       Int?
+  companyId    Int?
+  bookingId    Int?
+  creditsDelta Decimal  @db.Decimal(12, 2)
+  expiresAt    DateTime
+  reason       String
+  createdAt    DateTime @default(now())
+  
+  user         User?    @relation(fields: [userId], references: [id])
+  company      Company? @relation(fields: [companyId], references: [id])
+  booking      Booking? @relation(fields: [bookingId], references: [id])
+}
+
+// --- PARTNERS ---
+
+model PartnerProgram {
+  id           Int                  @id @default(autoincrement())
+  code         String               @unique // SERVICE, REFERRAL, OFFICIAL
+  name         String
+  benefits     Json?
+  
+  applications PartnerApplication[]
+  accounts     PartnerAccount[]
+}
+
+model PartnerApplication {
+  id           Int            @id @default(autoincrement())
+  userId       Int
+  programId    Int
+  whatsapp     String?
+  wechat       String?
+  reviewStatus String         @default("PENDING") // PENDING, APPROVED, REJECTED
+  reviewedAt   DateTime?
+  createdAt    DateTime       @default(now())
+  
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  program      PartnerProgram @relation(fields: [programId], references: [id])
+}
+
+model PartnerAccount {
+  id                   Int            @id @default(autoincrement())
+  userId               Int
+  companyId            Int?
+  programId            Int
+  dashboardPermissions String         @default("BASIC")
+  createdAt            DateTime       @default(now())
+  
+  user                 User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company              Company?       @relation(fields: [companyId], references: [id])
+  program              PartnerProgram @relation(fields: [programId], references: [id])
+}
+
+// --- CONTENT MANAGEMENT (CMS) ---
+
+model ContentCategory {
+  id       Int              @id @default(autoincrement())
+  name     String
+  slug     String           @unique
+  articles ContentArticle[]
+}
+
+model ContentArticle {
+  id           Int              @id @default(autoincrement())
+  type         String           // NEWS, BLOG, LEGAL
+  slug         String           @unique
+  categoryId   Int?
+  author       String?
+  isPublished  Boolean          @default(false)
+  shareEnabled Boolean          @default(true)
+  publishedAt  DateTime?
+  createdAt    DateTime         @default(now())
+  
+  category     ContentCategory? @relation(fields: [categoryId], references: [id])
+}
+
+model ContentTranslation {
+  id             Int     @id @default(autoincrement())
+  entityType     String  // ARTICLE, VIDEO, PLAN
+  entityId       Int
+  locale         String
+  title          String
+  body           String
+  seoTitle       String?
+  seoDescription String?
+  
+  @@unique([entityType, entityId, locale])
+}
+
+model Video {
+  id          Int       @id @default(autoincrement())
+  slug        String    @unique
+  videoUrl    String
+  duration    Int       @default(0) // in seconds
+  viewCount   Int       @default(0)
+  isPublished Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+// --- CAMPAIGNS ---
+
+model WorldCupMatch {
+  id        Int        @id @default(autoincrement())
+  matchDate DateTime
+  stage     String
+  homeTeam  String
+  awayTeam  String
+  hostCity  String
+  stadium   String
+  
+  legs      QuoteLeg[]
+}
+
+model WorldCupItinerary {
+  id             Int          @id @default(autoincrement())
+  quoteRequestId Int          @unique
+  campaignCode   String
+  
+  quoteRequest   QuoteRequest @relation(fields: [quoteRequestId], references: [id], onDelete: Cascade)
+}
+
+// --- LOGS & MISC ---
+
+model SavedSearch {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  queryPayload Json
+  locale       String   @default("en")
+  createdAt    DateTime @default(now())
+  
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ConsentLog {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  subject       String   // COOKIE_ANALYTICS, PRIVACY_POLICY, TERMS
+  policyVersion String
+  acceptedAt    DateTime @default(now())
+  
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  action    String
+  details   Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+  
+  user      User?    @relation(fields: [userId], references: [id])
+}

@@ -1,0 +1,28 @@
+{
+  "name": "j-ta-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "J - TA Clean-Room Private Jet Booking Platform",
+  "scripts": {
+    "dev": "pnpm --filter \"*\" --parallel dev",
+    "build": "pnpm --filter \"*\" build",
+    "start": "pnpm --filter \"*\" start",
+    "test": "pnpm --filter \"*\" test",
+    "test:e2e": "playwright test",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "prisma",
+      "@prisma/client",
+      "@prisma/engines",
+      "sharp"
+    ]
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.45.0",
+    "pg": "^8.22.0",
+    "typescript": "^5.0.0"
+  }
+}
