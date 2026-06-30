@@ -7,13 +7,18 @@ import {
   Body,
   Param,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { CreateJetCardPlanDto, UpdateJetCardPlanDto } from '../dto';
 import { JetCardService } from '../services/jet-card.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AdminGuard } from '../auth/admin.guard';
 
 @ApiTags('Admin Jet Card')
 @Controller('admin/jet-card/plans')
+@UseGuards(JwtAuthGuard, AdminGuard)
+@ApiBearerAuth()
 export class AdminJetCardController {
   constructor(private readonly jetCardService: JetCardService) {}
 

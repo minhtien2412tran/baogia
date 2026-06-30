@@ -1,7 +1,10 @@
-import { Controller, Post, Get, Body, Headers } from '@nestjs/common';
+import { Controller, Post, Get, Body, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { RegisterDto, LoginDto, OAuthDto, RefreshTokenDto } from '../dto';
 import { AuthService } from '../services/auth.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CurrentUser } from '../auth/current-user.decorator';
+import type { AuthUser } from '../auth/auth.types';
 
 @ApiTags('Auth')
 @Controller()
@@ -23,36 +26,34 @@ export class AuthController {
   }
 
   @Post('auth/oauth/google')
-  @ApiOperation({ summary: 'Authenticate via Google OAuth' })
-  googleLogin(@Body() body: OAuthDto) {
+  @ApiOperation({ summary: 'Authenticate via Google OAuth (demo stub)' })
+  googleLogin(@Body() _body: OAuthDto) {
     return {
-      message: 'Google login successful',
-      user: { id: 2, email: 'google.user@example.com', accountType: 'INDIVIDUAL' },
-      tokens: { accessToken: 'mock-google-access-token-xyz', refreshToken: 'mock-google-refresh-token-xyz' },
+      message: 'Google OAuth is not configured. Use email/password login.',
+      status: 'NOT_CONFIGURED',
     };
   }
 
   @Post('auth/oauth/apple')
-  @ApiOperation({ summary: 'Authenticate via Apple OAuth' })
-  appleLogin(@Body() body: OAuthDto) {
+  @ApiOperation({ summary: 'Authenticate via Apple OAuth (demo stub)' })
+  appleLogin(@Body() _body: OAuthDto) {
     return {
-      message: 'Apple login successful',
-      user: { id: 3, email: 'apple.user@example.com', accountType: 'INDIVIDUAL' },
-      tokens: { accessToken: 'mock-apple-access-token-xyz', refreshToken: 'mock-apple-refresh-token-xyz' },
+      message: 'Apple OAuth is not configured. Use email/password login.',
+      status: 'NOT_CONFIGURED',
     };
   }
 
   @Post('auth/refresh')
   @ApiOperation({ summary: 'Refresh access token' })
   refresh(@Body() body: RefreshTokenDto) {
-    return { accessToken: 'mock-new-access-token-abc' };
+    return this.authService.refresh(body.refreshToken);
   }
 
   @Get('me')
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get current user profile' })
-  getProfile(@Headers('authorization') authHeader: string) {
-    const userId = this.authService.resolveUserId(authHeader);
-    return this.authService.getProfile(userId);
+  getProfile(@CurrentUser() user: AuthUser) {
+    return this.authService.getProfile(user.userId);
   }
 }

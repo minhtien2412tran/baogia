@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
@@ -13,10 +15,12 @@ import { AdminJetCardController } from './controllers/admin-jet-card.controller'
 import { TravelCreditController, AdminTravelCreditController } from './controllers/travel-credit.controller';
 import { AdminContentController } from './controllers/admin-content.controller';
 import { PartnerController } from './controllers/partner.controller';
+import { AdminPartnerController } from './controllers/admin-partner.controller';
 import { ContentController } from './controllers/content.controller';
 import { BookingController, AdminBookingController } from './controllers/booking.controller';
 import { AdminDashboardController } from './controllers/admin-dashboard.controller';
 import { AirportController } from './controllers/airport.controller';
+import { ApiGatewayController } from './controllers/api-gateway.controller';
 import { BookingService } from './services/booking.service';
 import { AuditService } from './services/audit.service';
 import { FixedPriceService } from './services/fixed-price.service';
@@ -28,9 +32,20 @@ import { AdminDashboardService } from './services/admin-dashboard.service';
 import { AirportService } from './services/airport.service';
 import { QuoteService } from './services/quote.service';
 import { AuthService } from './services/auth.service';
+import { PartnerService } from './services/partner.service';
+import { ApiGatewayService } from './services/api-gateway.service';
+import { JwtStrategy } from './auth/jwt.strategy';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [
+    PrismaModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET ?? 'dev-jta-secret-change-in-production',
+      signOptions: { expiresIn: '7d' },
+    }),
+  ],
   controllers: [
     AppController,
     AuthController,
@@ -45,14 +60,17 @@ import { AuthService } from './services/auth.service';
     TravelCreditController,
     AdminTravelCreditController,
     PartnerController,
+    AdminPartnerController,
     ContentController,
     AdminContentController,
     BookingController,
     AdminBookingController,
     AdminDashboardController,
+    ApiGatewayController,
   ],
   providers: [
     AppService,
+    ApiGatewayService,
     BookingService,
     AuditService,
     FixedPriceService,
@@ -64,6 +82,8 @@ import { AuthService } from './services/auth.service';
     AirportService,
     QuoteService,
     AuthService,
+    PartnerService,
+    JwtStrategy,
   ],
 })
 export class AppModule {}

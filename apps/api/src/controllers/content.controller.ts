@@ -96,15 +96,25 @@ export class ContentController {
   getDestinations(
     @Query('category') category?: string,
     @Query('page') page?: string,
+    @Query('limit') limit?: string,
     @Query('search') search?: string,
     @Query('locale') locale?: string,
   ) {
     return this.contentService.listDestinations({
       category,
       page: page ? Number(page) : 1,
+      limit: limit ? Number(limit) : undefined,
       search,
       locale,
     });
+  }
+
+  @Get('content/destinations/:slug')
+  @ApiOperation({ summary: 'Get destination by slug' })
+  @ApiParam({ name: 'slug', type: 'string', example: 'nassau' })
+  @ApiQuery({ name: 'locale', required: false })
+  getDestination(@Param('slug') slug: string, @Query('locale') locale?: string) {
+    return this.contentService.getDestinationBySlug(slug, locale ?? 'en');
   }
 
   @Get('content/pages/:slug')

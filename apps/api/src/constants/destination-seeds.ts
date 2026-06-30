@@ -1,0 +1,156 @@
+/** Curated destination catalog — thumbnails map to apps/web/public/assets/jetbay */
+const JB = '/assets/jetbay';
+
+export type DestinationSeed = {
+  slug: string;
+  category: 'ISLAND' | 'SKI' | 'GOLF';
+  city: string;
+  country: string;
+  thumbnail: string;
+  title: string;
+  tagline: string;
+  body: string;
+};
+
+export const DESTINATION_SEEDS: DestinationSeed[] = [
+  {
+    slug: 'nassau',
+    category: 'ISLAND',
+    city: 'Nassau',
+    country: 'The Bahamas',
+    thumbnail: `${JB}/v4/alt/scenario/destination/nassau-beach-home.webp`,
+    title: 'Nassau',
+    tagline: 'Turquoise waters & colonial charm',
+    body: 'Fly private to Nassau for world-class resorts, marinas, and quick island hops across the Bahamas archipelago.',
+  },
+  {
+    slug: 'providenciales',
+    category: 'ISLAND',
+    city: 'Providenciales',
+    country: 'Turks and Caicos',
+    thumbnail: `${JB}/v4/alt/scenario/destination/providenciales-beach-home.webp`,
+    title: 'Providenciales',
+    tagline: 'Grace Bay luxury escape',
+    body: 'Grace Bay beaches and five-star villas await. Private jets land minutes from Provo’s best resorts and golf courses.',
+  },
+  {
+    slug: 'st-barts',
+    category: 'ISLAND',
+    city: 'St. Barts',
+    country: 'Saint Barthélemy',
+    thumbnail: `${JB}/v4/alt/scenario/destination/st-barts-harbor-home.webp`,
+    title: 'St. Barts',
+    tagline: 'Caribbean boutique glamour',
+    body: 'Short runway, big style — St. Barts is the jet-set’s favorite for dining, yachts, and secluded villas.',
+  },
+  {
+    slug: 'grand-cayman',
+    category: 'ISLAND',
+    city: 'Grand Cayman',
+    country: 'Cayman Islands',
+    thumbnail: `${JB}/v4/alt/scenario/destination/grand-cayman-beach-home.webp`,
+    title: 'Grand Cayman',
+    tagline: 'Seven Mile sophistication',
+    body: 'Corporate hubs and reef diving meet on Grand Cayman. Private charter connects Miami and New York in hours.',
+  },
+  {
+    slug: 'anguilla',
+    category: 'ISLAND',
+    city: 'Anguilla',
+    country: 'Anguilla',
+    thumbnail: `${JB}/v4/alt/scenario/destination/anguilla-beach-home.webp`,
+    title: 'Anguilla',
+    tagline: 'Quiet luxury beaches',
+    body: 'Powder-soft sand and low-key luxury — Anguilla is ideal for multi-day retreats with seamless private aviation.',
+  },
+  {
+    slug: 'san-juan',
+    category: 'ISLAND',
+    city: 'San Juan',
+    country: 'Puerto Rico',
+    thumbnail: `${JB}/v4/alt/scenario/destination/san-juan-beach-home.webp`,
+    title: 'San Juan',
+    tagline: 'Old city meets Caribbean coast',
+    body: 'Historic San Juan is a gateway to Puerto Rico and the eastern Caribbean, with FBO access close to Condado and Isla Verde.',
+  },
+  {
+    slug: 'aspen',
+    category: 'SKI',
+    city: 'Aspen',
+    country: 'United States',
+    thumbnail: `${JB}/v4/alt/banner/home/private-jet-cabin-banner-en-pc.webp`,
+    title: 'Aspen',
+    tagline: 'Rocky Mountain powder',
+    body: 'Aspen–Pitkin County Airport puts you slopeside in minutes. Perfect for ski season weekends from coast to coast.',
+  },
+  {
+    slug: 'chamonix',
+    category: 'SKI',
+    city: 'Chamonix',
+    country: 'France',
+    thumbnail: `${JB}/v4/alt/banner/home/fixed-price-private-jet-charter-banner-en-pc.webp`,
+    title: 'Chamonix',
+    tagline: 'Alps alpine adventure',
+    body: 'Chamonix-Mont-Blanc is the birthplace of extreme skiing. Charter from Geneva or Sion for the fastest mountain access.',
+  },
+  {
+    slug: 'st-moritz',
+    category: 'SKI',
+    city: 'St. Moritz',
+    country: 'Switzerland',
+    thumbnail: `${JB}/v4/default/privateBg-917782047634976768.webp`,
+    title: 'St. Moritz',
+    tagline: 'Swiss glitz on the slopes',
+    body: 'Engadin Valley elegance with Samedan airport nearby. Ideal for winter events, heliski connections, and après-ski in style.',
+  },
+  {
+    slug: 'niseko',
+    category: 'SKI',
+    city: 'Niseko',
+    country: 'Japan',
+    thumbnail: `${JB}/v4/alt/scenario/type/island-turquoise-coastline-bg.webp`,
+    title: 'Niseko',
+    tagline: 'Japan’s legendary powder',
+    body: 'Hokkaido’s Niseko delivers deep powder and onsen retreats. Fly into New Chitose and connect by short hop or helicopter.',
+  },
+  {
+    slug: 'augusta',
+    category: 'GOLF',
+    city: 'Augusta',
+    country: 'United States',
+    thumbnail: `${JB}/v4/alt/banner/home/private-jet-cabin-banner-en-m.webp`,
+    title: 'Augusta',
+    tagline: 'Masters week & Georgia fairways',
+    body: 'Private aviation is the standard for Masters week and year-round play across Georgia’s premier courses.',
+  },
+  {
+    slug: 'pebble-beach',
+    category: 'GOLF',
+    city: 'Pebble Beach',
+    country: 'United States',
+    thumbnail: `${JB}/v4/alt/banner/home/fixed-price-private-jet-charter-banner-en-m.webp`,
+    title: 'Pebble Beach',
+    tagline: 'Pacific links icon',
+    body: 'Monterey Peninsula golf with ocean views. Fly into Monterey Regional for tee times at Pebble Beach and Spyglass Hill.',
+  },
+  {
+    slug: 'dubai-hills',
+    category: 'GOLF',
+    city: 'Dubai Hills',
+    country: 'United Arab Emirates',
+    thumbnail: `${JB}/v4/default/privateBg-917782047634976768.webp`,
+    title: 'Dubai Hills',
+    tagline: 'Desert fairways & skyline views',
+    body: 'Dubai Hills Estate and championship courses pair with VIP FBO service at Dubai International and Al Maktoum.',
+  },
+  {
+    slug: 'st-andrews',
+    category: 'GOLF',
+    city: 'St Andrews',
+    country: 'United Kingdom',
+    thumbnail: `${JB}/v4/alt/scenario/type/island-turquoise-coastline-bg.webp`,
+    title: 'St Andrews',
+    tagline: 'Home of golf',
+    body: 'The Old Course and Scotland’s east coast links are within reach via Edinburgh or Dundee — charter makes the pilgrimage effortless.',
+  },
+];

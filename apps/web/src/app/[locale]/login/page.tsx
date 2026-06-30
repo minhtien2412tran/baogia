@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Input, Button, Muted, colors } from '@j-ta/ui';
 import { api } from '../../../lib/api';
 
 export default function LoginPage({ params }: { params: { locale: string } }) {
@@ -23,7 +22,7 @@ export default function LoginPage({ params }: { params: { locale: string } }) {
       localStorage.setItem('jta_user_id', String(res.user.id));
       router.push(`/${locale}/account`);
     } catch {
-      setError('Login failed. Try demo@j-ta.local with any password.');
+      setError('Login failed. Use demo@j-ta.local / Demo123!');
     } finally {
       setLoading(false);
     }
@@ -31,15 +30,37 @@ export default function LoginPage({ params }: { params: { locale: string } }) {
 
   return (
     <main className="jb-subpage">
-      <div className="jb-container" style={{ maxWidth: 440, padding: '48px 24px' }}>
-        <h1 style={{ color: colors.accent, marginTop: 0 }}>Login</h1>
-        <form onSubmit={onSubmit}>
-          <Input label="Email" type="email" value={email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} required />
-          <Input label="Password" type="password" value={password} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} required />
-          <Button type="submit" disabled={loading}>{loading ? 'Signing in...' : 'Sign in'}</Button>
+      <div className="jb-container jb-auth-wrap">
+        <h1 className="jb-auth-title">Login</h1>
+        <form className="jb-auth-form" onSubmit={onSubmit}>
+          <div className="jb-field">
+            <label htmlFor="login-email">Email</label>
+            <input
+              id="login-email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="jb-field">
+            <label htmlFor="login-password">Password</label>
+            <input
+              id="login-password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit" className="jb-btn-primary" disabled={loading}>
+            {loading ? 'Signing in…' : 'Sign in'}
+          </button>
         </form>
-        {error && <p style={{ color: colors.error }}>{error}</p>}
-        <Muted>No account? <a href={`/${locale}/register`} style={{ color: colors.link }}>Register</a></Muted>
+        {error && <p className="jb-auth-error">{error}</p>}
+        <p className="jb-auth-foot">
+          No account? <a href={`/${locale}/register`}>Register</a>
+        </p>
       </div>
     </main>
   );

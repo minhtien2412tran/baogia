@@ -2,13 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { LOCALES } from '../../config/locales';
+import { getLocaleConfig } from '../../config/locales';
 
-const LOCALES = [
-  { code: 'en', label: 'EN' },
-  { code: 'vi', label: 'VI' },
-];
-
-const CURRENCIES = ['USD', 'EUR', 'GBP'] as const;
+const CURRENCIES = ['USD', 'EUR', 'GBP', 'CNY', 'HKD'] as const;
 
 export function LocaleCurrencySelector({
   locale,
@@ -18,7 +15,14 @@ export function LocaleCurrencySelector({
   currency: string;
 }) {
   const router = useRouter();
-  const [cur, setCur] = useState(currency);
+  const [cur, setCur] = useState(currency || getLocaleConfig(locale).currency);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('jta_currency');
+      if (saved) setCur(saved);
+    }
+  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -38,7 +42,7 @@ export function LocaleCurrencySelector({
         className="jb-select-mini"
         value={locale}
         onChange={(e) => changeLocale(e.target.value)}
-        aria-label="Language"
+        aria-label="Language / Region"
       >
         {LOCALES.map((l) => (
           <option key={l.code} value={l.code}>{l.label}</option>

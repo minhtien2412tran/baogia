@@ -1,22 +1,27 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { JB } from '../../config/jetbay-cdn';
+import { cdnUrl } from '../../config/jetbay-cdn';
 
 const SLIDES = [
   {
     title: 'World Cup 2026 — Private jet travel for every match',
     href: '/world-cup-2026-private-jet-booking',
-    gradient: 'linear-gradient(135deg, #1a2a40 0%, #0d1520 100%)',
+    desktop: JB.promo.worldCup.desktop,
+    mobile: JB.promo.worldCup.mobile,
   },
   {
     title: 'Fixed price private jet charter — price certainty on global routes',
     href: '/fixed-price-charter',
-    gradient: 'linear-gradient(135deg, #2a3040 0%, #121820 100%)',
+    desktop: JB.promo.fixedPrice.desktop,
+    mobile: JB.promo.fixedPrice.mobile,
   },
   {
     title: 'Luxurious private jet cabin — cream leather & polished finishes',
     href: '/private-jet-charter',
-    gradient: 'linear-gradient(135deg, #302820 0%, #141010 100%)',
+    desktop: JB.promo.cabin.desktop,
+    mobile: JB.promo.cabin.mobile,
   },
 ];
 
@@ -35,8 +40,15 @@ export function PromoCarousel({ locale }: { locale: string }) {
         <div className="jb-carousel">
           <div className="jb-carousel-track" style={{ transform: `translateX(-${active * 100}%)` }}>
             {SLIDES.map((s) => (
-              <a key={s.title} href={`${p}${s.href}`} className="jb-promo-slide" style={{ background: s.gradient }}>
-                <div className="jb-promo-placeholder">{s.title}</div>
+              <a
+                key={s.title}
+                href={`${p}${s.href}`}
+                className="jb-promo-slide"
+                style={{
+                  backgroundImage: `linear-gradient(transparent 50%, rgba(0,0,0,0.75)), url(${cdnUrl(s.desktop, 1920)})`,
+                }}
+              >
+                <span className="jb-promo-caption">{s.title}</span>
               </a>
             ))}
           </div>

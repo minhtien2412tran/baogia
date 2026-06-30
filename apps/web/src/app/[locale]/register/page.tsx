@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Input, Button, Muted, colors } from '@j-ta/ui';
 import { api } from '../../../lib/api';
 
 export default function RegisterPage({ params }: { params: { locale: string } }) {
@@ -31,15 +30,38 @@ export default function RegisterPage({ params }: { params: { locale: string } })
 
   return (
     <main className="jb-subpage">
-      <div className="jb-container" style={{ maxWidth: 440, padding: '48px 24px' }}>
-        <h1 style={{ color: colors.accent, marginTop: 0 }}>Create Account</h1>
-        <form onSubmit={onSubmit}>
-          <Input label="Email" type="email" value={email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} required />
-          <Input label="Password" type="password" value={password} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} required minLength={6} />
-          <Button type="submit" disabled={loading}>{loading ? 'Creating...' : 'Register'}</Button>
+      <div className="jb-container jb-auth-wrap">
+        <h1 className="jb-auth-title">Create Account</h1>
+        <form className="jb-auth-form" onSubmit={onSubmit}>
+          <div className="jb-field">
+            <label htmlFor="register-email">Email</label>
+            <input
+              id="register-email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="jb-field">
+            <label htmlFor="register-password">Password</label>
+            <input
+              id="register-password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={8}
+            />
+          </div>
+          <button type="submit" className="jb-btn-primary" disabled={loading}>
+            {loading ? 'Creating…' : 'Register'}
+          </button>
         </form>
-        {error && <p style={{ color: colors.error }}>{error}</p>}
-        <Muted>Already have an account? <a href={`/${locale}/login`} style={{ color: colors.link }}>Login</a></Muted>
+        {error && <p className="jb-auth-error">{error}</p>}
+        <p className="jb-auth-foot">
+          Already have an account? <a href={`/${locale}/login`}>Login</a>
+        </p>
       </div>
     </main>
   );

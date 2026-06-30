@@ -1,36 +1,70 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+'use client';
 
-export default function Page(props: any) {
+import { useEffect, useState } from 'react';
+import { SectionTitle, DataTable, Muted } from '@j-ta/ui';
+import { AdminShell } from '../../../components/AdminShell';
+import { adminApi } from '../../../lib/api';
+
+export default function TravelCreditsAdminPage() {
+  const [packages, setPackages] = useState<Record<string, React.ReactNode>[]>([]);
+  const [txns, setTxns] = useState<Record<string, React.ReactNode>[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([adminApi.getTravelCreditPackages(), adminApi.getTravelCreditTransactions()])
+      .then(([pkgRes, txnRes]) => {
+        setPackages(
+          (pkgRes.packages as Record<string, unknown>[]).map((p) => ({
+            id: String(p.id),
+            name: String(p.name),
+            credit: p.creditAmount != null ? `USD ${Number(p.creditAmount).toLocaleString()}` : '—',
+            price: p.priceUsd != null ? `USD ${Number(p.priceUsd).toLocaleString()}` : '—',
+          })),
+        );
+        const data = (txnRes as { data?: unknown[] }).data ?? [];
+        setTxns(
+          (data as Record<string, unknown>[]).map((t) => ({
+            id: String(t.id),
+            user: String(t.userEmail ?? t.userId ?? '—'),
+            amount: String(t.amount ?? '—'),
+            type: String(t.type ?? '—'),
+            created: t.createdAt ? String(t.createdAt).slice(0, 10) : '—',
+          })),
+        );
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>Manage Travel Credits</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Admin Dashboard route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/admin/src/app/dashboard/travel-credits/page.tsx</code>
-      </div>
-    </div>
+    <AdminShell active="/dashboard/travel-credits">
+      <SectionTitle>Travel Credit Packages</SectionTitle>
+      {loading ? <Muted>Loading…</Muted> : (
+        <>
+          <DataTable
+            columns={[
+              { key: 'id', label: 'ID' },
+              { key: 'name', label: 'Package' },
+              { key: 'credit', label: 'Credit' },
+              { key: 'price', label: 'Price' },
+            ]}
+            rows={packages}
+          />
+          <div style={{ marginTop: 32 }}>
+            <SectionTitle>Recent Transactions</SectionTitle>
+            <DataTable
+              columns={[
+                { key: 'id', label: 'ID' },
+                { key: 'user', label: 'User' },
+                { key: 'amount', label: 'Amount' },
+                { key: 'type', label: 'Type' },
+                { key: 'created', label: 'Date' },
+              ]}
+              rows={txns}
+            />
+          </div>
+        </>
+      )}
+    </AdminShell>
   );
 }

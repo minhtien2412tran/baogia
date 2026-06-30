@@ -145,6 +145,7 @@ export class ContentService {
       slug: article.slug,
       title: translation?.title ?? slug,
       body: translation?.body ?? '',
+      excerpt: translation?.excerpt ?? translation?.seoDescription ?? null,
       seoMeta: {
         title: translation?.seoTitle ?? translation?.title,
         description: translation?.seoDescription,
@@ -300,6 +301,15 @@ export class ContentService {
     };
   }
 
+  async getDestinationBySlug(slug: string, locale = 'en') {
+    const dest = await this.prisma.destination.findFirst({
+      where: { slug, isPublished: true },
+    });
+    if (!dest) throw new NotFoundException(`Destination not found: ${slug}`);
+    const t = await this.getTranslation('DESTINATION', dest.id, locale);
+    return this.formatDestination(dest, t, true);
+  }
+
   private formatDestination(dest: Destination, translation: ContentTranslation | null, detailed = false) {
     const base = {
       id: dest.id,
@@ -353,7 +363,12 @@ export class ContentService {
     const data = await Promise.all(
       pages.map(async (p) => {
         const t = await this.getTranslation('ARTICLE', p.id, locale);
-        return this.formatArticle(p, t);
+        const formatted = this.formatArticle(p, t, true) as Record<string, unknown>;
+        return {
+          ...formatted,
+          body: formatted.content,
+          isPublished: p.isPublished,
+        };
       }),
     );
 

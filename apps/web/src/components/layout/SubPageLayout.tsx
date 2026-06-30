@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { navHref } from '../../config/navigation';
+import { PageHero } from './PageHero';
 
 export function SubPageLayout({
   locale,
@@ -7,6 +6,8 @@ export function SubPageLayout({
   description,
   tag,
   breadcrumb,
+  heroImage,
+  showQuoteWidget,
   children,
 }: {
   locale: string;
@@ -14,31 +15,21 @@ export function SubPageLayout({
   description?: string;
   tag?: string;
   breadcrumb?: { label: string; href?: string }[];
+  heroImage?: string;
+  showQuoteWidget?: boolean;
   children: React.ReactNode;
 }) {
-  const crumbs = breadcrumb ?? [{ label: 'Home', href: '' }, { label: title }];
-
   return (
     <main className="jb-subpage">
-      <section className="jb-sub-hero">
-        <div className="jb-container">
-          <nav className="jb-breadcrumb" aria-label="Breadcrumb">
-            {crumbs.map((c, i) => (
-              <span key={c.label}>
-                {i > 0 && <span className="jb-bc-sep"> / </span>}
-                {c.href !== undefined ? (
-                  <Link href={navHref(locale, c.href)}>{c.label}</Link>
-                ) : (
-                  <span>{c.label}</span>
-                )}
-              </span>
-            ))}
-          </nav>
-          {tag && <span className="jb-tag">{tag}</span>}
-          <h1>{title}</h1>
-          {description && <p className="jb-sub-hero-desc">{description}</p>}
-        </div>
-      </section>
+      <PageHero
+        locale={locale}
+        title={title}
+        description={description}
+        tag={tag}
+        breadcrumb={breadcrumb}
+        heroImage={heroImage}
+        showQuoteWidget={showQuoteWidget}
+      />
       <div className="jb-container jb-sub-body">{children}</div>
     </main>
   );

@@ -1,3 +1,6 @@
+import { JB } from '../../config/jetbay-cdn';
+import { CdnImage } from '../ui/CdnImage';
+
 export function AppDownloadSection({ locale }: { locale: string }) {
   const p = `/${locale}`;
   return (
@@ -15,7 +18,9 @@ export function AppDownloadSection({ locale }: { locale: string }) {
               <a href={`${p}/jetbay-private-jet-app`} className="jb-btn-outline">Download on the App Store</a>
             </div>
           </div>
-          <div className="jb-split-visual">[Image: Mobile app mockup]</div>
+          <div className="jb-split-visual jb-split-visual-img">
+            <CdnImage src={JB.sections.app} alt="J-TA mobile app" fill className="jb-cover-img" sizes="(max-width: 768px) 100vw, 50vw" />
+          </div>
         </div>
       </div>
     </section>

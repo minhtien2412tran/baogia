@@ -10,7 +10,7 @@ async function bootstrap() {
   app.use(helmet({ contentSecurityPolicy: false }));
 
   app.enableCors({
-    origin: process.env.CORS_ORIGIN?.split(',') ?? [
+    origin: process.env.CORS_ORIGIN?.split(',').map((s) => s.trim()) ?? [
       'http://localhost:3000',
       'http://localhost:3001',
       'http://127.0.0.1:3000',
@@ -22,14 +22,16 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
-      whitelist: false,
-      forbidNonWhitelisted: false,
+      whitelist: true,
+      forbidNonWhitelisted: true,
     }),
   );
 
   const config = new DocumentBuilder()
     .setTitle('J - TA API')
-    .setDescription('Clean-room Private Jet Booking Platform API')
+    .setDescription(
+      'Clean-room Private Jet Booking Platform API. UI coverage audit: GET /api-gateway/ui-audit',
+    )
     .setVersion('1.0')
     .addBearerAuth()
     .build();

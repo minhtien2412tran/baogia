@@ -1,49 +1,36 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { PartnerApplicationDto } from '../dto';
+import { PartnerService } from '../services/partner.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CurrentUser } from '../auth/current-user.decorator';
+import type { AuthUser } from '../auth/auth.types';
 
 @ApiTags('Partners')
 @Controller('partners')
 export class PartnerController {
+  constructor(private readonly partnerService: PartnerService) {}
+
   @Get('programs')
   @ApiOperation({ summary: 'Get details of global partner program roles' })
   @ApiResponse({ status: 200, description: 'Comparison matrix of partner tiers.' })
   getPrograms() {
-    return {
-      roles: [
-        { code: 'REFERRAL', name: 'Referral Partner', commission: '3%', features: ['Portal access', 'Asset library'] },
-        { code: 'SERVICE', name: 'Service Partner', commission: '5%', features: ['Client dashboard', 'Signing system', '24/7 ops'] },
-        { code: 'OFFICIAL', name: 'Official Partner', commission: '7%', features: ['Joint PR', 'Smart API integration', 'Supplier contracts'] }
-      ]
-    };
+    return this.partnerService.getPrograms();
   }
 
   @Post('applications')
   @ApiOperation({ summary: 'Submit a new partnership application' })
   @ApiResponse({ status: 201, description: 'Application submitted.' })
   submitApplication(@Body() body: PartnerApplicationDto) {
-    return {
-      applicationId: 88,
-      status: 'PENDING',
-      message: 'Application submitted successfully. Review SLA is 3 working days.',
-    };
+    return this.partnerService.submitApplication(body);
   }
 
   @Get('dashboard')
-  @ApiOperation({ summary: 'Get dashboard widgets and client updates for partners' })
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get dashboard widgets for authenticated partners' })
   @ApiResponse({ status: 200, description: 'Dashboard stats.' })
-  getDashboard() {
-    return {
-      stats: {
-        totalLeads: 12,
-        activeQuotes: 4,
-        confirmedBookings: 2,
-        totalCommissionEarned: 5800.0,
-      },
-      clientUpdates: [
-        { id: 1, clientName: 'Alice Johnson', status: 'Quote Sent', route: 'London - Paris' },
-        { id: 2, clientName: 'Bob Smith', status: 'Agreement Signed', route: 'New York - Miami' }
-      ]
-    };
+  getDashboard(@CurrentUser() user: AuthUser) {
+    return this.partnerService.getDashboard(user.userId);
   }
 }

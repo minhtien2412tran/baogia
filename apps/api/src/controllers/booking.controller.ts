@@ -6,26 +6,24 @@ import {
   Body,
   Param,
   Query,
-  Headers,
   Req,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
-  ApiHeader,
   ApiQuery,
 } from '@nestjs/swagger';
 import type { Request } from 'express';
 import { BookingService } from '../services/booking.service';
 import { CreateBookingDto, UpdateBookingStatusDto } from '../dto';
-
-function resolveUserId(headers: Record<string, string | undefined>): number {
-  const raw = headers['x-user-id'];
-  return raw ? Number(raw) : 1;
-}
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AdminGuard } from '../auth/admin.guard';
+import { CurrentUser } from '../auth/current-user.decorator';
+import type { AuthUser } from '../auth/auth.types';
 
 function clientIp(req: Request): string | undefined {
   return (req.headers['x-forwarded-for'] as string) ?? req.socket?.remoteAddress;
@@ -44,47 +42,45 @@ export class BookingController {
   }
 
   @Get('my')
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiHeader({ name: 'X-User-Id', required: false, description: 'Demo user ID (default: 1)' })
   @ApiOperation({ summary: 'List bookings for the current user' })
   @ApiResponse({ status: 200, description: 'User bookings.' })
-  findMy(@Headers() headers: Record<string, string | undefined>) {
-    return this.bookingService.findMyBookings(resolveUserId(headers));
+  findMy(@CurrentUser() user: AuthUser) {
+    return this.bookingService.findMyBookings(user.userId);
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiHeader({ name: 'X-User-Id', required: false })
   @ApiOperation({ summary: 'Get booking by ID' })
   @ApiResponse({ status: 200, description: 'Booking details.' })
-  findOne(
-    @Param('id', ParseIntPipe) id: number,
-    @Headers() headers: Record<string, string | undefined>,
-  ) {
-    return this.bookingService.findById(id, resolveUserId(headers));
+  findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthUser) {
+    return this.bookingService.findById(id, user.userId);
   }
 
   @Patch(':id/cancel')
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiHeader({ name: 'X-User-Id', required: false })
   @ApiOperation({ summary: 'Cancel a booking' })
   @ApiResponse({ status: 200, description: 'Booking cancelled.' })
   cancel(
     @Param('id', ParseIntPipe) id: number,
-    @Headers() headers: Record<string, string | undefined>,
+    @CurrentUser() user: AuthUser,
     @Req() req: Request,
   ) {
-    return this.bookingService.cancel(id, resolveUserId(headers), clientIp(req));
+    return this.bookingService.cancel(id, user.userId, clientIp(req));
   }
 }
 
 @ApiTags('Admin Bookings')
 @Controller('admin/bookings')
+@UseGuards(JwtAuthGuard, AdminGuard)
+@ApiBearerAuth()
 export class AdminBookingController {
   constructor(private readonly bookingService: BookingService) {}
 
   @Get()
-  @ApiBearerAuth()
   @ApiQuery({ name: 'status', required: false, example: 'pending' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 20 })
@@ -103,7 +99,6 @@ export class AdminBookingController {
   }
 
   @Get(':id')
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get booking by ID (admin)' })
   @ApiResponse({ status: 200, description: 'Booking details.' })
   findOne(@Param('id', ParseIntPipe) id: number) {
@@ -111,16 +106,14 @@ export class AdminBookingController {
   }
 
   @Patch(':id/status')
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update booking status (admin)' })
   @ApiResponse({ status: 200, description: 'Status updated.' })
   updateStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateBookingStatusDto,
-    @Headers() headers: Record<string, string | undefined>,
+    @CurrentUser() user: AuthUser,
     @Req() req: Request,
   ) {
-    const adminUserId = resolveUserId(headers);
-    return this.bookingService.updateStatusAdmin(id, body, adminUserId, clientIp(req));
+    return this.bookingService.updateStatusAdmin(id, body, user.userId, clientIp(req));
   }
 }

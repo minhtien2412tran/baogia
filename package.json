@@ -11,7 +11,9 @@
     "test:api": "pnpm --filter api test",
     "test:e2e": "playwright test",
     "db:up": "docker compose up -d",
-    "db:down": "docker compose down"
+    "db:down": "docker compose down",
+    "assets:jetbay": "node scripts/download-jetbay-assets.mjs",
+    "rebrand:jta": "node scripts/rebrand-jta.mjs"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

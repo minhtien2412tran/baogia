@@ -1,3 +1,7 @@
+import Link from 'next/link';
+import { FOOTER_COMPANY, FOOTER_SERVICES, navHref } from '../../config/navigation';
+import { JB } from '../../config/jetbay-cdn';
+import { CdnImage } from '../ui/CdnImage';
 import { NewsletterForm } from './NewsletterForm';
 
 export function JetBayFooter({ locale }: { locale: string }) {
@@ -7,7 +11,9 @@ export function JetBayFooter({ locale }: { locale: string }) {
       <div className="jb-container">
         <div className="jb-footer-grid">
           <div>
-            <a href={p} className="jb-logo" style={{ display: 'inline-block', marginBottom: 16 }}>J-TA</a>
+            <Link href={p} className="jb-logo-link" style={{ display: 'inline-block', marginBottom: 16 }}>
+              <CdnImage src={JB.logo} alt="J-TA" width={120} height={32} className="jb-logo-img" />
+            </Link>
             <p style={{ color: 'var(--jb-text-muted)', fontSize: 14, margin: '0 0 20px', lineHeight: 1.6 }}>
               A leading global private jet charter platform. Seamless access to 10,000+ aircraft worldwide.
             </p>
@@ -17,44 +23,42 @@ export function JetBayFooter({ locale }: { locale: string }) {
             </p>
             <NewsletterForm locale={locale} />
             <div className="jb-payment-row">
-              {['Visa', 'Mastercard', 'Amex', 'UnionPay', 'Discover'].map((c) => (
-                <span key={c} className="jb-pay-badge">{c}</span>
+              {JB.payment.map((c) => (
+                <CdnImage key={c.alt} src={c.src} alt={c.alt} width={48} height={32} className="jb-pay-img" />
               ))}
             </div>
           </div>
           <div>
             <h4>Services</h4>
             <ul className="jb-footer-links">
-              <li><a href={`${p}/private-jet-charter`}>Private Jet Charter</a></li>
-              <li><a href={`${p}/fixed-price-charter`}>Fixed Price</a></li>
-              <li><a href={`${p}/empty-leg`}>Empty Legs</a></li>
-              <li><a href={`${p}/jet-card`}>Jet Card</a></li>
-              <li><a href={`${p}/air-ambulance`}>Air Ambulance</a></li>
+              {FOOTER_SERVICES.map((l) => (
+                <li key={l.href}><Link href={navHref(locale, l.href)}>{l.label}</Link></li>
+              ))}
             </ul>
           </div>
           <div>
             <h4>Company</h4>
             <ul className="jb-footer-links">
-              <li><a href={`${p}/about-us`}>About Us</a></li>
-              <li><a href={`${p}/global-partnership-program`}>Partner Program</a></li>
-              <li><a href={`${p}/article/privacy-policy`}>Privacy Policy</a></li>
-              <li><a href={`${p}/article/cookie-consent`}>Cookie Consent</a></li>
+              {FOOTER_COMPANY.map((l) => (
+                <li key={l.href}><Link href={navHref(locale, l.href)}>{l.label}</Link></li>
+              ))}
             </ul>
             <h4 style={{ marginTop: 24 }}>Memberships</h4>
-            <div className="jb-payment-row">
-              {['WYVERN', 'ACA', 'NBAA', 'EBAA', 'AsBAA', 'BBGA'].map((m) => (
-                <span key={m} className="jb-pay-badge">{m}</span>
+            <div className="jb-membership-row">
+              {JB.membership.map((m) => (
+                <CdnImage key={m.alt} src={m.src} alt={m.alt} width={72} height={40} className="jb-member-img" />
               ))}
             </div>
           </div>
         </div>
         <div className="jb-footer-bottom">
-          <span>© 2026 J-TA Inc. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} J-TA Inc. All rights reserved.</span>
           <div className="jb-social">
-            <a href="#">Instagram</a>
-            <a href="#">LinkedIn</a>
-            <a href="#">YouTube</a>
-            <a href="#">TikTok</a>
+            {JB.social.map((s) => (
+              <a key={s.alt} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.alt}>
+                <CdnImage src={s.src} alt={s.alt} width={24} height={24} className="jb-social-icon" />
+              </a>
+            ))}
           </div>
         </div>
       </div>

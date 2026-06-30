@@ -19,7 +19,7 @@ export default function EmptyLegsPage() {
             slug: String(el.slug),
             route: `${(el.fromAirport as { iata: string })?.iata ?? '?'} → ${(el.toAirport as { iata: string })?.iata ?? '?'}`,
             discount: el.discountPct != null ? `${el.discountPct}%` : '—',
-            price: el.priceUsd != null ? `USD ${Number(el.priceUsd).toLocaleString()}` : '—',
+            price: el.price != null ? `USD ${Number(el.price).toLocaleString()}` : '—',
           })),
         );
       })

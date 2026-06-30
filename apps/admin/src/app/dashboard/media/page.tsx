@@ -1,36 +1,15 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+'use client';
 
-export default function Page(props: any) {
+import { SectionTitle, Muted } from '@j-ta/ui';
+import { AdminShell } from '../../../components/AdminShell';
+
+export default function MediaAdminPage() {
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>Manage Media Library</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Admin Dashboard route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/admin/src/app/dashboard/media/page.tsx</code>
-      </div>
-    </div>
+    <AdminShell active="/dashboard/media">
+      <SectionTitle>Media Library</SectionTitle>
+      <Muted>
+        Media assets use JETBAY CDN URLs configured in the web app. Upload integration (MinIO) is planned for a future sprint.
+      </Muted>
+    </AdminShell>
   );
 }

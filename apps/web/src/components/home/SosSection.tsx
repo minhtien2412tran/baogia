@@ -1,3 +1,6 @@
+import { JB } from '../../config/jetbay-cdn';
+import { CdnImage } from '../ui/CdnImage';
+
 export function SosSection({ locale }: { locale: string }) {
   const p = `/${locale}`;
   return (
@@ -16,7 +19,9 @@ export function SosSection({ locale }: { locale: string }) {
               <a href={`${p}/air-ambulance`} className="jb-btn-outline">Learn About J-TA SOS</a>
             </div>
           </div>
-          <div className="jb-split-visual">[Image: Medical air assistance]</div>
+          <div className="jb-split-visual jb-split-visual-img">
+            <CdnImage src={JB.sections.sos} alt="Medical air assistance" fill className="jb-cover-img" sizes="(max-width: 768px) 100vw, 50vw" />
+          </div>
         </div>
       </div>
     </section>

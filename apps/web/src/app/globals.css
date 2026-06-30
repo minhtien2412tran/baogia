@@ -1,6 +1,8 @@
 :root {
   --background: #0a0c0f;
   --foreground: #ffffff;
+  --jb-gold: #c9a45c;
+  --jb-text-muted: #9aa3b2;
 }
 
 html {

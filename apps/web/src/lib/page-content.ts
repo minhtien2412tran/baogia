@@ -1,7 +1,28 @@
+import { JB } from '../config/jetbay-cdn';
+
 export type PageSection = {
   heading: string;
   body: string;
   bullets?: string[];
+};
+
+export type PageFeature = {
+  icon: string;
+  title: string;
+  body?: string;
+};
+
+export type PageStep = {
+  title: string;
+  body: string;
+  image?: string;
+};
+
+export type PagePromo = {
+  image: string;
+  title: string;
+  href: string;
+  cta: string;
 };
 
 export type PageContent = {
@@ -9,19 +30,35 @@ export type PageContent = {
   description: string;
   hero: string;
   tag?: string;
+  heroImage?: string;
+  showQuoteWidget?: boolean;
   sections: PageSection[];
+  features?: PageFeature[];
+  steps?: PageStep[];
+  promoBanners?: PagePromo[];
   cta?: { label: string; href: string };
 };
 
 export const PAGE_CONTENT: Record<string, PageContent> = {
   'private-jet-charter': {
-    title: 'Private Jet Charter',
+    title: 'Private Jets for Every Need',
     description: 'On-demand private jet charter with 10,000+ aircraft and 24/7 concierge support.',
-    hero: 'Fly on your schedule with global access to vetted operators and premium cabins.',
+    hero: 'J-TA\'s private air charter service combines luxury, efficiency, and safety at the best value.',
     tag: 'Charter',
+    heroImage: JB.pages.privateJetCharter.hero,
+    showQuoteWidget: true,
+    features: JB.pages.privateJetCharter.highlights.map((h) => ({
+      icon: h.icon,
+      title: h.title,
+      body: 'Trusted global network with premium service standards.',
+    })),
+    promoBanners: [
+      { image: JB.pages.privateJetCharter.jetCardPromo, title: 'J-TA Jet Card', href: '/jet-card', cta: 'Explore Jet Card' },
+      { image: JB.pages.privateJetCharter.creditPromo, title: 'Travel Credits', href: '/travel-credit', cta: 'Learn More' },
+    ],
     sections: [
       {
-        heading: 'Why charter with J-TA',
+        heading: 'Private jet services we offer',
         body: 'From single legs to complex multi-city itineraries, our team matches you with the right aircraft category and operator.',
         bullets: [
           'Light, midsize, heavy and ultra-long-range options',
@@ -43,6 +80,8 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
     description: 'Executive private aviation for teams, roadshows, and time-critical business travel.',
     hero: 'Maximize productivity with point-to-point flights tailored to your corporate schedule.',
     tag: 'Charter',
+    heroImage: JB.pages.corporate.hero,
+    showQuoteWidget: true,
     sections: [
       {
         heading: 'Built for business',
@@ -57,6 +96,8 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
     description: 'Private jets for sports teams, delegations, weddings, and large groups.',
     hero: 'Move your group together with coordinated departures and flexible cabin configurations.',
     tag: 'Charter',
+    heroImage: JB.pages.privateJetCharter.hero,
+    showQuoteWidget: true,
     sections: [
       {
         heading: 'Group solutions',
@@ -71,6 +112,8 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
     description: 'VIP air transport for concerts, festivals, sporting events, and exclusive gatherings.',
     hero: 'Arrive on time and in style — we handle logistics so you can focus on the event.',
     tag: 'Charter',
+    heroImage: JB.pages.privateJetCharter.banner,
+    showQuoteWidget: true,
     sections: [
       {
         heading: 'Event expertise',
@@ -85,6 +128,8 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
     description: 'Safe, comfortable private jet travel for you and your pets.',
     hero: 'Your companions fly in the cabin with you — no cargo hold, no stress.',
     tag: 'Charter',
+    heroImage: JB.pages.privateJetCharter.service1,
+    showQuoteWidget: true,
     sections: [
       {
         heading: 'Pet-friendly charter',
@@ -99,6 +144,7 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
     description: 'A leading global private jet charter platform connecting clients to 10,000+ aircraft.',
     hero: 'Seamless, trusted access to private aviation worldwide.',
     tag: 'Company',
+    heroImage: JB.pages.about.hero,
     sections: [
       {
         heading: 'Our mission',
@@ -114,9 +160,10 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
   },
   'global-partnership-program': {
     title: 'Global Partner Program',
-    description: 'Join J-TA\'s referral network — no aviation experience required.',
+    description: "Join J-TA's referral network — no aviation experience required.",
     hero: 'Refer clients, earn commissions, and leverage our global fleet and support infrastructure.',
     tag: 'Partner',
+    heroImage: JB.pages.partner.service,
     sections: [
       {
         heading: 'Partner benefits',
@@ -124,13 +171,19 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
         bullets: ['Dedicated partner portal', 'Marketing assets & training', 'Global fleet access', '24/7 operations support'],
       },
     ],
-    cta: { label: 'Become a Partner', href: '/private-jet-charter' },
+    cta: { label: 'Become a Partner', href: '/register' },
   },
   'air-ambulance': {
     title: 'J-TA SOS — Medical Air Assistance',
     description: '24/7 rapid-response medical evacuation and air ambulance services.',
     hero: 'When every minute counts, our SOS team coordinates bed-to-bed medical transfers worldwide.',
     tag: 'Emergency',
+    heroImage: JB.pages.airAmbulance.hero,
+    showQuoteWidget: true,
+    features: JB.pages.airAmbulance.equipment.map((icon, i) => ({
+      icon,
+      title: ['Certified Pilots', 'Medical Doctors', 'Paramedics', 'Medical Equipment'][i] ?? 'Medical Team',
+    })),
     sections: [
       {
         heading: '24/7 emergency response',
@@ -145,31 +198,22 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
     description: 'Your guide to chartering a private jet with J-TA.',
     hero: 'From search to wheels-up in four simple steps.',
     tag: 'Guide',
-    sections: [
-      {
-        heading: 'Step 1 — Search',
-        body: 'Enter your route, dates, and passengers. Our system matches available aircraft categories instantly.',
-      },
-      {
-        heading: 'Step 2 — Quote',
-        body: 'Receive transparent pricing from vetted operators. Our team refines options to your preferences.',
-      },
-      {
-        heading: 'Step 3 — Confirm',
-        body: 'Review itinerary, sign agreement, and arrange payment. Concierge handles catering, ground transport, and permits.',
-      },
-      {
-        heading: 'Step 4 — Fly',
-        body: 'Arrive at the FBO, board your aircraft, and enjoy a seamless private aviation experience.',
-      },
+    heroImage: JB.homeBg,
+    steps: [
+      { title: 'Search', body: 'Enter your route, dates, and passengers. Our system matches available aircraft categories instantly.', image: JB.pages.bookingProcess.steps[0] },
+      { title: 'Quote', body: 'Receive transparent pricing from vetted operators. Our team refines options to your preferences.', image: JB.pages.bookingProcess.steps[1] },
+      { title: 'Confirm', body: 'Review itinerary, sign agreement, and arrange payment. Concierge handles catering, ground transport, and permits.', image: JB.pages.bookingProcess.steps[2] },
+      { title: 'Fly', body: 'Arrive at the FBO, board your aircraft, and enjoy a seamless private aviation experience.', image: JB.pages.bookingProcess.steps[3] },
     ],
-    cta: { label: 'Start a Search', href: '/' },
+    sections: [],
+    cta: { label: 'Start a Search', href: '/private-jet-charter' },
   },
   'jetbay-private-jet-app': {
     title: 'J-TA Private Jet App',
     description: 'Book and manage private jet travel from your mobile device.',
     hero: 'Search routes, track quotes, and manage trips — anywhere in the world.',
     tag: 'App',
+    heroImage: JB.pages.app.hero,
     sections: [
       {
         heading: 'Features',
@@ -177,13 +221,15 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
         bullets: ['Instant route search', 'Push notifications for quotes', 'Trip history & documents', '24/7 chat support'],
       },
     ],
-    cta: { label: 'Download Coming Soon', href: '/' },
+    cta: { label: 'Download on App Store', href: '/jetbay-private-jet-app' },
   },
   'world-cup-2026-private-jet-booking': {
     title: 'World Cup 2026 Private Jet Booking',
     description: 'Fly to every FIFA World Cup 2026 match with private jet charter.',
     hero: 'Skip the crowds — direct flights to host cities across North America.',
     tag: 'Campaign',
+    heroImage: JB.pages.worldCup.hero,
+    showQuoteWidget: true,
     sections: [
       {
         heading: 'Match-day travel',
@@ -198,6 +244,8 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
     description: 'Arrive in style for the FIFA World Cup Final 2026.',
     hero: 'Premium private aviation for the biggest match on earth.',
     tag: 'Campaign',
+    heroImage: JB.promo.worldCup.desktop,
+    showQuoteWidget: true,
     sections: [
       {
         heading: 'Final match packages',

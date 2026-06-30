@@ -1,8 +1,9 @@
-import Link from 'next/link';
-import { SubPageLayout } from '../../../../components/layout/SubPageLayout';
+import { SlugDetailLayout, SlugHeroImage } from '../../../../components/layout/SlugDetailLayout';
+import { LightSection } from '../../../../components/layout/LightSection';
+import { QuoteSearchWidget } from '../../../../components/QuoteSearchWidget';
 import { api, safeApi } from '../../../../lib/api';
 import { buildMetadata } from '../../../../lib/metadata';
-import { navHref } from '../../../../config/navigation';
+import { JB } from '../../../../config/jetbay-cdn';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -23,23 +24,42 @@ export default async function NewsArticlePage({
 
   if (!article) {
     return (
-      <SubPageLayout locale={locale} title="Article not found">
-        <Link href={navHref(locale, '/news')} className="jb-link-gold">← News</Link>
-      </SubPageLayout>
+      <SlugDetailLayout
+        locale={locale}
+        title="Article not found"
+        breadcrumb={[{ label: 'Home', href: '' }, { label: 'News', href: '/news' }, { label: 'Not found' }]}
+        backHref="/news"
+        backLabel="News"
+      >
+        <p>This article is no longer available.</p>
+      </SlugDetailLayout>
     );
   }
 
+  const thumb = article.thumbnail ? String(article.thumbnail) : JB.pages.newsDefault;
+  const publishedAt = String(article.publishedAt ?? '');
+
   return (
-    <SubPageLayout
-      locale={locale}
-      title={String(article.title)}
-      tag="News"
-      breadcrumb={[{ label: 'Home', href: '' }, { label: 'News', href: '/news' }, { label: String(article.title) }]}
-    >
-      <article className="jb-content-block">
-        <p className="jb-section-desc">{String(article.publishedAt ?? '').slice(0, 10)}</p>
-        <div className="jb-prose">{String(article.body ?? article.excerpt ?? '')}</div>
-      </article>
-    </SubPageLayout>
+    <>
+      <SlugDetailLayout
+        locale={locale}
+        title={String(article.title)}
+        tag="News"
+        heroImage={thumb}
+        publishedAt={publishedAt}
+        excerpt={String(article.excerpt ?? '')}
+        breadcrumb={[{ label: 'Home', href: '' }, { label: 'News', href: '/news' }, { label: String(article.title) }]}
+        backHref="/news"
+        backLabel="All News"
+        footer={
+          <LightSection title="Ready to fly?" subtitle="Search available aircraft for your next journey.">
+            <QuoteSearchWidget locale={locale} />
+          </LightSection>
+        }
+      >
+        <SlugHeroImage src={thumb} alt={String(article.title)} />
+        <div className="jb-prose jb-slug-prose">{String(article.body ?? article.excerpt ?? '')}</div>
+      </SlugDetailLayout>
+    </>
   );
 }

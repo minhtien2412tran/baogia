@@ -1,7 +1,9 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { api } from '../lib/api';
+import { JB, localAsset } from '../config/jetbay-cdn';
 import { AirportInput } from './AirportInput';
 
 type TripType = 'ONE_WAY' | 'ROUND_TRIP' | 'MULTI_CITY';
@@ -30,7 +32,13 @@ function defaultLeg(): Leg {
   };
 }
 
-export function QuoteSearchWidget({ locale = 'en', currency = 'USD' }: { locale?: string; currency?: string }) {
+function CdnIcon({ src, alt = '' }: { src: string; alt?: string }) {
+  return (
+    <Image src={localAsset(src)} alt={alt} width={20} height={20} unoptimized className="jb-field-icon" />
+  );
+}
+
+export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { locale?: string; currency?: string }) {
   const [tripType, setTripType] = useState<TripType>('ONE_WAY');
   const [legs, setLegs] = useState<Leg[]>([defaultLeg()]);
   const [returnDate, setReturnDate] = useState(() => {
@@ -146,7 +154,7 @@ export function QuoteSearchWidget({ locale = 'en', currency = 'USD' }: { locale?
               <div className="jb-leg-header">
                 <span>Leg {idx + 1}</span>
                 <button type="button" className="jb-leg-remove" onClick={() => removeLeg(idx)}>
-                  Remove
+                  <CdnIcon src={JB.icons.minus} alt="Remove leg" />
                 </button>
               </div>
             )}
@@ -159,7 +167,7 @@ export function QuoteSearchWidget({ locale = 'en', currency = 'USD' }: { locale?
                 placeholder="Departure city or airport"
               />
               <button type="button" className="jb-swap-btn" onClick={() => swapLeg(idx)} aria-label="Swap airports">
-                ⇄
+                <CdnIcon src={JB.icons.swap} alt="Swap" />
               </button>
               <AirportInput
                 id={`to-${idx}`}
@@ -168,23 +176,30 @@ export function QuoteSearchWidget({ locale = 'en', currency = 'USD' }: { locale?
                 onChange={(iata) => updateLeg(idx, { to: iata })}
                 placeholder="Destination city or airport"
               />
-              <div className="jb-field">
+              <div className="jb-field jb-field-icon-wrap">
                 <label htmlFor={`dep-${idx}`}>Departure (Local)</label>
-                <input
-                  id={`dep-${idx}`}
-                  type="date"
-                  value={leg.departure}
-                  onChange={(e) => updateLeg(idx, { departure: e.target.value })}
-                  required
-                />
+                <div className="jb-input-with-icon">
+                  <CdnIcon src={JB.icons.calendar} alt="" />
+                  <input
+                    id={`dep-${idx}`}
+                    type="date"
+                    value={leg.departure}
+                    onChange={(e) => updateLeg(idx, { departure: e.target.value })}
+                    required
+                  />
+                </div>
               </div>
               {idx === 0 && (
                 <div className="jb-field">
                   <label>Passengers</label>
                   <div className="jb-pax-control">
-                    <button type="button" className="jb-pax-btn" onClick={() => setPassengers((p) => Math.max(1, p - 1))}>−</button>
+                    <button type="button" className="jb-pax-btn" onClick={() => setPassengers((p) => Math.max(1, p - 1))} aria-label="Decrease passengers">
+                      <CdnIcon src={JB.icons.minus} alt="" />
+                    </button>
                     <span className="jb-pax-value">{passengers}</span>
-                    <button type="button" className="jb-pax-btn" onClick={() => setPassengers((p) => Math.min(16, p + 1))}>+</button>
+                    <button type="button" className="jb-pax-btn" onClick={() => setPassengers((p) => Math.min(16, p + 1))} aria-label="Increase passengers">
+                      <CdnIcon src={JB.icons.plus} alt="" />
+                    </button>
                   </div>
                 </div>
               )}
@@ -193,22 +208,26 @@ export function QuoteSearchWidget({ locale = 'en', currency = 'USD' }: { locale?
         ))}
 
         {tripType === 'ROUND_TRIP' && (
-          <div className="jb-field" style={{ maxWidth: 220, marginTop: 12 }}>
+          <div className="jb-field jb-field-icon-wrap" style={{ maxWidth: 260, marginTop: 12 }}>
             <label htmlFor="return">Return (Local)</label>
-            <input
-              id="return"
-              type="date"
-              value={returnDate}
-              min={legs[0]?.departure}
-              onChange={(e) => setReturnDate(e.target.value)}
-              required
-            />
+            <div className="jb-input-with-icon">
+              <CdnIcon src={JB.icons.calendar} alt="" />
+              <input
+                id="return"
+                type="date"
+                value={returnDate}
+                min={legs[0]?.departure}
+                onChange={(e) => setReturnDate(e.target.value)}
+                required
+              />
+            </div>
           </div>
         )}
 
         {tripType === 'MULTI_CITY' && (
           <button type="button" className="jb-add-leg-btn" onClick={addLeg}>
-            + Add Leg
+            <CdnIcon src={JB.icons.addLeg} alt="" />
+            Add another flight leg
           </button>
         )}
 

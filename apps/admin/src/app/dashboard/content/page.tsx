@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { SectionTitle, DataTable, Muted } from '@j-ta/ui';
 import { AdminShell } from '../../../components/AdminShell';
 import { adminApi } from '../../../lib/api';
@@ -30,7 +31,13 @@ export default function ContentPage() {
 
   return (
     <AdminShell active="/dashboard/content">
-      <SectionTitle>Content Articles</SectionTitle>
+      <SectionTitle>Content</SectionTitle>
+      <p style={{ marginBottom: 16 }}>
+        <Link href="/dashboard/content/pages" style={{ color: '#f1d99a' }}>CMS Pages (About Us, Legal) →</Link>
+        {' · '}
+        <Link href="/dashboard/content/about-us" style={{ color: '#f1d99a' }}>Edit About Us →</Link>
+      </p>
+      <SectionTitle>News & Blog Articles</SectionTitle>
       {loading ? (
         <Muted>Loading content...</Muted>
       ) : (

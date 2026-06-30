@@ -1,4 +1,13 @@
+import { jetCardArt } from '../../config/jetbay-cdn';
+import { CdnImage } from '../ui/CdnImage';
+
 type Plan = Record<string, unknown>;
+
+const PLAN_COPY: Record<number, { subtitle: string; desc: string }> = {
+  10: { subtitle: 'Occasional private flyers', desc: 'Flexibility without long-term commitment' },
+  25: { subtitle: 'Business travellers & executives', desc: 'Lower hourly rates, priority booking' },
+  50: { subtitle: 'Frequent global travellers', desc: 'Best value, ultimate convenience' },
+};
 
 export function JetCardHomeSection({ locale, plans }: { locale: string; plans: Plan[] }) {
   const p = `/${locale}`;
@@ -15,21 +24,25 @@ export function JetCardHomeSection({ locale, plans }: { locale: string; plans: P
           <div>
             <h2 className="jb-section-title">Elevate Your Travel with The J-TA Jet Card</h2>
           </div>
-          <a href={`${p}/jet-card`} className="jb-link-gold">Explore J-TA Jet Card benefits →</a>
+          <a href={`${p}/jet-card`} className="jb-link-gold">More information about Jet Card →</a>
         </div>
 
         <div className="jb-jetcard-grid">
-          {plans.map((plan) => (
-            <div key={String(plan.id)} className="jb-jetcard-item">
-              <div className="jb-jetcard-hours">{String(plan.hours)} Hour</div>
-              <div style={{ fontWeight: 600, marginBottom: 4 }}>{String(plan.name)}</div>
-              <div className="jb-jetcard-subtitle">USD {Number(plan.price).toLocaleString()}</div>
-              <p style={{ fontSize: 14, color: 'var(--jb-text-muted)', margin: '0 0 20px' }}>
-                {plan.validityYears ? `${String(plan.validityYears)} year validity · ` : ''}From USD {Number(plan.price).toLocaleString()}
-              </p>
-              <a href={`${p}/jet-card`} className="jb-unlock-link">Unlock Now ›</a>
-            </div>
-          ))}
+          {plans.map((plan) => {
+            const hours = Number(plan.hours ?? 10);
+            const copy = PLAN_COPY[hours] ?? { subtitle: String(plan.name), desc: '' };
+            return (
+              <div key={String(plan.id)} className="jb-jetcard-item">
+                <div className="jb-jetcard-art">
+                  <CdnImage src={jetCardArt(hours)} alt={`${hours} hour Jet Card`} width={280} height={160} className="jb-jetcard-img" />
+                </div>
+                <div className="jb-jetcard-hours">{hours} Hour Jet Card</div>
+                <div style={{ fontWeight: 600, marginBottom: 4 }}>{copy.subtitle}</div>
+                <div className="jb-jetcard-subtitle">{copy.desc}</div>
+                <a href={`${p}/jet-card`} className="jb-unlock-link">Unlock Now ›</a>
+              </div>
+            );
+          })}
         </div>
 
         <div className="jb-cta-row" style={{ justifyContent: 'center', marginTop: 32 }}>

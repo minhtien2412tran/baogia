@@ -1,36 +1,39 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+'use client';
 
-export default function Page(props: any) {
+import { useEffect, useState } from 'react';
+import { Card, SectionTitle, Muted, colors } from '@j-ta/ui';
+import { AdminShell } from '../../../components/AdminShell';
+import { adminApi } from '../../../lib/api';
+
+export default function SettingsAdminPage() {
+  const [health, setHealth] = useState<Record<string, unknown> | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    adminApi
+      .getHealth()
+      .then(setHealth)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>System Settings</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Admin Dashboard route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/admin/src/app/dashboard/settings/page.tsx</code>
-      </div>
-    </div>
+    <AdminShell active="/dashboard/settings">
+      <SectionTitle>System Health</SectionTitle>
+      {loading ? (
+        <Muted>Loading…</Muted>
+      ) : health ? (
+        <div style={{ display: 'grid', gap: 12, maxWidth: 480 }}>
+          {Object.entries(health).map(([k, v]) => (
+            <Card key={k}>
+              <div style={{ fontSize: 14, color: colors.textMuted }}>{k}</div>
+              <div style={{ fontSize: 18, color: colors.accent }}>{String(v)}</div>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <Muted>Unable to load health status</Muted>
+      )}
+    </AdminShell>
   );
 }

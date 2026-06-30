@@ -1,33 +1,59 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsArray,
+  IsBoolean,
+  IsEmail,
+  IsIn,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Min,
+  MinLength,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
 // --- AUTH DTOS ---
 
 export class RegisterDto {
   @ApiProperty({ example: 'user@example.com' })
+  @IsEmail()
   email: string;
 
   @ApiProperty({ example: 'Password123' })
-  password?: string;
+  @IsString()
+  @MinLength(8)
+  password: string;
 
-  @ApiProperty({ example: 'INDIVIDUAL', description: 'INDIVIDUAL or COMPANY' })
+  @ApiPropertyOptional({ example: 'INDIVIDUAL', description: 'INDIVIDUAL or COMPANY' })
+  @IsOptional()
+  @IsIn(['INDIVIDUAL', 'COMPANY'])
   accountType?: string;
 }
 
 export class LoginDto {
   @ApiProperty({ example: 'user@example.com' })
+  @IsEmail()
   email: string;
 
   @ApiProperty({ example: 'Password123' })
-  password?: string;
+  @IsString()
+  @IsNotEmpty()
+  password: string;
 }
 
 export class OAuthDto {
   @ApiProperty({ example: 'oauth-provider-token-xyz' })
+  @IsString()
+  @IsNotEmpty()
   token: string;
 }
 
 export class RefreshTokenDto {
   @ApiProperty({ example: 'refresh-token-xyz' })
+  @IsString()
+  @IsNotEmpty()
   refreshToken: string;
 }
 
@@ -35,52 +61,81 @@ export class RefreshTokenDto {
 
 export class LegDto {
   @ApiProperty({ example: 'SGN', description: 'Origin airport IATA code' })
+  @IsString()
+  @IsNotEmpty()
   fromAirport: string;
 
   @ApiProperty({ example: 'HAN', description: 'Destination airport IATA code' })
+  @IsString()
+  @IsNotEmpty()
   toAirport: string;
 
   @ApiProperty({ example: '2026-12-01T12:00:00Z' })
+  @IsString()
+  @IsNotEmpty()
   departureDate: string;
 
   @ApiProperty({ example: 4 })
+  @IsInt()
+  @Min(1)
   passengers: number;
 }
 
 export class SearchAircraftDto {
   @ApiProperty({ example: 'ONE_WAY', description: 'ONE_WAY, ROUND_TRIP, or MULTI_CITY' })
+  @IsIn(['ONE_WAY', 'ROUND_TRIP', 'MULTI_CITY'])
   tripType: string;
 
   @ApiProperty({ type: [LegDto] })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => LegDto)
   legs: LegDto[];
 
-  @ApiProperty({ example: 'en' })
+  @ApiPropertyOptional({ example: 'en' })
+  @IsOptional()
+  @IsString()
   locale?: string;
 
-  @ApiProperty({ example: 'USD' })
+  @ApiPropertyOptional({ example: 'USD' })
+  @IsOptional()
+  @IsString()
   currency?: string;
 }
 
 export class RequestQuoteDto {
   @ApiProperty({ example: 'John' })
+  @IsString()
+  @IsNotEmpty()
   firstName: string;
 
   @ApiProperty({ example: 'Doe' })
+  @IsString()
+  @IsNotEmpty()
   lastName: string;
 
   @ApiProperty({ example: 'john.doe@example.com' })
+  @IsEmail()
   email: string;
 
   @ApiProperty({ example: '+84900000000' })
+  @IsString()
+  @IsNotEmpty()
   phone: string;
 
   @ApiProperty({ type: [LegDto] })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => LegDto)
   legs: LegDto[];
 
-  @ApiProperty({ example: 'Need a pet-friendly cabin.' })
+  @ApiPropertyOptional({ example: 'Need a pet-friendly cabin.' })
+  @IsOptional()
+  @IsString()
   message?: string;
 
   @ApiProperty({ example: true })
+  @IsBoolean()
   isConsentAccepted: boolean;
 }
 
@@ -139,18 +194,26 @@ export class RedeemCreditsDto {
 
 export class PartnerApplicationDto {
   @ApiProperty({ example: 'SERVICE', description: 'SERVICE, REFERRAL, or OFFICIAL' })
+  @IsIn(['SERVICE', 'REFERRAL', 'OFFICIAL'])
   partnerType: string;
 
   @ApiProperty({ example: 'partner@example.com' })
+  @IsEmail()
   email: string;
 
   @ApiProperty({ example: '+84900000001' })
+  @IsString()
+  @IsNotEmpty()
   phone: string;
 
   @ApiPropertyOptional({ example: '+84900000001' })
+  @IsOptional()
+  @IsString()
   whatsapp?: string;
 
   @ApiPropertyOptional({ example: 'wechat_id' })
+  @IsOptional()
+  @IsString()
   wechat?: string;
 }
 
@@ -158,9 +221,12 @@ export class PartnerApplicationDto {
 
 export class SubscribeNewsletterDto {
   @ApiProperty({ example: 'news@example.com' })
+  @IsEmail()
   email: string;
 
-  @ApiProperty({ example: 'en' })
+  @ApiPropertyOptional({ example: 'en' })
+  @IsOptional()
+  @IsString()
   locale?: string;
 }
 

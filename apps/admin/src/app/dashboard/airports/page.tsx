@@ -1,36 +1,46 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+'use client';
 
-export default function Page(props: any) {
+import { useEffect, useState } from 'react';
+import { SectionTitle, DataTable, Muted } from '@j-ta/ui';
+import { AdminShell } from '../../../components/AdminShell';
+import { adminApi } from '../../../lib/api';
+
+export default function AirportsAdminPage() {
+  const [rows, setRows] = useState<Record<string, React.ReactNode>[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    adminApi
+      .getAirports()
+      .then((res) => {
+        const list = (res as { data?: unknown[] }).data ?? [];
+        setRows(
+          (list as Record<string, unknown>[]).map((a) => ({
+            iata: String(a.iata),
+            city: String(a.city),
+            country: String(a.country),
+            name: String(a.name ?? '—'),
+          })),
+        );
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>Manage Airports</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Admin Dashboard route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/admin/src/app/dashboard/airports/page.tsx</code>
-      </div>
-    </div>
+    <AdminShell active="/dashboard/airports">
+      <SectionTitle>Airports</SectionTitle>
+      {loading ? <Muted>Loading airports…</Muted> : (
+        <DataTable
+          columns={[
+            { key: 'iata', label: 'IATA' },
+            { key: 'city', label: 'City' },
+            { key: 'country', label: 'Country' },
+            { key: 'name', label: 'Name' },
+          ]}
+          rows={rows}
+        />
+      )}
+    </AdminShell>
   );
 }

@@ -1,14 +1,17 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { AdminDashboardService } from '../services/admin-dashboard.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AdminGuard } from '../auth/admin.guard';
 
 @ApiTags('Admin Dashboard')
 @Controller('admin')
+@UseGuards(JwtAuthGuard, AdminGuard)
+@ApiBearerAuth()
 export class AdminDashboardController {
   constructor(private readonly dashboard: AdminDashboardService) {}
 
   @Get('dashboard/stats')
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Dashboard overview stats' })
   getStats() {
     return this.dashboard.getStats();

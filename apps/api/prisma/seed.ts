@@ -1,21 +1,45 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
+import { aboutUsCmsJson } from '../src/constants/about-us-cms';
+import { bookingProcessCmsJson } from '../src/constants/booking-process-cms';
+import { DESTINATION_SEEDS } from '../src/constants/destination-seeds';
 
 const prisma = new PrismaClient();
+
+function hashPassword(password: string) {
+  return bcrypt.hashSync(password, 10);
+}
 
 async function main() {
   console.log('Seeding lookup tables and mock data...');
 
-  // 0. Seed demo user for bookings/auth
-  console.log('Seeding Demo User...');
+  // 0. Seed demo + admin users
+  console.log('Seeding users...');
   await prisma.user.upsert({
     where: { email: 'demo@j-ta.local' },
-    update: {},
+    update: { passwordHash: hashPassword('Demo123!'), role: 'USER' },
     create: {
       email: 'demo@j-ta.local',
+      passwordHash: hashPassword('Demo123!'),
       firstName: 'Demo',
       lastName: 'User',
       phone: '+84900000000',
       accountType: 'INDIVIDUAL',
+      role: 'USER',
+    },
+  });
+
+  await prisma.user.upsert({
+    where: { email: 'admin@j-ta.local' },
+    update: { passwordHash: hashPassword('Admin123!'), role: 'ADMIN' },
+    create: {
+      email: 'admin@j-ta.local',
+      passwordHash: hashPassword('Admin123!'),
+      firstName: 'Admin',
+      lastName: 'User',
+      phone: '+84900000001',
+      accountType: 'INDIVIDUAL',
+      role: 'ADMIN',
     },
   });
 
@@ -129,12 +153,40 @@ async function main() {
     create: { iata: 'GVA', icao: 'LSGG', name: 'Geneva Airport', city: 'Geneva', country: 'Switzerland', timezone: 'Europe/Zurich' },
   });
 
+  // US airports (jet-bay.com en-us fixed-price routes)
+  console.log('Seeding US Airports...');
+  const vny = await prisma.airport.upsert({
+    where: { iata: 'VNY' },
+    update: {},
+    create: { iata: 'VNY', icao: 'KVNY', name: 'Van Nuys Airport', city: 'Los Angeles', country: 'USA', timezone: 'America/Los_Angeles' },
+  });
+  const las = await prisma.airport.upsert({
+    where: { iata: 'LAS' },
+    update: {},
+    create: { iata: 'LAS', icao: 'KLAS', name: 'Harry Reid International Airport', city: 'Las Vegas', country: 'USA', timezone: 'America/Los_Angeles' },
+  });
+  const teb = await prisma.airport.upsert({
+    where: { iata: 'TEB' },
+    update: {},
+    create: { iata: 'TEB', icao: 'KTEB', name: 'Teterboro Airport', city: 'New York', country: 'USA', timezone: 'America/New_York' },
+  });
+  const opf = await prisma.airport.upsert({
+    where: { iata: 'OPF' },
+    update: {},
+    create: { iata: 'OPF', icao: 'KOPF', name: 'Miami-Opa Locka Executive Airport', city: 'Miami', country: 'USA', timezone: 'America/New_York' },
+  });
+  const iad = await prisma.airport.upsert({
+    where: { iata: 'IAD' },
+    update: {},
+    create: { iata: 'IAD', icao: 'KIAD', name: 'Washington Dulles International Airport', city: 'Washington', country: 'USA', timezone: 'America/New_York' },
+  });
+
   // 4. Seed Jet Card Plans
   console.log('Seeding Jet Card Plans...');
   for (const plan of [
-    { name: 'Silver Card', hours: 10, validityYears: 1, minNoticeHours: 48, dailyMinHours: 1.0, price: 50000 },
-    { name: 'Gold Card', hours: 25, validityYears: 2, minNoticeHours: 24, dailyMinHours: 1.5, price: 120000 },
-    { name: 'Platinum Card', hours: 50, validityYears: 2, minNoticeHours: 12, dailyMinHours: 1.5, price: 220000 },
+    { name: '10 Hour Jet Card', hours: 10, validityYears: 1, minNoticeHours: 48, dailyMinHours: 1.0, price: 50000 },
+    { name: '25 Hour Jet Card', hours: 25, validityYears: 2, minNoticeHours: 24, dailyMinHours: 1.5, price: 120000 },
+    { name: '50 Hour Jet Card', hours: 50, validityYears: 2, minNoticeHours: 12, dailyMinHours: 1.5, price: 220000 },
   ]) {
     const existing = await prisma.jetCardPlan.findFirst({ where: { name: plan.name } });
     if (!existing) {
@@ -168,6 +220,30 @@ async function main() {
     { slug: 'nice-to-paris', from: nce, to: lbg, region: 'Europe', options: [
       { categoryId: light.id, price: 13000, paxLimit: 8 },
       { categoryId: heavy.id, price: 33000, paxLimit: 16 },
+    ]},
+    { slug: 'los-angeles-to-las-vegas', from: vny, to: las, region: 'US', options: [
+      { categoryId: light.id, price: 12000, paxLimit: 8 },
+      { categoryId: heavy.id, price: 21000, paxLimit: 16 },
+    ]},
+    { slug: 'las-vegas-to-los-angeles', from: las, to: vny, region: 'US', options: [
+      { categoryId: light.id, price: 12000, paxLimit: 8 },
+      { categoryId: heavy.id, price: 21000, paxLimit: 16 },
+    ]},
+    { slug: 'new-york-to-miami', from: teb, to: opf, region: 'US', options: [
+      { categoryId: light.id, price: 17000, paxLimit: 8 },
+      { categoryId: heavy.id, price: 35000, paxLimit: 16 },
+    ]},
+    { slug: 'miami-to-new-york', from: opf, to: teb, region: 'US', options: [
+      { categoryId: light.id, price: 17000, paxLimit: 8 },
+      { categoryId: heavy.id, price: 35000, paxLimit: 16 },
+    ]},
+    { slug: 'new-york-to-washington', from: teb, to: iad, region: 'US', options: [
+      { categoryId: light.id, price: 12000, paxLimit: 8 },
+      { categoryId: heavy.id, price: 19000, paxLimit: 16 },
+    ]},
+    { slug: 'washington-to-new-york', from: iad, to: teb, region: 'US', options: [
+      { categoryId: light.id, price: 12000, paxLimit: 8 },
+      { categoryId: heavy.id, price: 19000, paxLimit: 16 },
     ]},
   ];
 
@@ -337,21 +413,23 @@ async function main() {
   });
 
   console.log('Seeding Destinations...');
-  const destSeeds = [
-    { slug: 'nassau', category: 'ISLAND', city: 'Nassau', country: 'The Bahamas', title: 'Nassau', tagline: 'Bahamas Classic' },
-    { slug: 'providenciales', category: 'ISLAND', city: 'Providenciales', country: 'Turks and Caicos', title: 'Providenciales', tagline: 'Resort Island Escape' },
-    { slug: 'st-barts', category: 'ISLAND', city: 'St. Barts', country: 'Saint Barthelemy', title: 'St. Barts', tagline: 'Iconic Boutique Island' },
-  ];
-
-  for (const d of destSeeds) {
+  for (const d of DESTINATION_SEEDS) {
     const dest = await prisma.destination.upsert({
       where: { slug: d.slug },
-      update: { isPublished: true },
+      update: {
+        category: d.category,
+        city: d.city,
+        country: d.country,
+        thumbnail: d.thumbnail,
+        isPublished: true,
+        publishedAt: new Date(),
+      },
       create: {
         slug: d.slug,
         category: d.category,
         city: d.city,
         country: d.country,
+        thumbnail: d.thumbnail,
         isPublished: true,
         publishedAt: new Date(),
       },
@@ -359,11 +437,102 @@ async function main() {
     await seedTranslation('DESTINATION', dest.id, {
       title: d.title,
       excerpt: d.tagline,
-      body: `Private jet access to ${d.city}, ${d.country}.`,
+      body: d.body,
       seoTitle: `${d.title} Private Jet Charter - J-TA`,
       seoDescription: `Fly to ${d.city} by private jet with J-TA.`,
     });
   }
+
+  console.log('Seeding World Cup matches...');
+  const wcCount = await prisma.worldCupMatch.count();
+  if (wcCount === 0) {
+    await prisma.worldCupMatch.createMany({
+      data: [
+        {
+          homeTeam: 'Brazil',
+          awayTeam: 'Argentina',
+          hostCity: 'Miami',
+          stadium: 'Hard Rock Stadium',
+          stage: 'Group',
+          matchDate: new Date('2026-06-15T20:00:00Z'),
+        },
+        {
+          homeTeam: 'USA',
+          awayTeam: 'Mexico',
+          hostCity: 'Los Angeles',
+          stadium: 'SoFi Stadium',
+          stage: 'Group',
+          matchDate: new Date('2026-06-20T18:00:00Z'),
+        },
+        {
+          homeTeam: 'France',
+          awayTeam: 'Germany',
+          hostCity: 'New York',
+          stadium: 'MetLife Stadium',
+          stage: 'Knockout',
+          matchDate: new Date('2026-07-19T20:00:00Z'),
+        },
+      ],
+    });
+  }
+
+  const termsPage = await prisma.contentArticle.upsert({
+    where: { slug: 'terms-of-service' },
+    update: { isPublished: true, publishedAt: new Date('2026-01-01') },
+    create: {
+      type: 'LEGAL',
+      slug: 'terms-of-service',
+      isPublished: true,
+      publishedAt: new Date('2026-01-01'),
+      author: 'Compliance Team',
+    },
+  });
+  await seedTranslation('ARTICLE', termsPage.id, {
+    title: 'Terms of Service',
+    body: 'These terms govern use of the J-TA private jet booking platform.',
+    seoTitle: 'Terms of Service - J-TA',
+    seoDescription: 'Platform terms and conditions.',
+  });
+
+  const aboutPage = await prisma.contentArticle.upsert({
+    where: { slug: 'about-us' },
+    update: { isPublished: true, publishedAt: new Date('2026-01-01') },
+    create: {
+      type: 'PAGE',
+      slug: 'about-us',
+      isPublished: true,
+      publishedAt: new Date('2026-01-01'),
+      author: 'J-TA Team',
+    },
+  });
+  const aboutCmsBody = aboutUsCmsJson();
+  await seedTranslation('ARTICLE', aboutPage.id, {
+    title: 'About J-TA',
+    excerpt:
+      'J-TA is a global private jet booking platform headquartered in Singapore with 6 other offices worldwide.',
+    body: aboutCmsBody,
+    seoTitle: 'About Us - J-TA',
+    seoDescription: 'Learn about J-TA private jet charter — global offices, awards, and 10,000+ aircraft.',
+  });
+
+  const bookingPage = await prisma.contentArticle.upsert({
+    where: { slug: 'booking-process' },
+    update: { isPublished: true, publishedAt: new Date('2026-01-01') },
+    create: {
+      type: 'PAGE',
+      slug: 'booking-process',
+      isPublished: true,
+      publishedAt: new Date('2026-01-01'),
+      author: 'Operations Team',
+    },
+  });
+  await seedTranslation('ARTICLE', bookingPage.id, {
+    title: 'How to Charter a Flight',
+    excerpt: 'Simple, efficient, reliable — follow four steps to book your private jet charter.',
+    body: bookingProcessCmsJson(),
+    seoTitle: 'How Booking Works - J-TA',
+    seoDescription: 'Step-by-step private jet booking guide with J-TA.',
+  });
 
   console.log('Seed execution completed successfully.');
 }

@@ -8,8 +8,9 @@ import {
   Param,
   Query,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import {
   CreateContentArticleDto,
   CreateContentPageDto,
@@ -21,9 +22,13 @@ import {
   UpdateVideoDto,
 } from '../dto';
 import { ContentService } from '../services/content.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AdminGuard } from '../auth/admin.guard';
 
 @ApiTags('Admin Content')
 @Controller('admin/content')
+@UseGuards(JwtAuthGuard, AdminGuard)
+@ApiBearerAuth()
 export class AdminContentController {
   constructor(private readonly contentService: ContentService) {}
 
@@ -151,10 +156,11 @@ export class AdminContentController {
   @ApiBearerAuth()
   @ApiQuery({ name: 'category', required: false })
   @ApiOperation({ summary: 'List destinations (admin)' })
-  listDestinations(@Query('category') category?: string, @Query('page') page?: string) {
+  listDestinations(@Query('category') category?: string, @Query('page') page?: string, @Query('limit') limit?: string) {
     return this.contentService.adminListDestinations({
       category,
       page: page ? Number(page) : 1,
+      limit: limit ? Number(limit) : undefined,
     });
   }
 

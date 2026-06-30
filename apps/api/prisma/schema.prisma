@@ -17,6 +17,7 @@ model User {
   lastName             String?
   phone                String?
   accountType          String                @default("INDIVIDUAL") // INDIVIDUAL, COMPANY
+  role                 String                @default("USER") // USER, ADMIN
   companyId            Int?
   status               String                @default("ACTIVE") // ACTIVE, SUSPENDED
   createdAt            DateTime              @default(now())

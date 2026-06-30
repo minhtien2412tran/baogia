@@ -5,15 +5,14 @@
 | Home + search | ✅ Wired | ✅ | ✅ | Review-ready |
 | Fixed Price | ✅ Wired | ✅ DB | ✅ | Review-ready |
 | Empty Legs | ✅ Wired | ✅ DB | ✅ | Review-ready |
-| Jet Card | 🟡 Skeleton | ✅ DB | ✅ | API ready |
-| Travel Credits | 🟡 Skeleton | ✅ DB | ✅ | API ready |
+| Jet Card | ✅ Wired | ✅ DB | ✅ | Review-ready |
+| Travel Credits | ✅ Wired | ✅ DB | ✅ | Review-ready |
 | News/Blogs | ✅ Wired | ✅ DB | ✅ | Review-ready |
-| Destinations | 🟡 Skeleton | ✅ DB | ✅ | API ready |
+| Destinations | ✅ Wired | ✅ DB | ✅ | Review-ready |
 | Quote request | ✅ Form | ✅ DB | ✅ | Review-ready |
-| Bookings | 🟡 Account | ✅ DB | ✅ | Partial |
-| Auth/Account | ✅ Login | ✅ DB | ✅ | Demo tokens |
-| Admin dashboard | ✅ Wired | ✅ DB | ✅ | Review-ready |
-| Partner | 🟡 Skeleton | 🟡 Mock | ✅ | Pending |
-| World Cup | 🟡 Skeleton | 🟡 Partial | — | Pending |
+| Bookings | ✅ Account | ✅ DB | ✅ | Partial |
+| Auth/Account | ✅ Login | ✅ JWT | ✅ | Review-ready |
+| Partner | ✅ Wired | ✅ DB | ✅ | Review-ready |
+| World Cup | ✅ Wired | ✅ DB | ✅ | Review-ready |
 
 **Mock / demo**: OAuth, payments, JWT (demo tokens), revenue when no payments.

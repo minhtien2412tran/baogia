@@ -6,7 +6,14 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  getRoot() {
+    return {
+      name: 'J-TA API',
+      status: 'ok',
+      swagger: '/swagger',
+      openapi: '/openapi.json',
+      apiGateway: '/api-gateway',
+      uiAudit: '/api-gateway/ui-audit',
+    };
   }
 }

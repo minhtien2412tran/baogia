@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="J-TA Private Jet Charter">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d1a24"/>
+      <stop offset="100%" stop-color="#193b43"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="80" y="280" font-family="system-ui,sans-serif" font-size="96" font-weight="700" fill="#c9a45c" letter-spacing="0.14em">J-TA</text>
+  <text x="80" y="380" font-family="system-ui,sans-serif" font-size="42" font-weight="500" fill="#f6efe2">Global Private Jet Charter</text>
+  <text x="80" y="460" font-family="system-ui,sans-serif" font-size="28" fill="#8ee4de" opacity="0.9">10,000+ aircraft · 190+ countries · 24/7 concierge</text>
+</svg>

@@ -1,36 +1,47 @@
-// J-TA Clean-room Clone UI Route
-import React from 'react';
+'use client';
 
-export default function Page(props: any) {
+import { useEffect, useState } from 'react';
+import { SectionTitle, DataTable, Muted } from '@j-ta/ui';
+import { AdminShell } from '../../../components/AdminShell';
+import { adminApi } from '../../../lib/api';
+
+export default function PartnersAdminPage() {
+  const [rows, setRows] = useState<Record<string, React.ReactNode>[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    adminApi
+      .getPartnerApplications()
+      .then((res) => {
+        setRows(
+          (res.applications as Record<string, unknown>[]).map((a) => ({
+            id: String(a.id),
+            email: String(a.email),
+            program: String(a.program),
+            status: String(a.status),
+            created: a.createdAt ? String(a.createdAt).slice(0, 10) : '—',
+          })),
+        );
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
-    <div style={{
-      padding: '40px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#f6efe2',
-      background: '#071018',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '30px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '16px',
-        background: 'rgba(255,255,255,0.03)'
-      }}>
-        <h1 style={{ color: '#f1d99a', marginBottom: '8px' }}>Manage Partners & Applications</h1>
-        <p style={{ color: '#b7b0a5', fontSize: '15px' }}>
-          This is a clean-room UI skeleton page for the J-TA Admin Dashboard route:
-        </p>
-        <code style={{
-          display: 'block',
-          padding: '12px',
-          background: '#000',
-          borderRadius: '8px',
-          color: '#8ab4ff',
-          fontSize: '13px'
-        }}>apps/admin/src/app/dashboard/partners/page.tsx</code>
-      </div>
-    </div>
+    <AdminShell active="/dashboard/partners">
+      <SectionTitle>Partner Applications</SectionTitle>
+      {loading ? <Muted>Loading applications…</Muted> : (
+        <DataTable
+          columns={[
+            { key: 'id', label: 'ID' },
+            { key: 'email', label: 'Email' },
+            { key: 'program', label: 'Program' },
+            { key: 'status', label: 'Status' },
+            { key: 'created', label: 'Submitted' },
+          ]}
+          rows={rows}
+        />
+      )}
+    </AdminShell>
   );
 }

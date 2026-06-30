@@ -1,8 +1,9 @@
-import Link from 'next/link';
-import { SubPageLayout } from '../../../../components/layout/SubPageLayout';
+import { SlugDetailLayout, SlugHeroImage } from '../../../../components/layout/SlugDetailLayout';
+import { LightSection } from '../../../../components/layout/LightSection';
+import { QuoteSearchWidget } from '../../../../components/QuoteSearchWidget';
 import { api, safeApi } from '../../../../lib/api';
 import { buildMetadata } from '../../../../lib/metadata';
-import { navHref } from '../../../../config/navigation';
+import { JB } from '../../../../config/jetbay-cdn';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -23,22 +24,38 @@ export default async function BlogPostPage({
 
   if (!post) {
     return (
-      <SubPageLayout locale={locale} title="Post not found">
-        <Link href={navHref(locale, '/blogs')} className="jb-link-gold">← Blogs</Link>
-      </SubPageLayout>
+      <SlugDetailLayout
+        locale={locale}
+        title="Post not found"
+        breadcrumb={[{ label: 'Home', href: '' }, { label: 'Blogs', href: '/blogs' }, { label: 'Not found' }]}
+        backHref="/blogs"
+        backLabel="Blogs"
+      >
+        <p>This post is no longer available.</p>
+      </SlugDetailLayout>
     );
   }
 
+  const thumb = post.thumbnail ? String(post.thumbnail) : JB.pages.newsDefault;
+
   return (
-    <SubPageLayout
+    <SlugDetailLayout
       locale={locale}
       title={String(post.title)}
       tag="Blog"
+      heroImage={thumb}
+      excerpt={String(post.excerpt ?? '')}
       breadcrumb={[{ label: 'Home', href: '' }, { label: 'Blogs', href: '/blogs' }, { label: String(post.title) }]}
+      backHref="/blogs"
+      backLabel="All Blogs"
+      footer={
+        <LightSection title="Plan your next flight" subtitle="Search available aircraft worldwide.">
+          <QuoteSearchWidget locale={locale} />
+        </LightSection>
+      }
     >
-      <article className="jb-content-block">
-        <div className="jb-prose">{String(post.body ?? post.excerpt ?? '')}</div>
-      </article>
-    </SubPageLayout>
+      <SlugHeroImage src={thumb} alt={String(post.title)} />
+      <div className="jb-prose jb-slug-prose">{String(post.body ?? post.excerpt ?? '')}</div>
+    </SlugDetailLayout>
   );
 }

@@ -1,3 +1,6 @@
+import { JB } from '../../config/jetbay-cdn';
+import { CdnImage } from '../ui/CdnImage';
+
 const WHY_CHARTER = [
   'Access 10,000+ aircraft across 1,000+ operators',
   '24/7 global concierge support',
@@ -6,12 +9,12 @@ const WHY_CHARTER = [
 ];
 
 const FEATURES = [
-  { icon: '🕐', title: '24/7 Availability', desc: 'Support is available whenever you need to fly.' },
-  { icon: '🛡️', title: 'Trusted Safety', desc: 'Flights arranged with vetted operators and high standards.' },
-  { icon: '✨', title: 'Luxury Experience', desc: 'Enjoy premium comfort, privacy, and flexibility onboard.' },
-  { icon: '🤝', title: 'Dedicated Service', desc: 'Receive attentive support throughout your journey.' },
-  { icon: '🌍', title: 'Global Network', desc: 'Fly across major cities and destinations worldwide.' },
-  { icon: '⚙️', title: 'Flexible & Tailored', desc: 'Choose flight solutions built around your travel plans.' },
+  { icon: JB.features.time, title: '24/7 Availability', desc: 'Support is available whenever you need to fly.' },
+  { icon: JB.features.safe, title: 'Trusted Safety', desc: 'Flights arranged with vetted operators and high standards.' },
+  { icon: JB.features.luxury, title: 'Luxury Experience', desc: 'Enjoy premium comfort, privacy, and flexibility onboard.' },
+  { icon: JB.features.dedicated, title: 'Dedicated Service', desc: 'Receive attentive support throughout your journey.' },
+  { icon: JB.features.global, title: 'Global Network', desc: 'Fly across major cities and destinations worldwide.' },
+  { icon: JB.features.flexible, title: 'Flexible & Tailored', desc: 'Choose flight solutions built around your travel plans.' },
 ];
 
 export function WhySections({ locale }: { locale: string }) {
@@ -32,7 +35,9 @@ export function WhySections({ locale }: { locale: string }) {
               </ul>
               <a href={`${p}/about-us`} className="jb-btn-outline">Learn More About J-TA</a>
             </div>
-            <div className="jb-split-visual">[Image: Private jet]</div>
+            <div className="jb-split-visual jb-split-visual-img">
+              <CdnImage src={JB.sections.whyCharter} alt="Private jet charter" fill className="jb-cover-img" sizes="(max-width: 768px) 100vw, 50vw" />
+            </div>
           </div>
         </div>
       </section>
@@ -47,7 +52,9 @@ export function WhySections({ locale }: { locale: string }) {
           <div className="jb-features-grid">
             {FEATURES.map((f) => (
               <div key={f.title} className="jb-feature">
-                <div className="jb-feature-icon">{f.icon}</div>
+                <div className="jb-feature-icon">
+                  <CdnImage src={f.icon} alt="" width={40} height={40} className="jb-cdn-icon" />
+                </div>
                 <h3>{f.title}</h3>
                 <p>{f.desc}</p>
               </div>

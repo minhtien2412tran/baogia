@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { SubPageLayout } from '../../../../components/layout/SubPageLayout';
+import { EmptyLegRequestForm } from '../../../../components/forms/EmptyLegRequestForm';
 import { api, safeApi } from '../../../../lib/api';
 import { buildMetadata } from '../../../../lib/metadata';
 import { navHref } from '../../../../config/navigation';
@@ -45,9 +46,7 @@ export default async function EmptyLegDetailPage({
         <p><strong>Departure:</strong> {String(el.departAt ?? '').slice(0, 16)}</p>
         <p><strong>Price:</strong> USD {Number(el.price).toLocaleString()} ({String(el.discountPct)}% discount)</p>
       </div>
-      <div className="jb-cta-row">
-        <Link href={navHref(locale, '/')} className="jb-btn-primary">Request This Empty Leg</Link>
-      </div>
+      <EmptyLegRequestForm emptyLegId={Number(el.id)} />
     </SubPageLayout>
   );
 }
