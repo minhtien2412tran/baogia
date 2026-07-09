@@ -67,5 +67,12 @@ Once running:
 - **Public Website**: [http://localhost:3000](http://localhost:3000)
 - **Admin Dashboard**: [http://localhost:3001](http://localhost:3001)
 - **Backend API**: [http://localhost:4000](http://localhost:4000)
-- **Swagger Documentation**: [http://localhost:4000/swagger](http://localhost:4000/swagger)
-- **OpenAPI JSON Spec**: [http://localhost:4000/openapi.json](http://localhost:4000/openapi.json)
+- **Swagger (local)**: [http://localhost:4000/swagger](http://localhost:4000/swagger)
+- **Swagger (prod)**: [https://docs.minhtien.online/swagger](https://docs.minhtien.online/swagger)
+- **API docs**: [docs/API.md](./docs/API.md) · **Secrets**: [docs/SECURITY_SECRETS.md](./docs/SECURITY_SECRETS.md)
+
+Local API env (random secrets, do not commit):
+
+```bash
+node scripts/generate-local-env.mjs
+```

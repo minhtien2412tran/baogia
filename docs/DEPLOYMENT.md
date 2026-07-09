@@ -27,49 +27,30 @@ pnpm --filter admin start         # :3001
 
 ## Environment variables
 
-### API (`apps/api/.env`)
+**Never commit `.env`.** See [SECURITY_SECRETS.md](./SECURITY_SECRETS.md).
 
-See `apps/api/.env.example` for the full list. Minimum production set:
+### Local API
 
-```
-DATABASE_URL=postgresql://...
-REDIS_URL=redis://...
-MINIO_ENDPOINT=...
-MINIO_ACCESS_KEY=...
-MINIO_SECRET_KEY=...
-MINIO_BUCKET=jta-uploads
-SMTP_HOST=...
-SMTP_PORT=587
-SMTP_FROM="J-TA <noreply@yourdomain.com>"
-JWT_SECRET=<strong-random-secret>
-CORS_ORIGIN=https://yourdomain.com,https://admin.yourdomain.com
-API_PUBLIC_URL=https://api.yourdomain.com
-PAYMENT_RETURN_URL=https://yourdomain.com/en-us/account
-STRIPE_SECRET_KEY=sk_live_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-GOOGLE_CLIENT_ID=...
-APPLE_CLIENT_ID=...
-ONEPAY_MERCHANT_ID=...
-NINEPAY_MERCHANT_KEY=...
-TWILIO_ACCOUNT_SID=...   # optional SMS
-TWILIO_AUTH_TOKEN=...
-TWILIO_FROM_NUMBER=...
-PORT=4000
-NODE_ENV=production
+```bash
+node scripts/generate-local-env.mjs   # random JWT / API_KEY / PAYMENT_SECRET
+# or: cp apps/api/.env.example apps/api/.env  then replace REPLACE_WITH_*
 ```
 
-### Web (`apps/web/.env.local`)
+### Production (VPS Jet-Bay)
+
+Template: `scripts/deploy/jetbay-be/env.production.template`  
+Live file: `/var/www/jetbay-be/.env` (`chmod 600`)  
+Rotate: `bash /var/www/jetbay-be/deploy/rotate-secrets.sh`
+
+Required: `DATABASE_URL`, `JWT_SECRET`, `REFRESH_TOKEN_SECRET`, `API_KEY`, `PAYMENT_SECRET`, `HOST`, `PORT`, `CORS_ORIGIN`, `APP_ENV=production`.
+
+Prod URLs: API `https://api.minhtien.online` · Docs `https://docs.minhtien.online/swagger` · Admin `https://admin.minhtien.online`.
+
+### Web / Admin
 
 ```
-NEXT_PUBLIC_API_URL=https://api.yourdomain.com
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=...
-NEXT_PUBLIC_APPLE_CLIENT_ID=...
-```
-
-### Admin (`apps/admin/.env.local`)
-
-```
-NEXT_PUBLIC_API_URL=https://api.yourdomain.com
+# apps/web/.env.local & apps/admin/.env.local
+NEXT_PUBLIC_API_URL=https://api.minhtien.online
 ```
 
 ## Stripe webhook

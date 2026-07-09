@@ -45,12 +45,15 @@
 
 ## 3. Tài liệu / Swagger (đã public)
 
+OpenAPI title: **Jet-Bay API** · Chi tiết: [API.md](./API.md) · Secrets: [SECURITY_SECRETS.md](./SECURITY_SECRETS.md)
+
 | URL | Mục đích |
 |-----|----------|
-| https://api.minhtien.online/swagger | Swagger UI (cùng API) |
+| https://docs.minhtien.online/swagger | Swagger UI (docs host) |
+| https://api.minhtien.online/swagger | Swagger UI (API host) |
 | https://api.minhtien.online/openapi.json | OpenAPI JSON |
-| https://docs.minhtien.online/swagger | Docs subdomain (chỉ docs) |
 | https://docs.minhtien.online/openapi.json | OpenAPI JSON |
+| https://api.minhtien.online/integrations/status | Readiness (no secrets) |
 | https://docs.minhtien.online/health | Health check |
 | https://api.minhtien.online/health | Health check |
 

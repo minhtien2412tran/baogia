@@ -48,10 +48,13 @@ scripts/deploy/jetbay-be/
 ├── sync-source.sh            # Upload source từ máy dev lên VPS
 ├── deploy.sh                 # Triển khai đầy đủ (cần DEPLOY_CONFIRM)
 ├── rollback.sh               # Gỡ Jet-Bay, không đụng BE cũ
+├── rotate-secrets.sh         # Random lại JWT/DB/API secrets (không in ra)
 ├── ecosystem.config.js       # PM2
 ├── api.minhtien.online.nginx.conf
 └── env.production.template
 ```
+
+Secrets runbook: [SECURITY_SECRETS.md](./SECURITY_SECRETS.md)
 
 ---
 
@@ -136,17 +139,26 @@ Biến bắt buộc theo spec deploy + mapping Prisma:
 
 **Không** copy secret từ `/var/www/baotienweb-api/.env`.
 
+### Xoay secrets (định kỳ / sau lộ)
+
+```bash
+bash /var/www/jetbay-be/deploy/rotate-secrets.sh
+```
+
+Script random `JWT_SECRET`, `REFRESH_TOKEN_SECRET`, `API_KEY`, `PAYMENT_SECRET`, password `jetbay_user` + `DATABASE_URL`; backup `.env` vào `/root/backups/jetbay-secrets-*`; **không in secret**; restart PM2; truncate refresh tokens (user phải login lại).
+
 ---
 
 ## Vận hành sau deploy
 
 | Thao tác | Lệnh |
 |----------|------|
-| Xem status | `pm2 status` |
-| Restart | `pm2 restart jetbay-be` |
-| Logs | `pm2 logs jetbay-be --lines 100` |
+| Xem status | `node /usr/lib/node_modules/pm2/bin/pm2 status` |
+| Restart | `node /usr/lib/node_modules/pm2/bin/pm2 restart jetbay-be --update-env` |
+| Logs | `node /usr/lib/node_modules/pm2/bin/pm2 logs jetbay-be --lines 100` |
 | Health local | `curl http://127.0.0.1:3010/health` |
 | Health public | `curl https://api.minhtien.online/health` |
+| Rotate secrets | `bash /var/www/jetbay-be/deploy/rotate-secrets.sh` |
 
 ---
 
@@ -190,19 +202,14 @@ Rollback sẽ:
 
 ---
 
-## API routes (đề xuất)
-
-Prefix `/api/v1`: `auth`, `users`, `profile`, `flights`, `bookings`, `orders`, `payments`, `notifications`, `admin`, `uploads`, `settings`, `webhooks`
-
-(Các route hiện có trong NestJS app — map theo controller hiện tại khi tích hợp frontend.)
-
 ## Docs / Swagger / DKIM
 
-Xem **[JETBAY_VPS_AUDIT_RESTRUCTURE.md](./JETBAY_VPS_AUDIT_RESTRUCTURE.md)** và **[DKIM_minhtien.online.txt](./DKIM_minhtien.online.txt)**.
+Chi tiết: [API.md](./API.md) · [JETBAY_VPS_AUDIT_RESTRUCTURE.md](./JETBAY_VPS_AUDIT_RESTRUCTURE.md)
 
-| URL | Trạng thái |
-|-----|------------|
-| https://api.minhtien.online/swagger | OK |
-| https://docs.minhtien.online/swagger | OK |
-| https://api.minhtien.online/openapi.json | OK |
-| DKIM DNS `default._domainkey` | Cần paste trên P.A Vietnam |
+| URL | Ghi chú |
+|-----|---------|
+| https://docs.minhtien.online/swagger | Swagger UI (Jet-Bay API) |
+| https://api.minhtien.online/swagger | Cùng document qua API host |
+| https://api.minhtien.online/openapi.json | OpenAPI 3 JSON |
+| https://api.minhtien.online/integrations/status | Readiness flags, không lộ secret |
+| DKIM `default._domainkey` | Đã cấu hình DNS `minhtien.online` |

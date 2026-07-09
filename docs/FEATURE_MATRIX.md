@@ -1,12 +1,14 @@
 # Feature Matrix
 
-**Cập nhật:** 2026-07-09
+**Cập nhật:** 2026-07-09  
+**Prod API:** https://api.minhtien.online · **Admin:** https://admin.minhtien.online/login  
+**Checklist:** [JETBAY_DELIVERY_CHECKLIST.md](./JETBAY_DELIVERY_CHECKLIST.md)
 
 | Feature | Web UI | API | Database | Status |
 |---------|--------|-----|----------|--------|
-| Home + search | ✅ | ✅ | ✅ QuoteRequest | Production-ready |
-| Fixed Price | ✅ CRUD admin | ✅ DB | ✅ | Production-ready |
-| Empty Legs | ✅ CRUD admin | ✅ DB | ✅ | Production-ready |
+| Home + search | ✅ | ✅ prod seed | ✅ QuoteRequest | Production-ready |
+| Fixed Price | ✅ CRUD admin | ✅ DB (12 routes) | ✅ | Production-ready |
+| Empty Legs | ✅ CRUD admin | ✅ DB (2 offers) | ✅ | Production-ready |
 | Jet Card | ✅ Account + admin | ✅ DB | ✅ | Production-ready |
 | Travel Credits | ✅ Account | ✅ DB | ✅ | Production-ready |
 | News/Blogs | ✅ + article editor | ✅ CMS | ✅ ContentArticle | Production-ready |
@@ -22,5 +24,6 @@
 | Aircraft admin | ✅ CRUD | ✅ DB | ✅ AircraftModel | Production-ready |
 | i18n | 🟡 Nav/account only | ✅ locale param | — | Partial |
 | Redis cache | — | 🟡 Service only | — | Optional next |
+| VPS deploy API/Admin | — | ✅ PM2 3010/3011 | ✅ jetbay_db | Live |
 
-**Mock / cần cấu hình production:** OnePay/9Pay sandbox keys, Twilio/ESMS SMS, Stripe live keys, Apple/Google OAuth domain verify.
+**Mock / cần cấu hình production:** OnePay/9Pay sandbox keys, Twilio/ESMS SMS, Stripe live keys, Apple/Google OAuth domain verify — xem [JETBAY_G4_INTEGRATIONS.md](./JETBAY_G4_INTEGRATIONS.md).

@@ -112,7 +112,6 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
         email: email || 'guest@example.com',
         phone: phone || '+10000000000',
         isConsentAccepted: true,
-        tripType,
         legs: buildApiLegs(),
       });
       setResult(quote.message);

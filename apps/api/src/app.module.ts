@@ -51,6 +51,7 @@ import { AdminUsersService } from './services/admin-users.service';
 import { StorageService } from './services/storage.service';
 import { RedisService } from './services/redis.service';
 import { AircraftService } from './services/aircraft.service';
+import { IntegrationsStatusService } from './services/integrations-status.service';
 import { JwtStrategy } from './auth/jwt.strategy';
 
 @Module({
@@ -120,6 +121,7 @@ import { JwtStrategy } from './auth/jwt.strategy';
     StorageService,
     RedisService,
     AircraftService,
+    IntegrationsStatusService,
     JwtStrategy,
   ],
 })
