@@ -6,6 +6,7 @@ import { MEGA_MENU, QUICK_LINKS, navHref, navLinkIcon } from '../../config/navig
 import { JB } from '../../config/jetbay-cdn';
 import { CdnImage } from '../ui/CdnImage';
 import { LocaleCurrencySelector } from './LocaleCurrencySelector';
+import { t } from '../../lib/i18n';
 
 export function JetBayHeader({ locale, currency = 'USD' }: { locale: string; currency?: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -30,7 +31,7 @@ export function JetBayHeader({ locale, currency = 'USD' }: { locale: string; cur
             <span className="jb-menu-icon" aria-hidden>
               <CdnImage src={JB.globalIcon} alt="" width={20} height={20} className="jb-header-icon" />
             </span>
-            <span className="jb-menu-label jb-hide-mobile">Menu</span>
+            <span className="jb-menu-label jb-hide-mobile">{t(locale, 'menu')}</span>
           </button>
           <Link href={navHref(locale, '')} className="jb-logo-link">
             <CdnImage src={JB.logo} alt="J-TA" width={120} height={32} className="jb-logo-img" priority />
@@ -55,10 +56,10 @@ export function JetBayHeader({ locale, currency = 'USD' }: { locale: string; cur
           </nav>
           <div className="jb-header-actions">
             <LocaleCurrencySelector locale={locale} currency={currency} />
-            <Link href={navHref(locale, '/login')} className="jb-header-link jb-hide-mobile">Log In</Link>
+            <Link href={navHref(locale, '/login')} className="jb-header-link jb-hide-mobile">{t(locale, 'login')}</Link>
             <Link href={navHref(locale, '/private-jet-charter')} className="jb-btn-contact">
               <CdnImage src={JB.callIcon} alt="" width={16} height={16} className="jb-header-icon-sm" />
-              Contact Us
+              {t(locale, 'contactUs')}
             </Link>
           </div>
         </div>

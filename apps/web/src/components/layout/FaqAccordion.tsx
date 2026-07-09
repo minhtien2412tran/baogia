@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-export function FaqAccordion({ items }: { items: { q: string; a: string }[] }) {
+export function FaqAccordion({ items }: { items: ReadonlyArray<{ q: string; a: string }> }) {
   const [open, setOpen] = useState<number | null>(0);
 
   return (

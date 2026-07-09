@@ -1,9 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { StorageService } from './storage.service';
+import { RedisService } from './redis.service';
 
 @Injectable()
 export class AdminDashboardService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly storage: StorageService,
+    private readonly redis: RedisService,
+  ) {}
 
   async getStats() {
     const [users, bookings, quotes, partners, articles] = await Promise.all([
@@ -111,13 +117,15 @@ export class AdminDashboardService {
     } catch {
       dbStatus = 'error';
     }
+    const minioStatus = await this.storage.ping();
+    const redisStatus = await this.redis.ping();
     return {
       status: dbStatus === 'ok' ? 'healthy' : 'degraded',
       services: {
         api: { status: 'ok', uptime: process.uptime() },
         database: { status: dbStatus },
-        redis: { status: 'not_configured' },
-        minio: { status: 'not_configured' },
+        redis: { status: redisStatus },
+        minio: { status: minioStatus },
       },
       timestamp: new Date().toISOString(),
     };

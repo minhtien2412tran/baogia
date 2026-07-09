@@ -51,6 +51,18 @@ To run all applications (`web`, `admin`, `api`) in parallel for development:
 pnpm dev
 ```
 
+### QA / CI (theo `docs/SPRINT_PROMPTS.md`)
+```bash
+pnpm qa:ci          # prisma generate + build all + API unit tests
+pnpm test:e2e       # Playwright (cần pnpm dev đang chạy)
+```
+
+### Demo credentials (sau `pnpm --filter api prisma:seed`)
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@j-ta.local | Admin123! |
+| User | demo@j-ta.local | Demo123! |
+
 Once running:
 - **Public Website**: [http://localhost:3000](http://localhost:3000)
 - **Admin Dashboard**: [http://localhost:3001](http://localhost:3001)

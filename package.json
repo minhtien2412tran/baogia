@@ -10,6 +10,7 @@
     "test": "pnpm --filter \"*\" test",
     "test:api": "pnpm --filter api test",
     "test:e2e": "playwright test",
+    "qa:ci": "pnpm --filter api prisma:generate && pnpm --filter api build && pnpm --filter api test && pnpm --filter admin build && pnpm --filter web build",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "assets:jetbay": "node scripts/download-jetbay-assets.mjs",

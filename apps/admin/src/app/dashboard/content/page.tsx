@@ -2,15 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { SectionTitle, DataTable, Muted } from '@j-ta/ui';
+import { SectionTitle, DataTable, Muted, Button } from '@j-ta/ui';
 import { AdminShell } from '../../../components/AdminShell';
+import { ActionBtn } from '../../../components/AdminFormFields';
 import { adminApi } from '../../../lib/api';
 
 export default function ContentPage() {
   const [rows, setRows] = useState<Record<string, React.ReactNode>[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  function load() {
+    setLoading(true);
     adminApi
       .getArticles()
       .then((res) => {
@@ -18,26 +20,42 @@ export default function ContentPage() {
         setRows(
           articles.map((a) => ({
             id: String(a.id),
+            title: String(a.title ?? a.slug),
             slug: String(a.slug),
-            type: String(a.contentType ?? 'article'),
-            published: a.isPublished ? 'yes' : 'no',
-            title: String((a.translations as Array<{ title: string }>)?.[0]?.title ?? a.slug),
+            type: String(a.type ?? 'article'),
+            published: String(a.status ?? 'draft'),
+            actions: (
+              <ActionBtn onClick={() => { window.location.href = `/dashboard/content/articles/${a.id}`; }}>
+                Edit
+              </ActionBtn>
+            ),
           })),
         );
       })
       .catch(console.error)
       .finally(() => setLoading(false));
+  }
+
+  useEffect(() => {
+    load();
   }, []);
 
   return (
     <AdminShell active="/dashboard/content">
-      <SectionTitle>Content</SectionTitle>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+        <SectionTitle>Content</SectionTitle>
+        <Link href="/dashboard/content/articles/new">
+          <Button type="button">+ New Article</Button>
+        </Link>
+      </div>
       <p style={{ marginBottom: 16 }}>
-        <Link href="/dashboard/content/pages" style={{ color: '#f1d99a' }}>CMS Pages (About Us, Legal) →</Link>
+        <Link href="/dashboard/content/pages" style={{ color: '#f1d99a' }}>CMS Pages →</Link>
         {' · '}
-        <Link href="/dashboard/content/about-us" style={{ color: '#f1d99a' }}>Edit About Us →</Link>
+        <Link href="/dashboard/content/about-us" style={{ color: '#f1d99a' }}>About Us →</Link>
+        {' · '}
+        <Link href="/dashboard/content/booking-process" style={{ color: '#f1d9a' }}>Booking Process →</Link>
       </p>
-      <SectionTitle>News & Blog Articles</SectionTitle>
+      <SectionTitle>News &amp; Blog Articles</SectionTitle>
       {loading ? (
         <Muted>Loading content...</Muted>
       ) : (
@@ -48,6 +66,7 @@ export default function ContentPage() {
             { key: 'slug', label: 'Slug' },
             { key: 'type', label: 'Type' },
             { key: 'published', label: 'Published' },
+            { key: 'actions', label: 'Actions' },
           ]}
           rows={rows}
         />

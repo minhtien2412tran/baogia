@@ -306,6 +306,23 @@ async function main() {
         ],
       });
     }
+
+    const jetPlan = await prisma.jetCardPlan.findFirst({ where: { name: '25 Hour Jet Card' } });
+    if (jetPlan) {
+      const existingCard = await prisma.jetCardAccount.findFirst({ where: { userId: demoUser.id } });
+      if (!existingCard) {
+        const expiresAt = new Date();
+        expiresAt.setFullYear(expiresAt.getFullYear() + 2);
+        await prisma.jetCardAccount.create({
+          data: {
+            userId: demoUser.id,
+            planId: jetPlan.id,
+            expiresAt,
+            remainingHours: 18.5,
+          },
+        });
+      }
+    }
   }
 
   // 8. Seed Content Categories & Articles

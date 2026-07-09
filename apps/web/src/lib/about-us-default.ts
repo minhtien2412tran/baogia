@@ -43,12 +43,12 @@ export type AboutUsPageData = {
   teamCards: AboutUsTeamCard[];
   awardsTitle: string;
   awardsSubtitle: string;
-  awards: AboutUsAward[];
+  awards: ReadonlyArray<AboutUsAward>;
   whyTitle: string;
   whyIntro: string;
   whyItems: AboutUsWhyItem[];
   officesTitle: string;
-  offices: AboutUsOffice[];
+  offices: ReadonlyArray<AboutUsOffice>;
 };
 
 /** Default layout cloned from scratch/pages/about-us.html — editable via CMS JSON body */

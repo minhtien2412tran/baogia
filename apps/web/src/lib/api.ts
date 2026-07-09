@@ -59,10 +59,97 @@ export const api = {
     request<{ requestId: number; status: string; message: string }>('/quotes/request', { method: 'POST', body: JSON.stringify(body) }),
   login: (email: string, password: string) =>
     request<{ user: { id: number }; tokens: { accessToken: string } }>('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) }),
+  sendOtp: (phone: string, purpose: 'LOGIN' | 'REGISTER') =>
+    request<{ sent: boolean; devCode?: string }>('/auth/otp/send', {
+      method: 'POST',
+      body: JSON.stringify({ phone, purpose }),
+    }),
+  verifyOtpLogin: (phone: string, code: string) =>
+    request<{ user: { id: number }; tokens: { accessToken: string } }>('/auth/otp/verify-login', {
+      method: 'POST',
+      body: JSON.stringify({ phone, code }),
+    }),
+  verifyOtpRegister: (phone: string, code: string, email?: string) =>
+    request<{ user: { id: number }; tokens: { accessToken: string } }>('/auth/otp/verify-register', {
+      method: 'POST',
+      body: JSON.stringify({ phone, code, email }),
+    }),
+  oauthGoogle: (token: string) =>
+    request<{ user: { id: number }; tokens: { accessToken: string } }>('/auth/oauth/google', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
+    }),
+  oauthApple: (token: string) =>
+    request<{ user: { id: number }; tokens: { accessToken: string; refreshToken?: string } }>(
+      '/auth/oauth/apple',
+      { method: 'POST', body: JSON.stringify({ token }) },
+    ),
+  logout: (refreshToken: string) =>
+    request<{ message: string }>('/auth/logout', {
+      method: 'POST',
+      body: JSON.stringify({ refreshToken }),
+    }),
+  createGatewayPayment: (
+    token: string,
+    body: { bookingId: number; gateway: 'onepay' | '9pay'; returnUrl?: string },
+  ) =>
+    request<{ redirectUrl: string; gateway: string; paymentId: number }>('/payments/gateway', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(body),
+    }),
   register: (email: string, password: string) =>
     request<{ user: { id: number }; tokens: { accessToken: string } }>('/auth/register', { method: 'POST', body: JSON.stringify({ email, password }) }),
   getMyBookings: (token: string) =>
-    request<unknown[]>('/bookings/my', { headers: { Authorization: `Bearer ${token}` } }),
+    request<
+      Array<{
+        id: number;
+        status?: string;
+        bookingStatus?: string;
+        documents?: Array<{
+          id: number;
+          documentType: string;
+          status: string;
+          fileUrl?: string;
+          htmlUrl?: string;
+        }>;
+      }>
+    >('/bookings/my', { headers: { Authorization: `Bearer ${token}` } }),
+  getMyPayments: (token: string) =>
+    request<
+      Array<{
+        id: number;
+        bookingId: number;
+        method: string;
+        amount: number;
+        currency: string;
+        status: string;
+        transactionRef?: string;
+        createdAt: string;
+      }>
+    >('/payments/my', { headers: { Authorization: `Bearer ${token}` } }),
+  getMyQuotes: (token: string) =>
+    request<Array<{
+      id: number;
+      status: string;
+      tripType: string;
+      createdAt: string;
+      legs: { from: string; to: string; departure: string; passengers: number }[];
+    }>>('/quotes/my', { headers: { Authorization: `Bearer ${token}` } }),
+  getMyJetCardAccounts: (token: string) =>
+    request<Array<{
+      accountId: number;
+      planName: string;
+      remainingHours: number;
+      expiryDate: string;
+      purchasedAt: string;
+      recentTransactions: { txnType: string; hoursDelta: number; date: string }[];
+    }>>('/jet-card/my', { headers: { Authorization: `Bearer ${token}` } }),
+  getTravelCreditBalance: (token: string) =>
+    request<{ credits: number; currency: string; expirySummary: { amount: number; expiresAt: string }[] }>(
+      '/travel-credits/balance',
+      { headers: { Authorization: `Bearer ${token}` } },
+    ),
   getMe: (token: string) =>
     request<{ id: number; email: string; firstName?: string; lastName?: string; accountType?: string }>(
       '/me',

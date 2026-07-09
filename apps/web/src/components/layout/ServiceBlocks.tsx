@@ -3,7 +3,7 @@ import { CdnImage } from '../ui/CdnImage';
 export function ServiceBlocks({
   items,
 }: {
-  items: { title: string; body: string; image: string }[];
+  items: ReadonlyArray<{ title: string; body: string; image: string }>;
 }) {
   return (
     <div className="jb-service-blocks">

@@ -18,6 +18,7 @@ const nav = [
   { href: '/dashboard/content/booking-process', label: 'Booking Process CMS' },
   { href: '/dashboard/destinations', label: 'Destinations' },
   { href: '/dashboard/airports', label: 'Airports' },
+  { href: '/dashboard/users', label: 'Users' },
   { href: '/dashboard/audit-logs', label: 'Audit Logs' },
   { href: '/dashboard/settings', label: 'Settings' },
 ];

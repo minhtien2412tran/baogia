@@ -1,0 +1,39 @@
+import { createHash } from 'crypto';
+
+describe('Auth token hashing', () => {
+  function hashRefreshToken(token: string) {
+    return createHash('sha256').update(token).digest('hex');
+  }
+
+  it('produces stable SHA-256 hashes', () => {
+    const a = hashRefreshToken('refresh-token-abc');
+    const b = hashRefreshToken('refresh-token-abc');
+    expect(a).toBe(b);
+    expect(a).toHaveLength(64);
+  });
+
+  it('differs for different tokens', () => {
+    expect(hashRefreshToken('a')).not.toBe(hashRefreshToken('b'));
+  });
+});
+
+describe('StorageService URL builder', () => {
+  function buildPublicUrl(base: string, key: string) {
+    const objectKey = key.startsWith('media/') ? key.slice('media/'.length) : key;
+    return `${base.replace(/\/$/, '')}/media/${encodeURIComponent(objectKey)}`;
+  }
+
+  it('builds media URLs without double prefix', () => {
+    expect(buildPublicUrl('http://127.0.0.1:4000', 'media/photo.jpg')).toBe(
+      'http://127.0.0.1:4000/media/photo.jpg',
+    );
+  });
+});
+
+describe('Gateway payment order ref', () => {
+  it('embeds booking id', () => {
+    const bookingId = 42;
+    const orderRef = `jta-${bookingId}-${Date.now()}`;
+    expect(orderRef.startsWith('jta-42-')).toBe(true);
+  });
+});

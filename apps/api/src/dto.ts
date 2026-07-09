@@ -50,6 +50,70 @@ export class OAuthDto {
   token: string;
 }
 
+export class OtpSendDto {
+  @ApiProperty({ example: '+84901234567' })
+  @IsString()
+  @IsNotEmpty()
+  phone: string;
+
+  @ApiProperty({ example: 'LOGIN', enum: ['LOGIN', 'REGISTER'] })
+  @IsIn(['LOGIN', 'REGISTER'])
+  purpose: 'LOGIN' | 'REGISTER';
+}
+
+export class OtpVerifyDto {
+  @ApiProperty({ example: '+84901234567' })
+  @IsString()
+  @IsNotEmpty()
+  phone: string;
+
+  @ApiProperty({ example: '123456' })
+  @IsString()
+  @MinLength(4)
+  code: string;
+
+  @ApiPropertyOptional({ example: 'user@example.com' })
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+}
+
+export class UpdateAdminUserDto {
+  @ApiPropertyOptional({ enum: ['USER', 'ADMIN'] })
+  @IsOptional()
+  @IsIn(['USER', 'ADMIN'])
+  role?: string;
+
+  @ApiPropertyOptional({ enum: ['ACTIVE', 'SUSPENDED'] })
+  @IsOptional()
+  @IsIn(['ACTIVE', 'SUSPENDED'])
+  status?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  firstName?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  lastName?: string;
+}
+
+export class CreateGatewayPaymentDto {
+  @ApiProperty({ example: 1 })
+  bookingId: number;
+
+  @ApiProperty({ example: 'onepay', enum: ['onepay', '9pay'] })
+  @IsIn(['onepay', '9pay'])
+  gateway: 'onepay' | '9pay';
+
+  @ApiPropertyOptional({ example: 'http://localhost:3000/en-us/account' })
+  @IsOptional()
+  @IsString()
+  returnUrl?: string;
+}
+
 export class RefreshTokenDto {
   @ApiProperty({ example: 'refresh-token-xyz' })
   @IsString()

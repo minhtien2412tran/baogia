@@ -102,6 +102,12 @@ export class AdminContentController {
     return this.contentService.adminCreateArticle(body);
   }
 
+  @Get('articles/:id')
+  @ApiOperation({ summary: 'Get article by ID (admin)' })
+  getArticle(@Param('id', ParseIntPipe) id: number, @Query('locale') locale?: string) {
+    return this.contentService.adminGetArticle(id, locale ?? 'en');
+  }
+
   @Patch('articles/:id')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update article (admin)' })

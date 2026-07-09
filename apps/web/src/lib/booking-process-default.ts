@@ -83,7 +83,7 @@ export const DEFAULT_BOOKING_PROCESS: BookingProcessPageData = {
 };
 
 export function bookingStepImages(): string[] {
-  return JB.pages.bookingProcess.steps;
+  return [...JB.pages.bookingProcess.steps];
 }
 
 export function parseBookingProcessBody(body: string | undefined | null): BookingProcessPageData {

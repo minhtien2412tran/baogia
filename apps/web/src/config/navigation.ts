@@ -43,6 +43,8 @@ export const MEGA_MENU: NavGroup[] = [
     title: 'Destinations',
     links: [
       { href: '/island-destinations', label: 'Island Escapes', description: 'Caribbean & island retreats' },
+      { href: '/ski-destinations', label: 'Ski Resorts', description: 'Alpine & winter escapes' },
+      { href: '/golf-destinations', label: 'Golf Getaways', description: 'Championship courses worldwide' },
       { href: '/destination', label: 'All Destinations', description: 'Curated global getaways' },
     ],
   },

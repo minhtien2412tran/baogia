@@ -71,8 +71,40 @@ export const adminApi = {
   getHealth: () => adminRequest<Record<string, unknown>>('/admin/system-health'),
   getBookings: () => adminRequest<{ data: unknown[] }>('/admin/bookings'),
   getFixedPriceRoutes: () => publicGet<{ routes: unknown[] }>('/fixed-price/routes'),
+  getAdminFixedPriceRoutes: () => adminRequest<{ routes: unknown[] }>('/admin/fixed-price/routes'),
+  createFixedPriceRoute: (body: unknown) =>
+    adminRequest<unknown>('/admin/fixed-price/routes', { method: 'POST', body: JSON.stringify(body) }),
+  updateFixedPriceRoute: (id: number, body: unknown) =>
+    adminRequest<unknown>(`/admin/fixed-price/routes/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  deleteFixedPriceRoute: (id: number) =>
+    adminRequest<unknown>(`/admin/fixed-price/routes/${id}`, { method: 'DELETE' }),
   getEmptyLegs: () => adminRequest<{ emptyLegs: unknown[] }>('/admin/empty-legs'),
+  createEmptyLeg: (body: unknown) =>
+    adminRequest<unknown>('/admin/empty-legs', { method: 'POST', body: JSON.stringify(body) }),
+  updateEmptyLeg: (id: number, body: unknown) =>
+    adminRequest<unknown>(`/admin/empty-legs/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  deleteEmptyLeg: (id: number) =>
+    adminRequest<unknown>(`/admin/empty-legs/${id}`, { method: 'DELETE' }),
+  getAdminJetCardPlans: () => adminRequest<{ plans: unknown[] }>('/admin/jet-card/plans'),
+  createJetCardPlan: (body: unknown) =>
+    adminRequest<unknown>('/admin/jet-card/plans', { method: 'POST', body: JSON.stringify(body) }),
+  updateJetCardPlan: (id: number, body: unknown) =>
+    adminRequest<unknown>(`/admin/jet-card/plans/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  deleteJetCardPlan: (id: number) =>
+    adminRequest<unknown>(`/admin/jet-card/plans/${id}`, { method: 'DELETE' }),
+  updateBookingStatus: (id: number, status: string) =>
+    adminRequest<unknown>(`/admin/bookings/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    }),
   getArticles: () => adminRequest<{ data: unknown[] }>('/admin/content/articles'),
+  getArticle: (id: number) => adminRequest<Record<string, unknown>>(`/admin/content/articles/${id}`),
+  createArticle: (body: unknown) =>
+    adminRequest<unknown>('/admin/content/articles', { method: 'POST', body: JSON.stringify(body) }),
+  updateArticle: (id: number, body: unknown) =>
+    adminRequest<unknown>(`/admin/content/articles/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  deleteArticle: (id: number) =>
+    adminRequest<unknown>(`/admin/content/articles/${id}`, { method: 'DELETE' }),
   getPages: () => adminRequest<{ data: unknown[] }>('/admin/content/pages'),
   updatePage: (id: number, body: unknown) =>
     adminRequest<unknown>(`/admin/content/pages/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
@@ -80,9 +112,50 @@ export const adminApi = {
   getJetCardPlans: () => publicGet<{ plans: unknown[] }>('/jet-card/plans'),
   getTravelCreditPackages: () => publicGet<{ packages: unknown[] }>('/travel-credits/packages'),
   getPartnerApplications: () => adminRequest<{ applications: unknown[] }>('/admin/partners/applications'),
+  getUsers: () => adminRequest<{ data: unknown[] }>('/admin/users'),
+  updateUser: (id: number, body: unknown) =>
+    adminRequest<unknown>(`/admin/users/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
   getTravelCreditTransactions: () => adminRequest<{ data: unknown[] }>('/admin/travel-credits/transactions'),
   getDestinations: (category?: string) =>
     adminRequest<{ data: unknown[]; pagination: { total: number } }>(
       `/admin/content/destinations${category ? `?category=${category}&limit=100` : '?limit=100'}`,
     ),
+  createDestination: (body: unknown) =>
+    adminRequest<unknown>('/admin/content/destinations', { method: 'POST', body: JSON.stringify(body) }),
+  updateDestination: (id: number, body: unknown) =>
+    adminRequest<unknown>(`/admin/content/destinations/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  deleteDestination: (id: number) =>
+    adminRequest<unknown>(`/admin/content/destinations/${id}`, { method: 'DELETE' }),
+  listMedia: () =>
+    adminRequest<{ configured: boolean; objects: { key: string; url: string; size: number; lastModified: string }[] }>(
+      '/admin/media',
+    ),
+  uploadMedia: async (file: File) => {
+    const token = getToken();
+    if (!token) throw new Error('Not authenticated');
+    const form = new FormData();
+    form.append('file', file);
+    const res = await fetch(`${API_URL}/admin/media/upload`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: form,
+    });
+    if (!res.ok) throw new Error(`${res.status}: ${await res.text()}`);
+    return res.json() as Promise<{ key: string; url: string }>;
+  },
+  deleteMedia: (objectKey: string) =>
+    adminRequest<unknown>(`/admin/media/${encodeURIComponent(objectKey)}`, { method: 'DELETE' }),
+  getAircraftCategories: () => adminRequest<{ categories: unknown[] }>('/admin/aircraft/categories'),
+  createAircraftCategory: (body: unknown) =>
+    adminRequest<unknown>('/admin/aircraft/categories', { method: 'POST', body: JSON.stringify(body) }),
+  updateAircraftCategory: (id: number, body: unknown) =>
+    adminRequest<unknown>(`/admin/aircraft/categories/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  deleteAircraftCategory: (id: number) =>
+    adminRequest<unknown>(`/admin/aircraft/categories/${id}`, { method: 'DELETE' }),
+  createAircraftModel: (body: unknown) =>
+    adminRequest<unknown>('/admin/aircraft/models', { method: 'POST', body: JSON.stringify(body) }),
+  updateAircraftModel: (id: number, body: unknown) =>
+    adminRequest<unknown>(`/admin/aircraft/models/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  deleteAircraftModel: (id: number) =>
+    adminRequest<unknown>(`/admin/aircraft/models/${id}`, { method: 'DELETE' }),
 };

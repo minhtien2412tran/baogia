@@ -467,6 +467,12 @@ export class ContentService {
     return { data, pagination: { page, limit: take, total, totalPages: Math.ceil(total / take) } };
   }
 
+  async adminGetArticle(id: number, locale = 'en') {
+    const article = await this.findArticleOrThrow(id);
+    const t = await this.getTranslation('ARTICLE', id, locale);
+    return this.formatArticle(article, t, true);
+  }
+
   async adminCreateArticle(dto: CreateContentArticleDto) {
     const type = this.articleTypeFromDto(dto.type);
     const isPublished = dto.status === 'published';

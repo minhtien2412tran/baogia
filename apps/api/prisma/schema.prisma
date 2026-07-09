@@ -34,6 +34,7 @@ model User {
   partnerApplications  PartnerApplication[]
   partnerAccounts      PartnerAccount[]
   auditLogs            AuditLog[]
+  refreshTokens        RefreshToken[]
 }
 
 model UserAuthProvider {
@@ -503,4 +504,29 @@ model AuditLog {
   createdAt DateTime @default(now())
   
   user      User?    @relation(fields: [userId], references: [id])
+}
+
+model OtpCode {
+  id        Int       @id @default(autoincrement())
+  phone     String
+  code      String
+  purpose   String    // LOGIN, REGISTER
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([phone, purpose])
+}
+
+model RefreshToken {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

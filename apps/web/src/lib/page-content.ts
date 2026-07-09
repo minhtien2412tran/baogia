@@ -82,11 +82,21 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
     tag: 'Charter',
     heroImage: JB.pages.corporate.hero,
     showQuoteWidget: true,
+    features: [
+      { icon: JB.trust.shield, title: 'Dedicated account manager', body: 'Single point of contact for all corporate travel.' },
+      { icon: JB.trust.support, title: '24/7 dispatch', body: 'Priority support for time-critical missions.' },
+      { icon: JB.trust.star, title: 'Consolidated billing', body: 'Monthly invoicing and authorized user management.' },
+    ],
     sections: [
       {
         heading: 'Built for business',
         body: 'Dedicated account support, consolidated billing, and repeat-route efficiency for corporate travel managers.',
         bullets: ['Multi-leg roadshow planning', 'Company accounts & authorized users', 'Priority dispatch and support'],
+      },
+      {
+        heading: 'Why executives choose J-TA',
+        body: 'Minimize downtime, protect confidentiality, and arrive refreshed for meetings.',
+        bullets: ['Access 10,000+ vetted aircraft', 'Flexible last-minute changes', 'Global FBO network'],
       },
     ],
     cta: { label: 'Request Corporate Quote', href: '/private-jet-charter' },
@@ -96,13 +106,23 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
     description: 'Private jets for sports teams, delegations, weddings, and large groups.',
     hero: 'Move your group together with coordinated departures and flexible cabin configurations.',
     tag: 'Charter',
-    heroImage: JB.pages.privateJetCharter.hero,
+    heroImage: JB.menu.groupCharter,
     showQuoteWidget: true,
+    features: [
+      { icon: JB.menu.groupCharter, title: 'Large cabins', body: 'Aircraft for groups up to 19 passengers.' },
+      { icon: JB.trust.shield, title: 'Coordinated logistics', body: 'Ground transport and catering arranged.' },
+      { icon: JB.trust.support, title: 'Multi-aircraft', body: 'Fleet solutions for very large delegations.' },
+    ],
     sections: [
       {
         heading: 'Group solutions',
         body: 'We coordinate aircraft capacity, ground transport, and catering for groups of all sizes.',
         bullets: ['Sports teams & fan travel', 'Wedding & celebration groups', 'Government & NGO delegations'],
+      },
+      {
+        heading: 'Popular group missions',
+        body: 'From tournament travel to incentive trips — one aircraft, one schedule, zero hassle.',
+        bullets: ['Same-day return options', 'Custom branding on request', 'VIP meet & greet'],
       },
     ],
     cta: { label: 'Plan Group Charter', href: '/private-jet-charter' },
@@ -112,13 +132,23 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
     description: 'VIP air transport for concerts, festivals, sporting events, and exclusive gatherings.',
     hero: 'Arrive on time and in style — we handle logistics so you can focus on the event.',
     tag: 'Charter',
-    heroImage: JB.pages.privateJetCharter.banner,
+    heroImage: JB.menu.event,
     showQuoteWidget: true,
+    features: [
+      { icon: JB.menu.event, title: 'Event specialists', body: 'Experience with festivals, tours, and VIP arrivals.' },
+      { icon: JB.trust.star, title: 'Tight schedules', body: 'Rapid turnarounds and slot coordination.' },
+      { icon: JB.trust.support, title: 'Discreet service', body: 'Privacy for talent and high-profile guests.' },
+    ],
     sections: [
       {
         heading: 'Event expertise',
         body: 'From red-carpet arrivals to multi-aircraft coordination, J-TA supports high-profile event travel.',
         bullets: ['Artist & talent transport', 'Corporate hospitality flights', 'Last-minute schedule changes'],
+      },
+      {
+        heading: 'End-to-end coordination',
+        body: 'We work with your production team on timing, security, and ground handling.',
+        bullets: ['Helicopter transfers', 'Multi-city tour routing', 'Empty leg savings where possible'],
       },
     ],
     cta: { label: 'Charter for Your Event', href: '/private-jet-charter' },
@@ -128,13 +158,23 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
     description: 'Safe, comfortable private jet travel for you and your pets.',
     hero: 'Your companions fly in the cabin with you — no cargo hold, no stress.',
     tag: 'Charter',
-    heroImage: JB.pages.privateJetCharter.service1,
+    heroImage: JB.menu.pet,
     showQuoteWidget: true,
+    features: [
+      { icon: JB.menu.pet, title: 'In-cabin travel', body: 'Pets remain with you throughout the flight.' },
+      { icon: JB.trust.shield, title: 'Pet-approved operators', body: 'Only vetted pet-friendly aircraft.' },
+      { icon: JB.trust.support, title: 'Documentation help', body: 'Guidance on international pet paperwork.' },
+    ],
     sections: [
       {
         heading: 'Pet-friendly charter',
         body: 'We match you with pet-approved operators and advise on documentation for international routes.',
         bullets: ['In-cabin travel for cats & dogs', 'Custom catering & bedding', 'Cross-border paperwork guidance'],
+      },
+      {
+        heading: 'Stress-free journeys',
+        body: 'Avoid cargo holds and long airport queues — your pet enjoys the same VIP treatment as you.',
+        bullets: ['Flexible cabin configurations', 'Veterinary contacts on request', 'Domestic & international routes'],
       },
     ],
     cta: { label: 'Book Pet-Friendly Flight', href: '/private-jet-charter' },
@@ -189,6 +229,11 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
         heading: '24/7 emergency response',
         body: 'Medical directors, flight nurses, and aviation specialists work together on every case.',
         bullets: ['ICU-equipped aircraft', 'Global hospital network', 'Insurance & case management support'],
+      },
+      {
+        heading: 'Bed-to-bed transfers',
+        body: 'From hospital pickup to destination facility — coordinated by our SOS medical team.',
+        bullets: ['Certified medical crew on board', 'Ground ambulance coordination', 'Family updates throughout'],
       },
     ],
     cta: { label: 'Request J-TA SOS', href: '/private-jet-charter' },

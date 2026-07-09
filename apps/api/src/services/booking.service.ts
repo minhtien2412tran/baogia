@@ -50,8 +50,13 @@ export class BookingService {
     return normalized;
   }
 
+  private documentExportBase() {
+    return (process.env.API_PUBLIC_URL ?? 'http://127.0.0.1:4000').replace(/\/$/, '');
+  }
+
   private formatBooking(booking: Awaited<ReturnType<typeof this.findBookingOrThrow>>) {
     const latestPayment = booking.payments[0];
+    const apiBase = this.documentExportBase();
     return {
       id: booking.id,
       quoteId: booking.quoteRequestId ?? booking.quoteOfferId ?? null,
@@ -90,8 +95,9 @@ export class BookingService {
         id: doc.id,
         documentType: doc.documentType,
         status: doc.status,
-        fileUrl: doc.fileUrl,
-        placeholder: true,
+        fileUrl: `${apiBase}/documents/charter-agreements/${doc.id}/export?format=pdf`,
+        htmlUrl: `${apiBase}/documents/charter-agreements/${doc.id}/export?format=html`,
+        placeholder: false,
       })),
       createdAt: booking.createdAt.toISOString(),
       updatedAt: booking.updatedAt.toISOString(),
@@ -202,6 +208,25 @@ export class BookingService {
       orderBy: { createdAt: 'desc' },
     });
     return bookings.map((b) => this.formatBooking(b));
+  }
+
+  async findMyPayments(userId: number) {
+    const payments = await this.prisma.payment.findMany({
+      where: { booking: { userId } },
+      include: { booking: { select: { id: true, bookingType: true } } },
+      orderBy: { createdAt: 'desc' },
+    });
+    return payments.map((p) => ({
+      id: p.id,
+      bookingId: p.bookingId,
+      bookingType: p.booking.bookingType,
+      method: p.method,
+      amount: Number(p.amount),
+      currency: p.currency,
+      status: p.status.toLowerCase(),
+      transactionRef: p.transactionRef,
+      createdAt: p.createdAt.toISOString(),
+    }));
   }
 
   async findById(id: number, userId?: number) {

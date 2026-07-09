@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { destinationThumb } from '../../config/jetbay-cdn';
+import { destinationThumb, JB } from '../../config/jetbay-cdn';
 import { DESTINATION_CATEGORIES, type DestinationCategory, apiLocale } from '../../config/destination-categories';
 import { api } from '../../lib/api';
 import { CdnImage } from '../ui/CdnImage';
@@ -11,7 +11,7 @@ type Dest = Record<string, unknown>;
 
 function destImage(d: Dest): string {
   if (d.thumbnail) return String(d.thumbnail);
-  return destinationThumb(String(d.slug));
+  return destinationThumb(String(d.slug ?? d.city ?? 'default')) ?? JB.logo;
 }
 
 type Props = {

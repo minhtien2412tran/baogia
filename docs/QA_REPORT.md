@@ -1,49 +1,94 @@
 # QA Report — J-TA Platform
 
-**Date:** 2026-06-29  
-**Environment:** Windows 11, Node 24, PostgreSQL 16 local, pnpm 11
+**Date:** 2026-07-09  
+**Environment:** Windows 10, Node 22+, PostgreSQL 16 local, pnpm 10  
+**Audit:** Theo [SPRINT_PROMPTS.md](./SPRINT_PROMPTS.md) — Prompt kiểm tra sau mỗi bước
 
 ## Build status
 
-| App | Build | Notes |
+| App | Build | Tests |
 |-----|-------|-------|
-| API | ✅ | NestJS + Prisma |
-| Web | ✅ | Next.js 16, `@j-ta/ui` transpiled |
-| Admin | ✅ | Dashboard + CRUD list pages wired |
+| API | ✅ `pnpm --filter api build` | ✅ 5 unit tests |
+| Web | ✅ `pnpm --filter web build` | — |
+| Admin | ✅ `pnpm --filter admin build` | — |
+| CI | ✅ `.github/workflows/ci.yml` | API test job |
 
-## API smoke tests
+## Lệnh đã chạy (CI local)
 
-| Endpoint | Status |
-|----------|--------|
-| `GET /` | ✅ |
-| `GET /openapi.json` | ✅ |
-| `GET /fixed-price/routes` | ✅ Seed data |
-| `GET /empty-legs` | ✅ |
-| `GET /content/news` | ✅ |
-| `GET /airports/search?q=lon` | ✅ |
-| `POST /auth/login` | ✅ Demo user |
-| `GET /admin/dashboard/stats` | ✅ |
-| `GET /admin/bookings` | ✅ |
+```bash
+pnpm --filter api prisma:generate
+pnpm --filter api build
+pnpm --filter api test
+pnpm --filter admin build
+pnpm --filter web build
+pnpm --filter api exec prisma db push   # RefreshToken + OtpCode sync
+```
 
-## E2E (Playwright)
+## API smoke tests (cần API chạy `:4000`)
 
-- Home page branding and fixed-price section
-- Admin dashboard overview
-- API health + OpenAPI spec
-- Fixed-price page shows London routes
-- Quote form interaction
+| Endpoint | Ghi chú |
+|----------|---------|
+| `GET /` | Root health |
+| `GET /openapi.json` | OpenAPI spec |
+| `POST /auth/login` | demo@j-ta.local |
+| `POST /auth/otp/send` | Dev code in response |
+| `GET /quotes/my` | JWT required |
+| `GET /payments/my` | JWT required |
+| `GET /admin/system-health` | Admin JWT — redis/minio status |
+| `POST /admin/media/upload` | MinIO + admin JWT |
+| `POST /payments/stripe/webhook` | Stripe signature |
+
+## Web routes (build output verified)
+
+| Route | Status |
+|-------|--------|
+| `/[locale]` | ✅ |
+| `/[locale]/login`, `/register` | ✅ OAuth + OTP |
+| `/[locale]/account/*` | ✅ overview, quotes, jet-card, credits, payments, documents |
+| `/[locale]/ski-destinations`, `/golf-destinations` | ✅ |
+| 29+ locale pages | ✅ TypeScript clean |
+
+## Admin routes
+
+| Route | Status |
+|-------|--------|
+| `/dashboard` | ✅ |
+| CRUD: fixed-price, empty-legs, jet-card, users, destinations, media, aircraft | ✅ |
+| `/dashboard/content/articles/[id]` | ✅ Rich text editor |
+
+## E2E (Playwright — `pnpm test:e2e`)
+
+**Kết quả 2026-07-09: ✅ 9/9 passed** (với `pnpm dev` chạy)
+
+- Home branding + fixed-price section
+- Admin dashboard (login via API token)
+- API health + OTP dev flow
+- Fixed-price London routes
+- Ski/golf destinations
+- Quote form submit
+- Vietnamese locale + OAuth buttons
+
+## Đã hoàn thành (so với báo giá 74TR)
+
+- GĐ4: Google/Apple OAuth, SMS OTP, OnePay/9Pay redirect, Stripe intent + webhook
+- MinIO media upload + admin library
+- Email (Mailpit/SMTP), PDF charter agreement export
+- Refresh token revocation + logout
+- Rate limiting
+- Account portal đầy đủ sub-pages
+- i18n cơ bản (vi/zh/en nav)
 
 ## Known limitations
 
-1. **Auth**: Demo tokens only — no JWT guard on admin routes
-2. **Passwords**: Not bcrypt-hashed yet
-3. **Docker**: Not used locally (WSL2 unavailable); Postgres installed natively
-4. **Redis/MinIO**: Not connected in dev
-5. **Service pages**: Many routes remain skeleton UI (charter, corporate, etc.)
-6. **Admin CRUD**: List views only — no create/edit forms in UI
+1. **OnePay/9Pay**: Cần merchant keys sandbox/production để test end-to-end
+2. **Apple/Google live**: Cần `NEXT_PUBLIC_*_CLIENT_ID` + domain verify
+3. **i18n**: Chỉ nav/account/footer — nội dung trang vẫn English
+4. **Redis cache**: Service có, chưa cache endpoint đọc nóng
+5. **Lighthouse**: Chưa chạy audit performance
+6. **E2E CI**: Playwright chưa trong GitHub Actions (chỉ build + unit test)
 
 ## Verdict
 
-**Ready for local development review.** Core booking/commercial/CMS APIs persist to PostgreSQL. Web home, fixed-price, empty-leg, news, jet-card, travel-credit, login/register/account are functional. Admin dashboard and list pages show live API data.
+**✅ Pass build, typecheck, unit tests (5), E2E (9/9) — sẵn sàng review local và staging deploy.**
 
-Not production-ready until security hardening (JWT, bcrypt, rate limit, admin guard).
+Chưa production-ready cho đến khi: env secrets production, HTTPS, SMS/Stripe/OnePay keys thật, và chạy full E2E trên staging.

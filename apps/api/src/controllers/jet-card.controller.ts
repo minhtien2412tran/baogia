@@ -1,7 +1,10 @@
-import { Controller, Get, Post, Body, Param, ParseIntPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Param, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { JetCardEnquiryDto } from '../dto';
 import { JetCardService } from '../services/jet-card.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CurrentUser } from '../auth/current-user.decorator';
+import type { AuthUser } from '../auth/auth.types';
 
 @ApiTags('Jet Card')
 @Controller('jet-card')
@@ -20,6 +23,14 @@ export class JetCardController {
   @ApiResponse({ status: 201, description: 'Enquiry received successfully.' })
   createEnquiry(@Body() body: JetCardEnquiryDto) {
     return this.jetCardService.createEnquiry(body);
+  }
+
+  @Get('my')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'List Jet Card accounts for the current user' })
+  getMyAccounts(@CurrentUser() user: AuthUser) {
+    return this.jetCardService.getUserAccounts(user.userId);
   }
 
   @Get('accounts/:id/balance')

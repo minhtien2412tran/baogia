@@ -22,6 +22,12 @@ import { AdminGuard } from '../auth/admin.guard';
 export class AdminFixedPriceController {
   constructor(private readonly fixedPriceService: FixedPriceService) {}
 
+  @Get()
+  @ApiOperation({ summary: 'List all fixed-price routes (admin)' })
+  listAll() {
+    return this.fixedPriceService.getAllRoutesAdmin();
+  }
+
   @Post()
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a fixed-price route (admin)' })

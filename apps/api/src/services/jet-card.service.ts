@@ -64,6 +64,31 @@ export class JetCardService {
     };
   }
 
+  async getUserAccounts(userId: number) {
+    const accounts = await this.prisma.jetCardAccount.findMany({
+      where: { userId },
+      include: {
+        plan: true,
+        transactions: { orderBy: { createdAt: 'desc' }, take: 5 },
+      },
+      orderBy: { purchasedAt: 'desc' },
+    });
+
+    return accounts.map((account) => ({
+      accountId: account.id,
+      planName: account.plan.name,
+      remainingHours: Number(account.remainingHours),
+      expiryDate: account.expiresAt.toISOString(),
+      purchasedAt: account.purchasedAt.toISOString(),
+      recentTransactions: account.transactions.map((t) => ({
+        txnId: t.id,
+        txnType: t.txnType,
+        hoursDelta: Number(t.hoursDelta),
+        date: t.createdAt.toISOString().slice(0, 10),
+      })),
+    }));
+  }
+
   async getCardBalance(id: number) {
     const account = await this.prisma.jetCardAccount.findUnique({
       where: { id },

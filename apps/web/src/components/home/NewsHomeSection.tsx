@@ -23,12 +23,12 @@ export async function NewsHomeSection({ locale }: { locale: string }) {
               className="jb-news-card"
             >
               <h3>{String(article.title ?? article.slug)}</h3>
-              {article.excerpt && <p>{String(article.excerpt)}</p>}
-              {article.publishedAt && (
+              {article.excerpt ? <p>{String(article.excerpt)}</p> : null}
+              {article.publishedAt ? (
                 <time className="jb-news-date">
                   {new Date(String(article.publishedAt)).toLocaleDateString()}
                 </time>
-              )}
+              ) : null}
             </Link>
           ))}
         </div>

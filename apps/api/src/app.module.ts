@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AppController } from './app.controller';
@@ -19,8 +21,11 @@ import { AdminPartnerController } from './controllers/admin-partner.controller';
 import { ContentController } from './controllers/content.controller';
 import { BookingController, AdminBookingController } from './controllers/booking.controller';
 import { AdminDashboardController } from './controllers/admin-dashboard.controller';
+import { AdminUsersController } from './controllers/admin-users.controller';
 import { AirportController } from './controllers/airport.controller';
 import { ApiGatewayController } from './controllers/api-gateway.controller';
+import { AdminAircraftController } from './controllers/admin-aircraft.controller';
+import { MediaController } from './controllers/media.controller';
 import { BookingService } from './services/booking.service';
 import { AuditService } from './services/audit.service';
 import { FixedPriceService } from './services/fixed-price.service';
@@ -34,11 +39,27 @@ import { QuoteService } from './services/quote.service';
 import { AuthService } from './services/auth.service';
 import { PartnerService } from './services/partner.service';
 import { ApiGatewayService } from './services/api-gateway.service';
+import { EmailService } from './services/email.service';
+import { PaymentService } from './services/payment.service';
+import { DocumentService } from './services/document.service';
+import { OAuthService } from './services/oauth.service';
+import { OtpService } from './services/otp.service';
+import { SmsService } from './services/sms.service';
+import { OnepayService } from './services/onepay.service';
+import { NinepayService } from './services/ninepay.service';
+import { AdminUsersService } from './services/admin-users.service';
+import { StorageService } from './services/storage.service';
+import { RedisService } from './services/redis.service';
+import { AircraftService } from './services/aircraft.service';
 import { JwtStrategy } from './auth/jwt.strategy';
 
 @Module({
   imports: [
     PrismaModule,
+    ThrottlerModule.forRoot([
+      { name: 'default', ttl: 60_000, limit: 120 },
+      { name: 'auth', ttl: 60_000, limit: 20 },
+    ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       global: true,
@@ -66,9 +87,13 @@ import { JwtStrategy } from './auth/jwt.strategy';
     BookingController,
     AdminBookingController,
     AdminDashboardController,
+    AdminUsersController,
+    AdminAircraftController,
     ApiGatewayController,
+    MediaController,
   ],
   providers: [
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
     AppService,
     ApiGatewayService,
     BookingService,
@@ -83,6 +108,18 @@ import { JwtStrategy } from './auth/jwt.strategy';
     QuoteService,
     AuthService,
     PartnerService,
+    EmailService,
+    PaymentService,
+    DocumentService,
+    OAuthService,
+    OtpService,
+    SmsService,
+    OnepayService,
+    NinepayService,
+    AdminUsersService,
+    StorageService,
+    RedisService,
+    AircraftService,
     JwtStrategy,
   ],
 })

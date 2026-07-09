@@ -1,6 +1,11 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
+import { EmailService } from './email.service';
+import { PaymentService } from './payment.service';
+import { OnepayService } from './onepay.service';
+import { NinepayService } from './ninepay.service';
+import { CreateGatewayPaymentDto } from '../dto';
 import {
   ConfirmPaymentDto,
   PaymentIntentDto,
@@ -20,6 +25,10 @@ export class QuoteService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
+    private readonly email: EmailService,
+    private readonly payments: PaymentService,
+    private readonly onepay: OnepayService,
+    private readonly ninepay: NinepayService,
   ) {}
 
   async searchAircraft(body: SearchAircraftDto) {
@@ -110,11 +119,43 @@ export class QuoteService {
     });
 
     await this.audit.log('QUOTE_REQUESTED', { quoteId: quote.id, email: body.email });
+    await this.email.sendQuoteConfirmation({
+      email: body.email,
+      firstName: body.firstName,
+      requestId: quote.id,
+    });
     return {
       requestId: quote.id,
       status: 'PENDING',
       message: 'Quote request received. Our team will contact you within 3 hours.',
     };
+  }
+
+  async getMyQuotes(userId: number, email: string) {
+    const quotes = await this.prisma.quoteRequest.findMany({
+      where: { OR: [{ userId }, { email }] },
+      include: {
+        legs: {
+          include: { fromAirport: true, toAirport: true },
+          orderBy: { seq: 'asc' },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+    });
+
+    return quotes.map((q) => ({
+      id: q.id,
+      status: q.status,
+      tripType: q.tripType,
+      createdAt: q.createdAt.toISOString(),
+      legs: q.legs.map((leg) => ({
+        from: leg.fromAirport.iata,
+        to: leg.toAirport.iata,
+        departure: leg.departureLocalAt.toISOString().slice(0, 10),
+        passengers: leg.passengers,
+      })),
+    }));
   }
 
   async getWorldCupMatches() {
@@ -162,6 +203,7 @@ export class QuoteService {
 
     const amount = booking.quoteOffer ? Number(booking.quoteOffer.price) : 12500;
 
+    const transactionRef = `internal_${Date.now()}`;
     const payment = await this.prisma.payment.create({
       data: {
         bookingId: body.bookingId,
@@ -169,13 +211,28 @@ export class QuoteService {
         amount,
         currency: 'USD',
         status: 'PENDING',
-        transactionRef: `pi_${Date.now()}`,
+        transactionRef,
       },
     });
+
+    const stripeResult = await this.payments.createStripePaymentIntent({
+      amount: Number(payment.amount),
+      currency: payment.currency,
+      bookingId: body.bookingId,
+      paymentId: payment.id,
+    });
+
+    if (stripeResult) {
+      await this.prisma.payment.update({
+        where: { id: payment.id },
+        data: { transactionRef: stripeResult.stripePaymentIntentId },
+      });
+    }
 
     await this.audit.log('PAYMENT_INTENT_CREATED', {
       paymentId: payment.id,
       bookingId: body.bookingId,
+      gateway: stripeResult ? 'stripe' : 'internal',
     });
 
     return {
@@ -184,6 +241,8 @@ export class QuoteService {
       currency: payment.currency,
       method: payment.method,
       status: payment.status,
+      gateway: stripeResult ? 'stripe' : 'internal',
+      ...(stripeResult ? { clientSecret: stripeResult.clientSecret } : {}),
     };
   }
 
@@ -195,6 +254,13 @@ export class QuoteService {
 
     const payment = await this.prisma.payment.findUnique({ where: { id: paymentId } });
     if (!payment) throw new NotFoundException('Payment not found');
+
+    if (this.payments.isStripeEnabled() && payment.transactionRef?.startsWith('pi_')) {
+      const ok = await this.payments.confirmStripePayment(payment.transactionRef);
+      if (!ok) {
+        throw new BadRequestException('Stripe payment not completed');
+      }
+    }
 
     const updated = await this.prisma.payment.update({
       where: { id: paymentId },
@@ -234,5 +300,115 @@ export class QuoteService {
       status: 'HELD',
       expiresAt: expiresAt.toISOString(),
     };
+  }
+
+  async createGatewayPayment(body: CreateGatewayPaymentDto) {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: body.bookingId },
+      include: { quoteOffer: true },
+    });
+    if (!booking) throw new NotFoundException(`Booking ${body.bookingId} not found`);
+
+    const amount = booking.quoteOffer ? Number(booking.quoteOffer.price) : 12500;
+    const orderRef = `jta-${body.bookingId}-${Date.now()}`;
+    const apiBase = process.env.API_PUBLIC_URL ?? 'http://127.0.0.1:4000';
+    const returnUrl =
+      body.returnUrl ??
+      (body.gateway === 'onepay'
+        ? `${apiBase}/payments/onepay/return`
+        : `${apiBase}/payments/9pay/return`);
+
+    const payment = await this.prisma.payment.create({
+      data: {
+        bookingId: body.bookingId,
+        method: body.gateway === 'onepay' ? 'BANK_TRANSFER' : 'CREDIT_CARD',
+        amount,
+        currency: body.gateway === 'onepay' ? 'VND' : 'VND',
+        status: 'PENDING',
+        transactionRef: orderRef,
+      },
+    });
+
+    const urlResult =
+      body.gateway === 'onepay'
+        ? this.onepay.createPaymentUrl({ orderId: orderRef, amount: amount * 25000, returnUrl, currency: 'VND' })
+        : this.ninepay.createPaymentUrl({ orderId: orderRef, amount: amount * 25000, returnUrl, currency: 'VND' });
+
+    if (!urlResult) {
+      throw new BadRequestException(
+        `${body.gateway} is not configured. Set merchant credentials in environment.`,
+      );
+    }
+
+    await this.audit.log('GATEWAY_PAYMENT_CREATED', {
+      paymentId: payment.id,
+      gateway: body.gateway,
+      orderRef,
+    });
+
+    return {
+      paymentId: payment.id,
+      orderRef,
+      gateway: urlResult.gateway,
+      redirectUrl: urlResult.redirectUrl,
+      amount,
+    };
+  }
+
+  async handleOnepayReturn(query: Record<string, string>) {
+    const ok = this.onepay.verifyIpn(query);
+    const orderRef = query.vpc_MerchTxnRef;
+    if (ok && orderRef) await this.markGatewayPaid(orderRef);
+    return { status: ok ? 'success' : 'failed', orderRef };
+  }
+
+  async handleOnepayIpn(query: Record<string, string>) {
+    const ok = this.onepay.verifyIpn(query);
+    if (ok && query.vpc_MerchTxnRef) await this.markGatewayPaid(query.vpc_MerchTxnRef);
+    return ok;
+  }
+
+  async handleNinepayReturn(query: Record<string, string>) {
+    const ok = this.ninepay.verifyIpn(query);
+    const orderRef = query.invoice_no;
+    if (ok && orderRef) await this.markGatewayPaid(orderRef);
+    return { status: ok ? 'success' : 'failed', orderRef };
+  }
+
+  async handleNinepayIpn(body: Record<string, string>) {
+    const ok = this.ninepay.verifyIpn(body);
+    if (ok && body.invoice_no) await this.markGatewayPaid(body.invoice_no);
+    return ok;
+  }
+
+  private async markGatewayPaid(orderRef: string) {
+    const payment = await this.prisma.payment.findFirst({
+      where: { transactionRef: orderRef },
+    });
+    if (!payment || payment.status === 'PAID') return;
+    await this.prisma.payment.update({
+      where: { id: payment.id },
+      data: { status: 'PAID' },
+    });
+    await this.audit.log('GATEWAY_PAYMENT_CONFIRMED', { paymentId: payment.id, orderRef });
+  }
+
+  async handleStripeWebhook(payload: Buffer, signature: string) {
+    const event = this.payments.constructStripeEvent(payload, signature);
+    if (!event) return { received: false };
+
+    if (event.type === 'payment_intent.succeeded') {
+      const intent = event.data.object as { id: string; metadata?: { paymentId?: string } };
+      const paymentId = intent.metadata?.paymentId ? Number(intent.metadata.paymentId) : null;
+      if (paymentId) {
+        await this.prisma.payment.updateMany({
+          where: { id: paymentId, status: { not: 'PAID' } },
+          data: { status: 'PAID', transactionRef: intent.id },
+        });
+        await this.audit.log('STRIPE_PAYMENT_CONFIRMED', { paymentId, intentId: intent.id });
+      }
+    }
+
+    return { received: true, type: event.type };
   }
 }

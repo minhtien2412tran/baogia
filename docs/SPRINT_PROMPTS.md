@@ -32,8 +32,8 @@ Cập nhật cột **Trạng thái** sau mỗi sprint: `⬜ Chưa làm` · `🟡
 | 15 | Content pages | ✅ | news wired; blogs/video/destination routes exist |
 | 16 | Legal/cookie | 🟡 | `/article/[slug]` route |
 | 17 | Prisma schema | ✅ | Schema đầy đủ User, Quote, Booking, CMS… |
-| 18 | Auth API | 🟡 | DB register/login; demo tokens, chưa JWT guard |
-| 19 | Airports/Aircraft API | ✅ | `GET /airports/search`, `GET /airports` |
+| 18 | Auth API | ✅ | JWT, bcrypt, OAuth Google/Apple, SMS OTP, refresh revoke |
+| 19 | Airports/Aircraft API | ✅ | Search + admin aircraft CRUD |
 | 20 | Quote API | ✅ | `POST /quotes/request` persists to DB |
 | 21 | Booking API | ✅ | Prisma persist, audit log, admin status/cancel |
 | 22 | Commercial API | ✅ | Fixed Price, Empty Leg, Jet Card, Travel Credits + admin CRUD |
@@ -41,17 +41,17 @@ Cập nhật cột **Trạng thái** sau mỗi sprint: `⬜ Chưa làm` · `🟡
 | 24 | Admin API overview | ✅ | `/admin/dashboard/*`, audit-logs, system-health |
 | 25 | Kết nối web ↔ API | ✅ | `apps/web/src/lib/api.ts`, key pages wired |
 | 26 | Kết nối admin ↔ API | ✅ | `apps/admin/src/lib/api.ts`, dashboard + lists |
-| 27 | Admin CRUD hoàn chỉnh | 🟡 | List pages wired; create/edit forms pending |
-| 28 | User account portal | ✅ | `/login`, `/register`, `/account` |
+| 27 | Admin CRUD hoàn chỉnh | ✅ | Fixed/empty/jet-card/users/destinations/media/aircraft/articles |
+| 28 | User account portal | ✅ | login/register/OAuth/OTP, quotes, jet-card, payments, documents |
 | 29 | Form UX và validation | 🟡 | Quote widget + login forms; not all pages |
 | 30 | Responsive audit | 🟡 | CSS grid auto-fill; full audit pending |
 | 31 | SEO metadata | ✅ | `buildMetadata` + `generateMetadata` on key pages |
 | 32 | Testing setup | ✅ | Playwright e2e + API health tests |
-| 33 | Security audit | 🟡 | CORS, ValidationPipe, Helmet; SECURITY.md |
-| 34 | Performance audit | 🟡 | DB indexes migration, performance-checklist.md |
-| 35 | Final QA và bàn giao | ✅ | API.md, FEATURE_MATRIX, DATABASE, DEPLOYMENT, QA_REPORT |
+| 33 | Security audit | ✅ | Helmet, Throttler, JWT+AdminGuard, refresh revoke, CORS |
+| 34 | Performance audit | 🟡 | Redis service, pagination; Lighthouse chưa chạy |
+| 35 | Final QA và bàn giao | ✅ | E2E 9/9 pass, QA_REPORT 2026-07-09 |
 
-**Sprint tiếp theo đề xuất:** Production hardening (JWT, bcrypt, admin guard, admin create/edit forms)
+**Sprint tiếp theo đề xuất:** Production deploy (Docker stack, env secrets, OnePay/9Pay sandbox, i18n full site)
 
 ---
 
@@ -609,3 +609,4 @@ Báo cáo nghiên cứu yêu cầu clone clean-room với đủ lớp: **marketi
 | Ngày | Sprint | Ghi chú |
 |------|--------|---------|
 | 2026-06-29 | 23 | Content CMS API: translations, Destination model, admin CRUD |
+| 2026-07-09 | 35 | Final QA: GĐ4 auth/payments, MinIO, E2E 9/9, DEPLOYMENT, FEATURE_MATRIX |

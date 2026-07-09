@@ -1,13 +1,28 @@
-import { Controller, Post, Get, Body, Param, ParseIntPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
-import { SearchAircraftDto, RequestQuoteDto, PaymentIntentDto, ConfirmPaymentDto } from '../dto';
+import { Controller, Post, Get, Body, Query, Param, ParseIntPipe, Res, Req, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
+import type { Response, Request } from 'express';
+import {
+  SearchAircraftDto,
+  RequestQuoteDto,
+  PaymentIntentDto,
+  ConfirmPaymentDto,
+  CreateGatewayPaymentDto,
+} from '../dto';
 import { QuoteService } from '../services/quote.service';
+import { DocumentService } from '../services/document.service';
+import { BookingService } from '../services/booking.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CurrentUser } from '../auth/current-user.decorator';
+import type { AuthUser } from '../auth/auth.types';
 
 @ApiTags('Quotes & Bookings')
 @Controller()
 export class QuoteController {
-  constructor(private readonly quoteService: QuoteService) {}
-
+  constructor(
+    private readonly quoteService: QuoteService,
+    private readonly documentService: DocumentService,
+    private readonly bookingService: BookingService,
+  ) {}
   @Post('quotes/search-aircraft')
   @ApiOperation({ summary: 'Search available aircraft options' })
   @ApiResponse({ status: 200, description: 'List of matching aircraft categories with pricing.' })
@@ -22,12 +37,65 @@ export class QuoteController {
     return this.quoteService.requestQuote(body);
   }
 
+  @Get('quotes/my')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'List quote requests for the current user' })
+  getMyQuotes(@CurrentUser() user: AuthUser) {
+    return this.quoteService.getMyQuotes(user.userId, user.email);
+  }
+
   @Get('documents/charter-agreements/:id')
   @ApiOperation({ summary: 'Get details of a charter agreement document' })
-  @ApiParam({ name: 'id', type: 'number', description: 'Document ID' })
   @ApiResponse({ status: 200, description: 'Agreement document details.' })
   getCharterAgreement(@Param('id', ParseIntPipe) id: number) {
     return this.quoteService.getCharterAgreement(id);
+  }
+
+  @Get('documents/charter-agreements/:id/export')
+  @ApiOperation({ summary: 'Export charter agreement as HTML or PDF' })
+  @ApiParam({ name: 'id', type: 'number' })
+  @ApiQuery({ name: 'format', required: false, enum: ['html', 'pdf'] })
+  async exportCharterAgreement(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('format') format: string,
+    @Res() res: Response,
+  ) {
+    if (format === 'pdf') {
+      const buffer = await this.documentService.generateCharterAgreementPdf(id);
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="charter-agreement-${id}.pdf"`);
+      return res.send(buffer);
+    }
+
+    const html = await this.documentService.getCharterAgreementHtml(id);
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    if (format === 'html') {
+      res.setHeader('Content-Disposition', `attachment; filename="charter-agreement-${id}.html"`);
+    }
+    return res.send(html);
+  }
+
+  @Get('payments/my')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'List payments for the current user' })
+  getMyPayments(@CurrentUser() user: AuthUser) {
+    return this.bookingService.findMyPayments(user.userId);
+  }
+
+  @Post('payments/stripe/webhook')
+  @ApiOperation({ summary: 'Stripe webhook handler' })
+  async stripeWebhook(@Req() req: Request & { rawBody?: Buffer }, @Res() res: Response) {
+    const signature = req.headers['stripe-signature'];
+    if (!signature || !req.rawBody) {
+      return res.status(400).send('Missing signature or body');
+    }
+    const result = await this.quoteService.handleStripeWebhook(
+      req.rawBody,
+      Array.isArray(signature) ? signature[0] : signature,
+    );
+    return res.json(result);
   }
 
   @Post('payments/intent')
@@ -49,6 +117,43 @@ export class QuoteController {
   @ApiResponse({ status: 201, description: 'Hold placed.' })
   placeHold(@Body() body: PaymentIntentDto) {
     return this.quoteService.placeHold(body);
+  }
+
+  @Post('payments/gateway')
+  @ApiOperation({ summary: 'Create OnePay or 9Pay redirect payment URL' })
+  createGatewayPayment(@Body() body: CreateGatewayPaymentDto) {
+    return this.quoteService.createGatewayPayment(body);
+  }
+
+  @Get('payments/onepay/return')
+  @ApiOperation({ summary: 'OnePay return URL handler' })
+  async onepayReturn(@Query() query: Record<string, string>, @Res() res: Response) {
+    const result = await this.quoteService.handleOnepayReturn(query);
+    const redirect = process.env.PAYMENT_RETURN_URL ?? 'http://localhost:3000/en-us/account';
+    res.redirect(`${redirect}?payment=${result.status}&ref=${result.orderRef ?? ''}`);
+  }
+
+  @Get('payments/onepay/ipn')
+  @Post('payments/onepay/ipn')
+  @ApiOperation({ summary: 'OnePay IPN callback' })
+  async onepayIpn(@Query() query: Record<string, string>, @Res() res: Response) {
+    const ok = await this.quoteService.handleOnepayIpn(query);
+    res.send(ok ? 'responsecode=1&desc=confirm-success' : 'responsecode=0&desc=confirm-fail');
+  }
+
+  @Get('payments/9pay/return')
+  @ApiOperation({ summary: '9Pay return URL handler' })
+  async ninepayReturn(@Query() query: Record<string, string>, @Res() res: Response) {
+    const result = await this.quoteService.handleNinepayReturn(query);
+    const redirect = process.env.PAYMENT_RETURN_URL ?? 'http://localhost:3000/en-us/account';
+    res.redirect(`${redirect}?payment=${result.status}&ref=${result.orderRef ?? ''}`);
+  }
+
+  @Post('payments/9pay/ipn')
+  @ApiOperation({ summary: '9Pay IPN callback' })
+  async ninepayIpn(@Body() body: Record<string, string>, @Res() res: Response) {
+    const ok = await this.quoteService.handleNinepayIpn(body);
+    res.json({ success: ok });
   }
 
   @Get('campaigns/world-cup/matches')

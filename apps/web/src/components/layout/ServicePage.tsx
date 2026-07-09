@@ -196,7 +196,7 @@ export async function ServicePage({ locale, pageKey }: { locale: string; pageKey
 
 
 
-          {cms?.body && (
+          {cms?.body ? (
 
             <section className="jb-content-block jb-cms-block">
 
@@ -204,7 +204,7 @@ export async function ServicePage({ locale, pageKey }: { locale: string; pageKey
 
             </section>
 
-          )}
+          ) : null}
 
 
 

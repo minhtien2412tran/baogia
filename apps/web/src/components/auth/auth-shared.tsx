@@ -1,0 +1,41 @@
+'use client';
+
+export function storeAuthSession(res: {
+  user: { id: number };
+  tokens: { accessToken: string; refreshToken?: string };
+}) {
+  localStorage.setItem('jta_token', res.tokens.accessToken);
+  localStorage.setItem('jta_user_id', String(res.user.id));
+  if (res.tokens.refreshToken) {
+    localStorage.setItem('jta_refresh_token', res.tokens.refreshToken);
+  }
+}
+
+export type AuthMode = 'email' | 'otp';
+
+export function AuthTabs({
+  mode,
+  onChange,
+}: {
+  mode: AuthMode;
+  onChange: (m: AuthMode) => void;
+}) {
+  return (
+    <div className="jb-auth-tabs" style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
+      <button
+        type="button"
+        className={mode === 'email' ? 'jb-btn-primary' : 'jb-btn-ghost'}
+        onClick={() => onChange('email')}
+      >
+        Email
+      </button>
+      <button
+        type="button"
+        className={mode === 'otp' ? 'jb-btn-primary' : 'jb-btn-ghost'}
+        onClick={() => onChange('otp')}
+      >
+        SMS OTP
+      </button>
+    </div>
+  );
+}

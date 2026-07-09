@@ -1,32 +1,64 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { SectionTitle, DataTable, Muted } from '@j-ta/ui';
 import { AdminShell } from '../../../components/AdminShell';
+import { ActionBtn } from '../../../components/AdminFormFields';
 import { adminApi } from '../../../lib/api';
+
+const STATUSES = ['pending', 'confirmed', 'in_progress', 'completed', 'cancelled'];
 
 export default function BookingsPage() {
   const [rows, setRows] = useState<Record<string, React.ReactNode>[]>([]);
   const [loading, setLoading] = useState(true);
+  const [msg, setMsg] = useState('');
 
-  useEffect(() => {
+  const load = useCallback(() => {
+    setLoading(true);
     adminApi
       .getBookings()
       .then((res) => {
         const data = (res as { data: Record<string, unknown>[] }).data ?? [];
         setRows(
-          data.map((b) => ({
-            id: String(b.id),
-            email: String(b.email ?? b.userEmail ?? '—'),
-            type: String(b.bookingType ?? '—'),
-            status: String(b.status ?? b.bookingStatus ?? '—'),
-            created: b.createdAt ? String(b.createdAt).slice(0, 10) : '—',
-          })),
+          data.map((b) => {
+            const id = Number(b.id);
+            const status = String(b.status ?? b.bookingStatus ?? 'pending');
+            return {
+              id: String(id),
+              email: String(b.email ?? b.userEmail ?? '—'),
+              type: String(b.bookingType ?? '—'),
+              status,
+              created: b.createdAt ? String(b.createdAt).slice(0, 10) : '—',
+              actions: (
+                <span style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                  {STATUSES.filter((s) => s !== status).map((s) => (
+                    <ActionBtn key={s} onClick={() => updateStatus(id, s)}>
+                      → {s}
+                    </ActionBtn>
+                  ))}
+                </span>
+              ),
+            };
+          }),
         );
       })
-      .catch(console.error)
+      .catch((e) => setMsg(e instanceof Error ? e.message : 'Load failed'))
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  async function updateStatus(id: number, status: string) {
+    try {
+      await adminApi.updateBookingStatus(id, status);
+      setMsg(`Booking #${id} → ${status}`);
+      load();
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : 'Update failed');
+    }
+  }
 
   return (
     <AdminShell active="/dashboard/bookings">
@@ -41,10 +73,12 @@ export default function BookingsPage() {
             { key: 'type', label: 'Type' },
             { key: 'status', label: 'Status' },
             { key: 'created', label: 'Created' },
+            { key: 'actions', label: 'Actions' },
           ]}
           rows={rows}
         />
       )}
+      {msg && <p style={{ marginTop: 12, color: '#4ade80' }}>{msg}</p>}
     </AdminShell>
   );
 }

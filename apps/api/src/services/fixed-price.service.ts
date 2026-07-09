@@ -36,6 +36,14 @@ export class FixedPriceService {
     };
   }
 
+  async getAllRoutesAdmin() {
+    const routes = await this.prisma.fixedPriceRoute.findMany({
+      include: routeInclude,
+      orderBy: { id: 'asc' },
+    });
+    return { routes: routes.map((r) => formatFixedPriceRoute(r, true)) };
+  }
+
   async getRouteBySlug(slug: string) {
     const route = await this.prisma.fixedPriceRoute.findUnique({
       where: { slug },

@@ -32,8 +32,23 @@ export function SectionTitle({ children }: { children: React.ReactNode }) {
   return <h2 style={{ color: colors.accent, fontSize: 22, margin: '0 0 16px' }}>{children}</h2>;
 }
 
-export function Muted({ children }: { children: React.ReactNode }) {
-  return <p style={{ color: colors.textMuted, margin: '0 0 12px', lineHeight: 1.6 }}>{children}</p>;
+export function Muted({
+  children,
+  style,
+  className,
+}: {
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+  className?: string;
+}) {
+  return (
+    <p
+      className={className}
+      style={{ color: colors.textMuted, margin: '0 0 12px', lineHeight: 1.6, ...style }}
+    >
+      {children}
+    </p>
+  );
 }
 
 export function Badge({ children, variant = 'default' }: { children: React.ReactNode; variant?: 'default' | 'success' | 'warning' }) {

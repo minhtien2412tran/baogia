@@ -35,7 +35,7 @@ export default async function DestinationHubPage({
           )}
           <div className="jb-content-block">
             <p>{String(item.tagline ?? `${item.city}, ${item.country}`)}</p>
-            {item.description && <p className="jb-section-desc">{String(item.description)}</p>}
+            {item.description ? <p className="jb-section-desc">{String(item.description)}</p> : null}
             <Link href={navHref(locale, '/')} className="jb-btn-primary">
               Search Flights to {String(item.city)}
             </Link>

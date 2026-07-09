@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { rawBody: true });
 
   app.use(helmet({ contentSecurityPolicy: false }));
 
@@ -45,9 +45,10 @@ async function bootstrap() {
 
   SwaggerModule.setup('swagger', app, document);
 
-  const port = process.env.PORT ?? 4000;
-  await app.listen(port);
-  console.log(`Application is running on: http://localhost:${port}`);
+  const host = process.env.HOST ?? '127.0.0.1';
+  const port = Number(process.env.PORT ?? 4000);
+  await app.listen(port, host);
+  console.log(`Application is running on: http://${host}:${port}`);
   console.log(`Swagger documentation is available at: http://localhost:${port}/swagger`);
   console.log(`OpenAPI JSON is available at: http://localhost:${port}/openapi.json`);
 }

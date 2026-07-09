@@ -3,6 +3,7 @@ import { FOOTER_COMPANY, FOOTER_SERVICES, navHref } from '../../config/navigatio
 import { JB } from '../../config/jetbay-cdn';
 import { CdnImage } from '../ui/CdnImage';
 import { NewsletterForm } from './NewsletterForm';
+import { t } from '../../lib/i18n';
 
 export function JetBayFooter({ locale }: { locale: string }) {
   const p = `/${locale}`;
@@ -17,7 +18,7 @@ export function JetBayFooter({ locale }: { locale: string }) {
             <p style={{ color: 'var(--jb-text-muted)', fontSize: 14, margin: '0 0 20px', lineHeight: 1.6 }}>
               A leading global private jet charter platform. Seamless access to 10,000+ aircraft worldwide.
             </p>
-            <h4>Subscribe to our newsletter</h4>
+            <h4>{t(locale, 'newsletter')}</h4>
             <p style={{ fontSize: 13, color: 'var(--jb-text-muted)', margin: '0 0 8px' }}>
               Get exclusive deals and updates on private jet travel
             </p>
@@ -29,7 +30,7 @@ export function JetBayFooter({ locale }: { locale: string }) {
             </div>
           </div>
           <div>
-            <h4>Services</h4>
+            <h4>{t(locale, 'services')}</h4>
             <ul className="jb-footer-links">
               {FOOTER_SERVICES.map((l) => (
                 <li key={l.href}><Link href={navHref(locale, l.href)}>{l.label}</Link></li>
@@ -37,7 +38,7 @@ export function JetBayFooter({ locale }: { locale: string }) {
             </ul>
           </div>
           <div>
-            <h4>Company</h4>
+            <h4>{t(locale, 'company')}</h4>
             <ul className="jb-footer-links">
               {FOOTER_COMPANY.map((l) => (
                 <li key={l.href}><Link href={navHref(locale, l.href)}>{l.label}</Link></li>
