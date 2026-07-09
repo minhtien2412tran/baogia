@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ['@j-ta/ui'],
+  transpilePackages: ['@jetbay/ui'],
 };
 
 export default nextConfig;

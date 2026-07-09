@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 
 function present(key: string): boolean {
   const v = process.env[key]?.trim();
-  return Boolean(v && !v.startsWith('CHANGE_ME') && v !== 'dev-jta-secret-change-in-production');
+  return Boolean(v && !v.startsWith('CHANGE_ME') && v !== 'dev-jetbay-secret-change-in-production');
 }
 
 @Injectable()

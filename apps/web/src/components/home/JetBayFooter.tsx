@@ -13,7 +13,7 @@ export function JetBayFooter({ locale }: { locale: string }) {
         <div className="jb-footer-grid">
           <div>
             <Link href={p} className="jb-logo-link" style={{ display: 'inline-block', marginBottom: 16 }}>
-              <CdnImage src={JB.logo} alt="J-TA" width={120} height={32} className="jb-logo-img" />
+              <CdnImage src={JB.logo} alt="JetBay" width={120} height={32} className="jb-logo-img" />
             </Link>
             <p style={{ color: 'var(--jb-text-muted)', fontSize: 14, margin: '0 0 20px', lineHeight: 1.6 }}>
               A leading global private jet charter platform. Seamless access to 10,000+ aircraft worldwide.
@@ -53,7 +53,7 @@ export function JetBayFooter({ locale }: { locale: string }) {
           </div>
         </div>
         <div className="jb-footer-bottom">
-          <span>© {new Date().getFullYear()} J-TA Inc. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} JetBay Inc. All rights reserved.</span>
           <div className="jb-social">
             {JB.social.map((s) => (
               <a key={s.alt} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.alt}>

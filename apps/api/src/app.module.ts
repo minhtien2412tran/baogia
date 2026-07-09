@@ -65,7 +65,7 @@ import { ApiKeyGuard } from './auth/api-key.guard';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       global: true,
-      secret: process.env.JWT_SECRET ?? 'dev-jta-secret-change-in-production',
+      secret: process.env.JWT_SECRET ?? 'dev-jetbay-secret-change-in-production',
       signOptions: { expiresIn: '7d' },
     }),
   ],

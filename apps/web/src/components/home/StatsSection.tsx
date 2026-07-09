@@ -16,7 +16,7 @@ const STATS = [
   {
     num: 'No.1',
     label: "Asia's Transaction Volume",
-    desc: 'J-TA leads private aviation transactions across Asia, connecting key business and leisure hubs with speed and precision.',
+    desc: 'JetBay leads private aviation transactions across Asia, connecting key business and leisure hubs with speed and precision.',
     variant: 'plain' as const,
     icon: JB.stats.tab,
   },
@@ -42,7 +42,7 @@ const DESKTOP_STATS = [
   {
     num: 'No.1',
     label: "Asia's Transaction Volume",
-    desc: 'J-TA leads private aviation transactions across Asia, connecting key business and leisure hubs with precision. A trusted platform for high-volume and time-critical flights.',
+    desc: 'JetBay leads private aviation transactions across Asia, connecting key business and leisure hubs with precision. A trusted platform for high-volume and time-critical flights.',
     icon: JB.stats.tab,
   },
   {

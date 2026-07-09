@@ -106,7 +106,7 @@ export async function ServicePage({ locale, pageKey }: { locale: string; pageKey
 
               <p className="jb-section-desc">
 
-                J-TA&apos;s private air charter service combines luxury, efficiency, and safety at the best value.
+                JetBay&apos;s private air charter service combines luxury, efficiency, and safety at the best value.
 
               </p>
 
@@ -262,7 +262,7 @@ export async function ServicePage({ locale, pageKey }: { locale: string; pageKey
 
         <>
 
-          <LightSection title="The J-TA Charter Process" subtitle="Your Journey, Effortlessly Arranged.">
+          <LightSection title="The JetBay Charter Process" subtitle="Your Journey, Effortlessly Arranged.">
 
             <StepsTimeline
 
@@ -312,7 +312,7 @@ export async function ServicePage({ locale, pageKey }: { locale: string; pageKey
 
       {pageKey !== 'private-jet-charter' && content.features && content.features.length > 0 && (
 
-        <LightSection title="Why J-TA" subtitle="Trusted standards on every flight.">
+        <LightSection title="Why JetBay" subtitle="Trusted standards on every flight.">
 
           <FeatureGrid items={content.features} />
 

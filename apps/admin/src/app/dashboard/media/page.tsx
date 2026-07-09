@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { SectionTitle, Muted, Button } from '@j-ta/ui';
+import { SectionTitle, Muted, Button } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
 import { ActionBtn } from '../../../components/AdminFormFields';
 import { adminApi } from '../../../lib/api';

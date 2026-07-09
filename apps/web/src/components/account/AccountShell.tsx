@@ -26,7 +26,7 @@ export function AccountShell({
   const base = `/${locale}/account`;
 
   async function logout() {
-    const refreshToken = localStorage.getItem('jta_refresh_token');
+    const refreshToken = localStorage.getItem('jetbay_refresh_token');
     if (refreshToken) {
       try {
         await api.logout(refreshToken);
@@ -34,9 +34,9 @@ export function AccountShell({
         /* revoke best-effort */
       }
     }
-    localStorage.removeItem('jta_token');
-    localStorage.removeItem('jta_refresh_token');
-    localStorage.removeItem('jta_user_id');
+    localStorage.removeItem('jetbay_token');
+    localStorage.removeItem('jetbay_refresh_token');
+    localStorage.removeItem('jetbay_user_id');
     router.push(`/${locale}/login`);
   }
 
@@ -80,7 +80,7 @@ export function AccountShell({
 
 function getToken(): string | null {
   if (typeof window === 'undefined') return null;
-  return localStorage.getItem('jta_token');
+  return localStorage.getItem('jetbay_token');
 }
 
 export function useAccountAuth(locale: string) {

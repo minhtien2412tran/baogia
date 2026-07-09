@@ -1,4 +1,4 @@
-# QA Report — J-TA Platform
+# QA Report — JetBay Platform
 
 **Date:** 2026-07-09  
 **Environment:** Windows 10, Node 22+, PostgreSQL 16 local, pnpm 10  
@@ -8,20 +8,20 @@
 
 | App | Build | Tests |
 |-----|-------|-------|
-| API | ✅ `pnpm --filter api build` | ✅ 5 unit tests |
-| Web | ✅ `pnpm --filter web build` | — |
-| Admin | ✅ `pnpm --filter admin build` | — |
+| API | ✅ `pnpm --filter @jetbay/api build` | ✅ 5 unit tests |
+| Web | ✅ `pnpm --filter @jetbay/web build` | — |
+| Admin | ✅ `pnpm --filter @jetbay/admin build` | — |
 | CI | ✅ `.github/workflows/ci.yml` | API test job |
 
 ## Lệnh đã chạy (CI local)
 
 ```bash
-pnpm --filter api prisma:generate
-pnpm --filter api build
-pnpm --filter api test
-pnpm --filter admin build
-pnpm --filter web build
-pnpm --filter api exec prisma db push   # RefreshToken + OtpCode sync
+pnpm --filter @jetbay/api prisma:generate
+pnpm --filter @jetbay/api build
+pnpm --filter @jetbay/api test
+pnpm --filter @jetbay/admin build
+pnpm --filter @jetbay/web build
+pnpm --filter @jetbay/api exec prisma db push   # RefreshToken + OtpCode sync
 ```
 
 ## API smoke tests (cần API chạy `:4000`)
@@ -30,7 +30,7 @@ pnpm --filter api exec prisma db push   # RefreshToken + OtpCode sync
 |----------|---------|
 | `GET /` | Root health |
 | `GET /openapi.json` | OpenAPI spec |
-| `POST /auth/login` | demo@j-ta.local |
+| `POST /auth/login` | demo@jetbay.local |
 | `POST /auth/otp/send` | Dev code in response |
 | `GET /quotes/my` | JWT required |
 | `GET /payments/my` | JWT required |

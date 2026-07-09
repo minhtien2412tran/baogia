@@ -4,8 +4,8 @@ const API = 'http://127.0.0.1:4000';
 const WEB = 'http://localhost:3000';
 const ADMIN = 'http://localhost:3001';
 
-test.describe('J-TA Platform E2E', () => {
-  test('web home loads with J-TA branding', async ({ page }) => {
+test.describe('JetBay Platform E2E', () => {
+  test('web home loads with JetBay branding', async ({ page }) => {
     await page.goto(`${WEB}/en-us`);
     await expect(page.getByRole('heading', { name: /Global Private Jet Charter/i }).first()).toBeVisible();
     await expect(page.getByText('Fixed-Price Charter Routes')).toBeVisible();
@@ -23,7 +23,7 @@ test.describe('J-TA Platform E2E', () => {
 
   test('admin dashboard loads after login', async ({ page, request }) => {
     const res = await request.post(`${API}/auth/login`, {
-      data: { email: 'admin@j-ta.local', password: 'Admin123!' },
+      data: { email: 'admin@jetbay.local', password: 'Admin123!' },
     });
     expect(res.ok()).toBeTruthy();
     const body = await res.json();
@@ -31,7 +31,7 @@ test.describe('J-TA Platform E2E', () => {
     expect(token).toBeTruthy();
 
     await page.goto(`${ADMIN}/login`);
-    await page.evaluate((t) => localStorage.setItem('jta_admin_token', t), token);
+    await page.evaluate((t) => localStorage.setItem('jetbay_admin_token', t), token);
     await page.goto(`${ADMIN}/dashboard`);
     await expect(page.getByText('Dashboard Overview')).toBeVisible({ timeout: 15000 });
   });
@@ -42,7 +42,7 @@ test.describe('J-TA Platform E2E', () => {
     const spec = await request.get(`${API}/openapi.json`);
     expect(spec.ok()).toBeTruthy();
     const json = await spec.json();
-    expect(json.info.title).toBe('J - TA API');
+    expect(json.info.title).toBe('JETBAY API');
   });
 
   test('API auth OTP dev flow', async ({ request }) => {

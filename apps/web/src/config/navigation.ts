@@ -51,7 +51,7 @@ export const MEGA_MENU: NavGroup[] = [
   {
     title: 'Services',
     links: [
-      { href: '/air-ambulance', label: 'Air Ambulance / J-TA SOS', description: '24/7 medical evacuation' },
+      { href: '/air-ambulance', label: 'Air Ambulance / JetBay SOS', description: '24/7 medical evacuation' },
       { href: '/booking-process', label: 'How Booking Works', description: 'Step-by-step guide' },
       { href: '/jetbay-private-jet-app', label: 'Mobile App', description: 'Book jets on the go' },
     ],
@@ -59,7 +59,7 @@ export const MEGA_MENU: NavGroup[] = [
   {
     title: 'Company',
     links: [
-      { href: '/about-us', label: 'About J-TA', description: 'Our story & standards' },
+      { href: '/about-us', label: 'About JetBay', description: 'Our story & standards' },
       { href: '/global-partnership-program', label: 'Global Partnership Program', description: 'Refer & earn globally' },
       { href: '/news', label: 'News', description: 'Latest updates' },
       { href: '/blogs', label: 'Blogs', description: 'Insights & guides' },
@@ -97,7 +97,7 @@ export function navHref(locale: string, href: string) {
   return `/${locale}${href}`;
 }
 
-/** Menu link icon from J-TA CDN */
+/** Menu link icon from JetBay CDN */
 export function navLinkIcon(href: string): string | undefined {
   const map: Record<string, string> = {
     '/private-jet-charter': JB.menu.privateJet,

@@ -14,8 +14,8 @@ Run locally:
 ```bash
 docker compose up -d   # Postgres, Redis, MinIO, Mailpit
 pnpm install
-pnpm --filter api prisma migrate deploy
-pnpm --filter api prisma:seed
+pnpm --filter @jetbay/api prisma migrate deploy
+pnpm --filter @jetbay/api prisma:seed
 pnpm dev
 ```
 

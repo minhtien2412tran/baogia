@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { SectionTitle, DataTable, Muted } from '@j-ta/ui';
+import { SectionTitle, DataTable, Muted } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
 import { adminApi } from '../../../lib/api';
 

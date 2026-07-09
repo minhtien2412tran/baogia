@@ -7,7 +7,7 @@ import { JB } from '../../../config/jetbay-cdn';
 import { CdnImage } from '../../../components/ui/CdnImage';
 
 export async function generateMetadata() {
-  return buildMetadata({ title: 'News', description: 'Latest news from J-TA private aviation.' });
+  return buildMetadata({ title: 'News', description: 'Latest news from JetBay private aviation.' });
 }
 
 export default async function NewsPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -15,7 +15,7 @@ export default async function NewsPage({ params }: { params: Promise<{ locale: s
   const data = await safeApi(() => api.getNews(), { news: [] });
 
   return (
-    <SubPageLayout locale={locale} title="News" description="Latest updates from J-TA." tag="Company" heroImage={JB.pages.newsDefault}>
+    <SubPageLayout locale={locale} title="News" description="Latest updates from JetBay." tag="Company" heroImage={JB.pages.newsDefault}>
       <div className="jb-news-grid">
         {data.news.map((n: Record<string, unknown>) => {
           const thumb = n.thumbnail ? String(n.thumbnail) : JB.pages.newsDefault;

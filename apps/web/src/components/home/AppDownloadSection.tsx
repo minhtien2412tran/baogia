@@ -19,7 +19,7 @@ export function AppDownloadSection({ locale }: { locale: string }) {
             </div>
           </div>
           <div className="jb-split-visual jb-split-visual-img">
-            <CdnImage src={JB.sections.app} alt="J-TA mobile app" fill className="jb-cover-img" sizes="(max-width: 768px) 100vw, 50vw" />
+            <CdnImage src={JB.sections.app} alt="JetBay mobile app" fill className="jb-cover-img" sizes="(max-width: 768px) 100vw, 50vw" />
           </div>
         </div>
       </div>

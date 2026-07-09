@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Muted } from '@j-ta/ui';
+import { Muted } from '@jetbay/ui';
 import { getToken } from '../lib/api';
 
 export function AdminAuthGate({ children }: { children: React.ReactNode }) {

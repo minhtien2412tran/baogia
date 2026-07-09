@@ -11,7 +11,7 @@ Web env: `apps/web/.env.local` → `NEXT_PUBLIC_API_URL`
 | Airport search `GET /airports/search` | ✅ |
 | Quote submit `POST /quotes/request` | ✅ |
 | Hero + QuoteSearchWidget wired | ✅ code |
-| Build `pnpm --filter web build` | (run in CI/local) |
+| Build `pnpm --filter @jetbay/web build` | (run in CI/local) |
 
 ## Group 2 — Commercial
 

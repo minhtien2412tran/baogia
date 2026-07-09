@@ -98,7 +98,7 @@ export default async function FixedPriceDetailPage({
           <ul className="jb-bullet-list">
             <li>Aircraft, crew, and standard handling fees</li>
             <li>Departure and arrival at private terminals (FBO)</li>
-            <li>24/7 J-TA concierge support</li>
+            <li>24/7 JetBay concierge support</li>
           </ul>
           <h2 className="jb-section-title" style={{ marginTop: 32 }}>What&apos;s not included</h2>
           <ul className="jb-bullet-list">

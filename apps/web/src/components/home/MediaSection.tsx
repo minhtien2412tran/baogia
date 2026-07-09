@@ -18,7 +18,7 @@ export function MediaSection() {
       <div className="jb-container">
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <span className="jb-tag">Explore</span>
-          <h2 className="jb-section-title">Explore the World with J-TA</h2>
+          <h2 className="jb-section-title">Explore the World with JetBay</h2>
         </div>
         <div className="jb-media-tabs">
           {TABS.map((t) => (

@@ -109,8 +109,8 @@ API tối thiểu theo báo giá App (*đăng nhập, tìm chuyến, lưu yêu c
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | `admin@j-ta.local` | `Admin123!` |
-| User | `demo@j-ta.local` | `Demo123!` |
+| Admin | `admin@jetbay.local` | `Admin123!` |
+| User | `demo@jetbay.local` | `Demo123!` |
 
 Đổi mật khẩu ngay khi bàn giao khách hàng. Env secrets: [SECURITY_SECRETS.md](./SECURITY_SECRETS.md).  
 Bảo mật tham khảo HomeFix / chức năng theo báo giá: [JETBAY_SECURITY_VS_FEATURES.md](./JETBAY_SECURITY_VS_FEATURES.md).
@@ -155,3 +155,4 @@ node scripts/deploy/jetbay-be/smoke-web-api.mjs
 | 2026-07-09 | Rotate prod secrets + chuẩn hoá Swagger/docs | DONE |
 | 2026-07-09 | ApiKeyGuard + X-API-Key smoke 16/16 | DONE |
 | 2026-07-09 | AGENTS + CONTINUE_AT_HOME + git FE/BE/admin | DONE |
+| 2026-07-09 | Rebrand monorepo → JETBAY (`@jetbay/*`, docs) | DONE |

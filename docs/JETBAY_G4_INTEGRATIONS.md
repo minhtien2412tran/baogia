@@ -40,7 +40,7 @@ Web/Admin cũng cần:
 
 ## UAT steps (khi có keys)
 
-1. **Email login** — `demo@j-ta.local` / `Demo123!` → ✅ đã smoke
+1. **Email login** — `demo@jetbay.local` / `Demo123!` → ✅ đã smoke
 2. **OTP** — `POST /auth/otp/send` → nhận SMS hoặc devCode
 3. **Google/Apple** — login UI trên web domain đã verify
 4. **Payment sandbox** — tạo booking → OnePay/9Pay/Stripe redirect → webhook cập nhật `Payment`

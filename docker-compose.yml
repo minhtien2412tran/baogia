@@ -3,20 +3,20 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: jta-postgres
+    container_name: jetbay-postgres
     ports:
       - '5432:5432'
     environment:
-      POSTGRES_USER: jta_user
-      POSTGRES_PASSWORD: jta_password
-      POSTGRES_DB: jta_db
+      POSTGRES_USER: jetbay_user
+      POSTGRES_PASSWORD: jetbay_password
+      POSTGRES_DB: jetbay_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: always
 
   redis:
     image: redis:7-alpine
-    container_name: jta-redis
+    container_name: jetbay-redis
     ports:
       - '6379:6379'
     volumes:
@@ -25,7 +25,7 @@ services:
 
   minio:
     image: minio/minio:RELEASE.2024-01-28T22-35-53Z
-    container_name: jta-minio
+    container_name: jetbay-minio
     ports:
       - '9000:9000'
       - '9001:9001'
@@ -38,11 +38,11 @@ services:
     restart: always
 
   mailpit:
-    image: axllent/mailpit:v1.15
-    container_name: jta-mailpit
+    image: axllent/mailpit:v1.21
+    container_name: jetbay-mailpit
     ports:
-      - '1025:1025' # SMTP port
-      - '8025:8025' # Web UI port
+      - '1025:1025'
+      - '8025:8025'
     restart: always
 
 volumes:

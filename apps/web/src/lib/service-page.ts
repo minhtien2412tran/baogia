@@ -10,7 +10,7 @@ export const PAGE_CMS_SLUG: Partial<Record<string, string>> = {
 export function servicePageMetadata(pageKey: string) {
   const c = getPageContent(pageKey);
   return buildMetadata({
-    title: c?.title ?? 'J-TA',
+    title: c?.title ?? 'JetBay',
     description: c?.description ?? 'Private jet charter',
   });
 }

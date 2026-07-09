@@ -31,8 +31,8 @@ Last updated: 2026-06-30
 
 | Account | Email | Password | Role |
 |---------|-------|----------|------|
-| Demo user | demo@j-ta.local | Demo123! | USER |
-| Admin | admin@j-ta.local | Admin123! | ADMIN |
+| Demo user | demo@jetbay.local | Demo123! | USER |
+| Admin | admin@jetbay.local | Admin123! | ADMIN |
 
 ### Still pending
 
@@ -49,7 +49,7 @@ See [API_UI_AUDIT.md](./API_UI_AUDIT.md). Live audit: `GET /api-gateway/ui-audit
 
 ```powershell
 pnpm db:up
-pnpm --filter api prisma:migrate
-pnpm --filter api prisma:seed
-pnpm --filter api dev
+pnpm --filter @jetbay/api prisma:migrate
+pnpm --filter @jetbay/api prisma:seed
+pnpm --filter @jetbay/api dev
 ```

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { SectionTitle, Muted, Button, Input } from '@j-ta/ui';
+import { SectionTitle, Muted, Button, Input } from '@jetbay/ui';
 import { AdminShell } from '../../../../components/AdminShell';
 import { adminApi } from '../../../../lib/api';
 
@@ -106,7 +106,7 @@ function mergeCms(parsed: Partial<AboutCms>): AboutCms {
 export default function EditAboutUsPage() {
   const [pageId, setPageId] = useState<number | null>(null);
   const [cms, setCms] = useState<AboutCms>(EMPTY);
-  const [pageTitle, setPageTitle] = useState('About J-TA');
+  const [pageTitle, setPageTitle] = useState('About JetBay');
   const [excerpt, setExcerpt] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'saved' | 'error'>('idle');
   const [msg, setMsg] = useState('');
@@ -117,7 +117,7 @@ export default function EditAboutUsPage() {
       const page = data.find((p) => p.slug === 'about-us');
       if (!page) return;
       setPageId(Number(page.id));
-      setPageTitle(String(page.title ?? 'About J-TA'));
+      setPageTitle(String(page.title ?? 'About JetBay'));
       setExcerpt(String((page as { excerpt?: string }).excerpt ?? ''));
       const body = String((page as { body?: string }).body ?? '');
       try {
@@ -144,7 +144,7 @@ export default function EditAboutUsPage() {
           title: pageTitle,
           excerpt,
           body: JSON.stringify(cms, null, 2),
-          seoTitle: `${pageTitle} - J-TA`,
+          seoTitle: `${pageTitle} - JetBay`,
           seoDescription: excerpt || cms.heroSubtitle,
         },
       });

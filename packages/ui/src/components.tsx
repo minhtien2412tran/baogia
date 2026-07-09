@@ -153,7 +153,7 @@ export function SiteHeader({ locale = 'en' }: { locale?: string }) {
   ];
   return (
     <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32, flexWrap: 'wrap', gap: 12 }}>
-      <a href={`/${locale}`} style={{ color: colors.accent, fontWeight: 700, fontSize: 20, textDecoration: 'none' }}>J-TA</a>
+      <a href={`/${locale}`} style={{ color: colors.accent, fontWeight: 700, fontSize: 20, textDecoration: 'none' }}>JetBay</a>
       <nav style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
         {links.map((l) => (
           <a key={l.href} href={l.href} style={{ color: colors.textMuted, textDecoration: 'none', fontSize: 14 }}>{l.label}</a>

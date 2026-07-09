@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { SectionTitle, Muted, Button, Input } from '@j-ta/ui';
+import { SectionTitle, Muted, Button, Input } from '@jetbay/ui';
 import { AdminShell } from '../../../../components/AdminShell';
 import { adminApi } from '../../../../lib/api';
 
@@ -116,7 +116,7 @@ export default function EditBookingProcessPage() {
           title: pageTitle,
           excerpt,
           body: JSON.stringify(cms, null, 2),
-          seoTitle: `${pageTitle} - J-TA`,
+          seoTitle: `${pageTitle} - JetBay`,
           seoDescription: excerpt || cms.heroSubtitle,
         },
       });
@@ -163,7 +163,7 @@ export default function EditBookingProcessPage() {
         </div>
       ))}
 
-      <h3 style={{ marginTop: 24, color: '#f1d99a' }}>Why J-TA</h3>
+      <h3 style={{ marginTop: 24, color: '#f1d99a' }}>Why JetBay</h3>
       <Field label="Section title" value={cms.whyTitle} onChange={(v) => set('whyTitle', v)} />
       {cms.whyItems.map((item, i) => (
         <div key={i} style={{ marginTop: 12 }}>

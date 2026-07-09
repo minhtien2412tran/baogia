@@ -1,14 +1,15 @@
-# J - TA Clean-Room Private Jet Booking Platform
+# JETBAY — Private Jet Booking Platform
 
-This project is a monorepo containing the public website, admin dashboard, and backend API for J - TA, a clean-room clone of a private jet booking platform.
+Monorepo: public website, admin dashboard, and NestJS API for **JETBAY** (clean-room clone of a private jet booking platform).
 
 ## Architecture
 
-The platform uses a pnpm monorepo structure:
-- **`apps/web`**: Next.js public website (running on `localhost:3000`) — branch `feat/web-*`
-- **`apps/admin`**: Next.js custom admin dashboard (running on `localhost:3001`) — branch `feat/admin-*`
-- **`apps/api`**: NestJS core backend API (running on `localhost:4000`) — branch `feat/api-*`
-- **`docker-compose.yml`**: Docker environment configurations for PostgreSQL, Redis, MinIO, and Mailpit.
+pnpm workspace:
+- **`apps/web`** (`@jetbay/web`): Next.js public site — `localhost:3000` — branch `feat/web-*`
+- **`apps/admin`** (`@jetbay/admin`): Admin CMS — `localhost:3001` — branch `feat/admin-*`
+- **`apps/api`** (`@jetbay/api`): NestJS API — `localhost:4000` — branch `feat/api-*`
+- **`packages/ui`** (`@jetbay/ui`): Shared UI
+- **`docker-compose.yml`**: PostgreSQL, Redis, MinIO, Mailpit (`jetbay_*` local)
 
 ### Tiếp tục code (nhiều máy / Cursor)
 
@@ -16,6 +17,7 @@ The platform uses a pnpm monorepo structure:
 |------|----------|
 | [docs/CONTINUE_AT_HOME.md](./docs/CONTINUE_AT_HOME.md) | **Bắt đầu ở đây** sau `git pull` |
 | [AGENTS.md](./AGENTS.md) | Hướng dẫn AI + map FE/BE/Admin |
+| [docs/JETBAY_BAO_GIA.md](./docs/JETBAY_BAO_GIA.md) | Báo giá / phạm vi |
 | [docs/GIT_WORKFLOW.md](./docs/GIT_WORKFLOW.md) | Nhánh git an toàn |
 | `.cursor/rules/` | Rules Cursor (commit cùng code) |
 
@@ -53,10 +55,10 @@ pnpm db:down
 Apply migrations to PostgreSQL and generate the Prisma Client:
 ```bash
 # Generate Prisma Client
-pnpm --filter api prisma:generate
+pnpm --filter @jetbay/api prisma:generate
 
 # Deploy migrations (requires database connection)
-pnpm --filter api prisma:migrate
+pnpm --filter @jetbay/api prisma:migrate
 ```
 
 ### Running the Applications
@@ -71,7 +73,7 @@ pnpm qa:ci          # prisma generate + build all + API unit tests
 pnpm test:e2e       # Playwright (cần pnpm dev đang chạy)
 ```
 
-### Demo credentials (sau `pnpm --filter api prisma:seed`)
+### Demo credentials (sau `pnpm --filter @jetbay/api prisma:seed`)
 | Role | Email | Password |
 |------|-------|----------|
 | Admin | admin@j-ta.local | Admin123! |

@@ -59,7 +59,7 @@ export default async function VideoCentrePage({ params }: { params: Promise<{ lo
       </SubPageLayout>
 
       {data.videos.length === 0 && (
-        <LightSection title="Featured videos" subtitle="Highlights from J-TA events and aircraft tours.">
+        <LightSection title="Featured videos" subtitle="Highlights from JetBay events and aircraft tours.">
           <div className="jb-video-grid">
             {JB.videoThumbs.slice(0, 6).map((thumb, i) => (
               <article key={thumb} className="jb-video-card">
@@ -68,7 +68,7 @@ export default async function VideoCentrePage({ params }: { params: Promise<{ lo
                   <span className="jb-video-play" aria-hidden>▶</span>
                 </div>
                 <div className="jb-video-body">
-                  <h3>J-TA Highlights {i + 1}</h3>
+                  <h3>JetBay Highlights {i + 1}</h3>
                 </div>
               </article>
             ))}

@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     title: seo?.title ? rebrandText(seo.title) : 'How Booking Works',
     description: seo?.description
       ? rebrandText(seo.description)
-      : 'Step-by-step guide to chartering a private jet with J-TA.',
+      : 'Step-by-step guide to chartering a private jet with JetBay.',
     path: '/booking-process',
   });
 }

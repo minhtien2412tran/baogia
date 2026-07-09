@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { PageShell, colors } from '@j-ta/ui';
+import { PageShell, colors } from '@jetbay/ui';
 import { clearToken } from '../lib/api';
 
 const nav = [
@@ -36,7 +36,7 @@ export function AdminShell({ children, active }: { children: React.ReactNode; ac
       <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
         <aside style={{ minWidth: 180 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-            <h2 style={{ color: colors.accent, margin: 0 }}>J-TA Admin</h2>
+            <h2 style={{ color: colors.accent, margin: 0 }}>JetBay Admin</h2>
             <button type="button" onClick={logout} style={{ background: 'none', border: 'none', color: colors.textMuted, cursor: 'pointer', fontSize: 12 }}>
               Logout
             </button>

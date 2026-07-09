@@ -27,7 +27,7 @@ export class AuthService {
     return (
       process.env.REFRESH_TOKEN_SECRET ??
       process.env.JWT_SECRET ??
-      'dev-jta-secret-change-in-production'
+      'dev-jetbay-secret-change-in-production'
     );
   }
 
@@ -235,7 +235,7 @@ export class AuthService {
     const { phone: normalized } = await this.otp.verifyOtp(phone, code, 'LOGIN');
     let user = await this.prisma.user.findFirst({ where: { phone: normalized } });
     if (!user) {
-      const email = `${normalized.replace(/\D/g, '')}@phone.j-ta.local`;
+      const email = `${normalized.replace(/\D/g, '')}@phone.jetbay.local`;
       user = await this.prisma.user.create({
         data: {
           email,
@@ -252,7 +252,7 @@ export class AuthService {
 
   async verifyOtpRegister(phone: string, code: string, email?: string) {
     const { phone: normalized } = await this.otp.verifyOtp(phone, code, 'REGISTER');
-    const userEmail = email ?? `${normalized.replace(/\D/g, '')}@phone.j-ta.local`;
+    const userEmail = email ?? `${normalized.replace(/\D/g, '')}@phone.jetbay.local`;
 
     const existing = await this.prisma.user.findFirst({
       where: { OR: [{ phone: normalized }, { email: userEmail }] },

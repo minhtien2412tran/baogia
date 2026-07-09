@@ -43,7 +43,7 @@ const checks = [
       post('/quotes/request', {
         firstName: 'Web',
         lastName: 'Smoke',
-        email: 'demo@j-ta.local',
+        email: 'demo@jetbay.local',
         phone: '+84900000000',
         isConsentAccepted: true,
         legs: [{ fromAirport: 'SGN', toAirport: 'HAN', departureDate: '2026-09-15T10:00:00Z', passengers: 2 }],

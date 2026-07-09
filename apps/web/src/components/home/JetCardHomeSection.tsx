@@ -22,7 +22,7 @@ export function JetCardHomeSection({ locale, plans }: { locale: string; plans: P
         <span className="jb-tag">Jet Card</span>
         <div className="jb-section-header">
           <div>
-            <h2 className="jb-section-title">Elevate Your Travel with The J-TA Jet Card</h2>
+            <h2 className="jb-section-title">Elevate Your Travel with The JetBay Jet Card</h2>
           </div>
           <a href={`${p}/jet-card`} className="jb-link-gold">More information about Jet Card →</a>
         </div>

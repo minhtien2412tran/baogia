@@ -48,8 +48,8 @@ With `APP_ENV=production`, API refuses to start if JWT/refresh/API_KEY/PAYMENT_S
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | `admin@j-ta.local` | `Admin123!` |
-| User | `demo@j-ta.local` | `Demo123!` |
+| Admin | `admin@jetbay.local` | `Admin123!` |
+| User | `demo@jetbay.local` | `Demo123!` |
 
 These are **seed passwords**, not env secrets. Rotate user passwords separately before customer handover.
 

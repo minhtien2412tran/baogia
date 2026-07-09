@@ -1,5 +1,5 @@
 {
-  "name": "admin",
+  "name": "@jetbay/admin",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@j-ta/ui": "workspace:*",
+    "@jetbay/ui": "workspace:*",
     "next": "16.2.9",
     "react": "19.2.4",
     "react-dom": "19.2.4"

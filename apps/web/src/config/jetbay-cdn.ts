@@ -284,7 +284,7 @@ export const JB = {
         { title: 'Access Private Jet', body: 'Enjoy exclusive, hassle-free private jet access.' },
       ],
       faqs: [
-        { q: 'What is the J-TA Jet Card, and how does it work?', a: 'A prepaid membership giving flexible access to a global private jet network with fixed hourly rates and priority booking.' },
+        { q: 'What is the JetBay Jet Card, and how does it work?', a: 'A prepaid membership giving flexible access to a global private jet network with fixed hourly rates and priority booking.' },
         { q: 'What aircraft can I fly with the Jet Card?', a: 'Light, midsize, super-midsize, and long-range jets across our vetted operator network.' },
         { q: 'Can I use the Jet Card for international flights?', a: 'Yes — subject to aircraft availability and applicable regulations for your route.' },
         { q: 'What are the benefits over on-demand charter?', a: 'Fixed pricing, no blackout dates, instant booking, and dedicated account management.' },

@@ -1,6 +1,6 @@
 'use client';
 
-import { colors } from '@j-ta/ui';
+import { colors } from '@jetbay/ui';
 
 export const fieldStyle: React.CSSProperties = {
   width: '100%',

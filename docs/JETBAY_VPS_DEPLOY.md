@@ -68,7 +68,7 @@ bash scripts/deploy/jetbay-be/sync-source.sh
 ```
 
 Script sẽ:
-1. Build API local (`pnpm --filter api build`)
+1. Build API local (`pnpm --filter @jetbay/api build`)
 2. Rsync `apps/api/` → `root@103.200.20.100:/var/www/jetbay-be/`
 3. Copy deploy scripts → `/var/www/jetbay-be/deploy/`
 

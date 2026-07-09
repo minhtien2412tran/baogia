@@ -49,7 +49,7 @@ export class ApiGatewayService {
     }, {});
 
     return {
-      name: 'J-TA API Gateway',
+      name: 'JetBay API Gateway',
       version: '1.0',
       documentation: {
         swagger: '/swagger',

@@ -1,20 +1,20 @@
 {
-  "name": "j-ta-platform",
+  "name": "jetbay",
   "version": "1.0.0",
   "private": true,
-  "description": "J - TA Clean-Room Private Jet Booking Platform",
+  "description": "JETBAY Private Jet Booking Platform",
   "scripts": {
     "dev": "pnpm --filter \"*\" --parallel dev",
     "build": "pnpm --filter \"*\" build",
     "start": "pnpm --filter \"*\" start",
     "test": "pnpm --filter \"*\" test",
-    "test:api": "pnpm --filter api test",
+    "test:api": "pnpm --filter @jetbay/api test",
     "test:e2e": "playwright test",
-    "qa:ci": "pnpm --filter api prisma:generate && pnpm --filter api build && pnpm --filter api test && pnpm --filter admin build && pnpm --filter web build",
+    "qa:ci": "pnpm --filter @jetbay/api prisma:generate && pnpm --filter @jetbay/api build && pnpm --filter @jetbay/api test && pnpm --filter @jetbay/admin build && pnpm --filter @jetbay/web build",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "assets:jetbay": "node scripts/download-jetbay-assets.mjs",
-    "rebrand:jta": "node scripts/rebrand-jta.mjs"
+    "rebrand:jetbay": "node scripts/rebrand-jetbay.mjs"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

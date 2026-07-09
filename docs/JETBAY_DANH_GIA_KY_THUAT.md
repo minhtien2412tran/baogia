@@ -1,12 +1,12 @@
-# Đánh giá kỹ thuật & phân rã báo giá — Nền tảng J-TA Private Jet Charter
+# Đánh giá kỹ thuật & phân rã báo giá — nền tảng JETBAY Private Jet Charter
 
-> **Báo giá gửi khách hàng (phiên bản trình bày):** xem [`PHIEU_BAO_GIA_J_TA.md`](./PHIEU_BAO_GIA_J_TA.md)  
+> **Báo giá gửi khách hàng (phiên bản trình bày):** xem [`JETBAY_BAO_GIA.md`](./JETBAY_BAO_GIA.md)  
 > **Demo tương tác:** [m-tien.com/jet-bay](https://m-tien.com/jet-bay/)
 
 **Phiên bản tài liệu:** 1.0  
 **Ngày:** 30/06/2026  
 **Đối tượng:** Báo giá triển khai / hoàn thiện hệ thống gửi khách hàng  
-**Mã dự án:** `j-ta-platform` (monorepo `baogia`)
+**Mã dự án:** `JETBAY-platform` (monorepo `baogia`)
 
 ---
 
@@ -43,7 +43,7 @@ flowchart TB
   end
 
   subgraph Shared["packages/"]
-    UI["@j-ta/ui<br/>Design tokens + components"]
+    UI["@JETBAY/ui<br/>Design tokens + components"]
   end
 
   subgraph Infra["Hạ tầng (Docker Compose)"]
@@ -92,7 +92,7 @@ baogia/
 │   ├── admin/               # Dashboard quản trị
 │   └── api/                 # Backend REST + Prisma
 ├── packages/
-│   └── ui/                  # @j-ta/ui — component dùng chung
+│   └── ui/                  # @JETBAY/ui — component dùng chung
 ├── scripts/                 # Tải asset, rebrand, parse HTML mẫu
 ├── docs/                    # Tài liệu kỹ thuật & sprint
 ├── tests/                   # Playwright e2e + API tests
@@ -109,7 +109,7 @@ apps/web/
 ├── public/
 │   └── assets/
 │       ├── jetbay/          # Ảnh clone (banner, aircraft, destinations…)
-│       └── jta/             # Brand J-TA (logo, favicon, OG)
+│       └── jta/             # Brand JETBAY (logo, favicon, OG)
 └── src/
     ├── app/
     │   ├── layout.tsx       # Metadata, favicon, OG mặc định
@@ -133,7 +133,7 @@ apps/web/
     │   ├── about-us-default.ts
     │   ├── booking-process-default.ts
     │   ├── aircraft-catalog.ts
-    │   ├── brand.ts         # J-TA rebrand
+    │   ├── brand.ts         # JETBAY rebrand
     │   └── metadata.ts      # SEO / OpenGraph
     └── styles/
         ├── jetbay-home.css
@@ -199,7 +199,7 @@ apps/api/
 
 ```
 packages/ui/src/
-├── tokens.ts        # colors, spacing (J-TA theme)
+├── tokens.ts        # colors, spacing (JETBAY theme)
 ├── components.tsx   # PageShell, Card, DataTable, Button, Input, Badge
 └── index.ts
 ```
@@ -209,7 +209,7 @@ packages/ui/src/
 ## 4. Cây chức năng nghiệp vụ (Feature Tree)
 
 ```
-J-TA Platform
+JETBAY Platform
 │
 ├── A. Marketing & Discovery (Web)
 │   ├── A1. Trang chủ (Hero, Promo, Fixed Price, Empty Legs, Destinations, Jet Card, Stats, Media)
@@ -256,7 +256,7 @@ J-TA Platform
     ├── F4. [Chưa] Email (Mailpit → SMTP production)
     ├── F5. [Chưa] Stripe / cổng thanh toán
     ├── F6. [Chưa] Rate limiting, OAuth, CI/CD
-    └── F7. SEO, favicon, OG (đã có cơ bản J-TA)
+    └── F7. SEO, favicon, OG (đã có cơ bản JETBAY)
 ```
 
 ---
@@ -407,7 +407,7 @@ PartnerAccount
 | Partner program | Programs + application | 🟡 ~55% | 2 ngày |
 | Quote widget | Airport search, submit quote | ✅ | 2 ngày UX validation |
 | Responsive mobile | Stats carousel, tabs, grids | 🟡 ~65% | 5–8 ngày audit toàn site |
-| SEO + OG + favicon J-TA | metadata, brand assets | ✅ Cơ bản | 1 ngày (PNG OG, analytics) |
+| SEO + OG + favicon JETBAY | metadata, brand assets | ✅ Cơ bản | 1 ngày (PNG OG, analytics) |
 | i18n content | 6 locale routing | 🟡 Route only | 10–15 ngày dịch CMS |
 
 ### WP-03 — Admin Dashboard
@@ -452,8 +452,8 @@ PartnerAccount
 | Hạng mục | Mô tả | Trạng thái | Effort còn lại |
 |----------|-------|------------|----------------|
 | Mirror CDN jetbay | 164 assets local | ✅ | Bảo trì khi thêm trang |
-| Rebrand J-TA | Logo, text replace | ✅ | 0.5 ngày |
-| Favicon / OG | SVG J-TA | ✅ | 0.5 ngày (export PNG) |
+| Rebrand JETBAY | Logo, text replace | ✅ | 0.5 ngày |
+| Favicon / OG | SVG JETBAY | ✅ | 0.5 ngày (export PNG) |
 | Copywriting | Thay nội dung marketing | ⬜ | Theo scope KH |
 
 ---
@@ -481,7 +481,7 @@ PartnerAccount
 | Clone UI 100% jet-bay.com | Trung bình | Scope rõ từng trang; HTML scratch làm baseline |
 | Thanh toán / OAuth phụ thuộc bên thứ 3 | Trung bình | Stripe/Google console của KH |
 | Đa ngôn ngữ nội dung | Thấp–Trung bình | CMS có sẵn; cần dịch thuật |
-| Bản quyền asset gốc | Pháp lý | Đã mirror local + rebrand J-TA; KH cần asset riêng cho production |
+| Bản quyền asset gốc | Pháp lý | Đã mirror local + rebrand JETBAY; KH cần asset riêng cho production |
 
 ---
 
@@ -496,7 +496,7 @@ PartnerAccount
 | 5 | Tài liệu triển khai `docs/DEPLOYMENT.md` |
 | 6 | Bộ test Playwright + hướng dẫn chạy |
 | 7 | Tài khoản admin seed + tài liệu vận hành CMS |
-| 8 | Asset J-TA (logo, favicon, OG) + ~164 ảnh marketing local |
+| 8 | Asset JETBAY (logo, favicon, OG) + ~164 ảnh marketing local |
 
 ---
 
@@ -505,8 +505,8 @@ PartnerAccount
 ```powershell
 pnpm install
 pnpm db:up                    # Cần Docker
-pnpm --filter api prisma:migrate
-pnpm --filter api prisma:seed
+pnpm --filter @jetbay/api prisma:migrate
+pnpm --filter @jetbay/api prisma:seed
 pnpm dev                      # Web :3000 | Admin :3001 | API :4000
 pnpm assets:jetbay            # Tải thêm ảnh CDN
 ```
@@ -515,8 +515,8 @@ pnpm assets:jetbay            # Tải thêm ảnh CDN
 
 | Vai trò | Email | Mật khẩu |
 |---------|-------|----------|
-| Admin | admin@j-ta.local | Admin123! |
-| User | demo@j-ta.local | Demo123! |
+| Admin | admin@JETBAY.local | Admin123! |
+| User | demo@JETBAY.local | Demo123! |
 
 ---
 

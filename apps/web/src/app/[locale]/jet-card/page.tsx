@@ -18,8 +18,8 @@ const PLAN_COPY: Record<number, { subtitle: string; desc: string }> = {
 
 export async function generateMetadata() {
   return buildMetadata({
-    title: 'J-TA Jet Card – The Ultimate Private Jet Membership',
-    description: 'The J-TA Jet Card gives flexible access to a vast network of private jet aircraft worldwide.',
+    title: 'JetBay Jet Card – The Ultimate Private Jet Membership',
+    description: 'The JetBay Jet Card gives flexible access to a vast network of private jet aircraft worldwide.',
   });
 }
 
@@ -32,12 +32,12 @@ export default async function JetCardPage({ params }: { params: Promise<{ locale
       <SubPageLayout
         locale={locale}
         title="The Ultimate Private Jet Membership"
-        description="The J-TA Jet Card is an exclusive private jet membership program that gives clients flexible access to a vast network of private jet aircraft worldwide."
+        description="The JetBay Jet Card is an exclusive private jet membership program that gives clients flexible access to a vast network of private jet aircraft worldwide."
         tag="Jet Card"
         heroImage={JB.pages.jetCard.hero}
       >
         <section className="jb-sub-section">
-          <h2 className="jb-section-title">Elevate Your Travel with The J-TA Jet Card</h2>
+          <h2 className="jb-section-title">Elevate Your Travel with The JetBay Jet Card</h2>
           <p className="jb-section-desc">
             Designed for frequent flyers, business executives, and luxury travellers who require on-demand private aviation with guaranteed availability.
           </p>
@@ -45,7 +45,7 @@ export default async function JetCardPage({ params }: { params: Promise<{ locale
         </section>
 
         <section className="jb-sub-section">
-          <h2 className="jb-section-title">Choose Your Preferred J-TA Jet Card Option</h2>
+          <h2 className="jb-section-title">Choose Your Preferred JetBay Jet Card Option</h2>
           <div className="jb-jetcard-grid">
             {data.plans.map((p: Record<string, unknown>) => {
               const hours = Number(p.hours ?? 10);
@@ -70,7 +70,7 @@ export default async function JetCardPage({ params }: { params: Promise<{ locale
         </section>
       </SubPageLayout>
 
-      <LightSection title="How to Join the J-TA Jet Card Programme?" subtitle="Customised for clients flying more than 6 flights a year">
+      <LightSection title="How to Join the JetBay Jet Card Programme?" subtitle="Customised for clients flying more than 6 flights a year">
         <StepsTimeline
           steps={JB.pages.jetCard.joinSteps.map((s, i) => ({
             title: `${i + 1}. ${s.title}`,
@@ -81,7 +81,7 @@ export default async function JetCardPage({ params }: { params: Promise<{ locale
 
       <section className="jb-section">
         <div className="jb-container">
-          <h2 className="jb-section-title">FAQs – J-TA Jet Card Membership</h2>
+          <h2 className="jb-section-title">FAQs – JetBay Jet Card Membership</h2>
           <FaqAccordion items={JB.pages.jetCard.faqs} />
         </div>
       </section>

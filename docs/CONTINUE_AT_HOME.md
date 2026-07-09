@@ -1,10 +1,11 @@
-# Continue at home — Jet-Bay
+# Continue at home — JETBAY
 
 > **Mục riêng trong repo** (commit được lên GitHub). Chat Cursor không nhớ — mở file này sau `git pull`.
 
+**Dự án:** JETBAY (Private Jet Booking)  
 **Cập nhật lần cuối:** 2026-07-09  
-**Repo:** https://github.com/minhtien2412tran/baogia.git  
-**Nhánh mặc định:** `main` (ổn định) · làm việc trên `feat/web-*` | `feat/api-*` | `feat/admin-*`
+**Repo:** https://github.com/minhtien2412tran/baogia.git *(remote name unchanged)*  
+**Nhánh mặc định:** `main` · làm việc trên `feat/web-*` | `feat/api-*` | `feat/admin-*`
 
 ---
 
@@ -15,11 +16,13 @@
 - [x] Rotate secrets + `ApiKeyGuard` (`X-API-Key`) + throttle auth
 - [x] Swagger: schemes `bearer` + `X-API-Key`
 - [x] Smoke prod API key: 16/16 pass
+- [x] Rebrand monorepo → JETBAY (`@jetbay/*`, docs `JETBAY_*`)
+- [x] Demo seed emails: `admin@jetbay.local` / `demo@jetbay.local` (local). **Prod:** re-run seed hoặc cập nhật email user nếu vẫn `@j-ta.local`
 
 ## Việc tiếp theo (ưu tiên)
 
-1. **P1 OTP env** — `OTP_COOLDOWN_SECONDS` / `OTP_MAX_ATTEMPTS` khi bật SMS (G4)
-2. **Web polish** — parity trang theo `JETBAY_WEB_PAGE_DOD.md` (nhánh `feat/web-*`)
+1. **Web polish** — parity trang theo `JETBAY_WEB_PAGE_DOD.md` (nhánh `feat/web-*`)
+2. **P1 OTP env** — `OTP_COOLDOWN_SECONDS` / `OTP_MAX_ATTEMPTS` khi bật SMS (G4)
 3. **Admin CRUD** — form còn thiếu (nhánh `feat/admin-*`)
 4. **G4 keys KH** — SMTP / OAuth / payment sandbox (không hardcode secret)
 
@@ -32,7 +35,7 @@
 | `apps/admin/**` | `git checkout -b feat/admin/<ten-viec>` |
 | Docs/deploy only | `chore/docs-*` hoặc `chore/deploy-*` |
 
-Chi tiết: [GIT_WORKFLOW.md](./GIT_WORKFLOW.md)
+Chi tiết: [GIT_WORKFLOW.md](./GIT_WORKFLOW.md) · Báo giá: [JETBAY_BAO_GIA.md](./JETBAY_BAO_GIA.md)
 
 ## Về nhà — 5 lệnh
 
@@ -57,7 +60,7 @@ git push -u origin HEAD
 ## Không commit
 
 - `apps/*/.env`, `.env.local`, `*.env.bak*`
-- Secret VPS, password demo bàn giao (chỉ ghi trong checklist nội bộ nếu cần)
+- Secret VPS, password demo bàn giao
 
 ## Liên kết nhanh
 

@@ -113,7 +113,7 @@ flowchart LR
 | Thành phần | Công nghệ đề xuất |
 |------------|-------------------|
 | Labeling UI | React/Next.js + canvas (Konva/Fabric) hoặc nhúng CVAT-style |
-| API | NestJS (đồng bộ stack với J-TA monorepo nếu gói chung) |
+| API | NestJS (đồng bộ stack với JetBay monorepo nếu gói chung) |
 | Job queue | Redis + BullMQ / Celery |
 | AI inference | Docker container CUDA + GroundingDINO PyTorch hoặc TAO `auto_label generate` |
 | Storage | MinIO/S3 cho ảnh + PostgreSQL metadata |
@@ -250,4 +250,4 @@ flowchart LR
 
 ---
 
-*Phụ lục này bổ sung cho `PHIEU_BAO_GIA_J_TA.md` khi khách hàng yêu cầu module Vision AI / gán nhãn. Có thể tách thành hợp đồng độc lập.*
+*Phụ lục này bổ sung cho `JETBAY_BAO_GIA.md` khi khách hàng yêu cầu module Vision AI / gán nhãn. Có thể tách thành hợp đồng độc lập.*

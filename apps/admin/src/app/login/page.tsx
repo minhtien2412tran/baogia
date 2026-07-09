@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Input, Button, Muted, colors } from '@j-ta/ui';
+import { Input, Button, Muted, colors } from '@jetbay/ui';
 import { adminApi, setToken } from '../../lib/api';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('admin@j-ta.local');
+  const [email, setEmail] = useState('admin@jetbay.local');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,7 @@ export default function AdminLoginPage() {
         throw new Error(res.message ?? 'Login failed');
       }
       if (res.user?.role !== 'ADMIN') {
-        throw new Error('Admin access required. Use admin@j-ta.local');
+        throw new Error('Admin access required. Use admin@jetbay.local');
       }
       setToken(res.tokens.accessToken);
       router.push('/dashboard');
@@ -36,7 +36,7 @@ export default function AdminLoginPage() {
   return (
     <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <div style={{ maxWidth: 400, width: '100%' }}>
-        <h1 style={{ color: colors.accent, marginTop: 0 }}>J-TA Admin</h1>
+        <h1 style={{ color: colors.accent, marginTop: 0 }}>JetBay Admin</h1>
         <Muted style={{ marginBottom: 24, display: 'block' }}>Sign in with an admin account</Muted>
         <form onSubmit={onSubmit}>
           <Input label="Email" type="email" value={email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} required />
@@ -45,7 +45,7 @@ export default function AdminLoginPage() {
         </form>
         {error && <p style={{ color: colors.error, marginTop: 12 }}>{error}</p>}
         <Muted style={{ marginTop: 16, display: 'block', fontSize: 13 }}>
-          Dev: admin@j-ta.local / Admin123!
+          Dev: admin@jetbay.local / Admin123!
         </Muted>
       </div>
     </main>

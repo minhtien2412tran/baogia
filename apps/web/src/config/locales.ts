@@ -1,4 +1,4 @@
-/** J-TA-style locale configuration */
+/** JetBay-style locale configuration */
 export type LocaleConfig = {
   code: string;
   label: string;

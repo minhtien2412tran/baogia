@@ -1,4 +1,4 @@
-# Deployment — J-TA Platform
+# Deployment — JetBay Platform
 
 ## Architecture
 
@@ -20,9 +20,9 @@ pnpm build
 Start each app:
 
 ```bash
-pnpm --filter api start:prod      # :4000
-pnpm --filter web start           # :3000
-pnpm --filter admin start         # :3001
+pnpm --filter @jetbay/api start:prod      # :4000
+pnpm --filter @jetbay/web start           # :3000
+pnpm --filter @jetbay/admin start         # :3001
 ```
 
 ## Environment variables
@@ -77,10 +77,10 @@ Register in Stripe Dashboard:
 
 ```bash
 pnpm install
-pnpm --filter api prisma:generate
-pnpm --filter api build
-pnpm --filter web build
-pnpm --filter admin build
+pnpm --filter @jetbay/api prisma:generate
+pnpm --filter @jetbay/api build
+pnpm --filter @jetbay/web build
+pnpm --filter @jetbay/admin build
 pnpm test:e2e
 ```
 

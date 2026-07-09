@@ -16,7 +16,7 @@ export class AppController {
   @Get()
   getRoot() {
     return {
-      name: 'Jet-Bay API',
+      name: 'JetBay API',
       status: 'ok',
       swagger: '/swagger',
       openapi: '/openapi.json',

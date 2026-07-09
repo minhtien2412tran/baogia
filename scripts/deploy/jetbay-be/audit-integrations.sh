@@ -67,7 +67,7 @@ echo
 echo "=== LOGIN JWT SHAPE ==="
 curl -sk -X POST https://api.minhtien.online/auth/login \
   -H 'Content-Type: application/json' \
-  -d '{"email":"admin@j-ta.local","password":"Admin123!"}' \
+  -d '{"email":"admin@jetbay.local","password":"Admin123!"}' \
   -o /tmp/jb-login-audit.json
 python3 <<'PY'
 import json

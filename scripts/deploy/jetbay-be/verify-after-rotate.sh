@@ -21,7 +21,7 @@ for line in Path("/var/www/jetbay-be/.env").read_text().splitlines():
 
 req = urllib.request.Request(
     "https://api.minhtien.online/auth/login",
-    data=json.dumps({"email": "admin@j-ta.local", "password": "Admin123!"}).encode(),
+    data=json.dumps({"email": "admin@jetbay.local", "password": "Admin123!"}).encode(),
     headers={"Content-Type": "application/json", "X-API-Key": api_key},
     method="POST",
 )

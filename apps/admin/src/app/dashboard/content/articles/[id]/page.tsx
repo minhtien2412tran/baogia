@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { SectionTitle, Button, Muted } from '@j-ta/ui';
+import { SectionTitle, Button, Muted } from '@jetbay/ui';
 import { AdminShell } from '../../../../../components/AdminShell';
 import { AdminField } from '../../../../../components/AdminFormFields';
 import { RichTextEditor } from '../../../../../components/RichTextEditor';
@@ -16,7 +16,7 @@ export default function ArticleEditorPage({ params }: { params: { id: string } }
 
   const [type, setType] = useState('news');
   const [slug, setSlug] = useState('');
-  const [author, setAuthor] = useState('J-TA Editorial');
+  const [author, setAuthor] = useState('JetBay Editorial');
   const [status, setStatus] = useState('draft');
   const [title, setTitle] = useState('');
   const [excerpt, setExcerpt] = useState('');
@@ -32,7 +32,7 @@ export default function ArticleEditorPage({ params }: { params: { id: string } }
       .then((a) => {
         setType(String(a.type ?? 'news').toLowerCase());
         setSlug(String(a.slug ?? ''));
-        setAuthor(String(a.author ?? 'J-TA Editorial'));
+        setAuthor(String(a.author ?? 'JetBay Editorial'));
         setStatus(String(a.status ?? 'draft'));
         setTitle(String(a.title ?? ''));
         setExcerpt(String(a.excerpt ?? ''));

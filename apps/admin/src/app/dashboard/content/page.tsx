@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { SectionTitle, DataTable, Muted, Button } from '@j-ta/ui';
+import { SectionTitle, DataTable, Muted, Button } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
 import { ActionBtn } from '../../../components/AdminFormFields';
 import { adminApi } from '../../../lib/api';

@@ -4,10 +4,10 @@ globs: apps/api/**/*
 alwaysApply: false
 ---
 
-# apps/api — Backend
+# apps/api — Backend (@jetbay/api)
 
 - Branch: `feat/api-*`
 - Auth: JWT Bearer + global `ApiKeyGuard` (`X-API-Key`); use `@Public()` for health/webhooks/swagger
-- Swagger schemes: `bearer` and `X-API-Key` (named)
+- Swagger schemes: `bearer` and `X-API-Key` (named); title JetBay API
 - Production secrets: see `docs/SECURITY_SECRETS.md`; never copy HomeFix `.env`
 - Deploy scripts live under `scripts/deploy/jetbay-be/` — do not touch baotienweb nginx/DB

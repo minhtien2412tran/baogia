@@ -13,7 +13,7 @@ export class SmsService {
   }
 
   async sendOtp(phone: string, code: string): Promise<{ sent: boolean; devCode?: string }> {
-    const message = `J-TA verification code: ${code}. Valid for 5 minutes.`;
+    const message = `JetBay verification code: ${code}. Valid for 5 minutes.`;
 
     if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
       return this.sendTwilio(phone, message);

@@ -32,7 +32,7 @@ export default function LoginPage({ params }: { params: { locale: string } }) {
       storeAuthSession(res);
       goAccount();
     } catch {
-      setError('Login failed. Use demo@j-ta.local / Demo123!');
+      setError('Login failed. Use demo@jetbay.local / Demo123!');
     } finally {
       setLoading(false);
     }

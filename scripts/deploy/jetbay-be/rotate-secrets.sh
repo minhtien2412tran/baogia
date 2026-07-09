@@ -116,7 +116,7 @@ CODE=$(curl -sk -o /tmp/jb-rotate-login.json -w '%{http_code}' \
   -X POST https://api.minhtien.online/auth/login \
   -H 'Content-Type: application/json' \
   -H "X-API-Key: ${API_KEY_VAL}" \
-  -d '{"email":"admin@j-ta.local","password":"Admin123!"}')
+  -d '{"email":"admin@jetbay.local","password":"Admin123!"}')
 echo "[rotate] auth/login HTTP ${CODE}"
 unset API_KEY_VAL
 

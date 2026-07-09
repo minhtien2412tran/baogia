@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { SectionTitle, DataTable, Muted, Button } from '@j-ta/ui';
+import { SectionTitle, DataTable, Muted, Button } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
 import { ActionBtn } from '../../../components/AdminFormFields';
 import { adminApi } from '../../../lib/api';
@@ -40,7 +40,7 @@ export default function UsersAdminPage() {
                 {u.role === 'USER' && (
                   <ActionBtn onClick={() => update(u.id, { role: 'ADMIN' })}>Make Admin</ActionBtn>
                 )}
-                {u.role === 'ADMIN' && u.email !== 'admin@j-ta.local' && (
+                {u.role === 'ADMIN' && u.email !== 'admin@jetbay.local' && (
                   <ActionBtn onClick={() => update(u.id, { role: 'USER' })}>Remove Admin</ActionBtn>
                 )}
                 {u.status === 'ACTIVE' ? (

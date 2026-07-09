@@ -26,14 +26,14 @@ export function WhySections({ locale }: { locale: string }) {
           <div className="jb-split">
             <div>
               <span className="jb-tag">About Us</span>
-              <h2 className="jb-section-title">Why Charter with J-TA?</h2>
-              <p className="jb-section-desc">J-TA offers bespoke charter solutions, connecting you to a global fleet.</p>
+              <h2 className="jb-section-title">Why Charter with JetBay?</h2>
+              <p className="jb-section-desc">JetBay offers bespoke charter solutions, connecting you to a global fleet.</p>
               <ul style={{ margin: '20px 0', paddingLeft: 20, color: 'var(--jb-text-muted)', lineHeight: 2 }}>
                 {WHY_CHARTER.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
-              <a href={`${p}/about-us`} className="jb-btn-outline">Learn More About J-TA</a>
+              <a href={`${p}/about-us`} className="jb-btn-outline">Learn More About JetBay</a>
             </div>
             <div className="jb-split-visual jb-split-visual-img">
               <CdnImage src={JB.sections.whyCharter} alt="Private jet charter" fill className="jb-cover-img" sizes="(max-width: 768px) 100vw, 50vw" />
@@ -46,7 +46,7 @@ export function WhySections({ locale }: { locale: string }) {
         <div className="jb-container">
           <div style={{ textAlign: 'center', marginBottom: 40 }}>
             <span className="jb-tag">What Sets Us Apart</span>
-            <h2 className="jb-section-title">Why Choose J-TA?</h2>
+            <h2 className="jb-section-title">Why Choose JetBay?</h2>
             <p className="jb-section-desc">Excellence in Every Detail</p>
           </div>
           <div className="jb-features-grid">

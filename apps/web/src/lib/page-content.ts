@@ -43,7 +43,7 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
   'private-jet-charter': {
     title: 'Private Jets for Every Need',
     description: 'On-demand private jet charter with 10,000+ aircraft and 24/7 concierge support.',
-    hero: 'J-TA\'s private air charter service combines luxury, efficiency, and safety at the best value.',
+    hero: 'JetBay\'s private air charter service combines luxury, efficiency, and safety at the best value.',
     tag: 'Charter',
     heroImage: JB.pages.privateJetCharter.hero,
     showQuoteWidget: true,
@@ -53,7 +53,7 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
       body: 'Trusted global network with premium service standards.',
     })),
     promoBanners: [
-      { image: JB.pages.privateJetCharter.jetCardPromo, title: 'J-TA Jet Card', href: '/jet-card', cta: 'Explore Jet Card' },
+      { image: JB.pages.privateJetCharter.jetCardPromo, title: 'JetBay Jet Card', href: '/jet-card', cta: 'Explore Jet Card' },
       { image: JB.pages.privateJetCharter.creditPromo, title: 'Travel Credits', href: '/travel-credit', cta: 'Learn More' },
     ],
     sections: [
@@ -94,7 +94,7 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
         bullets: ['Multi-leg roadshow planning', 'Company accounts & authorized users', 'Priority dispatch and support'],
       },
       {
-        heading: 'Why executives choose J-TA',
+        heading: 'Why executives choose JetBay',
         body: 'Minimize downtime, protect confidentiality, and arrive refreshed for meetings.',
         bullets: ['Access 10,000+ vetted aircraft', 'Flexible last-minute changes', 'Global FBO network'],
       },
@@ -142,7 +142,7 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
     sections: [
       {
         heading: 'Event expertise',
-        body: 'From red-carpet arrivals to multi-aircraft coordination, J-TA supports high-profile event travel.',
+        body: 'From red-carpet arrivals to multi-aircraft coordination, JetBay supports high-profile event travel.',
         bullets: ['Artist & talent transport', 'Corporate hospitality flights', 'Last-minute schedule changes'],
       },
       {
@@ -180,7 +180,7 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
     cta: { label: 'Book Pet-Friendly Flight', href: '/private-jet-charter' },
   },
   'about-us': {
-    title: 'About J-TA',
+    title: 'About JetBay',
     description: 'A leading global private jet charter platform connecting clients to 10,000+ aircraft.',
     hero: 'Seamless, trusted access to private aviation worldwide.',
     tag: 'Company',
@@ -188,7 +188,7 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
     sections: [
       {
         heading: 'Our mission',
-        body: 'J-TA democratizes access to private aviation through technology, transparency, and world-class service.',
+        body: 'JetBay democratizes access to private aviation through technology, transparency, and world-class service.',
         bullets: ['10,000+ aircraft network', '190+ countries served', 'WYVERN & industry-certified partners'],
       },
       {
@@ -200,7 +200,7 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
   },
   'global-partnership-program': {
     title: 'Global Partner Program',
-    description: "Join J-TA's referral network — no aviation experience required.",
+    description: "Join JetBay's referral network — no aviation experience required.",
     hero: 'Refer clients, earn commissions, and leverage our global fleet and support infrastructure.',
     tag: 'Partner',
     heroImage: JB.pages.partner.service,
@@ -214,7 +214,7 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
     cta: { label: 'Become a Partner', href: '/register' },
   },
   'air-ambulance': {
-    title: 'J-TA SOS — Medical Air Assistance',
+    title: 'JetBay SOS — Medical Air Assistance',
     description: '24/7 rapid-response medical evacuation and air ambulance services.',
     hero: 'When every minute counts, our SOS team coordinates bed-to-bed medical transfers worldwide.',
     tag: 'Emergency',
@@ -236,11 +236,11 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
         bullets: ['Certified medical crew on board', 'Ground ambulance coordination', 'Family updates throughout'],
       },
     ],
-    cta: { label: 'Request J-TA SOS', href: '/private-jet-charter' },
+    cta: { label: 'Request JetBay SOS', href: '/private-jet-charter' },
   },
   'booking-process': {
     title: 'How Booking Works',
-    description: 'Your guide to chartering a private jet with J-TA.',
+    description: 'Your guide to chartering a private jet with JetBay.',
     hero: 'From search to wheels-up in four simple steps.',
     tag: 'Guide',
     heroImage: JB.homeBg,
@@ -254,7 +254,7 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
     cta: { label: 'Start a Search', href: '/private-jet-charter' },
   },
   'jetbay-private-jet-app': {
-    title: 'J-TA Private Jet App',
+    title: 'JetBay Private Jet App',
     description: 'Book and manage private jet travel from your mobile device.',
     hero: 'Search routes, track quotes, and manage trips — anywhere in the world.',
     tag: 'App',
@@ -262,7 +262,7 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
     sections: [
       {
         heading: 'Features',
-        body: 'The J-TA app puts our full charter platform in your pocket.',
+        body: 'The JetBay app puts our full charter platform in your pocket.',
         bullets: ['Instant route search', 'Push notifications for quotes', 'Trip history & documents', '24/7 chat support'],
       },
     ],

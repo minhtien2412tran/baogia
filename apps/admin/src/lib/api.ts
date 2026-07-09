@@ -19,15 +19,15 @@ function apiHeaders(extra?: HeadersInit): HeadersInit {
 
 export function getToken(): string | null {
   if (typeof window === 'undefined') return null;
-  return localStorage.getItem('jta_admin_token');
+  return localStorage.getItem('jetbay_admin_token');
 }
 
 export function setToken(token: string) {
-  localStorage.setItem('jta_admin_token', token);
+  localStorage.setItem('jetbay_admin_token', token);
 }
 
 export function clearToken() {
-  localStorage.removeItem('jta_admin_token');
+  localStorage.removeItem('jetbay_admin_token');
 }
 
 async function adminRequest<T>(path: string, options?: RequestInit): Promise<T> {

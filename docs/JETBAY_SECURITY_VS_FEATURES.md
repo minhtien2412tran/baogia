@@ -5,7 +5,7 @@
 | Nguồn | Dùng để làm gì | Không dùng để |
 |-------|----------------|---------------|
 | **BE `api.homefix.asia`** (Baotienweb) | Tham khảo **cách bảo mật / vận hành API** | Copy nghiệp vụ CRM, marketplace, chat, AI moderation, LiveKit… |
-| **`docs/PHIEU_BAO_GIA_J_TA.md`** + **`docs/DANH_GIA_KY_THUAT_BAO_GIA.md`** | Phạm vi **chức năng & tính năng** Jet-Bay / J-TA | Bổ sung feature HomeFix ngoài báo giá |
+| **`docs/JETBAY_BAO_GIA.md`** + **`docs/JETBAY_DANH_GIA_KY_THUAT.md`** | Phạm vi **chức năng & tính năng** JETBAY | Bổ sung feature HomeFix ngoài báo giá |
 
 Hai BE cùng VPS nhưng **tách domain / port / DB / env / secret** — xem [SECURITY_SECRETS.md](./SECURITY_SECRETS.md).
 
@@ -56,15 +56,15 @@ Nguồn quan sát: Swagger `Bearer` + `X-API-Key`, `AUTH_CONVENTION.md`, `ApiKey
 
 ### Nguồn chính thức
 
-1. [PHIEU_BAO_GIA_J_TA.md](./PHIEU_BAO_GIA_J_TA.md) — phạm vi hợp đồng, gói A/B/C, cây nghiệp vụ §IV  
-2. [DANH_GIA_KY_THUAT_BAO_GIA.md](./DANH_GIA_KY_THUAT_BAO_GIA.md) — feature tree §4, ma trận trang/API, WP
+1. [JETBAY_BAO_GIA.md](./JETBAY_BAO_GIA.md) — phạm vi hợp đồng, gói A/B/C, cây nghiệp vụ §IV  
+2. [JETBAY_DANH_GIA_KY_THUAT.md](./JETBAY_DANH_GIA_KY_THUAT.md) — feature tree §4, ma trận trang/API, WP
 
 Demo tham chiếu UI: [m-tien.com/jet-bay](https://m-tien.com/jet-bay/) · App: [m-tien.com/app-jetbay](https://m-tien.com/app-jetbay/)
 
 ### Cây chức năng (rút gọn từ báo giá — không thêm từ HomeFix)
 
 ```
-J-TA / Jet-Bay
+JetBay / Jet-Bay
 ├── A. Marketing & Discovery (Web)
 │   Home · Charter×6 · Fixed Price · Empty Leg · Jet Card · Travel Credit
 │   Destinations · News/Blogs/Video · About/Booking CMS · World Cup · Partners

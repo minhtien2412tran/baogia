@@ -10,10 +10,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const page = await fetchContentPage('about-us', apiLocale(locale));
   const seo = contentSeo(page);
   return buildMetadata({
-    title: seo?.title ? rebrandText(seo.title) : 'About J-TA',
+    title: seo?.title ? rebrandText(seo.title) : 'About JetBay',
     description: seo?.description
       ? rebrandText(seo.description)
-      : 'Learn about J-TA — your global private jet charter partner.',
+      : 'Learn about JetBay — your global private jet charter partner.',
     path: '/about-us',
   });
 }

@@ -16,10 +16,10 @@ async function main() {
   // 0. Seed demo + admin users
   console.log('Seeding users...');
   await prisma.user.upsert({
-    where: { email: 'demo@j-ta.local' },
+    where: { email: 'demo@jetbay.local' },
     update: { passwordHash: hashPassword('Demo123!'), role: 'USER' },
     create: {
-      email: 'demo@j-ta.local',
+      email: 'demo@jetbay.local',
       passwordHash: hashPassword('Demo123!'),
       firstName: 'Demo',
       lastName: 'User',
@@ -30,10 +30,10 @@ async function main() {
   });
 
   await prisma.user.upsert({
-    where: { email: 'admin@j-ta.local' },
+    where: { email: 'admin@jetbay.local' },
     update: { passwordHash: hashPassword('Admin123!'), role: 'ADMIN' },
     create: {
-      email: 'admin@j-ta.local',
+      email: 'admin@jetbay.local',
       passwordHash: hashPassword('Admin123!'),
       firstName: 'Admin',
       lastName: 'User',
@@ -295,7 +295,7 @@ async function main() {
 
   // 7. Seed Travel Credits for demo user
   console.log('Seeding Travel Credits...');
-  const demoUser = await prisma.user.findUnique({ where: { email: 'demo@j-ta.local' } });
+  const demoUser = await prisma.user.findUnique({ where: { email: 'demo@jetbay.local' } });
   if (demoUser) {
     const existingCredits = await prisma.travelCreditLedger.count({ where: { userId: demoUser.id } });
     if (existingCredits === 0) {
@@ -365,9 +365,9 @@ async function main() {
   });
   await seedTranslation('ARTICLE', privacyPage.id, {
     title: 'Privacy Policy',
-    body: 'This is the clean-room reconstructed privacy policy for J-TA platform.',
-    seoTitle: 'Privacy Policy - J-TA',
-    seoDescription: 'How J-TA handles your personal data.',
+    body: 'This is the clean-room reconstructed privacy policy for JetBay platform.',
+    seoTitle: 'Privacy Policy - JetBay',
+    seoDescription: 'How JetBay handles your personal data.',
   });
 
   const newsArticle = await prisma.contentArticle.upsert({
@@ -383,11 +383,11 @@ async function main() {
     },
   });
   await seedTranslation('ARTICLE', newsArticle.id, {
-    title: 'J-TA Expands Private Jet Fleet',
+    title: 'JetBay Expands Private Jet Fleet',
     excerpt: 'New aircraft added to serve growing demand across Asia and Europe.',
-    body: 'J-TA announces fleet expansion with additional light and heavy jets available for charter.',
-    seoTitle: 'Fleet Expansion News - J-TA',
-    seoDescription: 'J-TA expands private jet fleet for global charter.',
+    body: 'JetBay announces fleet expansion with additional light and heavy jets available for charter.',
+    seoTitle: 'Fleet Expansion News - JetBay',
+    seoDescription: 'JetBay expands private jet fleet for global charter.',
   });
 
   const blogArticle = await prisma.contentArticle.upsert({
@@ -406,7 +406,7 @@ async function main() {
     title: 'Tips for Flying with Pets on a Private Jet',
     excerpt: 'Everything you need to know about pet-friendly private aviation.',
     body: 'Private jets offer a stress-free way to travel with pets. Here are our top tips...',
-    seoTitle: 'Pet Travel Tips - J-TA Blog',
+    seoTitle: 'Pet Travel Tips - JetBay Blog',
     seoDescription: 'Guide to flying with pets on private jets.',
   });
 
@@ -455,8 +455,8 @@ async function main() {
       title: d.title,
       excerpt: d.tagline,
       body: d.body,
-      seoTitle: `${d.title} Private Jet Charter - J-TA`,
-      seoDescription: `Fly to ${d.city} by private jet with J-TA.`,
+      seoTitle: `${d.title} Private Jet Charter - JetBay`,
+      seoDescription: `Fly to ${d.city} by private jet with JetBay.`,
     });
   }
 
@@ -506,8 +506,8 @@ async function main() {
   });
   await seedTranslation('ARTICLE', termsPage.id, {
     title: 'Terms of Service',
-    body: 'These terms govern use of the J-TA private jet booking platform.',
-    seoTitle: 'Terms of Service - J-TA',
+    body: 'These terms govern use of the JetBay private jet booking platform.',
+    seoTitle: 'Terms of Service - JetBay',
     seoDescription: 'Platform terms and conditions.',
   });
 
@@ -519,17 +519,17 @@ async function main() {
       slug: 'about-us',
       isPublished: true,
       publishedAt: new Date('2026-01-01'),
-      author: 'J-TA Team',
+      author: 'JetBay Team',
     },
   });
   const aboutCmsBody = aboutUsCmsJson();
   await seedTranslation('ARTICLE', aboutPage.id, {
-    title: 'About J-TA',
+    title: 'About JetBay',
     excerpt:
-      'J-TA is a global private jet booking platform headquartered in Singapore with 6 other offices worldwide.',
+      'JetBay is a global private jet booking platform headquartered in Singapore with 6 other offices worldwide.',
     body: aboutCmsBody,
-    seoTitle: 'About Us - J-TA',
-    seoDescription: 'Learn about J-TA private jet charter — global offices, awards, and 10,000+ aircraft.',
+    seoTitle: 'About Us - JetBay',
+    seoDescription: 'Learn about JetBay private jet charter — global offices, awards, and 10,000+ aircraft.',
   });
 
   const bookingPage = await prisma.contentArticle.upsert({
@@ -547,8 +547,8 @@ async function main() {
     title: 'How to Charter a Flight',
     excerpt: 'Simple, efficient, reliable — follow four steps to book your private jet charter.',
     body: bookingProcessCmsJson(),
-    seoTitle: 'How Booking Works - J-TA',
-    seoDescription: 'Step-by-step private jet booking guide with J-TA.',
+    seoTitle: 'How Booking Works - JetBay',
+    seoDescription: 'Step-by-step private jet booking guide with JetBay.',
   });
 
   console.log('Seed execution completed successfully.');

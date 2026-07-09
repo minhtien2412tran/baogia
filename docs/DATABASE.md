@@ -1,4 +1,4 @@
-# Database — J-TA Platform
+# Database — JetBay Platform
 
 ## Stack
 
@@ -10,14 +10,14 @@
 
 ```powershell
 # Create DB and user in psql
-CREATE USER jta_user WITH PASSWORD 'jta_password';
-CREATE DATABASE jta_db OWNER jta_user;
+CREATE USER jetbay_user WITH PASSWORD 'jetbay_password';
+CREATE DATABASE jetbay_db OWNER jetbay_user;
 ```
 
 Set `apps/api/.env`:
 
 ```
-DATABASE_URL=postgresql://jta_user:jta_password@localhost:5432/jta_db
+DATABASE_URL=postgresql://jetbay_user:jetbay_password@127.0.0.1:5432/jetbay_db
 ```
 
 Run migrations and seed:
@@ -46,4 +46,4 @@ Performance indexes on frequently queried columns (`email`, `status`, `createdAt
 
 ## Demo data
 
-Seed creates `demo@j-ta.local` user, European airports, 6 fixed-price routes, 2 empty legs, jet card plans, travel credits, and CMS articles.
+Seed creates `demo@jetbay.local` user, European airports, 6 fixed-price routes, 2 empty legs, jet card plans, travel credits, and CMS articles.

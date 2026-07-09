@@ -1,6 +1,6 @@
-# Sprint Prompts — J-TA Platform
+# Sprint Prompts — JetBay Platform
 
-> Tài liệu ghi nhớ tiến trình phát triển và audit code theo [`deep-research-report (2).md`](../deep-research-report%20(2).md).
+> Tài liệu ghi nhớ tiến trình phát triển và audit code theo [`JETBAY_DANH_GIA_KY_THUAT.md`](./JETBAY_DANH_GIA_KY_THUAT.md).
 >
 > **Quy tắc:** Chạy từng prompt một. Không gộp nhiều sprint trong một lần — dễ bỏ sót, code lỗi hoặc dựng nửa vời.
 >

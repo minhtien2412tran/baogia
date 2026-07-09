@@ -65,7 +65,7 @@ LOGIN_CODE=$(curl -sk -o /tmp/jb-login.json -w '%{http_code}' \
   -X POST "${BASE}/auth/login" \
   -H 'Content-Type: application/json' \
   "${AUTH_H[@]}" \
-  -d '{"email":"admin@j-ta.local","password":"Admin123!"}' || echo "000")
+  -d '{"email":"admin@jetbay.local","password":"Admin123!"}' || echo "000")
 if [ "$LOGIN_CODE" = "200" ] || [ "$LOGIN_CODE" = "201" ]; then
   echo "OK  $LOGIN_CODE auth/login admin"
   PASS=$((PASS+1))
@@ -95,7 +95,7 @@ QUOTE_CODE=$(curl -sk -o /tmp/jb-quote.json -w '%{http_code}' \
   -X POST "${BASE}/quotes/request" \
   -H 'Content-Type: application/json' \
   "${AUTH_H[@]}" \
-  -d '{"firstName":"Demo","lastName":"User","email":"demo@j-ta.local","phone":"+84900000000","isConsentAccepted":true,"legs":[{"fromAirport":"SGN","toAirport":"HAN","departureDate":"2026-08-01T10:00:00Z","passengers":2}]}' || echo "000")
+  -d '{"firstName":"Demo","lastName":"User","email":"demo@jetbay.local","phone":"+84900000000","isConsentAccepted":true,"legs":[{"fromAirport":"SGN","toAirport":"HAN","departureDate":"2026-08-01T10:00:00Z","passengers":2}]}' || echo "000")
 if [ "$QUOTE_CODE" = "200" ] || [ "$QUOTE_CODE" = "201" ]; then
   echo "OK  $QUOTE_CODE quotes/request"
   PASS=$((PASS+1))

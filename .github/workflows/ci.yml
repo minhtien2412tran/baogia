@@ -25,16 +25,16 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma client
-        run: pnpm --filter api prisma:generate
+        run: pnpm --filter @jetbay/api prisma:generate
 
       - name: Build API
-        run: pnpm --filter api build
+        run: pnpm --filter @jetbay/api build
 
       - name: Build Admin
-        run: pnpm --filter admin build
+        run: pnpm --filter @jetbay/admin build
 
       - name: Build Web
-        run: pnpm --filter web build
+        run: pnpm --filter @jetbay/web build
 
       - name: API unit tests
-        run: pnpm --filter api test --passWithNoTests
+        run: pnpm --filter @jetbay/api test --passWithNoTests

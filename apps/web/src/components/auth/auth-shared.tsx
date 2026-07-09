@@ -4,10 +4,10 @@ export function storeAuthSession(res: {
   user: { id: number };
   tokens: { accessToken: string; refreshToken?: string };
 }) {
-  localStorage.setItem('jta_token', res.tokens.accessToken);
-  localStorage.setItem('jta_user_id', String(res.user.id));
+  localStorage.setItem('jetbay_token', res.tokens.accessToken);
+  localStorage.setItem('jetbay_user_id', String(res.user.id));
   if (res.tokens.refreshToken) {
-    localStorage.setItem('jta_refresh_token', res.tokens.refreshToken);
+    localStorage.setItem('jetbay_refresh_token', res.tokens.refreshToken);
   }
 }
 

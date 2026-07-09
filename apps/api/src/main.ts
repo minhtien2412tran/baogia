@@ -13,7 +13,7 @@ function assertProductionSecrets() {
     !v?.trim() ||
     v.includes('CHANGE_ME') ||
     v.includes('change-in-production') ||
-    v === 'dev-jta-secret-change-in-production' ||
+    v === 'dev-jetbay-secret-change-in-production' ||
     v === 'dev-refresh-secret-change-in-production';
 
   if (weak(process.env.JWT_SECRET)) {
@@ -63,10 +63,10 @@ async function bootstrap() {
     ['http://127.0.0.1:4000', 'Local development'],
   ]);
   let builder = new DocumentBuilder()
-    .setTitle('Jet-Bay API')
+    .setTitle('JetBay API')
     .setDescription(
       [
-        'Private jet booking platform API (Jet-Bay / J-TA).',
+        'Private jet booking platform API (JETBAY).',
         '',
         '**App key:** header `X-API-Key` (required on most routes; not needed for `/health`).',
         '**User auth:** `Authorization: Bearer <accessToken>` from `POST /auth/login`.',
@@ -109,7 +109,7 @@ async function bootstrap() {
   });
 
   SwaggerModule.setup('swagger', app, document, {
-    customSiteTitle: 'Jet-Bay API Docs',
+    customSiteTitle: 'JetBay API Docs',
     swaggerOptions: {
       persistAuthorization: true,
       docExpansion: 'none',

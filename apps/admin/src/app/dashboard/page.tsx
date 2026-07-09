@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, SectionTitle, DataTable, Muted, colors } from '@j-ta/ui';
+import { Card, SectionTitle, DataTable, Muted, colors } from '@jetbay/ui';
 import { AdminShell } from '../../components/AdminShell';
 import { adminApi } from '../../lib/api';
 

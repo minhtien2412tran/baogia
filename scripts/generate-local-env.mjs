@@ -23,7 +23,7 @@ HOST=127.0.0.1
 PORT=4000
 NODE_ENV=development
 
-DATABASE_URL="postgresql://jta_user:jta_password@127.0.0.1:5432/jta_db?schema=public"
+DATABASE_URL="postgresql://jetbay_user:jetbay_password@127.0.0.1:5432/jetbay_db?schema=public"
 REDIS_URL="redis://127.0.0.1:6379/0"
 
 JWT_SECRET="${secret(48)}"
@@ -43,7 +43,7 @@ MINIO_BUCKET="jetbay-uploads"
 
 SMTP_HOST="localhost"
 SMTP_PORT=1025
-SMTP_FROM="JetBay <noreply@j-ta.local>"
+SMTP_FROM="JetBay <noreply@jetbay.local>"
 
 STRIPE_SECRET_KEY=
 STRIPE_WEBHOOK_SECRET=
