@@ -1,6 +1,6 @@
 # Jet-Bay Delivery Checklist
 
-**Sản phẩm chính:** clone jetbay.com → `apps/web` (local `:3000`, public web chưa deploy)  
+**Sản phẩm chính:** clone jetbay.com → `apps/web` (prod https://www.minhtien.online/en-us · local `:3000`)  
 **Bản đồ:** [JETBAY_PRODUCT_MAP.md](./JETBAY_PRODUCT_MAP.md)  
 **Báo giá (chỉ collateral):** [Web 74TR](https://m-tien.com/jet-bay/) · [App 248TR](https://m-tien.com/app-jetbay/) · [JETBAY_BAO_GIA.md](./JETBAY_BAO_GIA.md)  
 **Cập nhật:** 2026-07-09  
@@ -55,7 +55,7 @@ Quy tắc: mỗi giai đoạn phải đạt DoD trước khi mở giai đoạn t
 - [x] Local pages 200: home, FP, EL, jet-card, TC, charter, news, destination, login, account
 - [x] Quote widget không gửi `tripType` thừa (DTO fix)
 - [x] DoD groups: [JETBAY_WEB_PAGE_DOD.md](./JETBAY_WEB_PAGE_DOD.md)
-- [ ] Deploy public web clone (đề xuất `www.minhtien.online` → PM2 `:3012`) — **ưu tiên demo sản phẩm**
+- [x] Deploy public web clone — `www.minhtien.online` → PM2 `jetbay-web` `:3012` + SSL
 - [ ] Visual parity polish vs `scratch/` / jet-bay.com (ongoing)
 
 ---

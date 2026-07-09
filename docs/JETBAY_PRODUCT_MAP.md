@@ -30,7 +30,7 @@ flowchart LR
 
 | Lớp | Là gì | URL / path | Việc cần làm |
 |-----|--------|------------|--------------|
-| **Sản phẩm** | Clone jetbay.com | Code: `apps/web` · Local: `http://localhost:3000/en-us` · Prod web: **chưa deploy** | Polish UI + deploy subdomain |
+| **Sản phẩm** | Clone jetbay.com | Code: `apps/web` · Prod: https://www.minhtien.online/en-us · Local: `:3000` | Polish UI vs `scratch/` |
 | **API / Admin** | Backend + CMS | `api.minhtien.online` · `admin.minhtien.online` | Đã live |
 | **Báo giá** | Pitch / giá gói | `m-tien.com/jet-bay` · `m-tien.com/app-jetbay` · `docs/JETBAY_BAO_GIA.md` | Chỉ đọc / cập nhật số tiền — **không** coi là trang chính |
 | **Scratch** | HTML gốc để so | `scratch/` | Tham chiếu clone, không ship |
@@ -57,7 +57,7 @@ flowchart LR
 
 | Service | URL | Trạng thái |
 |---------|-----|------------|
-| Web clone | Local `:3000` · Prod đề xuất `www.minhtien.online` hoặc domain KH | 🟡 chưa public |
+| Web clone | https://www.minhtien.online/en-us · Local `:3000` | ✅ live (`jetbay-web` `:3012`) |
 | API | https://api.minhtien.online | ✅ |
 | Admin | https://admin.minhtien.online/login | ✅ |
 | Swagger | https://docs.minhtien.online/swagger | ✅ |
@@ -74,8 +74,8 @@ flowchart LR
 
 ## 4. Quy hoạch việc tiếp (ưu tiên sản phẩm)
 
-1. **P0 — Định hướng docs** (file này + CONTINUE_AT_HOME) — tách báo giá / sản phẩm  
-2. **P1 — Deploy `apps/web`** lên subdomain (vd. `www.minhtien.online` → PM2 `:3012`) để có URL demo clone thật  
+1. **P0 — Định hướng docs** — ✅ tách báo giá / sản phẩm  
+2. **P1 — Deploy `apps/web`** — ✅ `www.minhtien.online` → PM2 `jetbay-web` `:3012`  
 3. **P2 — Polish clone** theo `scratch/` + [JETBAY_WEB_PAGE_DOD.md](./JETBAY_WEB_PAGE_DOD.md) (charter rich, commercial, account)  
 4. **P3 — App RN** chỉ sau cổng API xanh + thỏa thuận KH (không nhầm với landing `app-jetbay`)
 

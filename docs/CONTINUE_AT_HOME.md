@@ -14,7 +14,7 @@
 
 | Vai trò | URL | Ghi chú |
 |---------|-----|---------|
-| **Web clone (chính)** | http://localhost:3000/en-us | Code: `apps/web` — **chưa deploy public** |
+| **Web clone (chính)** | https://www.minhtien.online/en-us | ✅ PM2 `jetbay-web` `:3012` · local vẫn `:3000` |
 | API | https://api.minhtien.online | ✅ |
 | Admin | https://admin.minhtien.online/login | ✅ |
 | Swagger | https://docs.minhtien.online/swagger | ✅ |
@@ -29,13 +29,20 @@
 - [x] Web nối API prod (local → `api.minhtien.online`)
 - [x] ApiKeyGuard / secrets / rebrand JETBAY
 - [x] Quy hoạch: product = clone · báo giá = collateral ([JETBAY_PRODUCT_MAP.md](./JETBAY_PRODUCT_MAP.md))
+- [x] **Deploy public web** — `www.minhtien.online` (+ apex → www) · SSL · CORS
 
 ## Việc tiếp theo (ưu tiên sản phẩm)
 
-1. **Deploy public web** — subdomain (đề xuất `www.minhtien.online`) để demo clone thật  
-2. **Polish clone** — parity `scratch/` + [JETBAY_WEB_PAGE_DOD.md](./JETBAY_WEB_PAGE_DOD.md) (`feat/web-*`)  
-3. Admin CRUD còn thiếu (`feat/admin-*`)  
-4. G4 keys KH (SMTP / OAuth / payment) khi có
+1. **Polish clone** (ongoing) — so `scratch/` vs live; charter/nav/footer đã có content + icon dropdown  
+2. Admin CRUD còn thiếu (`feat/admin-*`)  
+3. G4 keys KH (SMTP / OAuth / payment) khi có  
+
+### Redeploy web (Windows)
+
+```powershell
+powershell -File scripts/deploy/jetbay-be/sync-web.ps1
+ssh root@103.200.20.100 "export DEPLOY_CONFIRM='ĐỒNG Ý TRIỂN KHAI'; bash /var/www/jetbay-web/deploy/deploy-web.sh"
+```
 
 ---
 

@@ -1,7 +1,8 @@
 # Web page groups — Definition of Done (G2)
 
 API base: `https://api.minhtien.online`  
-Web env: `apps/web/.env.local` → `NEXT_PUBLIC_API_URL`
+Public web: `https://www.minhtien.online/en-us` (PM2 `jetbay-web` `:3012`)  
+Web env: `apps/web/.env.local` → `NEXT_PUBLIC_API_URL` + `NEXT_PUBLIC_API_KEY`
 
 ## Group 1 — Home + Quote (priority)
 

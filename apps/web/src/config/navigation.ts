@@ -70,6 +70,8 @@ export const MEGA_MENU: NavGroup[] = [
 
 export const FOOTER_SERVICES: NavLink[] = [
   { href: '/private-jet-charter', label: 'Private Jet Charter' },
+  { href: '/corporate-air-charter', label: 'Corporate Air Charter' },
+  { href: '/group-air-charter', label: 'Group Air Charter' },
   { href: '/fixed-price-charter', label: 'Fixed Price Charter' },
   { href: '/empty-leg', label: 'Empty Legs' },
   { href: '/jet-card', label: 'Jet Card' },

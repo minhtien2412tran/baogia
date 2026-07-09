@@ -41,12 +41,22 @@ export function JetBayHeader({ locale, currency = 'USD' }: { locale: string; cur
               <div key={group.title} className="jb-nav-dropdown">
                 <button type="button" className="jb-nav-trigger">{group.title}</button>
                 <div className="jb-nav-panel">
-                  {group.links.map((link) => (
-                    <Link key={link.href} href={navHref(locale, link.href)} className="jb-nav-panel-link">
-                      <strong>{link.label}</strong>
-                      {link.description && <span>{link.description}</span>}
-                    </Link>
-                  ))}
+                  {group.links.map((link) => {
+                    const icon = navLinkIcon(link.href);
+                    return (
+                      <Link key={link.href} href={navHref(locale, link.href)} className="jb-nav-panel-link">
+                        {icon ? (
+                          <span className="jb-nav-panel-icon" aria-hidden>
+                            <CdnImage src={icon} alt="" width={28} height={28} />
+                          </span>
+                        ) : null}
+                        <span className="jb-nav-panel-text">
+                          <strong>{link.label}</strong>
+                          {link.description && <span>{link.description}</span>}
+                        </span>
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             ))}
