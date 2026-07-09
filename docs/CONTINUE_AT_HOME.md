@@ -34,14 +34,16 @@
 ## Việc tiếp theo (ưu tiên sản phẩm)
 
 1. **Polish clone** (ongoing) — so `scratch/` vs live  
-2. **Deploy** branch `feat/admin-partner-tc-crud` (migrate `TravelCreditPackage` + restart API/admin)  
-3. Admin còn thiếu: Quotes status · Video CMS UI · Airport CRUD  
-4. G4 keys KH (SMTP / OAuth / payment) khi có  
+2. Admin còn thiếu: Quotes status · Video CMS UI · Airport CRUD  
+3. G4 keys KH (SMTP / OAuth / payment) khi có  
+4. Merge `feat/admin-partner-tc-crud` → `main` khi ổn  
 
 ### Đang làm / vừa xong (admin)
 
 - [x] Partner applications: Approve / Reject (+ tạo `PartnerAccount` khi approve)  
 - [x] Travel Credit packages: CRUD DB (thay hardcode) + admin form  
+- [x] Prod: migrate `TravelCreditPackage` · API `:3010` · admin redeployed  
+- [!] Prod `.env` từng lệch `jta_db` / `PORT=4000` — đã sửa → `jetbay_db` + `PORT=3010` (backup `.env.bak-*`)  
 
 ### Redeploy web (Windows)
 
