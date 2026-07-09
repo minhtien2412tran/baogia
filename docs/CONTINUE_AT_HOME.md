@@ -49,6 +49,20 @@
 - [x] Airport admin CRUD  
 - [x] CMS Pages editor (`/dashboard/content/pages/[id]`)  
 
+### Test trước khi deploy (bắt buộc)
+
+```powershell
+# Local
+cd apps/api; npx tsc --noEmit; npm test; cd ../..
+cd apps/admin; npx tsc --noEmit; npm run build; cd ../..
+$env:API_URL='http://127.0.0.1:4000'
+node scripts/deploy/jetbay-be/smoke-admin-crud.mjs
+node scripts/deploy/jetbay-be/smoke-web-api.mjs
+
+# Chỉ deploy khi RESULT pass
+# Sau deploy: smoke lại với API_URL=https://api.minhtien.online
+```
+
 ### Redeploy web (Windows)
 
 ```powershell
