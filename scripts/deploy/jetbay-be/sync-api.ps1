@@ -9,8 +9,11 @@ $tmp = Join-Path $env:TEMP "jetbay-api-sync"
 if (Test-Path $tmp) { Remove-Item $tmp -Recurse -Force }
 New-Item -ItemType Directory -Path "$tmp\api", "$tmp\deploy" | Out-Null
 
-robocopy "$Repo\apps\api" "$tmp\api" /E /XD node_modules dist coverage /NFL /NDL /NJH /NJS /nc /ns /np
+robocopy "$Repo\apps\api" "$tmp\api" /E /XD node_modules dist coverage /XF .env .env.local /NFL /NDL /NJH /NJS /nc /ns /np
 if ($LASTEXITCODE -ge 8) { throw "robocopy api failed: $LASTEXITCODE" }
+# Never ship local secrets
+Remove-Item "$tmp\api\.env" -ErrorAction SilentlyContinue
+Remove-Item "$tmp\api\.env.local" -ErrorAction SilentlyContinue
 robocopy "$Repo\scripts\deploy\jetbay-be" "$tmp\deploy" /E /NFL /NDL /NJH /NJS /nc /ns /np
 if ($LASTEXITCODE -ge 8) { throw "robocopy deploy failed: $LASTEXITCODE" }
 

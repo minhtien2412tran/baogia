@@ -51,9 +51,11 @@ export default function ContentPage() {
       <p style={{ marginBottom: 16 }}>
         <Link href="/dashboard/content/pages" style={{ color: '#f1d99a' }}>CMS Pages →</Link>
         {' · '}
+        <Link href="/dashboard/content/videos" style={{ color: '#f1d99a' }}>Videos →</Link>
+        {' · '}
         <Link href="/dashboard/content/about-us" style={{ color: '#f1d99a' }}>About Us →</Link>
         {' · '}
-        <Link href="/dashboard/content/booking-process" style={{ color: '#f1d9a' }}>Booking Process →</Link>
+        <Link href="/dashboard/content/booking-process" style={{ color: '#f1d99a' }}>Booking Process →</Link>
       </p>
       <SectionTitle>News &amp; Blog Articles</SectionTitle>
       {loading ? (

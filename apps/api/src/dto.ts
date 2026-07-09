@@ -750,6 +750,89 @@ export class UpdateContentArticleDto {
   translation?: ContentTranslationDto;
 }
 
+export class UpdateQuoteStatusDto {
+  @ApiProperty({
+    example: 'OFFERED',
+    enum: ['PENDING', 'OFFERED', 'EXPIRED', 'CONVERTED', 'CANCELLED'],
+  })
+  @IsIn(['PENDING', 'OFFERED', 'EXPIRED', 'CONVERTED', 'CANCELLED'])
+  status: 'PENDING' | 'OFFERED' | 'EXPIRED' | 'CONVERTED' | 'CANCELLED';
+}
+
+export class CreateAirportDto {
+  @ApiProperty({ example: 'SGN' })
+  @IsString()
+  @IsNotEmpty()
+  iata: string;
+
+  @ApiProperty({ example: 'VVTS' })
+  @IsString()
+  @IsNotEmpty()
+  icao: string;
+
+  @ApiProperty({ example: 'Tan Son Nhat International Airport' })
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @ApiProperty({ example: 'Ho Chi Minh City' })
+  @IsString()
+  @IsNotEmpty()
+  city: string;
+
+  @ApiProperty({ example: 'Vietnam' })
+  @IsString()
+  @IsNotEmpty()
+  country: string;
+
+  @ApiPropertyOptional({ example: 'Asia/Ho_Chi_Minh' })
+  @IsOptional()
+  @IsString()
+  timezone?: string;
+
+  @ApiPropertyOptional({ example: 'ACTIVE', enum: ['ACTIVE', 'INACTIVE'] })
+  @IsOptional()
+  @IsIn(['ACTIVE', 'INACTIVE'])
+  status?: string;
+}
+
+export class UpdateAirportDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  iata?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  icao?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  city?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  country?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  timezone?: string;
+
+  @ApiPropertyOptional({ enum: ['ACTIVE', 'INACTIVE'] })
+  @IsOptional()
+  @IsIn(['ACTIVE', 'INACTIVE'])
+  status?: string;
+}
+
 export class CreateContentPageDto {
   @ApiProperty({ example: 'privacy-policy' })
   slug: string;

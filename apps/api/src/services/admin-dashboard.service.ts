@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { StorageService } from './storage.service';
 import { RedisService } from './redis.service';
+import { AuditService } from './audit.service';
 
 @Injectable()
 export class AdminDashboardService {
@@ -9,6 +10,7 @@ export class AdminDashboardService {
     private readonly prisma: PrismaService,
     private readonly storage: StorageService,
     private readonly redis: RedisService,
+    private readonly audit: AuditService,
   ) {}
 
   async getStats() {
@@ -46,6 +48,27 @@ export class AdminDashboardService {
         : null,
       createdAt: q.createdAt.toISOString(),
     }));
+  }
+
+  async updateQuoteStatus(id: number, status: string) {
+    const allowed = ['PENDING', 'OFFERED', 'EXPIRED', 'CONVERTED', 'CANCELLED'];
+    if (!allowed.includes(status)) {
+      throw new BadRequestException(`Invalid status. Allowed: ${allowed.join(', ')}`);
+    }
+    const existing = await this.prisma.quoteRequest.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException(`Quote #${id} not found`);
+
+    const updated = await this.prisma.quoteRequest.update({
+      where: { id },
+      data: { status },
+    });
+    await this.audit.log('QUOTE_STATUS_UPDATED', { quoteId: id, status, previous: existing.status });
+    return {
+      id: updated.id,
+      status: updated.status,
+      email: updated.email,
+      message: `Quote #${id} → ${status}`,
+    };
   }
 
   async getRecentBookings(limit = 10) {

@@ -23,6 +23,7 @@ import { BookingController, AdminBookingController } from './controllers/booking
 import { AdminDashboardController } from './controllers/admin-dashboard.controller';
 import { AdminUsersController } from './controllers/admin-users.controller';
 import { AirportController } from './controllers/airport.controller';
+import { AdminAirportController } from './controllers/admin-airport.controller';
 import { ApiGatewayController } from './controllers/api-gateway.controller';
 import { AdminAircraftController } from './controllers/admin-aircraft.controller';
 import { MediaController } from './controllers/media.controller';
@@ -74,6 +75,7 @@ import { ApiKeyGuard } from './auth/api-key.guard';
     AuthController,
     QuoteController,
     AirportController,
+    AdminAirportController,
     FixedPriceController,
     AdminFixedPriceController,
     EmptyLegController,

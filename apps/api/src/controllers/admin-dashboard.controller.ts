@@ -1,6 +1,7 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { AdminDashboardService } from '../services/admin-dashboard.service';
+import { UpdateQuoteStatusDto } from '../dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
 
@@ -22,6 +23,15 @@ export class AdminDashboardController {
   @ApiOperation({ summary: 'Recent quote requests' })
   getRecentQuotes(@Query('limit') limit?: string) {
     return this.dashboard.getRecentQuotes(limit ? Number(limit) : 10);
+  }
+
+  @Patch('quotes/:id/status')
+  @ApiOperation({ summary: 'Update quote request status' })
+  updateQuoteStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateQuoteStatusDto,
+  ) {
+    return this.dashboard.updateQuoteStatus(id, body.status);
   }
 
   @Get('dashboard/recent-bookings')

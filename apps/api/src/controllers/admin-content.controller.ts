@@ -59,6 +59,13 @@ export class AdminContentController {
     return this.contentService.adminCreatePage(body);
   }
 
+  @Get('pages/:id')
+  @ApiBearerAuth('bearer')
+  @ApiOperation({ summary: 'Get content page by id (admin)' })
+  getPage(@Param('id', ParseIntPipe) id: number, @Query('locale') locale?: string) {
+    return this.contentService.adminGetPage(id, locale ?? 'en');
+  }
+
   @Patch('pages/:id')
   @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update content page (admin)' })

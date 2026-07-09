@@ -395,6 +395,17 @@ export class ContentService {
     return this.formatArticle(page, t, true);
   }
 
+  async adminGetPage(id: number, locale = 'en') {
+    const page = await this.findPageOrThrow(id);
+    const t = await this.getTranslation('ARTICLE', id, locale);
+    const formatted = this.formatArticle(page, t, true) as Record<string, unknown>;
+    return {
+      ...formatted,
+      body: formatted.content,
+      isPublished: page.isPublished,
+    };
+  }
+
   async adminUpdatePage(id: number, dto: UpdateContentPageDto) {
     await this.findPageOrThrow(id);
     const isPublished = dto.status ? dto.status === 'published' : undefined;

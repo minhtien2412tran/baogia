@@ -114,9 +114,32 @@ export const adminApi = {
   deleteArticle: (id: number) =>
     adminRequest<unknown>(`/admin/content/articles/${id}`, { method: 'DELETE' }),
   getPages: () => adminRequest<{ data: unknown[] }>('/admin/content/pages'),
+  getPage: (id: number) => adminRequest<Record<string, unknown>>(`/admin/content/pages/${id}`),
+  createPage: (body: unknown) =>
+    adminRequest<unknown>('/admin/content/pages', { method: 'POST', body: JSON.stringify(body) }),
   updatePage: (id: number, body: unknown) =>
     adminRequest<unknown>(`/admin/content/pages/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
-  getAirports: () => publicGet<{ airports: unknown[] }>('/airports'),
+  deletePage: (id: number) =>
+    adminRequest<unknown>(`/admin/content/pages/${id}`, { method: 'DELETE' }),
+  getVideos: () => adminRequest<{ data: unknown[] }>('/admin/content/videos'),
+  createVideo: (body: unknown) =>
+    adminRequest<unknown>('/admin/content/videos', { method: 'POST', body: JSON.stringify(body) }),
+  updateVideo: (id: number, body: unknown) =>
+    adminRequest<unknown>(`/admin/content/videos/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  deleteVideo: (id: number) =>
+    adminRequest<unknown>(`/admin/content/videos/${id}`, { method: 'DELETE' }),
+  updateQuoteStatus: (id: number, status: string) =>
+    adminRequest<unknown>(`/admin/quotes/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    }),
+  getAirports: () => adminRequest<{ data: unknown[] }>('/admin/airports?limit=200'),
+  createAirport: (body: unknown) =>
+    adminRequest<unknown>('/admin/airports', { method: 'POST', body: JSON.stringify(body) }),
+  updateAirport: (id: number, body: unknown) =>
+    adminRequest<unknown>(`/admin/airports/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  deleteAirport: (id: number) =>
+    adminRequest<unknown>(`/admin/airports/${id}`, { method: 'DELETE' }),
   getJetCardPlans: () => publicGet<{ plans: unknown[] }>('/jet-card/plans'),
   getTravelCreditPackages: () => publicGet<{ packages: unknown[] }>('/travel-credits/packages'),
   getAdminTravelCreditPackages: () =>
