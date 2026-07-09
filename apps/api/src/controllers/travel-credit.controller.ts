@@ -28,7 +28,7 @@ export class TravelCreditController {
 
   @Get('balance')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Get current user Travel Credit balance' })
   @ApiResponse({ status: 200, description: 'Balance details.' })
   getCreditsBalance(@CurrentUser() user: AuthUser) {
@@ -37,7 +37,7 @@ export class TravelCreditController {
 
   @Post('redeem')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Redeem Travel Credits for a booking' })
   @ApiResponse({ status: 200, description: 'Credits redeemed.' })
   redeemCredits(@Body() body: RedeemCreditsDto, @CurrentUser() user: AuthUser) {
@@ -48,7 +48,7 @@ export class TravelCreditController {
 @ApiTags('Admin Travel Credits')
 @Controller('admin/travel-credits')
 @UseGuards(JwtAuthGuard, AdminGuard)
-@ApiBearerAuth()
+@ApiBearerAuth('bearer')
 export class AdminTravelCreditController {
   constructor(private readonly travelCreditService: TravelCreditService) {}
 

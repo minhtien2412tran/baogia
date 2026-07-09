@@ -27,7 +27,7 @@ export class PartnerController {
 
   @Get('dashboard')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Get dashboard widgets for authenticated partners' })
   @ApiResponse({ status: 200, description: 'Dashboard stats.' })
   getDashboard(@CurrentUser() user: AuthUser) {

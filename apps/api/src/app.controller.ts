@@ -1,7 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { IntegrationsStatusService } from './services/integrations-status.service';
+import { Public } from './auth/public.decorator';
 
+@ApiTags('System')
 @Controller()
 export class AppController {
   constructor(
@@ -9,10 +12,11 @@ export class AppController {
     private readonly integrations: IntegrationsStatusService,
   ) {}
 
+  @Public()
   @Get()
   getRoot() {
     return {
-      name: 'J-TA API',
+      name: 'Jet-Bay API',
       status: 'ok',
       swagger: '/swagger',
       openapi: '/openapi.json',
@@ -23,6 +27,7 @@ export class AppController {
     };
   }
 
+  @Public()
   @Get('health')
   getHealth() {
     return {
@@ -34,6 +39,7 @@ export class AppController {
   }
 
   /** Public readiness of JWT/DB/Redis + which G4 integrations are configured (no secrets). */
+  @Public()
   @Get('integrations/status')
   getIntegrationsStatus() {
     return this.integrations.getStatus();

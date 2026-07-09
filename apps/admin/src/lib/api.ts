@@ -7,6 +7,15 @@ function resolveApiUrl(): string {
 }
 
 const API_URL = resolveApiUrl();
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY ?? '';
+
+function apiHeaders(extra?: HeadersInit): HeadersInit {
+  return {
+    'Content-Type': 'application/json',
+    ...(API_KEY ? { 'X-API-Key': API_KEY } : {}),
+    ...extra,
+  };
+}
 
 export function getToken(): string | null {
   if (typeof window === 'undefined') return null;
@@ -26,11 +35,10 @@ async function adminRequest<T>(path: string, options?: RequestInit): Promise<T> 
   if (!token) throw new Error('Not authenticated');
   const res = await fetch(`${API_URL}${path}`, {
     ...options,
-    headers: {
-      'Content-Type': 'application/json',
+    headers: apiHeaders({
       Authorization: `Bearer ${token}`,
       ...options?.headers,
-    },
+    }),
   });
   if (res.status === 401 || res.status === 403) {
     clearToken();
@@ -41,7 +49,7 @@ async function adminRequest<T>(path: string, options?: RequestInit): Promise<T> 
 }
 
 async function publicGet<T>(path: string): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, { headers: { 'Content-Type': 'application/json' } });
+  const res = await fetch(`${API_URL}${path}`, { headers: apiHeaders() });
   if (!res.ok) throw new Error(`${res.status}: ${await res.text()}`);
   return res.json() as Promise<T>;
 }
@@ -56,7 +64,7 @@ export const adminApi = {
   login: async (email: string, password: string): Promise<LoginResponse> => {
     const res = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: apiHeaders(),
       body: JSON.stringify({ email, password }),
     });
     const data = (await res.json()) as LoginResponse & { message?: string };
@@ -137,7 +145,10 @@ export const adminApi = {
     form.append('file', file);
     const res = await fetch(`${API_URL}/admin/media/upload`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        ...(API_KEY ? { 'X-API-Key': API_KEY } : {}),
+      },
       body: form,
     });
     if (!res.ok) throw new Error(`${res.status}: ${await res.text()}`);

@@ -7,6 +7,7 @@ function resolveApiUrl(): string {
 }
 
 const API_URL = resolveApiUrl();
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY ?? '';
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
@@ -14,10 +15,18 @@ export class ApiError extends Error {
   }
 }
 
+function apiHeaders(extra?: HeadersInit): HeadersInit {
+  return {
+    'Content-Type': 'application/json',
+    ...(API_KEY ? { 'X-API-Key': API_KEY } : {}),
+    ...extra,
+  };
+}
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {
     ...options,
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    headers: apiHeaders(options?.headers),
     next: options?.method && options.method !== 'GET' ? undefined : { revalidate: 30 },
   });
   if (!res.ok) {

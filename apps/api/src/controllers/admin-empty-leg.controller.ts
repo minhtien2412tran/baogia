@@ -18,33 +18,33 @@ import { AdminGuard } from '../auth/admin.guard';
 @ApiTags('Admin Empty Legs')
 @Controller('admin/empty-legs')
 @UseGuards(JwtAuthGuard, AdminGuard)
-@ApiBearerAuth()
+@ApiBearerAuth('bearer')
 export class AdminEmptyLegController {
   constructor(private readonly emptyLegService: EmptyLegService) {}
 
   @Get()
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'List all empty legs (admin)' })
   getAll() {
     return this.emptyLegService.getAll('all');
   }
 
   @Post()
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Create empty leg offer (admin)' })
   create(@Body() body: CreateEmptyLegDto) {
     return this.emptyLegService.create(body);
   }
 
   @Patch(':id')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update empty leg offer (admin)' })
   update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateEmptyLegDto) {
     return this.emptyLegService.update(id, body);
   }
 
   @Delete(':id')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Delete empty leg offer (admin)' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.emptyLegService.delete(id);

@@ -42,7 +42,7 @@ export class MediaController {
 
   @Get('admin/media')
   @UseGuards(JwtAuthGuard, AdminGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'List uploaded media objects' })
   async listMedia() {
     const objects = await this.storage.list();
@@ -54,7 +54,7 @@ export class MediaController {
 
   @Post('admin/media/upload')
   @UseGuards(JwtAuthGuard, AdminGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -75,7 +75,7 @@ export class MediaController {
 
   @Delete('admin/media/:objectKey')
   @UseGuards(JwtAuthGuard, AdminGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Delete a media object' })
   async deleteMedia(@Param('objectKey') objectKey: string) {
     const key = toStorageKey(objectKey);

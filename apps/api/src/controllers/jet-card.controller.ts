@@ -27,7 +27,7 @@ export class JetCardController {
 
   @Get('my')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'List Jet Card accounts for the current user' })
   getMyAccounts(@CurrentUser() user: AuthUser) {
     return this.jetCardService.getUserAccounts(user.userId);

@@ -20,12 +20,12 @@ Nguồn quan sát: Swagger `Bearer` + `X-API-Key`, `AUTH_CONVENTION.md`, `ApiKey
 | # | Pattern HomeFix | Jet-Bay hiện tại | Hành động |
 |---|-----------------|------------------|-----------|
 | 1 | **JWT Bearer** + refresh secret riêng | ✅ JWT + `REFRESH_TOKEN_SECRET` | Giữ; rotate định kỳ (`rotate-secrets.sh`) |
-| 2 | **`X-API-Key` header** (`ApiKeyGuard`) cho app/client | 🟡 Có `API_KEY` trong env, **chưa** enforce guard + Swagger scheme | Nên port: guard + `@ApiSecurity('X-API-Key')` cho mobile/web client |
-| 3 | Swagger auth khớp runtime (`bearer` named + `X-API-Key`) | 🟡 Bearer OK; thiếu X-API-Key scheme | Chuẩn hoá như HomeFix khi bật ApiKey |
+| 2 | **`X-API-Key` header** (`ApiKeyGuard`) cho app/client | ✅ Global `ApiKeyGuard` + `@Public()` health/webhooks/swagger | Web/Admin: `NEXT_PUBLIC_API_KEY` |
+| 3 | Swagger auth khớp runtime (`bearer` named + `X-API-Key`) | ✅ `bearer` + `X-API-Key` schemes | Authorize cả hai trong Swagger UI |
 | 4 | **Helmet** | ✅ | Giữ |
 | 5 | **ValidationPipe** whitelist / forbid | ✅ | Giữ |
 | 6 | **CORS allowlist** (`ALLOWED_ORIGINS` / `CORS_ORIGIN`) | ✅ `CORS_ORIGIN` | Không dùng `*` trên prod |
-| 7 | **Rate limit / `@Throttle`** (login/register/refresh chặt) | 🟡 Global Throttler 120/min; auth bucket 20 — chưa gắn `@Throttle` từng route auth | Siết login/register/OTP giống HomeFix (5–10/min) |
+| 7 | **Rate limit / `@Throttle`** (login/register/refresh chặt) | ✅ `@Throttle` auth: login 10, register/OTP/refresh 5/min | Giữ |
 | 8 | Guard class-level + `@Public()` | 🟡 Guard theo method/controller | Chuẩn hoá convention (không bắt buộc copy RBAC 50+ permission) |
 | 9 | Role tách quyền admin | ✅ `AdminGuard` (USER/ADMIN) | Đủ theo báo giá; **không** port RBAC SUPER_ADMIN/STAFF/… của HomeFix |
 | 10 | Secret riêng, không share BE khác | ✅ `jetbay_db` + `.env` riêng đã rotate | Tiếp tục; không copy `.env` HomeFix |
@@ -42,11 +42,11 @@ Nguồn quan sát: Swagger `Bearer` + `X-API-Key`, `AUTH_CONVENTION.md`, `ApiKey
 - Account deletion / KYC admin HomeFix
 - Reels / Pexels / Cloudinary stack HomeFix
 
-### 1.3 Thứ tự ưu tiên port bảo mật (gợi ý)
+### 1.3 Thứ tự ưu tiên port bảo mật
 
-1. **P0** — `ApiKeyGuard` + Swagger `X-API-Key` (mobile App 248TR / web client)
-2. **P0** — `@Throttle` chặt trên `/auth/login`, `/auth/register`, OTP
-3. **P1** — Named scheme `'bearer'` đồng bộ decorator (convention HomeFix)
+1. ~~**P0** — `ApiKeyGuard` + Swagger `X-API-Key`~~ ✅
+2. ~~**P0** — `@Throttle` chặt auth~~ ✅
+3. ~~**P1** — Named scheme `'bearer'`~~ ✅
 4. **P1** — OTP env (`OTP_COOLDOWN_SECONDS`, `OTP_MAX_ATTEMPTS`) khi bật SMS
 5. **P2** — Auth convention doc nội bộ Jet-Bay (rút gọn từ HomeFix, không copy RBAC)
 

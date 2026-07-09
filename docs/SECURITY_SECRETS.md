@@ -15,9 +15,17 @@
 
 ```bash
 node scripts/generate-local-env.mjs
+node scripts/sync-frontend-api-key.mjs   # copy API_KEY → web/admin NEXT_PUBLIC_API_KEY
 ```
 
 Creates `apps/api/.env` with random `JWT_SECRET`, `REFRESH_TOKEN_SECRET`, `API_KEY`, `PAYMENT_SECRET`.
+
+Clients must send header `X-API-Key` (same value as `API_KEY`). After rotating prod secrets, run on VPS:
+
+```bash
+bash /var/www/jetbay-be/deploy/sync-admin-api-key.sh
+# then rebuild/restart jetbay-admin
+```
 
 ## Rotate production secrets (VPS)
 

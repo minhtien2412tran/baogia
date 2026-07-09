@@ -43,7 +43,7 @@ export class BookingController {
 
   @Get('my')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'List bookings for the current user' })
   @ApiResponse({ status: 200, description: 'User bookings.' })
   findMy(@CurrentUser() user: AuthUser) {
@@ -52,7 +52,7 @@ export class BookingController {
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Get booking by ID' })
   @ApiResponse({ status: 200, description: 'Booking details.' })
   findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthUser) {
@@ -61,7 +61,7 @@ export class BookingController {
 
   @Patch(':id/cancel')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Cancel a booking' })
   @ApiResponse({ status: 200, description: 'Booking cancelled.' })
   cancel(
@@ -76,7 +76,7 @@ export class BookingController {
 @ApiTags('Admin Bookings')
 @Controller('admin/bookings')
 @UseGuards(JwtAuthGuard, AdminGuard)
-@ApiBearerAuth()
+@ApiBearerAuth('bearer')
 export class AdminBookingController {
   constructor(private readonly bookingService: BookingService) {}
 

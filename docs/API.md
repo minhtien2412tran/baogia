@@ -9,7 +9,12 @@
 | **Integrations** | `GET /integrations/status` | boolean readiness, **no secrets** |
 | **Admin UI** | http://127.0.0.1:3001 | https://admin.minhtien.online/login |
 
-OpenAPI title: **Jet-Bay API**. Authorize in Swagger with Bearer JWT from `POST /auth/login`.
+OpenAPI title: **Jet-Bay API**. In Swagger Authorize:
+
+1. **X-API-Key** — app key (`API_KEY` / `NEXT_PUBLIC_API_KEY`)
+2. **bearer** — JWT from `POST /auth/login`
+
+`GET /health`, `/swagger`, `/openapi.json` không cần API key. Hầu hết route khác bắt buộc `X-API-Key`.
 
 Full page mapping: [API_UI_AUDIT.md](./API_UI_AUDIT.md) · Secrets: [SECURITY_SECRETS.md](./SECURITY_SECRETS.md)
 

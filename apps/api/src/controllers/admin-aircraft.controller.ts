@@ -18,7 +18,7 @@ import { AdminGuard } from '../auth/admin.guard';
 @ApiTags('Admin Aircraft')
 @Controller('admin/aircraft')
 @UseGuards(JwtAuthGuard, AdminGuard)
-@ApiBearerAuth()
+@ApiBearerAuth('bearer')
 export class AdminAircraftController {
   constructor(private readonly aircraft: AircraftService) {}
 

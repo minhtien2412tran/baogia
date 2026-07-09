@@ -18,33 +18,33 @@ import { AdminGuard } from '../auth/admin.guard';
 @ApiTags('Admin Jet Card')
 @Controller('admin/jet-card/plans')
 @UseGuards(JwtAuthGuard, AdminGuard)
-@ApiBearerAuth()
+@ApiBearerAuth('bearer')
 export class AdminJetCardController {
   constructor(private readonly jetCardService: JetCardService) {}
 
   @Get()
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'List Jet Card plans (admin)' })
   list() {
     return this.jetCardService.getPlans();
   }
 
   @Post()
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Create Jet Card plan (admin)' })
   create(@Body() body: CreateJetCardPlanDto) {
     return this.jetCardService.createPlan(body);
   }
 
   @Patch(':id')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update Jet Card plan (admin)' })
   update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateJetCardPlanDto) {
     return this.jetCardService.updatePlan(id, body);
   }
 
   @Delete(':id')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Delete Jet Card plan (admin)' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.jetCardService.deletePlan(id);

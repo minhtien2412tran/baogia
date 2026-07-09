@@ -13,6 +13,7 @@ import { DocumentService } from '../services/document.service';
 import { BookingService } from '../services/booking.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
+import { Public } from '../auth/public.decorator';
 import type { AuthUser } from '../auth/auth.types';
 
 @ApiTags('Quotes & Bookings')
@@ -39,7 +40,7 @@ export class QuoteController {
 
   @Get('quotes/my')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'List quote requests for the current user' })
   getMyQuotes(@CurrentUser() user: AuthUser) {
     return this.quoteService.getMyQuotes(user.userId, user.email);
@@ -78,12 +79,13 @@ export class QuoteController {
 
   @Get('payments/my')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'List payments for the current user' })
   getMyPayments(@CurrentUser() user: AuthUser) {
     return this.bookingService.findMyPayments(user.userId);
   }
 
+  @Public()
   @Post('payments/stripe/webhook')
   @ApiOperation({ summary: 'Stripe webhook handler' })
   async stripeWebhook(@Req() req: Request & { rawBody?: Buffer }, @Res() res: Response) {
@@ -125,6 +127,7 @@ export class QuoteController {
     return this.quoteService.createGatewayPayment(body);
   }
 
+  @Public()
   @Get('payments/onepay/return')
   @ApiOperation({ summary: 'OnePay return URL handler' })
   async onepayReturn(@Query() query: Record<string, string>, @Res() res: Response) {
@@ -133,6 +136,7 @@ export class QuoteController {
     res.redirect(`${redirect}?payment=${result.status}&ref=${result.orderRef ?? ''}`);
   }
 
+  @Public()
   @Get('payments/onepay/ipn')
   @Post('payments/onepay/ipn')
   @ApiOperation({ summary: 'OnePay IPN callback' })
@@ -141,6 +145,7 @@ export class QuoteController {
     res.send(ok ? 'responsecode=1&desc=confirm-success' : 'responsecode=0&desc=confirm-fail');
   }
 
+  @Public()
   @Get('payments/9pay/return')
   @ApiOperation({ summary: '9Pay return URL handler' })
   async ninepayReturn(@Query() query: Record<string, string>, @Res() res: Response) {
@@ -149,6 +154,7 @@ export class QuoteController {
     res.redirect(`${redirect}?payment=${result.status}&ref=${result.orderRef ?? ''}`);
   }
 
+  @Public()
   @Post('payments/9pay/ipn')
   @ApiOperation({ summary: '9Pay IPN callback' })
   async ninepayIpn(@Body() body: Record<string, string>, @Res() res: Response) {

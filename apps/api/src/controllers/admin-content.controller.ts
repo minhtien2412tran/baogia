@@ -28,14 +28,14 @@ import { AdminGuard } from '../auth/admin.guard';
 @ApiTags('Admin Content')
 @Controller('admin/content')
 @UseGuards(JwtAuthGuard, AdminGuard)
-@ApiBearerAuth()
+@ApiBearerAuth('bearer')
 export class AdminContentController {
   constructor(private readonly contentService: ContentService) {}
 
   // --- PAGES ---
 
   @Get('pages')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'limit', required: false })
   @ApiQuery({ name: 'status', required: false })
@@ -53,21 +53,21 @@ export class AdminContentController {
   }
 
   @Post('pages')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Create content page (admin)' })
   createPage(@Body() body: CreateContentPageDto) {
     return this.contentService.adminCreatePage(body);
   }
 
   @Patch('pages/:id')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update content page (admin)' })
   updatePage(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateContentPageDto) {
     return this.contentService.adminUpdatePage(id, body);
   }
 
   @Delete('pages/:id')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Delete content page (admin)' })
   deletePage(@Param('id', ParseIntPipe) id: number) {
     return this.contentService.adminDeletePage(id);
@@ -76,7 +76,7 @@ export class AdminContentController {
   // --- ARTICLES ---
 
   @Get('articles')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiQuery({ name: 'type', required: false, example: 'news' })
   @ApiQuery({ name: 'status', required: false })
   @ApiQuery({ name: 'page', required: false })
@@ -96,7 +96,7 @@ export class AdminContentController {
   }
 
   @Post('articles')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Create article (admin)' })
   createArticle(@Body() body: CreateContentArticleDto) {
     return this.contentService.adminCreateArticle(body);
@@ -109,14 +109,14 @@ export class AdminContentController {
   }
 
   @Patch('articles/:id')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update article (admin)' })
   updateArticle(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateContentArticleDto) {
     return this.contentService.adminUpdateArticle(id, body);
   }
 
   @Delete('articles/:id')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Delete article (admin)' })
   deleteArticle(@Param('id', ParseIntPipe) id: number) {
     return this.contentService.adminDeleteArticle(id);
@@ -125,7 +125,7 @@ export class AdminContentController {
   // --- VIDEOS ---
 
   @Get('videos')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiQuery({ name: 'status', required: false })
   @ApiOperation({ summary: 'List videos (admin)' })
   listVideos(@Query('status') status?: string, @Query('page') page?: string) {
@@ -136,21 +136,21 @@ export class AdminContentController {
   }
 
   @Post('videos')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Create video (admin)' })
   createVideo(@Body() body: CreateVideoDto) {
     return this.contentService.adminCreateVideo(body);
   }
 
   @Patch('videos/:id')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update video (admin)' })
   updateVideo(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateVideoDto) {
     return this.contentService.adminUpdateVideo(id, body);
   }
 
   @Delete('videos/:id')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Delete video (admin)' })
   deleteVideo(@Param('id', ParseIntPipe) id: number) {
     return this.contentService.adminDeleteVideo(id);
@@ -159,7 +159,7 @@ export class AdminContentController {
   // --- DESTINATIONS ---
 
   @Get('destinations')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiQuery({ name: 'category', required: false })
   @ApiOperation({ summary: 'List destinations (admin)' })
   listDestinations(@Query('category') category?: string, @Query('page') page?: string, @Query('limit') limit?: string) {
@@ -171,21 +171,21 @@ export class AdminContentController {
   }
 
   @Post('destinations')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Create destination (admin)' })
   createDestination(@Body() body: CreateDestinationDto) {
     return this.contentService.adminCreateDestination(body);
   }
 
   @Patch('destinations/:id')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update destination (admin)' })
   updateDestination(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateDestinationDto) {
     return this.contentService.adminUpdateDestination(id, body);
   }
 
   @Delete('destinations/:id')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Delete destination (admin)' })
   deleteDestination(@Param('id', ParseIntPipe) id: number) {
     return this.contentService.adminDeleteDestination(id);

@@ -53,6 +53,7 @@ import { RedisService } from './services/redis.service';
 import { AircraftService } from './services/aircraft.service';
 import { IntegrationsStatusService } from './services/integrations-status.service';
 import { JwtStrategy } from './auth/jwt.strategy';
+import { ApiKeyGuard } from './auth/api-key.guard';
 
 @Module({
   imports: [
@@ -95,6 +96,7 @@ import { JwtStrategy } from './auth/jwt.strategy';
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_GUARD, useClass: ApiKeyGuard },
     AppService,
     ApiGatewayService,
     BookingService,

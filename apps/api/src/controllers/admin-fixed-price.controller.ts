@@ -18,7 +18,7 @@ import { AdminGuard } from '../auth/admin.guard';
 @ApiTags('Admin Fixed Price')
 @Controller('admin/fixed-price/routes')
 @UseGuards(JwtAuthGuard, AdminGuard)
-@ApiBearerAuth()
+@ApiBearerAuth('bearer')
 export class AdminFixedPriceController {
   constructor(private readonly fixedPriceService: FixedPriceService) {}
 
@@ -29,7 +29,7 @@ export class AdminFixedPriceController {
   }
 
   @Post()
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Create a fixed-price route (admin)' })
   @ApiResponse({ status: 201, description: 'Route created.' })
   create(@Body() body: CreateFixedPriceRouteDto) {
@@ -37,7 +37,7 @@ export class AdminFixedPriceController {
   }
 
   @Patch(':id')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update a fixed-price route (admin)' })
   @ApiResponse({ status: 200, description: 'Route updated.' })
   update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateFixedPriceRouteDto) {
@@ -45,7 +45,7 @@ export class AdminFixedPriceController {
   }
 
   @Delete(':id')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Delete a fixed-price route (admin)' })
   @ApiResponse({ status: 200, description: 'Route deleted.' })
   remove(@Param('id', ParseIntPipe) id: number) {

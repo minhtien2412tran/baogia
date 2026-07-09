@@ -7,7 +7,7 @@ import { AdminGuard } from '../auth/admin.guard';
 @ApiTags('Admin Partners')
 @Controller('admin/partners')
 @UseGuards(JwtAuthGuard, AdminGuard)
-@ApiBearerAuth()
+@ApiBearerAuth('bearer')
 export class AdminPartnerController {
   constructor(private readonly partnerService: PartnerService) {}
 

@@ -7,7 +7,7 @@ import { AdminGuard } from '../auth/admin.guard';
 @ApiTags('Admin Dashboard')
 @Controller('admin')
 @UseGuards(JwtAuthGuard, AdminGuard)
-@ApiBearerAuth()
+@ApiBearerAuth('bearer')
 export class AdminDashboardController {
   constructor(private readonly dashboard: AdminDashboardService) {}
 
@@ -18,28 +18,28 @@ export class AdminDashboardController {
   }
 
   @Get('dashboard/recent-quotes')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Recent quote requests' })
   getRecentQuotes(@Query('limit') limit?: string) {
     return this.dashboard.getRecentQuotes(limit ? Number(limit) : 10);
   }
 
   @Get('dashboard/recent-bookings')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Recent bookings' })
   getRecentBookings(@Query('limit') limit?: string) {
     return this.dashboard.getRecentBookings(limit ? Number(limit) : 10);
   }
 
   @Get('dashboard/revenue-demo')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Revenue demo calculation' })
   getRevenue() {
     return this.dashboard.getRevenueDemo();
   }
 
   @Get('audit-logs')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'limit', required: false })
   @ApiOperation({ summary: 'Audit log listing' })
@@ -48,7 +48,7 @@ export class AdminDashboardController {
   }
 
   @Get('system-health')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'System health check' })
   getHealth() {
     return this.dashboard.getSystemHealth();

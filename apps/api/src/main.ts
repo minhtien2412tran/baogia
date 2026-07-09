@@ -45,6 +45,7 @@ async function bootstrap() {
       'http://127.0.0.1:3001',
     ],
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'Accept'],
   });
 
   app.useGlobalPipes(
@@ -67,7 +68,8 @@ async function bootstrap() {
       [
         'Private jet booking platform API (Jet-Bay / J-TA).',
         '',
-        '**Auth:** `Authorization: Bearer <accessToken>` from `POST /auth/login`.',
+        '**App key:** header `X-API-Key` (required on most routes; not needed for `/health`).',
+        '**User auth:** `Authorization: Bearer <accessToken>` from `POST /auth/login`.',
         '**Health:** `GET /health` · **Integrations (no secrets):** `GET /integrations/status`',
         '**UI audit:** `GET /api-gateway/ui-audit`',
         '',
@@ -79,12 +81,24 @@ async function bootstrap() {
     builder = builder.addServer(url, name);
   }
   const config = builder
-    .addBearerAuth({
-      type: 'http',
-      scheme: 'bearer',
-      bearerFormat: 'JWT',
-      description: 'JWT accessToken from POST /auth/login',
-    })
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description: 'JWT accessToken from POST /auth/login (without Bearer prefix in Swagger field)',
+      },
+      'bearer',
+    )
+    .addApiKey(
+      {
+        type: 'apiKey',
+        name: 'X-API-Key',
+        in: 'header',
+        description: 'App identification key (same pattern as api.homefix.asia)',
+      },
+      'X-API-Key',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
 

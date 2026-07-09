@@ -111,10 +111,13 @@ curl -fsS http://127.0.0.1:3010/integrations/status | python3 -c \
   'import sys,json; d=json.load(sys.stdin); print("jwt", d["core"]["jwt"], "db", d["core"]["database"], "redis", d["core"]["redis"])'
 
 # Login smoke
+API_KEY_VAL="$(grep -E '^API_KEY=' "${ENV_FILE}" | head -1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
 CODE=$(curl -sk -o /tmp/jb-rotate-login.json -w '%{http_code}' \
   -X POST https://api.minhtien.online/auth/login \
   -H 'Content-Type: application/json' \
+  -H "X-API-Key: ${API_KEY_VAL}" \
   -d '{"email":"admin@j-ta.local","password":"Admin123!"}')
 echo "[rotate] auth/login HTTP ${CODE}"
+unset API_KEY_VAL
 echo "[rotate] DONE. Backup: ${BACKUP_DIR}"
 echo "[rotate] Users must re-login (JWT rotated)."
