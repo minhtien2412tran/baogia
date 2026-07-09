@@ -1,6 +1,22 @@
-import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
-import { RedeemCreditsDto, TravelCreditEnquiryDto } from '../dto';
+import {
+  CreateTravelCreditPackageDto,
+  RedeemCreditsDto,
+  TravelCreditEnquiryDto,
+  UpdateTravelCreditPackageDto,
+} from '../dto';
 import { TravelCreditService } from '../services/travel-credit.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
@@ -51,6 +67,33 @@ export class TravelCreditController {
 @ApiBearerAuth('bearer')
 export class AdminTravelCreditController {
   constructor(private readonly travelCreditService: TravelCreditService) {}
+
+  @Get('packages')
+  @ApiOperation({ summary: 'List all travel credit packages (admin)' })
+  listPackages() {
+    return this.travelCreditService.getPackages(true);
+  }
+
+  @Post('packages')
+  @ApiOperation({ summary: 'Create travel credit package' })
+  createPackage(@Body() body: CreateTravelCreditPackageDto) {
+    return this.travelCreditService.createPackage(body);
+  }
+
+  @Patch('packages/:id')
+  @ApiOperation({ summary: 'Update travel credit package' })
+  updatePackage(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateTravelCreditPackageDto,
+  ) {
+    return this.travelCreditService.updatePackage(id, body);
+  }
+
+  @Delete('packages/:id')
+  @ApiOperation({ summary: 'Delete travel credit package' })
+  deletePackage(@Param('id', ParseIntPipe) id: number) {
+    return this.travelCreditService.deletePackage(id);
+  }
 
   @Get('transactions')
   @ApiQuery({ name: 'page', required: false })

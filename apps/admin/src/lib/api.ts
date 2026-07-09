@@ -119,7 +119,23 @@ export const adminApi = {
   getAirports: () => publicGet<{ airports: unknown[] }>('/airports'),
   getJetCardPlans: () => publicGet<{ plans: unknown[] }>('/jet-card/plans'),
   getTravelCreditPackages: () => publicGet<{ packages: unknown[] }>('/travel-credits/packages'),
+  getAdminTravelCreditPackages: () =>
+    adminRequest<{ packages: unknown[] }>('/admin/travel-credits/packages'),
+  createTravelCreditPackage: (body: unknown) =>
+    adminRequest<unknown>('/admin/travel-credits/packages', { method: 'POST', body: JSON.stringify(body) }),
+  updateTravelCreditPackage: (id: number, body: unknown) =>
+    adminRequest<unknown>(`/admin/travel-credits/packages/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
+  deleteTravelCreditPackage: (id: number) =>
+    adminRequest<unknown>(`/admin/travel-credits/packages/${id}`, { method: 'DELETE' }),
   getPartnerApplications: () => adminRequest<{ applications: unknown[] }>('/admin/partners/applications'),
+  reviewPartnerApplication: (id: number, status: 'APPROVED' | 'REJECTED') =>
+    adminRequest<unknown>(`/admin/partners/applications/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    }),
   getUsers: () => adminRequest<{ data: unknown[] }>('/admin/users'),
   updateUser: (id: number, body: unknown) =>
     adminRequest<unknown>(`/admin/users/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),

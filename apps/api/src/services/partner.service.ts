@@ -94,6 +94,57 @@ export class PartnerService {
     };
   }
 
+  async reviewApplication(id: number, status: 'APPROVED' | 'REJECTED') {
+    const application = await this.prisma.partnerApplication.findUnique({
+      where: { id },
+      include: { program: true },
+    });
+    if (!application) throw new NotFoundException(`Application #${id} not found`);
+    if (application.reviewStatus !== 'PENDING') {
+      throw new BadRequestException(`Application already ${application.reviewStatus}`);
+    }
+
+    const updated = await this.prisma.$transaction(async (tx) => {
+      const app = await tx.partnerApplication.update({
+        where: { id },
+        data: { reviewStatus: status, reviewedAt: new Date() },
+        include: { user: true, program: true },
+      });
+
+      if (status === 'APPROVED') {
+        const existing = await tx.partnerAccount.findFirst({
+          where: { userId: app.userId, programId: app.programId },
+        });
+        if (!existing) {
+          await tx.partnerAccount.create({
+            data: {
+              userId: app.userId,
+              programId: app.programId,
+              dashboardPermissions: 'BASIC',
+            },
+          });
+        }
+      }
+
+      return app;
+    });
+
+    await this.audit.log('PARTNER_APPLICATION_REVIEWED', {
+      applicationId: id,
+      status,
+      userId: updated.userId,
+      programCode: updated.program.code,
+    });
+
+    return {
+      id: updated.id,
+      status: updated.reviewStatus,
+      email: updated.user.email,
+      program: updated.program.name,
+      reviewedAt: updated.reviewedAt?.toISOString() ?? null,
+    };
+  }
+
   async getDashboard(userId: number) {
     const account = await this.prisma.partnerAccount.findFirst({
       where: { userId },

@@ -68,6 +68,11 @@ Quy tắc: mỗi giai đoạn phải đạt DoD trước khi mở giai đoạn t
 - [x] `/login` HTTPS 200
 - [x] AdminGuard: USER → 403 trên `/admin/dashboard/stats`
 - [x] Scripts: `deploy-admin.sh`, `start-admin-vps.sh`, nginx confs
+- [x] Partner applications Approve/Reject (`feat/admin-partner-tc-crud`)
+- [x] Travel Credit package CRUD (DB model + admin form)
+- [ ] Quotes admin status workflow
+- [ ] Video CMS admin UI
+- [ ] Airport admin CRUD
 
 ---
 

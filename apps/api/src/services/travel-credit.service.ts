@@ -1,13 +1,12 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
-import { RedeemCreditsDto, TravelCreditEnquiryDto } from '../dto';
-
-export const TRAVEL_CREDIT_PACKAGES = [
-  { id: 1, name: 'Starter', credits: 1000, price: 1000, currency: 'USD', validityMonths: 12 },
-  { id: 2, name: 'Business', credits: 5000, price: 4500, currency: 'USD', validityMonths: 18 },
-  { id: 3, name: 'Enterprise', credits: 15000, price: 12000, currency: 'USD', validityMonths: 24 },
-];
+import {
+  CreateTravelCreditPackageDto,
+  RedeemCreditsDto,
+  TravelCreditEnquiryDto,
+  UpdateTravelCreditPackageDto,
+} from '../dto';
 
 @Injectable()
 export class TravelCreditService {
@@ -16,15 +15,90 @@ export class TravelCreditService {
     private readonly audit: AuditService,
   ) {}
 
-  getPackages() {
-    return { packages: TRAVEL_CREDIT_PACKAGES };
+  private mapPackage(p: {
+    id: number;
+    name: string;
+    creditAmount: { toString(): string } | number;
+    priceUsd: { toString(): string } | number;
+    bonusPct: { toString(): string } | number | null;
+    validityMonths: number;
+    currency: string;
+    active: boolean;
+  }) {
+    return {
+      id: p.id,
+      name: p.name,
+      creditAmount: Number(p.creditAmount),
+      priceUsd: Number(p.priceUsd),
+      bonusPct: p.bonusPct == null ? null : Number(p.bonusPct),
+      validityMonths: p.validityMonths,
+      currency: p.currency,
+      active: p.active,
+      // legacy aliases used by older clients
+      credits: Number(p.creditAmount),
+      price: Number(p.priceUsd),
+    };
+  }
+
+  async getPackages(includeInactive = false) {
+    const packages = await this.prisma.travelCreditPackage.findMany({
+      where: includeInactive ? undefined : { active: true },
+      orderBy: { creditAmount: 'asc' },
+    });
+    return { packages: packages.map((p) => this.mapPackage(p)) };
+  }
+
+  async createPackage(body: CreateTravelCreditPackageDto) {
+    const created = await this.prisma.travelCreditPackage.create({
+      data: {
+        name: body.name,
+        creditAmount: body.creditAmount,
+        priceUsd: body.priceUsd,
+        bonusPct: body.bonusPct ?? null,
+        validityMonths: body.validityMonths ?? 12,
+        currency: body.currency ?? 'USD',
+        active: body.active ?? true,
+      },
+    });
+    await this.audit.log('TRAVEL_CREDIT_PACKAGE_CREATED', { id: created.id, name: created.name });
+    return this.mapPackage(created);
+  }
+
+  async updatePackage(id: number, body: UpdateTravelCreditPackageDto) {
+    const existing = await this.prisma.travelCreditPackage.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException(`Package #${id} not found`);
+
+    const updated = await this.prisma.travelCreditPackage.update({
+      where: { id },
+      data: {
+        ...(body.name != null ? { name: body.name } : {}),
+        ...(body.creditAmount != null ? { creditAmount: body.creditAmount } : {}),
+        ...(body.priceUsd != null ? { priceUsd: body.priceUsd } : {}),
+        ...(body.bonusPct !== undefined ? { bonusPct: body.bonusPct } : {}),
+        ...(body.validityMonths != null ? { validityMonths: body.validityMonths } : {}),
+        ...(body.currency != null ? { currency: body.currency } : {}),
+        ...(body.active != null ? { active: body.active } : {}),
+      },
+    });
+    await this.audit.log('TRAVEL_CREDIT_PACKAGE_UPDATED', { id });
+    return this.mapPackage(updated);
+  }
+
+  async deletePackage(id: number) {
+    const existing = await this.prisma.travelCreditPackage.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException(`Package #${id} not found`);
+    await this.prisma.travelCreditPackage.delete({ where: { id } });
+    await this.audit.log('TRAVEL_CREDIT_PACKAGE_DELETED', { id, name: existing.name });
+    return { ok: true, id };
   }
 
   async createEnquiry(body: TravelCreditEnquiryDto) {
     if (!body.isConsentAccepted) {
       throw new BadRequestException('Consent is required');
     }
-    const pkg = TRAVEL_CREDIT_PACKAGES.find((p) => p.id === body.packageId);
+    const pkg = await this.prisma.travelCreditPackage.findFirst({
+      where: { id: body.packageId, active: true },
+    });
     if (!pkg) throw new BadRequestException(`Package #${body.packageId} not found`);
 
     const record = await this.prisma.auditLog.create({

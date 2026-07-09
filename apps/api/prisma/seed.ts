@@ -293,8 +293,20 @@ async function main() {
     },
   });
 
-  // 7. Seed Travel Credits for demo user
+  // 7. Seed Travel Credit packages + demo ledger
   console.log('Seeding Travel Credits...');
+  const tcPackageSeeds = [
+    { name: 'Starter', creditAmount: 1000, priceUsd: 1000, bonusPct: null as number | null, validityMonths: 12 },
+    { name: 'Business', creditAmount: 5000, priceUsd: 4500, bonusPct: 10, validityMonths: 18 },
+    { name: 'Enterprise', creditAmount: 15000, priceUsd: 12000, bonusPct: 20, validityMonths: 24 },
+  ];
+  for (const pkg of tcPackageSeeds) {
+    const existing = await prisma.travelCreditPackage.findFirst({ where: { name: pkg.name } });
+    if (!existing) {
+      await prisma.travelCreditPackage.create({ data: { ...pkg, currency: 'USD', active: true } });
+    }
+  }
+
   const demoUser = await prisma.user.findUnique({ where: { email: 'demo@jetbay.local' } });
   if (demoUser) {
     const existingCredits = await prisma.travelCreditLedger.count({ where: { userId: demoUser.id } });

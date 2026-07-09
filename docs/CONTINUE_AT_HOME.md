@@ -33,9 +33,15 @@
 
 ## Việc tiếp theo (ưu tiên sản phẩm)
 
-1. **Polish clone** (ongoing) — so `scratch/` vs live; charter/nav/footer đã có content + icon dropdown  
-2. Admin CRUD còn thiếu (`feat/admin-*`)  
-3. G4 keys KH (SMTP / OAuth / payment) khi có  
+1. **Polish clone** (ongoing) — so `scratch/` vs live  
+2. **Deploy** branch `feat/admin-partner-tc-crud` (migrate `TravelCreditPackage` + restart API/admin)  
+3. Admin còn thiếu: Quotes status · Video CMS UI · Airport CRUD  
+4. G4 keys KH (SMTP / OAuth / payment) khi có  
+
+### Đang làm / vừa xong (admin)
+
+- [x] Partner applications: Approve / Reject (+ tạo `PartnerAccount` khi approve)  
+- [x] Travel Credit packages: CRUD DB (thay hardcode) + admin form  
 
 ### Redeploy web (Windows)
 

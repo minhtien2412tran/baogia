@@ -597,6 +597,88 @@ export class TravelCreditEnquiryDto {
   isConsentAccepted: boolean;
 }
 
+export class CreateTravelCreditPackageDto {
+  @ApiProperty({ example: 'Starter' })
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @ApiProperty({ example: 1000 })
+  @IsInt()
+  @Min(1)
+  creditAmount: number;
+
+  @ApiProperty({ example: 1000 })
+  @IsInt()
+  @Min(1)
+  priceUsd: number;
+
+  @ApiPropertyOptional({ example: 10 })
+  @IsOptional()
+  bonusPct?: number;
+
+  @ApiPropertyOptional({ example: 12 })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  validityMonths?: number;
+
+  @ApiPropertyOptional({ example: 'USD' })
+  @IsOptional()
+  @IsString()
+  currency?: string;
+
+  @ApiPropertyOptional({ example: true })
+  @IsOptional()
+  @IsBoolean()
+  active?: boolean;
+}
+
+export class UpdateTravelCreditPackageDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  creditAmount?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  priceUsd?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  bonusPct?: number | null;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  validityMonths?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  currency?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  active?: boolean;
+}
+
+export class ReviewPartnerApplicationDto {
+  @ApiProperty({ example: 'APPROVED', enum: ['APPROVED', 'REJECTED'] })
+  @IsIn(['APPROVED', 'REJECTED'])
+  status: 'APPROVED' | 'REJECTED';
+}
+
 // --- CONTENT CMS DTOS ---
 
 export class ContentTranslationDto {
