@@ -1,0 +1,10 @@
+﻿# Keep indexing fast and avoid leaking build artifacts into AI context
+**/node_modules/**
+**/.next/**
+**/dist/**
+**/coverage/**
+**/playwright-report/**
+**/test-results/**
+apps/api/uploads/**
+**/logs/**
+**/*.log

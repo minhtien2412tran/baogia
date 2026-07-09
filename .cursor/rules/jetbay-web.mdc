@@ -1,0 +1,13 @@
+---
+description: Public website (apps/web) conventions
+globs: apps/web/**/*
+alwaysApply: false
+---
+
+# apps/web — Public FE
+
+- Branch: `feat/web-*`
+- API client: `apps/web/src/lib/api.ts` — send `X-API-Key` via `NEXT_PUBLIC_API_KEY`
+- Do not edit `apps/api` or `apps/admin` unless the task explicitly requires a shared contract change
+- Progress: update `docs/CONTINUE_AT_HOME.md` / `docs/JETBAY_WEB_PAGE_DOD.md` when finishing a page group
+- Read Next.js notes in `apps/web/AGENTS.md` / `node_modules/next/dist/docs/` when unsure

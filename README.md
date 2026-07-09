@@ -5,10 +5,24 @@ This project is a monorepo containing the public website, admin dashboard, and b
 ## Architecture
 
 The platform uses a pnpm monorepo structure:
-- **`apps/web`**: Next.js public website (running on `localhost:3000`)
-- **`apps/admin`**: Next.js custom admin dashboard (running on `localhost:3001`)
-- **`apps/api`**: NestJS core backend API (running on `localhost:4000`)
+- **`apps/web`**: Next.js public website (running on `localhost:3000`) — branch `feat/web-*`
+- **`apps/admin`**: Next.js custom admin dashboard (running on `localhost:3001`) — branch `feat/admin-*`
+- **`apps/api`**: NestJS core backend API (running on `localhost:4000`) — branch `feat/api-*`
 - **`docker-compose.yml`**: Docker environment configurations for PostgreSQL, Redis, MinIO, and Mailpit.
+
+### Tiếp tục code (nhiều máy / Cursor)
+
+| File | Mục đích |
+|------|----------|
+| [docs/CONTINUE_AT_HOME.md](./docs/CONTINUE_AT_HOME.md) | **Bắt đầu ở đây** sau `git pull` |
+| [AGENTS.md](./AGENTS.md) | Hướng dẫn AI + map FE/BE/Admin |
+| [docs/GIT_WORKFLOW.md](./docs/GIT_WORKFLOW.md) | Nhánh git an toàn |
+| `.cursor/rules/` | Rules Cursor (commit cùng code) |
+
+```bash
+git pull origin main
+# mở Cursor → @docs/CONTINUE_AT_HOME.md
+```
 
 ---
 

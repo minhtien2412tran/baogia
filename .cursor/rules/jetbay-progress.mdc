@@ -1,0 +1,12 @@
+---
+description: Jet-Bay progress board and monorepo boundaries (always on)
+alwaysApply: true
+---
+
+# Jet-Bay agent context
+
+1. Start from `docs/CONTINUE_AT_HOME.md` and `AGENTS.md` — do not invent status from chat.
+2. After meaningful work, update `docs/CONTINUE_AT_HOME.md` and the checklist log.
+3. Scope by app: `apps/web` = FE, `apps/api` = BE, `apps/admin` = dashboard. Prefer matching branch prefixes `feat/web-*`, `feat/api-*`, `feat/admin-*`.
+4. Features only from báo giá docs; security patterns may mirror HomeFix but never share secrets/DB with HomeFix.
+5. Never commit `.env` / `.env.local` or print production secrets.

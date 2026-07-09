@@ -1,0 +1,12 @@
+---
+description: Admin dashboard (apps/admin) conventions
+globs: apps/admin/**/*
+alwaysApply: false
+---
+
+# apps/admin — Dashboard
+
+- Branch: `feat/admin-*`
+- API client: `apps/admin/src/lib/api.ts` — Bearer + `X-API-Key`
+- After rotating prod `API_KEY`, sync admin via `scripts/deploy/jetbay-be/sync-admin-api-key.sh`
+- Keep CRUD/ops scoped to Jet-Bay báo giá modules (not HomeFix CRM)

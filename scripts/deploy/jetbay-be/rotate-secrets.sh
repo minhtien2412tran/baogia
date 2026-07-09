@@ -119,5 +119,12 @@ CODE=$(curl -sk -o /tmp/jb-rotate-login.json -w '%{http_code}' \
   -d '{"email":"admin@j-ta.local","password":"Admin123!"}')
 echo "[rotate] auth/login HTTP ${CODE}"
 unset API_KEY_VAL
+
+# Keep admin client in sync (NEXT_PUBLIC_API_KEY)
+if [ -x /var/www/jetbay-be/deploy/sync-admin-api-key.sh ]; then
+  bash /var/www/jetbay-be/deploy/sync-admin-api-key.sh || true
+  echo "[rotate] Re-build/restart jetbay-admin if admin login fails after rotate."
+fi
+
 echo "[rotate] DONE. Backup: ${BACKUP_DIR}"
 echo "[rotate] Users must re-login (JWT rotated)."

@@ -1,3 +1,9 @@
+# apps/admin — Dashboard
+
+- Parent: [../../AGENTS.md](../../AGENTS.md) · Progress: [../../docs/CONTINUE_AT_HOME.md](../../docs/CONTINUE_AT_HOME.md)
+- Branch prefix: `feat/admin-*`
+- Auth: Bearer + `X-API-Key` (`NEXT_PUBLIC_API_KEY`)
+
 <!-- BEGIN:nextjs-agent-rules -->
 # This is NOT the Next.js you know
 

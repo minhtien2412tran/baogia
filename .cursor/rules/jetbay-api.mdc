@@ -1,0 +1,13 @@
+---
+description: NestJS API (apps/api) conventions
+globs: apps/api/**/*
+alwaysApply: false
+---
+
+# apps/api — Backend
+
+- Branch: `feat/api-*`
+- Auth: JWT Bearer + global `ApiKeyGuard` (`X-API-Key`); use `@Public()` for health/webhooks/swagger
+- Swagger schemes: `bearer` and `X-API-Key` (named)
+- Production secrets: see `docs/SECURITY_SECRETS.md`; never copy HomeFix `.env`
+- Deploy scripts live under `scripts/deploy/jetbay-be/` — do not touch baotienweb nginx/DB

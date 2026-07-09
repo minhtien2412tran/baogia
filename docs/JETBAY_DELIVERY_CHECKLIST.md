@@ -153,3 +153,5 @@ node scripts/deploy/jetbay-be/smoke-web-api.mjs
 | 2026-07-09 | G3 admin HTTPS + AdminGuard | PASS |
 | 2026-07-09 | G4 checklist + App gate doc | READY / gate API xanh |
 | 2026-07-09 | Rotate prod secrets + chuẩn hoá Swagger/docs | DONE |
+| 2026-07-09 | ApiKeyGuard + X-API-Key smoke 16/16 | DONE |
+| 2026-07-09 | AGENTS + CONTINUE_AT_HOME + git FE/BE/admin | DONE |
