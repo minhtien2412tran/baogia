@@ -1,67 +1,71 @@
 # Continue at home — JETBAY
 
-> **Mục riêng trong repo** (commit được lên GitHub). Chat Cursor không nhớ — mở file này sau `git pull`.
+> Chat Cursor không nhớ — mở file này sau `git pull`.  
+> Bản đồ đầy đủ: [JETBAY_PRODUCT_MAP.md](./JETBAY_PRODUCT_MAP.md)
 
-**Dự án:** JETBAY (Private Jet Booking)  
-**Cập nhật lần cuối:** 2026-07-09  
-**Repo:** https://github.com/minhtien2412tran/baogia.git *(remote name unchanged)*  
-**Nhánh mặc định:** `main` · làm việc trên `feat/web-*` | `feat/api-*` | `feat/admin-*`
+**Dự án:** JETBAY — **sản phẩm chính = clone jetbay.com** (`apps/web`)  
+**Báo giá** (`m-tien.com/jet-bay`) chỉ là mô tả bán hàng — không phải trang chính.  
+**Repo:** https://github.com/minhtien2412tran/baogia.git  
+**Nhánh:** `main` · `feat/web-*` | `feat/api-*` | `feat/admin-*`
 
 ---
 
-## Đã xong (prod)
+## URL nhanh
 
-- [x] API `api.minhtien.online` + Admin `admin.minhtien.online` + Docs Swagger
-- [x] Tách BE cũ (port/DB/env) — không đụng HomeFix
-- [x] Rotate secrets + `ApiKeyGuard` (`X-API-Key`) + throttle auth
-- [x] Swagger: schemes `bearer` + `X-API-Key`
-- [x] Smoke prod API key: 16/16 pass
-- [x] Rebrand monorepo → JETBAY (`@jetbay/*`, docs `JETBAY_*`)
-- [x] Demo seed emails: `admin@jetbay.local` / `demo@jetbay.local` (local). **Prod:** re-run seed hoặc cập nhật email user nếu vẫn `@j-ta.local`
+| Vai trò | URL | Ghi chú |
+|---------|-----|---------|
+| **Web clone (chính)** | http://localhost:3000/en-us | Code: `apps/web` — **chưa deploy public** |
+| API | https://api.minhtien.online | ✅ |
+| Admin | https://admin.minhtien.online/login | ✅ |
+| Swagger | https://docs.minhtien.online/swagger | ✅ |
+| Báo giá Web (collateral) | https://m-tien.com/jet-bay/ | Chỉ pitch / giá — không sửa như product |
+| Báo giá App (collateral) | https://m-tien.com/app-jetbay/ | Scope App 248TR — chưa code RN |
 
-## Việc tiếp theo (ưu tiên)
+---
 
-1. **Web polish** — parity trang theo `JETBAY_WEB_PAGE_DOD.md` (nhánh `feat/web-*`)
-2. **P1 OTP env** — `OTP_COOLDOWN_SECONDS` / `OTP_MAX_ATTEMPTS` khi bật SMS (G4)
-3. **Admin CRUD** — form còn thiếu (nhánh `feat/admin-*`)
-4. **G4 keys KH** — SMTP / OAuth / payment sandbox (không hardcode secret)
+## Đã xong
 
-## Phân nhánh khi code
+- [x] API + Admin + Docs Swagger (prod)
+- [x] Web nối API prod (local → `api.minhtien.online`)
+- [x] ApiKeyGuard / secrets / rebrand JETBAY
+- [x] Quy hoạch: product = clone · báo giá = collateral ([JETBAY_PRODUCT_MAP.md](./JETBAY_PRODUCT_MAP.md))
 
-| Bạn sửa | Checkout |
-|---------|----------|
-| `apps/web/**` | `git checkout -b feat/web/<ten-viec>` |
-| `apps/api/**` | `git checkout -b feat/api/<ten-viec>` |
-| `apps/admin/**` | `git checkout -b feat/admin/<ten-viec>` |
-| Docs/deploy only | `chore/docs-*` hoặc `chore/deploy-*` |
+## Việc tiếp theo (ưu tiên sản phẩm)
 
-Chi tiết: [GIT_WORKFLOW.md](./GIT_WORKFLOW.md) · Báo giá: [JETBAY_BAO_GIA.md](./JETBAY_BAO_GIA.md)
+1. **Deploy public web** — subdomain (đề xuất `www.minhtien.online`) để demo clone thật  
+2. **Polish clone** — parity `scratch/` + [JETBAY_WEB_PAGE_DOD.md](./JETBAY_WEB_PAGE_DOD.md) (`feat/web-*`)  
+3. Admin CRUD còn thiếu (`feat/admin-*`)  
+4. G4 keys KH (SMTP / OAuth / payment) khi có
 
-## Về nhà — 5 lệnh
+---
+
+## Code trang chính (clone)
+
+```
+apps/web/src/app/[locale]/page.tsx     ← Home
+apps/web/src/components/home/          ← Hero, FP, EL, JetCard…
+apps/web/src/app/[locale]/*            ← Các trang con
+scratch/                               ← HTML mẫu jet-bay.com
+```
 
 ```bash
-git clone https://github.com/minhtien2412tran/baogia.git   # lần đầu
-cd baogia
+pnpm --filter @jetbay/web dev
+# mở http://localhost:3000/en-us
+```
+
+---
+
+## Về nhà
+
+```bash
 git pull origin main
 pnpm install
-# đọc file này + AGENTS.md rồi mới code
+# đọc JETBAY_PRODUCT_MAP.md + file này
 ```
 
-Sau khi xong việc:
+Demo seed: `admin@jetbay.local` / `Admin123!` · `demo@jetbay.local` / `Demo123!`  
+(Prod có thể còn `@j-ta.local` nếu chưa re-seed.)
 
-```bash
-# cập nhật mục "Việc tiếp theo" trong file này
-git add -A
-git status   # kiểm tra KHÔNG có .env
-git commit -m "..."
-git push -u origin HEAD
-```
+## Liên kết
 
-## Không commit
-
-- `apps/*/.env`, `.env.local`, `*.env.bak*`
-- Secret VPS, password demo bàn giao
-
-## Liên kết nhanh
-
-- [AGENTS.md](../AGENTS.md) · [JETBAY_DELIVERY_CHECKLIST.md](./JETBAY_DELIVERY_CHECKLIST.md) · [SECURITY_SECRETS.md](./SECURITY_SECRETS.md) · [API.md](./API.md)
+[AGENTS.md](../AGENTS.md) · [JETBAY_PRODUCT_MAP.md](./JETBAY_PRODUCT_MAP.md) · [JETBAY_BAO_GIA.md](./JETBAY_BAO_GIA.md) · [GIT_WORKFLOW.md](./GIT_WORKFLOW.md)

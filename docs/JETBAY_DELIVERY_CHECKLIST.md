@@ -1,10 +1,10 @@
 # Jet-Bay Delivery Checklist
 
-**Nguồn:** [Web 74TR](https://m-tien.com/jet-bay/) · [App 248TR](https://m-tien.com/app-jetbay/)  
+**Sản phẩm chính:** clone jetbay.com → `apps/web` (local `:3000`, public web chưa deploy)  
+**Bản đồ:** [JETBAY_PRODUCT_MAP.md](./JETBAY_PRODUCT_MAP.md)  
+**Báo giá (chỉ collateral):** [Web 74TR](https://m-tien.com/jet-bay/) · [App 248TR](https://m-tien.com/app-jetbay/) · [JETBAY_BAO_GIA.md](./JETBAY_BAO_GIA.md)  
 **Cập nhật:** 2026-07-09  
-**API prod:** https://api.minhtien.online  
-**Docs:** https://docs.minhtien.online/swagger  
-**Admin:** https://admin.minhtien.online/login
+**API:** https://api.minhtien.online · **Swagger:** https://docs.minhtien.online/swagger · **Admin:** https://admin.minhtien.online/login
 
 Quy tắc: mỗi giai đoạn phải đạt DoD trước khi mở giai đoạn tiếp theo. Không kick-off React Native cho đến khi cổng App xanh.
 
@@ -55,8 +55,8 @@ Quy tắc: mỗi giai đoạn phải đạt DoD trước khi mở giai đoạn t
 - [x] Local pages 200: home, FP, EL, jet-card, TC, charter, news, destination, login, account
 - [x] Quote widget không gửi `tripType` thừa (DTO fix)
 - [x] DoD groups: [JETBAY_WEB_PAGE_DOD.md](./JETBAY_WEB_PAGE_DOD.md)
-- [ ] Deploy public web lên subdomain (sau — không bắt buộc G2 wire)
-- [ ] Visual parity polish vs scratch (ongoing)
+- [ ] Deploy public web clone (đề xuất `www.minhtien.online` → PM2 `:3012`) — **ưu tiên demo sản phẩm**
+- [ ] Visual parity polish vs `scratch/` / jet-bay.com (ongoing)
 
 ---
 

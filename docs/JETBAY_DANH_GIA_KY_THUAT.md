@@ -1,7 +1,8 @@
 # Đánh giá kỹ thuật & phân rã báo giá — nền tảng JETBAY Private Jet Charter
 
 > **Báo giá gửi khách hàng (phiên bản trình bày):** xem [`JETBAY_BAO_GIA.md`](./JETBAY_BAO_GIA.md)  
-> **Demo tương tác:** [m-tien.com/jet-bay](https://m-tien.com/jet-bay/)
+> **Sản phẩm (clone):** `apps/web` → local http://localhost:3000/en-us · xem [JETBAY_PRODUCT_MAP.md](./JETBAY_PRODUCT_MAP.md)  
+> **Báo giá (collateral):** [m-tien.com/jet-bay](https://m-tien.com/jet-bay/) — không phải app clone
 
 **Phiên bản tài liệu:** 1.0  
 **Ngày:** 30/06/2026  

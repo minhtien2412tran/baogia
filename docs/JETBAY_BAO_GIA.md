@@ -28,7 +28,8 @@
 |--------|----------|
 | Đại diện | Ông Nguyễn Minh Tiến — Giám đốc Kỹ thuật |
 | Email | minhtiensolutions@gmail.com |
-| Website | [m-tien.com/jet-bay](https://m-tien.com/jet-bay/) |
+| Website (báo giá agency) | [m-tien.com/jet-bay](https://m-tien.com/jet-bay/) — *không phải app clone* |
+| Sản phẩm clone | `apps/web` · xem [JETBAY_PRODUCT_MAP.md](./JETBAY_PRODUCT_MAP.md) |
 
 ---
 

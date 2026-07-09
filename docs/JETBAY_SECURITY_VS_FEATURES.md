@@ -59,7 +59,8 @@ Nguồn quan sát: Swagger `Bearer` + `X-API-Key`, `AUTH_CONVENTION.md`, `ApiKey
 1. [JETBAY_BAO_GIA.md](./JETBAY_BAO_GIA.md) — phạm vi hợp đồng, gói A/B/C, cây nghiệp vụ §IV  
 2. [JETBAY_DANH_GIA_KY_THUAT.md](./JETBAY_DANH_GIA_KY_THUAT.md) — feature tree §4, ma trận trang/API, WP
 
-Demo tham chiếu UI: [m-tien.com/jet-bay](https://m-tien.com/jet-bay/) · App: [m-tien.com/app-jetbay](https://m-tien.com/app-jetbay/)
+**Product UI (clone):** `apps/web` — [JETBAY_PRODUCT_MAP.md](./JETBAY_PRODUCT_MAP.md)  
+**Báo giá (collateral only):** [m-tien.com/jet-bay](https://m-tien.com/jet-bay/) · [m-tien.com/app-jetbay](https://m-tien.com/app-jetbay/)
 
 ### Cây chức năng (rút gọn từ báo giá — không thêm từ HomeFix)
 

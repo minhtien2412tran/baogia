@@ -1,6 +1,9 @@
 # JETBAY — Private Jet Booking Platform
 
-Monorepo: public website, admin dashboard, and NestJS API for **JETBAY** (clean-room clone of a private jet booking platform).
+**Sản phẩm chính:** clean-room **clone jetbay.com** → [`apps/web`](./apps/web) (local http://localhost:3000/en-us).  
+**Báo giá** trên [m-tien.com/jet-bay](https://m-tien.com/jet-bay/) chỉ là mô tả bán hàng — xem [docs/JETBAY_PRODUCT_MAP.md](./docs/JETBAY_PRODUCT_MAP.md).
+
+Monorepo: public website, admin dashboard, and NestJS API.
 
 ## Architecture
 
@@ -16,8 +19,9 @@ pnpm workspace:
 | File | Mục đích |
 |------|----------|
 | [docs/CONTINUE_AT_HOME.md](./docs/CONTINUE_AT_HOME.md) | **Bắt đầu ở đây** sau `git pull` |
+| [docs/JETBAY_PRODUCT_MAP.md](./docs/JETBAY_PRODUCT_MAP.md) | Product vs báo giá |
 | [AGENTS.md](./AGENTS.md) | Hướng dẫn AI + map FE/BE/Admin |
-| [docs/JETBAY_BAO_GIA.md](./docs/JETBAY_BAO_GIA.md) | Báo giá / phạm vi |
+| [docs/JETBAY_BAO_GIA.md](./docs/JETBAY_BAO_GIA.md) | Báo giá (collateral) |
 | [docs/GIT_WORKFLOW.md](./docs/GIT_WORKFLOW.md) | Nhánh git an toàn |
 | `.cursor/rules/` | Rules Cursor (commit cùng code) |
 
@@ -76,8 +80,8 @@ pnpm test:e2e       # Playwright (cần pnpm dev đang chạy)
 ### Demo credentials (sau `pnpm --filter @jetbay/api prisma:seed`)
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | admin@j-ta.local | Admin123! |
-| User | demo@j-ta.local | Demo123! |
+| Admin | admin@jetbay.local | Admin123! |
+| User | demo@jetbay.local | Demo123! |
 
 Once running:
 - **Public Website**: [http://localhost:3000](http://localhost:3000)

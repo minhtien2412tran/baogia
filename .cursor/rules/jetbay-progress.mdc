@@ -5,9 +5,9 @@ alwaysApply: true
 
 # JETBAY agent context
 
-1. Start from `docs/CONTINUE_AT_HOME.md` and `AGENTS.md` — do not invent status from chat.
-2. After meaningful work, update `docs/CONTINUE_AT_HOME.md` and the checklist log.
-3. Scope by app: `apps/web` = FE, `apps/api` = BE, `apps/admin` = dashboard. Prefer matching branch prefixes `feat/web-*`, `feat/api-*`, `feat/admin-*`.
-4. Features only from `docs/JETBAY_BAO_GIA.md` + `docs/JETBAY_DANH_GIA_KY_THUAT.md`; security patterns may mirror HomeFix but never share secrets/DB with HomeFix.
-5. Never commit `.env` / `.env.local` or print production secrets.
-6. Shared UI package is `@jetbay/ui` (not `@j-ta/ui`).
+1. Start from `docs/CONTINUE_AT_HOME.md` + `docs/JETBAY_PRODUCT_MAP.md` — do not invent status from chat.
+2. **Product = jetbay.com clone in `apps/web`**. `m-tien.com/jet-bay` is sales/quote only, not the product UI.
+3. After meaningful work, update `docs/CONTINUE_AT_HOME.md` and the checklist log.
+4. Scope by app: `apps/web` = FE clone, `apps/api` = BE, `apps/admin` = dashboard. Branches `feat/web-*`, `feat/api-*`, `feat/admin-*`.
+5. Features only from `docs/JETBAY_BAO_GIA.md` + `docs/JETBAY_DANH_GIA_KY_THUAT.md`; security may mirror HomeFix but never share secrets/DB.
+6. Never commit `.env` / `.env.local` or print production secrets. UI package: `@jetbay/ui`.
