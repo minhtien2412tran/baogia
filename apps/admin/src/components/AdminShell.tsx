@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { PageShell, colors } from '@jetbay/ui';
 import { clearToken } from '../lib/api';
 
 const nav = [
@@ -36,33 +35,32 @@ export function AdminShell({ children, active }: { children: React.ReactNode; ac
   }
 
   return (
-    <PageShell>
-      <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-        <aside style={{ minWidth: 180 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-            <h2 style={{ color: colors.accent, margin: 0 }}>JetBay Admin</h2>
-            <button type="button" onClick={logout} style={{ background: 'none', border: 'none', color: colors.textMuted, cursor: 'pointer', fontSize: 12 }}>
-              Logout
-            </button>
+    <div className="jb-shell">
+      <aside className="jb-shell__aside">
+        <div className="jb-shell__brand-row">
+          <div className="jb-shell__brand">
+            <span className="jb-shell__mark" aria-hidden>
+              JB
+            </span>
+            JetBay Admin
           </div>
+          <button type="button" className="jb-shell__logout" onClick={logout}>
+            Logout
+          </button>
+        </div>
+        <nav className="jb-shell__nav" aria-label="Admin">
           {nav.map((n) => (
             <a
               key={n.href}
               href={n.href}
-              style={{
-                display: 'block',
-                padding: '8px 0',
-                color: active === n.href ? colors.accent : colors.textMuted,
-                textDecoration: 'none',
-                fontSize: 14,
-              }}
+              className={`jb-shell__link${active === n.href ? ' is-active' : ''}`}
             >
               {n.label}
             </a>
           ))}
-        </aside>
-        <main style={{ flex: 1, minWidth: 280 }}>{children}</main>
-      </div>
-    </PageShell>
+        </nav>
+      </aside>
+      <main className="jb-shell__main">{children}</main>
+    </div>
   );
 }

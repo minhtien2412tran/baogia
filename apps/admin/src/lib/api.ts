@@ -3,11 +3,15 @@ function resolveApiUrl(): string {
   if (typeof window !== 'undefined' && url.includes('localhost')) {
     return url.replace('localhost', '127.0.0.1');
   }
-  return url;
+  return url.replace(/\/$/, '');
 }
 
 const API_URL = resolveApiUrl();
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY ?? '';
+
+export function getApiBaseUrl(): string {
+  return API_URL;
+}
 
 function apiHeaders(extra?: HeadersInit): HeadersInit {
   return {
@@ -15,6 +19,14 @@ function apiHeaders(extra?: HeadersInit): HeadersInit {
     ...(API_KEY ? { 'X-API-Key': API_KEY } : {}),
     ...extra,
   };
+}
+
+function networkErrorMessage(err: unknown): string {
+  if (err instanceof TypeError) {
+    return `Cannot reach API at ${API_URL}. Check CORS / network / API status.`;
+  }
+  if (err instanceof Error) return err.message;
+  return 'Request failed';
 }
 
 export function getToken(): string | null {
@@ -62,12 +74,17 @@ export type LoginResponse = {
 
 export const adminApi = {
   login: async (email: string, password: string): Promise<LoginResponse> => {
-    const res = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: apiHeaders(),
-      body: JSON.stringify({ email, password }),
-    });
-    const data = (await res.json()) as LoginResponse & { message?: string };
+    let res: Response;
+    try {
+      res = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: apiHeaders(),
+        body: JSON.stringify({ email, password }),
+      });
+    } catch (err) {
+      throw new Error(networkErrorMessage(err));
+    }
+    const data = (await res.json().catch(() => ({}))) as LoginResponse & { message?: string };
     if (!res.ok) throw new Error(data.message ?? `Login failed (${res.status})`);
     return data;
   },
