@@ -96,7 +96,7 @@ Mỗi phase: `tsc` + jest + `smoke-admin-crud.mjs` + `smoke-web-api.mjs` trướ
 
 - [x] `AppModule` imports feature module (không list từng controller của domain đó)
 - [x] Không đổi OpenAPI paths
-- [ ] Smoke local 16/16 admin + 8/8 web
+- [x] Smoke local 16/16 admin + 8/8 web
 - [x] Cập nhật [BE_AUDIT.md](./BE_AUDIT.md) status nếu có gap mới
 
 ---

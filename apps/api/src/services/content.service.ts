@@ -516,10 +516,12 @@ export class ContentService {
     const existing = await this.findArticleOrThrow(id);
     const isPublished = dto.status ? dto.status === 'published' : undefined;
     const categoryId = dto.category !== undefined ? await this.resolveCategoryId(dto.category) : undefined;
+    const type = dto.type ? this.articleTypeFromDto(dto.type) : undefined;
 
     const article = await this.prisma.contentArticle.update({
       where: { id },
       data: {
+        ...(type ? { type } : {}),
         slug: dto.slug,
         author: dto.author,
         thumbnail: dto.thumbnail,

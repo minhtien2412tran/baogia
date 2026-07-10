@@ -2,17 +2,20 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { SectionTitle, Button, Muted } from '@jetbay/ui';
 import { AdminShell } from '../../../../../components/AdminShell';
 import { AdminField } from '../../../../../components/AdminFormFields';
 import { RichTextEditor } from '../../../../../components/RichTextEditor';
 import { adminApi } from '../../../../../lib/api';
 
-export default function ArticleEditorPage({ params }: { params: { id: string } }) {
+export default function ArticleEditorPage() {
   const router = useRouter();
-  const isNew = params.id === 'new';
-  const articleId = isNew ? 0 : Number(params.id);
+  const params = useParams<{ id: string }>();
+  const rawId = typeof params?.id === 'string' ? params.id : Array.isArray(params?.id) ? params.id[0] : '';
+  const isNew = rawId === 'new';
+  const articleId = isNew ? 0 : Number(rawId);
+  const idValid = isNew || (Number.isFinite(articleId) && articleId > 0);
 
   const [type, setType] = useState('news');
   const [slug, setSlug] = useState('');
@@ -22,14 +25,20 @@ export default function ArticleEditorPage({ params }: { params: { id: string } }
   const [excerpt, setExcerpt] = useState('');
   const [body, setBody] = useState('');
   const [msg, setMsg] = useState('');
-  const [loading, setLoading] = useState(!isNew);
+  const [loading, setLoading] = useState(!isNew && idValid);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (isNew) return;
+    if (isNew || !idValid) {
+      setLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setLoading(true);
     adminApi
       .getArticle(articleId)
       .then((a) => {
+        if (cancelled) return;
         setType(String(a.type ?? 'news').toLowerCase());
         setSlug(String(a.slug ?? ''));
         setAuthor(String(a.author ?? 'JetBay Editorial'));
@@ -38,11 +47,22 @@ export default function ArticleEditorPage({ params }: { params: { id: string } }
         setExcerpt(String(a.excerpt ?? ''));
         setBody(String(a.content ?? a.body ?? ''));
       })
-      .catch((e) => setMsg(e instanceof Error ? e.message : 'Load failed'))
-      .finally(() => setLoading(false));
-  }, [articleId, isNew]);
+      .catch((e) => {
+        if (!cancelled) setMsg(e instanceof Error ? e.message : 'Load failed');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [articleId, isNew, idValid]);
 
   async function save() {
+    if (!idValid) {
+      setMsg('Invalid article id');
+      return;
+    }
     setSaving(true);
     setMsg('');
     const payload = {
@@ -76,7 +96,7 @@ export default function ArticleEditorPage({ params }: { params: { id: string } }
   }
 
   async function remove() {
-    if (isNew || !confirm('Delete this article?')) return;
+    if (isNew || !idValid || !confirm('Delete this article?')) return;
     await adminApi.deleteArticle(articleId);
     router.push('/dashboard/content');
   }
@@ -92,9 +112,19 @@ export default function ArticleEditorPage({ params }: { params: { id: string } }
   return (
     <AdminShell active="/dashboard/content">
       <p style={{ marginBottom: 16 }}>
-        <Link href="/dashboard/content" style={{ color: '#f1d99a' }}>← All articles</Link>
+        <Link href="/dashboard/content" style={{ color: 'var(--jb-accent)' }}>
+          ← All articles
+        </Link>
       </p>
-      <SectionTitle>{isNew ? 'New Article' : `Edit Article #${articleId}`}</SectionTitle>
+      <SectionTitle>
+        {isNew ? 'New Article' : idValid ? `Edit Article #${articleId}` : 'Edit Article'}
+      </SectionTitle>
+
+      {!idValid && (
+        <p className="jb-form-error" style={{ marginBottom: 16 }}>
+          Invalid article id in URL.
+        </p>
+      )}
 
       <AdminField label="Type (news / blog)" value={type} onChange={setType} />
       <AdminField label="Slug" value={slug} onChange={setSlug} required />
@@ -105,16 +135,25 @@ export default function ArticleEditorPage({ params }: { params: { id: string } }
       <RichTextEditor label="Body (HTML)" value={body} onChange={setBody} />
 
       <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
-        <Button type="button" onClick={save} disabled={saving}>
+        <Button type="button" onClick={save} disabled={saving || !idValid}>
           {saving ? 'Saving…' : 'Save'}
         </Button>
-        {!isNew && (
+        {!isNew && idValid && (
           <Button type="button" variant="ghost" onClick={remove}>
             Delete
           </Button>
         )}
       </div>
-      {msg && <p style={{ marginTop: 12, color: '#4ade80' }}>{msg}</p>}
+      {msg && (
+        <p
+          className={
+            /^(400|401|403|404|500)|fail|error|invalid/i.test(msg) ? 'jb-form-error' : 'jb-form-ok'
+          }
+          style={{ marginTop: 12 }}
+        >
+          {msg}
+        </p>
+      )}
     </AdminShell>
   );
 }

@@ -912,6 +912,11 @@ export class CreateContentArticleDto {
 }
 
 export class UpdateContentArticleDto {
+  @ApiPropertyOptional({ example: 'news', enum: ['news', 'blog'] })
+  @IsOptional()
+  @IsIn(['news', 'blog'])
+  type?: string;
+
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
