@@ -124,7 +124,7 @@ export class TravelCreditService {
     };
   }
 
-  async getBalance(userId = 1) {
+  async getBalance(userId: number) {
     const entries = await this.prisma.travelCreditLedger.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
@@ -148,7 +148,7 @@ export class TravelCreditService {
     };
   }
 
-  async redeem(body: RedeemCreditsDto, userId = 1) {
+  async redeem(body: RedeemCreditsDto, userId: number) {
     const balance = await this.getBalance(userId);
     if (body.credits > balance.credits) {
       throw new BadRequestException('Insufficient travel credits');

@@ -365,9 +365,6 @@ export class CreateBookingDto {
   @ApiPropertyOptional({ example: 1, description: 'Quote request or offer ID' })
   quoteId?: number;
 
-  @ApiPropertyOptional({ example: 1 })
-  userId?: number;
-
   @ApiProperty({ example: 'CHARTER' })
   bookingType?: string;
 

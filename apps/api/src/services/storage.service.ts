@@ -19,7 +19,7 @@ export class StorageService {
 
   constructor() {
     const endpoint = process.env.MINIO_ENDPOINT?.trim();
-    this.bucket = process.env.MINIO_BUCKET ?? 'jta-uploads';
+    this.bucket = process.env.MINIO_BUCKET ?? 'jetbay-uploads';
     this.publicBase = (process.env.API_PUBLIC_URL ?? 'http://127.0.0.1:4000').replace(/\/$/, '');
 
     if (endpoint) {

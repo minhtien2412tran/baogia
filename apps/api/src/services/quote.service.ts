@@ -277,14 +277,18 @@ export class QuoteService {
   }
 
   async placeHold(body: PaymentIntentDto) {
-    const booking = await this.prisma.booking.findUnique({ where: { id: body.bookingId } });
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: body.bookingId },
+      include: { quoteOffer: true },
+    });
     if (!booking) throw new NotFoundException(`Booking ${body.bookingId} not found`);
 
+    const amount = booking.quoteOffer ? Number(booking.quoteOffer.price) : 12500;
     const payment = await this.prisma.payment.create({
       data: {
         bookingId: body.bookingId,
         method: 'HOLD',
-        amount: 12500,
+        amount,
         currency: 'USD',
         status: 'PENDING',
         transactionRef: `hold_${Date.now()}`,
@@ -310,7 +314,7 @@ export class QuoteService {
     if (!booking) throw new NotFoundException(`Booking ${body.bookingId} not found`);
 
     const amount = booking.quoteOffer ? Number(booking.quoteOffer.price) : 12500;
-    const orderRef = `jta-${body.bookingId}-${Date.now()}`;
+    const orderRef = `jbay-${body.bookingId}-${Date.now()}`;
     const apiBase = process.env.API_PUBLIC_URL ?? 'http://127.0.0.1:4000';
     const returnUrl =
       body.returnUrl ??

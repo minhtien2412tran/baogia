@@ -33,7 +33,7 @@ describe('StorageService URL builder', () => {
 describe('Gateway payment order ref', () => {
   it('embeds booking id', () => {
     const bookingId = 42;
-    const orderRef = `jta-${bookingId}-${Date.now()}`;
-    expect(orderRef.startsWith('jta-42-')).toBe(true);
+    const orderRef = `jbay-${bookingId}-${Date.now()}`;
+    expect(orderRef.startsWith('jbay-42-')).toBe(true);
   });
 });

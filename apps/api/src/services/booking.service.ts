@@ -140,10 +140,16 @@ export class BookingService {
     }
   }
 
-  async create(dto: CreateBookingDto, ipAddress?: string) {
+  async create(dto: CreateBookingDto, userId: number, ipAddress?: string) {
     this.validateCreateDto(dto);
 
-    const userId = dto.userId ?? (await this.ensureDemoUser(dto.contact));
+    const userExists = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true },
+    });
+    if (!userExists) {
+      throw new BadRequestException('Authenticated user not found');
+    }
 
     const booking = await this.prisma.booking.create({
       data: {
@@ -355,21 +361,4 @@ export class BookingService {
     return this.formatBooking(updated);
   }
 
-  private async ensureDemoUser(contact: CreateBookingDto['contact']) {
-    const existing = await this.prisma.user.findUnique({
-      where: { email: contact.email },
-    });
-    if (existing) {
-      return existing.id;
-    }
-    const created = await this.prisma.user.create({
-      data: {
-        email: contact.email,
-        firstName: contact.firstName,
-        lastName: contact.lastName,
-        phone: contact.phone,
-      },
-    });
-    return created.id;
-  }
 }

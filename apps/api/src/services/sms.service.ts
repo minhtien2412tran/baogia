@@ -44,7 +44,8 @@ export class SmsService {
       }
     }
 
-    if (process.env.NODE_ENV !== 'production') {
+    const appEnv = process.env.APP_ENV ?? process.env.NODE_ENV;
+    if (appEnv !== 'production') {
       this.logger.warn(`[DEV SMS] ${phone} → ${code}`);
       return { sent: true, devCode: code };
     }
