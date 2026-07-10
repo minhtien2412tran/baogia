@@ -88,12 +88,23 @@ pnpm --filter @jetbay/web dev
 
 ---
 
-## Về nhà
+## Về nhà / máy mới / nhân viên khác
+
+**Hướng dẫn đầy đủ (clone + env + DB + chạy app):**  
+→ [ONBOARDING_NHAN_VIEN.md](./ONBOARDING_NHAN_VIEN.md)
 
 ```bash
+git clone https://github.com/minhtien2412tran/baogia.git
+cd baogia
 git pull origin main
 pnpm install
-# đọc JETBAY_PRODUCT_MAP.md + file này
+node scripts/generate-local-env.mjs
+node scripts/sync-frontend-api-key.mjs
+pnpm db:up
+pnpm --filter @jetbay/api prisma:generate
+pnpm --filter @jetbay/api exec prisma migrate deploy
+pnpm --filter @jetbay/api prisma:seed
+# đọc ONBOARDING_NHAN_VIEN.md + JETBAY_PRODUCT_MAP.md + file này
 ```
 
 Demo seed: `admin@jetbay.local` / `Admin123!` · `demo@jetbay.local` / `Demo123!`  
@@ -101,4 +112,4 @@ Demo seed: `admin@jetbay.local` / `Admin123!` · `demo@jetbay.local` / `Demo123!
 
 ## Liên kết
 
-[AGENTS.md](../AGENTS.md) · [JETBAY_PRODUCT_MAP.md](./JETBAY_PRODUCT_MAP.md) · [JETBAY_BAO_GIA.md](./JETBAY_BAO_GIA.md) · [GIT_WORKFLOW.md](./GIT_WORKFLOW.md)
+[ONBOARDING_NHAN_VIEN.md](./ONBOARDING_NHAN_VIEN.md) · [AGENTS.md](../AGENTS.md) · [JETBAY_PRODUCT_MAP.md](./JETBAY_PRODUCT_MAP.md) · [JETBAY_BAO_GIA.md](./JETBAY_BAO_GIA.md) · [GIT_WORKFLOW.md](./GIT_WORKFLOW.md)

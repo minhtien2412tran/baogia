@@ -14,11 +14,12 @@ pnpm workspace:
 - **`packages/ui`** (`@jetbay/ui`): Shared UI
 - **`docker-compose.yml`**: PostgreSQL, Redis, MinIO, Mailpit (`jetbay_*` local)
 
-### Tiếp tục code (nhiều máy / Cursor)
+### Tiếp tục code (nhiều máy / Cursor / nhân viên mới)
 
 | File | Mục đích |
 |------|----------|
-| [docs/CONTINUE_AT_HOME.md](./docs/CONTINUE_AT_HOME.md) | **Bắt đầu ở đây** sau `git pull` |
+| [docs/ONBOARDING_NHAN_VIEN.md](./docs/ONBOARDING_NHAN_VIEN.md) | **Clone + setup đầy đủ** cho người mới |
+| [docs/CONTINUE_AT_HOME.md](./docs/CONTINUE_AT_HOME.md) | Tiến độ / URL sau `git pull` |
 | [docs/JETBAY_PRODUCT_MAP.md](./docs/JETBAY_PRODUCT_MAP.md) | Product vs báo giá |
 | [AGENTS.md](./AGENTS.md) | Hướng dẫn AI + map FE/BE/Admin |
 | [docs/JETBAY_BAO_GIA.md](./docs/JETBAY_BAO_GIA.md) | Báo giá (collateral) |
@@ -26,8 +27,9 @@ pnpm workspace:
 | `.cursor/rules/` | Rules Cursor (commit cùng code) |
 
 ```bash
-git pull origin main
-# mở Cursor → @docs/CONTINUE_AT_HOME.md
+git clone https://github.com/minhtien2412tran/baogia.git
+cd baogia
+# làm theo docs/ONBOARDING_NHAN_VIEN.md
 ```
 
 ---

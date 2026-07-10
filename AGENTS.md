@@ -10,6 +10,7 @@ Chat sessions do **not** remember progress. Before coding, read and update the f
 | Doc | Purpose |
 |-----|---------|
 | [docs/CONTINUE_AT_HOME.md](./docs/CONTINUE_AT_HOME.md) | **Where we left off** — start here on a new machine |
+| [docs/ONBOARDING_NHAN_VIEN.md](./docs/ONBOARDING_NHAN_VIEN.md) | Full clone + setup for new teammates |
 | [docs/JETBAY_PRODUCT_MAP.md](./docs/JETBAY_PRODUCT_MAP.md) | Product vs báo giá — architecture map |
 | [docs/JETBAY_WEB_PAGE_DOD.md](./docs/JETBAY_WEB_PAGE_DOD.md) | Clone page DoD |
 | [docs/JETBAY_DELIVERY_CHECKLIST.md](./docs/JETBAY_DELIVERY_CHECKLIST.md) | Delivery DoD G0–G4 + App gate |
