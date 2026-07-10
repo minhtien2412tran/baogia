@@ -100,11 +100,11 @@ async function main() {
   const { token } = auth;
 
   // Quotes list + status patch (idempotent: set same or cycle PENDING)
-  const quotes = await req('/admin/dashboard/recent-quotes?limit=5', { token });
-  if (quotes.status === 200 && Array.isArray(quotes.json)) {
-    ok('quotes list', `count=${quotes.json.length}`);
-    if (quotes.json.length > 0) {
-      const q = quotes.json[0];
+  const quotes = await req('/admin/quotes?limit=5', { token });
+  if (quotes.status === 200 && Array.isArray(quotes.json?.data)) {
+    ok('quotes list', `count=${quotes.json.data.length}`);
+    if (quotes.json.data.length > 0) {
+      const q = quotes.json.data[0];
       const next =
         String(q.status).toUpperCase() === 'PENDING' ? 'OFFERED' : 'PENDING';
       const patch = await req(`/admin/quotes/${q.id}/status`, {
@@ -123,11 +123,53 @@ async function main() {
       } else {
         fail('quotes status patch', `status=${patch.status} body=${JSON.stringify(patch.json).slice(0, 160)}`);
       }
+
+      const detail = await req(`/admin/quotes/${q.id}`, { token });
+      if (detail.status === 200 && detail.json?.id === q.id) {
+        ok('quotes detail', `id=${q.id} offers=${detail.json.offers?.length ?? 0}`);
+      } else {
+        fail('quotes detail', `status=${detail.status}`);
+      }
     } else {
       ok('quotes status patch', 'skipped (no quotes)');
+      ok('quotes detail', 'skipped (no quotes)');
     }
   } else {
     fail('quotes list', `status=${quotes.status}`);
+  }
+
+  const operators = await req('/admin/operators', { token });
+  if (operators.status === 200 && Array.isArray(operators.json?.operators)) {
+    ok('operators list', `count=${operators.json.operators.length}`);
+  } else {
+    fail('operators list', `status=${operators.status}`);
+  }
+
+  // Create offer when we have quote + operator + aircraft model
+  const models = await req('/admin/aircraft/models', { token });
+  const modelList = models.json?.models ?? [];
+  const opList = operators.json?.operators ?? [];
+  const quoteList = quotes.json?.data ?? [];
+  if (quoteList.length && opList.length && modelList.length) {
+    const expires = new Date();
+    expires.setDate(expires.getDate() + 7);
+    const offer = await req(`/admin/quotes/${quoteList[0].id}/offers`, {
+      method: 'POST',
+      token,
+      body: {
+        aircraftModelId: modelList[0].id,
+        operatorId: opList[0].id,
+        price: 19999,
+        expiresAt: expires.toISOString(),
+      },
+    });
+    if (offer.status === 200 || offer.status === 201) {
+      ok('quotes create offer', `offerId=${offer.json?.id}`);
+    } else {
+      fail('quotes create offer', `status=${offer.status} ${JSON.stringify(offer.json).slice(0, 160)}`);
+    }
+  } else {
+    ok('quotes create offer', 'skipped (missing quote/operator/model)');
   }
 
   // Airports list
