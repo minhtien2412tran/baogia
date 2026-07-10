@@ -35,15 +35,28 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule, { rawBody: true });
 
-  app.use(helmet({ contentSecurityPolicy: false }));
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+      // APIs serving browser clients must allow cross-origin reads
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+    }),
+  );
+
+  const corsOrigins = (process.env.CORS_ORIGIN ??
+    'http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001')
+    .split(',')
+    .map((s) => s.trim().replace(/^["']|["']$/g, ''))
+    .filter(Boolean);
 
   app.enableCors({
-    origin: process.env.CORS_ORIGIN?.split(',').map((s) => s.trim()) ?? [
-      'http://localhost:3000',
-      'http://localhost:3001',
-      'http://127.0.0.1:3000',
-      'http://127.0.0.1:3001',
-    ],
+    origin: (origin, callback) => {
+      if (!origin || corsOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(null, false);
+    },
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'Accept'],
   });
