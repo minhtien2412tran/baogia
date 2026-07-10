@@ -15,6 +15,7 @@
 | Vai trò | URL | Ghi chú |
 |---------|-----|---------|
 | **Web clone (chính)** | https://www.minhtien.online/en-us | ✅ PM2 `jetbay-web` `:3012` · local vẫn `:3000` |
+| **Báo cáo tiến độ KH** | https://www.minhtien.online/baocaotiendo | ✅ trang nội bộ gửi Anh Tuấn Anh |
 | API | https://api.minhtien.online | ✅ |
 | Admin | https://admin.minhtien.online/login | ✅ |
 | Swagger | https://docs.minhtien.online/swagger | ✅ |
@@ -38,7 +39,7 @@
 3. (Optional) set prod `APP_ENV=production` khi secrets đã đủ mạnh  
 4. **BE modules** — tiếp phase 2+ theo [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md)  
 
-**BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) (canonical) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md)
+**BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) (canonical) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) · **[JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)** (kế hoạch triển khai + smoke)
 
 ### Đã merge + deploy (2026-07-10)
 
@@ -47,6 +48,8 @@
 - [x] Prod smoke admin **16/16** · web **8/8**  
 - [x] Redeploy (Content DTO validators + article `#NaN` fix + Settings UI) — `ARTICLE_PATCH 200` · smoke **16/16** + **8/8**  
 - [x] OpenAPI YAML (`/openapi.yaml`) + `@jetbay/api-client` (`pnpm openapi:client`) · docs RN section in API.md · prod YAML **200**  
+- [x] **Báo cáo tiến độ KH** (`/baocaotiendo`) — UI aviation + JS effects · redeploy web **200**
+- [x] **Retest full prod** — smoke BE 16/16 · docs 11/11 · admin 16/16 · web 8/8 · [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)
 
 ### Đang làm / vừa xong (admin)
 

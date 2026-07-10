@@ -4,8 +4,13 @@ import { DEFAULT_LOCALE, isValidLocale } from './src/config/locales';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const segment = pathname.split('/')[1];
 
+  // Standalone client progress report — no locale redirect
+  if (pathname === '/baocaotiendo' || pathname.startsWith('/baocaotiendo/')) {
+    return NextResponse.next();
+  }
+
+  const segment = pathname.split('/')[1];
   if (segment && !isValidLocale(segment) && !pathname.startsWith('/_next') && !pathname.includes('.')) {
     const url = request.nextUrl.clone();
     url.pathname = `/${DEFAULT_LOCALE}${pathname}`;

@@ -33,8 +33,8 @@ Mỗi phần dùng cùng template: Mục tiêu · Routes · Models · Status · 
 | **Routes** | `GET /`, `GET /health`, `GET /integrations/status`, `/swagger`, `/openapi.json`, `/openapi.yaml` (`@Public`) |
 | **Models** | — |
 | **Status** | **solid** |
-| **Gaps** | Prod `.env` còn `APP_ENV=development` (nên `production` khi secrets đủ mạnh). CORS đã gồm `admin` + `www.minhtien.online`. Helmet `crossOriginResourcePolicy: cross-origin` cho browser clients. |
-| **Smoke** | `curl https://api.minhtien.online/health` |
+| **Gaps** | Prod `.env` còn `APP_ENV=development` (nên `production` khi secrets đủ mạnh). CORS đã gồm `admin` + `www` + `docs.minhtien.online`. `API_PUBLIC_URL=https://api.minhtien.online` ✅. Helmet `crossOriginResourcePolicy: cross-origin`. |
+| **Smoke** | `smoke-prod.sh` **16/16** · `smoke-docs.sh` **11/11** · `smoke-admin-crud.mjs` **16/16** · `smoke-web-api.mjs` **8/8** (2026-07-10) |
 
 Guards order: Throttler → ApiKey. JWT/Admin gắn per-controller. Boot `assertProductionSecrets()` khi `APP_ENV=production`.
 

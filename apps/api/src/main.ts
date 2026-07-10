@@ -70,12 +70,23 @@ async function bootstrap() {
     }),
   );
 
-  const apiPublic = process.env.API_PUBLIC_URL?.replace(/\/$/, '') || 'http://127.0.0.1:4000';
-  const servers = new Map<string, string>([
-    [apiPublic, process.env.APP_ENV === 'production' ? 'Production' : 'Current'],
-    ['https://api.minhtien.online', 'Production (api.minhtien.online)'],
-    ['http://127.0.0.1:4000', 'Local development'],
-  ]);
+  const isProd =
+    process.env.APP_ENV === 'production' || process.env.NODE_ENV === 'production';
+  const apiPublic =
+    process.env.API_PUBLIC_URL?.replace(/\/$/, '') ||
+    (isProd ? 'https://api.minhtien.online' : 'http://127.0.0.1:4000');
+
+  const servers = new Map<string, string>();
+  if (isProd) {
+    servers.set('https://api.minhtien.online', 'Production');
+    if (apiPublic !== 'https://api.minhtien.online') {
+      servers.set(apiPublic, 'API_PUBLIC_URL');
+    }
+  } else {
+    servers.set(apiPublic, 'Current');
+    servers.set('https://api.minhtien.online', 'Production (api.minhtien.online)');
+    servers.set('http://127.0.0.1:4000', 'Local development');
+  }
   let builder = new DocumentBuilder()
     .setTitle('JetBay API')
     .setDescription(
