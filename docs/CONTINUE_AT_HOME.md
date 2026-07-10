@@ -48,6 +48,7 @@
 - [x] **CSS polish web** (2026-07-10) — logo JetBay · header desktop · airport dropdown · hero overflow · redeploy `jetbay-web`
 - [x] **Motion effects web** (2026-07-10) — scroll reveal · hero flight path · parallax · stat progress
 - [x] **Motion v2** (2026-07-10) — counter 10K+/190+ · 3D tilt cards · page transition · booking flow FX
+- [x] **i18n GĐ1** (2026-07-10) — `@jetbay/i18n` · reverse locale DB `en` · `/i18n/config` · FE middleware cookie · [I18N_ROADMAP.md](./I18N_ROADMAP.md)
 
 - [x] `feat/api-security-hardening` (+ admin screens / partner-TC) → **`main`** (`9893789`)  
 - [x] VPS API `jetbay-be` + Admin `jetbay-admin` redeployed  

@@ -48,7 +48,7 @@ export class ContentService {
     return isPublished ? 'published' : 'draft';
   }
 
-  private async getTranslation(entityType: string, entityId: number, locale = CANONICAL_LOCALE) {
+  private async getTranslation(entityType: string, entityId: number, locale: string = CANONICAL_LOCALE) {
     const chain = this.locales.fallbackChain(locale);
     for (const loc of chain) {
       const translation = await this.prisma.contentTranslation.findUnique({
@@ -168,13 +168,14 @@ export class ContentService {
 
   // --- PUBLIC: PAGES ---
 
-  async getPageBySlug(slug: string, locale = CANONICAL_LOCALE) {
+  async getPageBySlug(slug: string, locale: string = CANONICAL_LOCALE) {
+    const loc = this.locales.normalize(locale);
     const article = await this.prisma.contentArticle.findFirst({
       where: { slug, type: { in: ['PAGE', 'LEGAL'] }, isPublished: true },
     });
     if (!article) throw new NotFoundException(`Page "${slug}" not found`);
 
-    const translation = await this.getTranslation('ARTICLE', article.id, locale);
+    const translation = await this.getTranslation('ARTICLE', article.id, loc);
     return {
       slug: article.slug,
       title: translation?.title ?? slug,
@@ -231,14 +232,15 @@ export class ContentService {
     };
   }
 
-  async getArticleBySlug(type: 'NEWS' | 'BLOG', slug: string, locale = CANONICAL_LOCALE) {
+  async getArticleBySlug(type: 'NEWS' | 'BLOG', slug: string, locale: string = CANONICAL_LOCALE) {
+    const loc = this.locales.normalize(locale);
     const article = await this.prisma.contentArticle.findFirst({
       where: { slug, type, isPublished: true },
       include: { category: true },
     });
     if (!article) throw new NotFoundException(`${type} article "${slug}" not found`);
 
-    const translation = await this.getTranslation('ARTICLE', article.id, locale);
+    const translation = await this.getTranslation('ARTICLE', article.id, loc);
     return this.formatArticle(article, translation, true);
   }
 
@@ -335,12 +337,13 @@ export class ContentService {
     };
   }
 
-  async getDestinationBySlug(slug: string, locale = CANONICAL_LOCALE) {
+  async getDestinationBySlug(slug: string, locale: string = CANONICAL_LOCALE) {
+    const loc = this.locales.normalize(locale);
     const dest = await this.prisma.destination.findFirst({
       where: { slug, isPublished: true },
     });
     if (!dest) throw new NotFoundException(`Destination not found: ${slug}`);
-    const t = await this.getTranslation('DESTINATION', dest.id, locale);
+    const t = await this.getTranslation('DESTINATION', dest.id, loc);
     return this.formatDestination(dest, t, true);
   }
 
@@ -429,9 +432,10 @@ export class ContentService {
     return this.formatArticle(page, t, true);
   }
 
-  async adminGetPage(id: number, locale = CANONICAL_LOCALE) {
+  async adminGetPage(id: number, locale: string = CANONICAL_LOCALE) {
+    const loc = this.locales.normalize(locale);
     const page = await this.findPageOrThrow(id);
-    const t = await this.getTranslation('ARTICLE', id, locale);
+    const t = await this.getTranslation('ARTICLE', id, loc);
     const formatted = this.formatArticle(page, t, true) as Record<string, unknown>;
     return {
       ...formatted,
@@ -512,9 +516,10 @@ export class ContentService {
     return { data, pagination: { page, limit: take, total, totalPages: Math.ceil(total / take) } };
   }
 
-  async adminGetArticle(id: number, locale = CANONICAL_LOCALE) {
+  async adminGetArticle(id: number, locale: string = CANONICAL_LOCALE) {
+    const loc = this.locales.normalize(locale);
     const article = await this.findArticleOrThrow(id);
-    const t = await this.getTranslation('ARTICLE', id, locale);
+    const t = await this.getTranslation('ARTICLE', id, loc);
     return this.formatArticle(article, t, true);
   }
 
