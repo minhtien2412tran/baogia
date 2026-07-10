@@ -391,6 +391,7 @@ export class UpdateBookingStatusDto {
     example: 'confirmed',
     enum: ['draft', 'pending', 'confirmed', 'in_progress', 'completed', 'cancelled'],
   })
+  @IsIn(['draft', 'pending', 'confirmed', 'in_progress', 'completed', 'cancelled'])
   status: string;
 }
 
@@ -398,107 +399,180 @@ export class UpdateBookingStatusDto {
 
 export class FixedPriceOptionDto {
   @ApiProperty({ example: 'LIGHT' })
+  @IsString()
+  @IsNotEmpty()
   categoryCode: string;
 
   @ApiProperty({ example: 13500 })
+  @Type(() => Number)
+  @Min(1)
   price: number;
 
   @ApiProperty({ example: 8 })
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
   paxLimit: number;
 
   @ApiPropertyOptional({ example: 'Standard catering included' })
+  @IsOptional()
+  @IsString()
   includedTerms?: string;
 }
 
 export class CreateFixedPriceRouteDto {
   @ApiProperty({ example: 'london-to-paris' })
+  @IsString()
+  @IsNotEmpty()
   slug: string;
 
   @ApiProperty({ example: 'LTN' })
+  @IsString()
+  @IsNotEmpty()
   fromAirportIata: string;
 
   @ApiProperty({ example: 'LBG' })
+  @IsString()
+  @IsNotEmpty()
   toAirportIata: string;
 
   @ApiProperty({ example: 'Europe' })
+  @IsString()
+  @IsNotEmpty()
   region: string;
 
   @ApiPropertyOptional({ example: 'ACTIVE' })
+  @IsOptional()
+  @IsString()
   status?: string;
 
   @ApiPropertyOptional({ type: [FixedPriceOptionDto] })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => FixedPriceOptionDto)
   options?: FixedPriceOptionDto[];
 }
 
 export class UpdateFixedPriceRouteDto {
   @ApiPropertyOptional({ example: 'london-to-paris' })
+  @IsOptional()
+  @IsString()
   slug?: string;
 
   @ApiPropertyOptional({ example: 'LTN' })
+  @IsOptional()
+  @IsString()
   fromAirportIata?: string;
 
   @ApiPropertyOptional({ example: 'LBG' })
+  @IsOptional()
+  @IsString()
   toAirportIata?: string;
 
   @ApiPropertyOptional({ example: 'Europe' })
+  @IsOptional()
+  @IsString()
   region?: string;
 
   @ApiPropertyOptional({ example: 'ACTIVE' })
+  @IsOptional()
+  @IsString()
   status?: string;
 
   @ApiPropertyOptional({ type: [FixedPriceOptionDto] })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => FixedPriceOptionDto)
   options?: FixedPriceOptionDto[];
 }
 
 export class CreateEmptyLegDto {
   @ApiProperty({ example: 'paris-to-geneva-empty-leg' })
+  @IsString()
+  @IsNotEmpty()
   slug: string;
 
   @ApiProperty({ example: 'LBG' })
+  @IsString()
+  @IsNotEmpty()
   fromAirportIata: string;
 
   @ApiProperty({ example: 'GVA' })
+  @IsString()
+  @IsNotEmpty()
   toAirportIata: string;
 
   @ApiProperty({ example: '2026-12-05T09:00:00Z' })
+  @IsString()
+  @IsNotEmpty()
   departAt: string;
 
   @ApiProperty({ example: 1, description: 'Aircraft model ID' })
+  @Type(() => Number)
+  @IsInt()
   aircraftModelId: number;
 
   @ApiProperty({ example: 4200 })
+  @Type(() => Number)
+  @Min(1)
   price: number;
 
   @ApiPropertyOptional({ example: 60 })
+  @IsOptional()
+  @Type(() => Number)
+  @Min(0)
   discountPct?: number;
 
   @ApiPropertyOptional({ example: 'ACTIVE' })
+  @IsOptional()
+  @IsString()
   status?: string;
 }
 
 export class UpdateEmptyLegDto {
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   slug?: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   fromAirportIata?: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   toAirportIata?: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   departAt?: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
   aircraftModelId?: number;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @Min(1)
   price?: number;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @Min(0)
   discountPct?: number;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   status?: string;
 }
 
@@ -541,41 +615,73 @@ export class EmptyLegRequestDto {
 
 export class CreateJetCardPlanDto {
   @ApiProperty({ example: 'Gold Card' })
+  @IsString()
+  @IsNotEmpty()
   name: string;
 
   @ApiProperty({ example: 25 })
+  @Type(() => Number)
+  @Min(1)
   hours: number;
 
   @ApiPropertyOptional({ example: 2 })
+  @IsOptional()
+  @Type(() => Number)
+  @Min(1)
   validityYears?: number;
 
   @ApiPropertyOptional({ example: 24 })
+  @IsOptional()
+  @Type(() => Number)
+  @Min(0)
   minNoticeHours?: number;
 
   @ApiPropertyOptional({ example: 1.5 })
+  @IsOptional()
+  @Type(() => Number)
+  @Min(0)
   dailyMinHours?: number;
 
   @ApiProperty({ example: 120000 })
+  @Type(() => Number)
+  @Min(1)
   price: number;
 }
 
 export class UpdateJetCardPlanDto {
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   name?: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @Min(1)
   hours?: number;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @Min(1)
   validityYears?: number;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @Min(0)
   minNoticeHours?: number;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @Min(0)
   dailyMinHours?: number;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @Min(1)
   price?: number;
 }
 

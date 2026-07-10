@@ -123,7 +123,24 @@ export default function FixedPricePage() {
           <AdminField label="From IATA" value={form.fromAirportIata} onChange={(v) => setForm({ ...form, fromAirportIata: v.toUpperCase() })} required />
           <AdminField label="To IATA" value={form.toAirportIata} onChange={(v) => setForm({ ...form, toAirportIata: v.toUpperCase() })} required />
           <AdminField label="Region" value={form.region} onChange={(v) => setForm({ ...form, region: v })} required />
-          <AdminField label="Status" value={form.status} onChange={(v) => setForm({ ...form, status: v })} />
+          <label style={{ display: 'block', margin: '10px 0' }}>
+            <span style={{ display: 'block', marginBottom: 4, fontSize: 13, opacity: 0.7 }}>Status</span>
+            <select
+              value={form.status}
+              onChange={(e) => setForm({ ...form, status: e.target.value })}
+              style={{
+                width: '100%',
+                padding: 10,
+                borderRadius: 8,
+                background: '#0d1a24',
+                color: '#f6efe2',
+                border: '1px solid rgba(255,255,255,0.1)',
+              }}
+            >
+              <option value="ACTIVE">ACTIVE</option>
+              <option value="INACTIVE">INACTIVE</option>
+            </select>
+          </label>
           <Button type="button" onClick={save} disabled={saving}>{saving ? 'Saving…' : 'Save'}</Button>
         </AdminPanel>
       )}
