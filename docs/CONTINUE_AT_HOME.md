@@ -34,8 +34,14 @@
 ## Việc tiếp theo (ưu tiên sản phẩm)
 
 1. **Polish clone** (ongoing) — so `scratch/` vs live  
-2. Merge `feat/admin-partner-tc-crud` + `feat/admin-missing-screens` → `main`  
-3. G4 keys KH (SMTP / OAuth / payment) khi có  
+2. **G4 keys** — SMTP / OAuth / payment / SMS **chờ KH** (code sẵn, ENV-gated)  
+3. (Optional) set prod `APP_ENV=production` khi secrets đã đủ mạnh  
+
+### Đã merge + deploy (2026-07-10)
+
+- [x] `feat/api-security-hardening` (+ admin screens / partner-TC) → **`main`** (`9893789`)  
+- [x] VPS API `jetbay-be` + Admin `jetbay-admin` redeployed  
+- [x] Prod smoke admin **16/16** · web **8/8**  
 
 ### Đang làm / vừa xong (admin)
 
