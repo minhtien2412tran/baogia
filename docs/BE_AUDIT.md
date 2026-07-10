@@ -33,7 +33,7 @@ Mỗi phần dùng cùng template: Mục tiêu · Routes · Models · Status · 
 | **Routes** | `GET /`, `GET /health`, `GET /integrations/status`, `/swagger`, `/openapi.json`, `/openapi.yaml` (`@Public`) |
 | **Models** | — |
 | **Status** | **solid** |
-| **Gaps** | Prod `.env` còn `APP_ENV=development` (nên `production` khi secrets đủ mạnh). CORS đã gồm `admin` + `www` + `docs.minhtien.online`. `API_PUBLIC_URL=https://api.minhtien.online` ✅. Helmet `crossOriginResourcePolicy: cross-origin`. |
+| **Gaps** | ~~Prod `APP_ENV=development`~~ → **production** ✅ 2026-07-10. MinIO → `local` (UPLOAD_PATH). |
 | **Smoke** | `smoke-prod.sh` **16/16** · `smoke-docs.sh` **11/11** · `smoke-admin-crud.mjs` **16/16** · `smoke-web-api.mjs` **8/8** (2026-07-10) |
 
 Guards order: Throttler → ApiKey. JWT/Admin gắn per-controller. Boot `assertProductionSecrets()` khi `APP_ENV=production`.
@@ -102,7 +102,7 @@ Throttle: login 10/min · register/OTP/refresh 5/min (tier `auth`).
 | **Routes** | Public list/quote/enquiry · Admin CRUD `/admin/fixed-price/routes`, `/admin/empty-legs`, `/admin/jet-card/plans`, `/admin/travel-credits/*` |
 | **Models** | `FixedPriceRoute/Option`, `EmptyLegOffer`, `JetCardPlan/Account/Transaction`, `TravelCreditPackage`, `TravelCreditLedger` |
 | **Status** | **solid** (DB-backed; DTO validators FP/EL/JetCard ✅ 2026-07-10) |
-| **Gaps** | Admin form FP chưa edit `options[]` chi tiết trên UI (API hỗ trợ). |
+| **Gaps** | ~~Admin form FP chưa edit `options[]`~~ → đã có UI tier editor (2026-07-10). |
 | **Smoke** | Admin Save Fixed Price → 200 · `smoke-web-api.mjs` public lists |
 
 ---
@@ -152,11 +152,11 @@ Throttle: login 10/min · register/OTP/refresh 5/min (tier `auth`).
 
 | Pri | Item | Notes |
 |-----|------|-------|
-| **P1** | Set prod `APP_ENV=production` | Sau khi xác nhận secrets mạnh + SMS không cần `devCode` |
+| **P1** | ~~Set prod `APP_ENV=production`~~ | ✅ 2026-07-10 |
 | **P1** | G4 keys từ KH | SMTP, OAuth, Stripe/OnePay/9Pay, SMS |
 | **P2** | Nest feature modules | Auth + Quotes (phase 1) → xem BE_ARCHITECTURE |
 | **P2** | Split `dto.ts` theo module | Sau khi modules ổn định |
-| **P2** | Admin FP options UI | API đã nhận `options[]` |
+| **P2** | ~~Admin FP options UI~~ | ✅ 2026-07-10 |
 | **P3** | Company / SavedSearch APIs | Schema sẵn, ngoài DoD G1 |
 
 **Đã đóng (2026-07-10):** booking JWT spoof · OTP CSPRNG · SMS APP_ENV · CORS admin · FP DTO validators · QuoteOffer admin · Redis connect-once.

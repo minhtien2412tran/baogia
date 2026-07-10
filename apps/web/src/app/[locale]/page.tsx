@@ -25,6 +25,8 @@ import { WhySections } from '../../components/home/WhySections';
 import { StatsSection } from '../../components/home/StatsSection';
 
 import { MediaSection } from '../../components/home/MediaSection';
+import { NewsHomeSection } from '../../components/home/NewsHomeSection';
+import { NewsletterForm } from '../../components/home/NewsletterForm';
 
 import { fixedPriceRegion } from '../../config/jetbay-cdn';
 
@@ -89,6 +91,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <WhySections locale={locale} />
 
       <StatsSection />
+
+      <NewsHomeSection locale={locale} />
+
+      <section className="jb-section jb-newsletter-band">
+        <div className="jb-container">
+          <NewsletterForm locale={locale} />
+        </div>
+      </section>
 
       <MediaSection />
 

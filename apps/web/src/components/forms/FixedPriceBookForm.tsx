@@ -41,9 +41,9 @@ export function FixedPriceBookForm({
   if (tiers.length === 0) return null;
 
   return (
-    <section className="jb-sub-section">
+    <section className="jb-sub-section jb-booking-form">
       <h2 className="jb-section-title">Book this route</h2>
-      <form className="jb-newsletter-form jb-enquiry-form" onSubmit={onSubmit}>
+      <form className={`jb-newsletter-form jb-enquiry-form jb-booking-form__form${status === 'done' ? ' jb-booking-form--success' : ''}`} onSubmit={onSubmit}>
         <select value={category} onChange={(e) => setCategory(e.target.value)}>
           {tiers.map((t) => (
             <option key={t.category} value={t.category}>

@@ -1,6 +1,6 @@
 /** Local mirror of asserts.jet-bay.com — no external CDN at runtime */
 export const LOCAL_ASSET_ROOT = '/assets/jetbay';
-export const JTA_LOGO = '/assets/jta/logo.svg';
+export const JTA_LOGO = '/assets/jetbay/v4/alt/jetbay-logo.webp';
 
 export function localAsset(path: string): string {
   if (path.startsWith('/assets/')) return path;

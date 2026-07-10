@@ -1,8 +1,11 @@
 import '../../styles/jetbay-home.css';
 import '../../styles/jetbay-polish.css';
+import '../../styles/jetbay-motion.css';
 import { JetBayHeader } from '../../components/home/JetBayHeader';
 import { JetBayFooter } from '../../components/home/JetBayFooter';
 import { CookieBanner } from '../../components/home/CookieBanner';
+import { JetBayMotion } from '../../components/motion/JetBayMotion';
+import { PageTransition } from '../../components/motion/PageTransition';
 import { LocaleHtmlLang } from '../../components/layout/LocaleHtmlLang';
 import { getLocaleConfig, isValidLocale } from '../../config/locales';
 import { notFound } from 'next/navigation';
@@ -21,8 +24,9 @@ export default async function LocaleLayout({
   return (
     <div className="jb-page">
       <LocaleHtmlLang locale={locale} />
+      <JetBayMotion />
       <JetBayHeader locale={locale} currency={currency} />
-      {children}
+      <PageTransition>{children}</PageTransition>
       <JetBayFooter locale={locale} />
       <CookieBanner locale={locale} />
     </div>

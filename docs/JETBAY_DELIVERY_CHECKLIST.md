@@ -3,7 +3,7 @@
 **Sản phẩm chính:** clone jetbay.com → `apps/web` (prod https://www.minhtien.online/en-us · local `:3000`)  
 **Bản đồ:** [JETBAY_PRODUCT_MAP.md](./JETBAY_PRODUCT_MAP.md)  
 **Báo giá (chỉ collateral):** [Web 74TR](https://m-tien.com/jet-bay/) · [App 248TR](https://m-tien.com/app-jetbay/) · [JETBAY_BAO_GIA.md](./JETBAY_BAO_GIA.md)  
-**Cập nhật:** 2026-07-09  
+**Cập nhật:** 2026-07-10  
 **API:** https://api.minhtien.online · **Swagger:** https://docs.minhtien.online/swagger · **Admin:** https://admin.minhtien.online/login
 
 Quy tắc: mỗi giai đoạn phải đạt DoD trước khi mở giai đoạn tiếp theo. Không kick-off React Native cho đến khi cổng App xanh.
@@ -14,7 +14,7 @@ Quy tắc: mỗi giai đoạn phải đạt DoD trước khi mở giai đoạn t
 
 | Nhánh | Phạm vi | Code | Prod | DoD |
 |-------|---------|------|------|-----|
-| A — Backend API + DB | NestJS + Prisma + Swagger | ✅ | ✅ seed + smoke 14/14 | **G1 PASS** |
+| A — Backend API + DB | NestJS + Prisma + Swagger | ✅ | ✅ seed + smoke **55/55** | **G1 PASS ✅** |
 | B — Web Public | Next.js clone | ✅ | 🟡 local → prod API | **G2 wire PASS** |
 | C — Admin Dashboard | CRUD + CMS | ✅ | ✅ `admin.minhtien.online` :3011 | **G3 PASS** |
 | D — Auth JWT | Login/register/refresh | ✅ | ✅ admin+demo seed | **G1 PASS** |
@@ -36,15 +36,17 @@ Quy tắc: mỗi giai đoạn phải đạt DoD trước khi mở giai đoạn t
 
 ---
 
-## G1 — Backend DoD — PASS
+## G1 — Backend DoD — PASS ✅ (đóng 2026-07-10)
 
-- [x] Seed data (airports, aircraft, FP×12, EL×2, content)
-- [x] CORS production (`m-tien.com` + localhost)
+- [x] Seed data (airports, aircraft, FP×12, EL×2, content + news)
+- [x] CORS production (`m-tien.com` + localhost + docs + admin)
 - [x] `dotenv` load `.env` trong `main.ts`
-- [x] Smoke `scripts/deploy/jetbay-be/smoke-prod.sh` → **14/14**
+- [x] `APP_ENV=production` trên prod
+- [x] Smoke full suite → **55/55** (prod + docs + admin + web + booking)
 - [x] Không đụng `api.baotienweb.cloud`
+- [x] Biên bản nội bộ → [GD1_SIGNOFF.md](./GD1_SIGNOFF.md)
 
-**Smoke log (2026-07-09):** pass=14 fail=0 (health, openapi, FP, EL, jet-card, TC, news, destinations, airports, partners, admin login, dashboard stats, quotes/request).
+**Smoke log (2026-07-10):** 16+11+16+8+4 pass=55 fail=0 · `fix-gd1-prod.sh` · health `env=production` · minio=local · FP n=12 · news n=1.
 
 ---
 
@@ -164,3 +166,4 @@ node scripts/deploy/jetbay-be/smoke-web-api.mjs
 | 2026-07-09 | ApiKeyGuard + X-API-Key smoke 16/16 | DONE |
 | 2026-07-09 | AGENTS + CONTINUE_AT_HOME + git FE/BE/admin | DONE |
 | 2026-07-09 | Rebrand monorepo → JETBAY (`@jetbay/*`, docs) | DONE |
+| 2026-07-10 | **GĐ1 đóng** — `fix-gd1-prod.sh`, smoke 55/55, [GD1_SIGNOFF.md](./GD1_SIGNOFF.md) | **PASS** |

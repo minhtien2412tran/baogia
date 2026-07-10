@@ -129,7 +129,7 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
   ];
 
   return (
-    <div className="jb-quote-card">
+    <div className={`jb-quote-card jb-booking-widget${loading ? ' jb-booking-widget--searching' : ''}`}>
       <form onSubmit={onSearch}>
         <div className="jb-trip-tabs">
           {tabs.map((t) => (
@@ -242,14 +242,27 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
         </div>
 
         <button type="submit" className="jb-search-btn" disabled={loading}>
-          {loading ? 'Searching...' : 'Search Available Aircraft'}
+          {loading ? (
+            <span className="jb-search-btn__label">
+              <span className="jb-search-radar" aria-hidden />
+              Searching aircraft…
+            </span>
+          ) : (
+            'Search Available Aircraft'
+          )}
         </button>
 
         {options && options.length > 0 && (
-          <div className="jb-aircraft-results">
+          <div className="jb-aircraft-results jb-booking-results">
             <h4>Available Aircraft</h4>
-            {options.map((o) => (
-              <div key={o.categoryId} className="jb-aircraft-row">
+            {options.map((o, i) => (
+              <div
+                key={o.categoryId}
+                className="jb-aircraft-row jb-booking-result-row jb-tilt-card"
+                data-tilt-max="6"
+                style={{ animationDelay: `${i * 0.08}s` }}
+              >
+                <div className="jb-tilt-card__inner jb-aircraft-row-inner">
                 <div>
                   <strong>{o.categoryLabel}</strong>
                   <div className="jb-aircraft-meta">{o.aircraftModel} · up to {o.maxPassengers} pax</div>
@@ -257,12 +270,13 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
                 <div className="jb-aircraft-price">
                   {o.currency} {o.estimatedPrice.toLocaleString()}
                 </div>
+                </div>
               </div>
             ))}
           </div>
         )}
 
-        {result && <p className="jb-form-msg success">{result}</p>}
+        {result && <p className="jb-form-msg success jb-booking-success">{result}</p>}
         {error && <p className="jb-form-msg error">{error}</p>}
       </form>
     </div>

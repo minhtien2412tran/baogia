@@ -263,7 +263,12 @@ async function main() {
   for (const r of routeSeeds) {
     await prisma.fixedPriceRoute.upsert({
       where: { slug: r.slug },
-      update: { status: 'ACTIVE' },
+      update: {
+        status: 'ACTIVE',
+        fromAirportId: r.from.id,
+        toAirportId: r.to.id,
+        region: r.region,
+      },
       create: {
         slug: r.slug,
         fromAirportId: r.from.id,
@@ -397,7 +402,7 @@ async function main() {
 
   const newsArticle = await prisma.contentArticle.upsert({
     where: { slug: 'jetbay-expands-fleet' },
-    update: { isPublished: true, publishedAt: new Date('2026-06-25') },
+    update: { isPublished: true, publishedAt: new Date('2026-06-25'), type: 'NEWS' },
     create: {
       type: 'NEWS',
       slug: 'jetbay-expands-fleet',

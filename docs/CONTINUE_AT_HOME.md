@@ -34,14 +34,20 @@
 
 ## Việc tiếp theo (ưu tiên sản phẩm)
 
-1. **Polish clone** (ongoing) — so `scratch/` vs live  
-2. **G4 keys** — SMTP / OAuth / payment / SMS **chờ KH** (code sẵn, ENV-gated)  
+1. **Polish clone** (ongoing) — so `scratch/` vs live · Home news/newsletter · FP tier labels  
+2. **G4 keys** — SMTP / OAuth / payment / SMS **chờ KH** → [KH_G4_KEYS_CHECKLIST.md](./KH_G4_KEYS_CHECKLIST.md)  
 3. (Optional) set prod `APP_ENV=production` khi secrets đã đủ mạnh  
 4. **BE modules** — tiếp phase 2+ theo [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md)  
 
-**BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) · [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)
+**Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) · [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)
 
 ### Đã merge + deploy (2026-07-10)
+
+- [x] **GĐ1 ĐÓNG** — `fix-gd1-prod.sh` · smoke **55/55** · `APP_ENV=production` · FP×12 · news×1 · [GD1_SIGNOFF.md](./GD1_SIGNOFF.md)
+- [x] **Deploy web + admin** (2026-07-10) — Home news/newsletter · FP tiers · admin FP options · smoke 55/55 · pages 200
+- [x] **CSS polish web** (2026-07-10) — logo JetBay · header desktop · airport dropdown · hero overflow · redeploy `jetbay-web`
+- [x] **Motion effects web** (2026-07-10) — scroll reveal · hero flight path · parallax · stat progress
+- [x] **Motion v2** (2026-07-10) — counter 10K+/190+ · 3D tilt cards · page transition · booking flow FX
 
 - [x] `feat/api-security-hardening` (+ admin screens / partner-TC) → **`main`** (`9893789`)  
 - [x] VPS API `jetbay-be` + Admin `jetbay-admin` redeployed  
@@ -50,6 +56,15 @@
 - [x] OpenAPI YAML (`/openapi.yaml`) + `@jetbay/api-client` (`pnpm openapi:client`) · docs RN section in API.md · prod YAML **200**  
 - [x] **Báo cáo tiến độ KH** (`/baocaotiendo`) — UI aviation + JS effects · redeploy web **200**
 - [x] **Retest full prod** — smoke BE 16/16 · docs 11/11 · admin 16/16 · web 8/8 · [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)
+
+### Đang làm / vừa xong (tuần 1 — 10/07)
+
+- [x] Admin FP **price tiers** editor (`options[]` category, price, pax, terms)
+- [x] Web Home: News + Newsletter sections wired
+- [x] FP listing: `categoryLabel`, `includedTerms`, empty state
+- [x] `docs/JETBAY_WORK_PLAN.md` + `docs/KH_G4_KEYS_CHECKLIST.md`
+- [ ] Charter ×6 polish vs scratch (tuần 2–3)
+- [x] Deploy admin/web lên prod (2026-07-10)
 
 ### Đang làm / vừa xong (admin)
 
@@ -128,4 +143,4 @@ Demo seed: `admin@jetbay.local` / `Admin123!` · `demo@jetbay.local` / `Demo123!
 
 ## Liên kết
 
-[ONBOARDING_NHAN_VIEN.md](./ONBOARDING_NHAN_VIEN.md) · [AGENTS.md](../AGENTS.md) · [JETBAY_PRODUCT_MAP.md](./JETBAY_PRODUCT_MAP.md) · [JETBAY_BAO_GIA.md](./JETBAY_BAO_GIA.md) · [GIT_WORKFLOW.md](./GIT_WORKFLOW.md)
+[ONBOARDING_NHAN_VIEN.md](./ONBOARDING_NHAN_VIEN.md) · [AGENTS.md](../AGENTS.md) · [JETBAY_PRODUCT_MAP.md](./JETBAY_PRODUCT_MAP.md) · [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · [GD1_SIGNOFF.md](./GD1_SIGNOFF.md) · [JETBAY_BAO_GIA.md](./JETBAY_BAO_GIA.md) · [GIT_WORKFLOW.md](./GIT_WORKFLOW.md)

@@ -40,7 +40,14 @@ export default async function FixedPricePage({ params }: { params: Promise<{ loc
           {data.routes.map((r: Record<string, unknown>) => {
             const from = r.fromAirport as { city: string; iata: string };
             const to = r.toAirport as { city: string; iata: string };
-            const tiers = (r.priceOptions as Array<{ category: string; price: number; paxLimit: number }>) ?? [];
+            const tiers =
+              (r.priceOptions as Array<{
+                category: string;
+                categoryLabel?: string;
+                price: number;
+                paxLimit: number;
+                includedTerms?: string | null;
+              }>) ?? [];
             return (
               <div key={String(r.slug)} className="jb-route-card" style={{ flex: '1 1 300px' }}>
                 <div className="jb-route-airports">
@@ -48,12 +55,20 @@ export default async function FixedPricePage({ params }: { params: Promise<{ loc
                   <span className="jb-route-arrow">→</span>
                   <div><div className="jb-iata">{to?.iata}</div><div className="jb-city">{to?.city}</div></div>
                 </div>
-                {tiers.map((t) => (
-                  <div key={t.category} className="jb-tier">
-                    <div><div className="jb-tier-label">{t.category} Jets</div><div className="jb-tier-pax">Up to {t.paxLimit} pax</div></div>
-                    <div className="jb-tier-price">USD {t.price.toLocaleString()}</div>
-                  </div>
-                ))}
+                {tiers.length === 0 ? (
+                  <p className="jb-tier-empty">Pricing on request</p>
+                ) : (
+                  tiers.map((t) => (
+                    <div key={t.category} className="jb-tier">
+                      <div>
+                        <div className="jb-tier-label">{t.categoryLabel ?? t.category} Jets</div>
+                        <div className="jb-tier-pax">Up to {t.paxLimit} pax</div>
+                        {t.includedTerms ? <div className="jb-tier-terms">{t.includedTerms}</div> : null}
+                      </div>
+                      <div className="jb-tier-price">USD {t.price.toLocaleString()}</div>
+                    </div>
+                  ))
+                )}
                 <Link href={navHref(locale, `/fixed-price-charter/${r.slug}`)} className="jb-book-btn">Book Now</Link>
               </div>
             );

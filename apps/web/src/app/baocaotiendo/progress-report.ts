@@ -121,6 +121,7 @@ export const CONTRACT_MODULES: ContractModule[] = [
     doneHighlights: [
       'Đã mở cổng admin thử nghiệm tại https://admin.minhtien.online để đội nội bộ kiểm tra quyền đăng nhập',
       'Đang dựng dần các màn hình quản lý (bài viết, chuyến, báo giá…) — chưa bàn giao vận hành',
+      'Đã bổ sung form chỉnh giá Fixed Price theo từng hạng máy bay (tier) — phục vụ kiểm thử nội bộ, chưa nghiệm thu CMS',
     ],
     why: 'Cần khung admin sớm để kiểm tra quyền USER/ADMIN và luồng dữ liệu, nhưng chưa đến hạn “CMS vận hành đầy đủ”.',
     benefit: 'Khi tới giai đoạn nghiệm thu CMS, Anh sẽ có sẵn đường vào và tài khoản demo để xem thực tế.',
@@ -406,6 +407,7 @@ export const NEXT_ACTIONS = [
     owner: 'Phía Minh Tiến Solutions',
     items: [
       'Tiếp tục hoàn thiện Giai đoạn 1 đúng lịch tuần 2–4',
+      'Chuẩn bị sớm một số màn web (tin tức, newsletter, hiển thị giá FP) — nội bộ, chưa nghiệm thu GĐ2',
       'Cập nhật báo cáo tiến độ định kỳ (không dồn một lần cuối)',
       'Chỉ mở nghiệm thu từng giai đoạn khi đủ điều kiện theo hợp đồng',
     ],

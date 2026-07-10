@@ -6,6 +6,7 @@
   --jb-text-soft: #9aa3b2;
   --jb-text-on-light: #1a1f2e;
   --jb-text-muted-on-light: #5a6478;
+  --jb-border-on-light: rgba(0, 0, 0, 0.1);
   --jb-link: var(--jb-gold);
   color: var(--jb-text);
 }

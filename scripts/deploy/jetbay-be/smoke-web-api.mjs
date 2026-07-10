@@ -73,7 +73,7 @@ const checks = [
     'fixed-price',
     () =>
       get('/fixed-price/routes').then(({ status, j }) =>
-        ok('fixed-price', status === 200 && (j.routes?.length ?? 0) > 0, `n=${j.routes?.length}`),
+        ok('fixed-price', status === 200 && (j.routes?.length ?? 0) >= 12, `n=${j.routes?.length}`),
       ),
   ],
   [
@@ -104,8 +104,8 @@ const checks = [
   [
     'news',
     () =>
-      get('/content/news').then(({ status, j }) =>
-        ok('news', status === 200 && (j.news?.length ?? 0) >= 0, `n=${j.news?.length}`),
+      get('/content/news?locale=en').then(({ status, j }) =>
+        ok('news', status === 200 && (j.news?.length ?? 0) >= 1, `n=${j.news?.length}`),
       ),
   ],
   [

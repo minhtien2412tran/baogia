@@ -17,9 +17,17 @@ export function FixedPriceSection({ locale, routes }: { locale: string; routes: 
           {routes.map((r) => {
             const from = r.fromAirport as { city: string; iata: string };
             const to = r.toAirport as { city: string; iata: string };
-            const tiers = (r.priceOptions as Array<{ category: string; price: number; paxLimit: number }>) ?? [];
+            const tiers =
+              (r.priceOptions as Array<{
+                category: string;
+                categoryLabel?: string;
+                price: number;
+                paxLimit: number;
+                includedTerms?: string | null;
+              }>) ?? [];
             return (
-              <div key={String(r.slug)} className="jb-route-card">
+              <div key={String(r.slug)} className="jb-route-card jb-tilt-card" data-tilt-max="8">
+                <div className="jb-tilt-card__inner">
                 <div className="jb-route-airports">
                   <div>
                     <div className="jb-iata">{from?.iata}</div>
@@ -31,16 +39,22 @@ export function FixedPriceSection({ locale, routes }: { locale: string; routes: 
                     <div className="jb-city">{to?.city}</div>
                   </div>
                 </div>
-                {tiers.map((t) => (
-                  <div key={t.category} className="jb-tier">
-                    <div>
-                      <div className="jb-tier-label">{t.category} Jets</div>
-                      <div className="jb-tier-pax">Up to {t.paxLimit} passengers</div>
+                {tiers.length === 0 ? (
+                  <p className="jb-tier-empty">Pricing on request</p>
+                ) : (
+                  tiers.map((t) => (
+                    <div key={t.category} className="jb-tier">
+                      <div>
+                        <div className="jb-tier-label">{t.categoryLabel ?? t.category} Jets</div>
+                        <div className="jb-tier-pax">Up to {t.paxLimit} passengers</div>
+                        {t.includedTerms ? <div className="jb-tier-terms">{t.includedTerms}</div> : null}
+                      </div>
+                      <div className="jb-tier-price">USD {t.price.toLocaleString()}</div>
                     </div>
-                    <div className="jb-tier-price">USD {t.price.toLocaleString()}</div>
-                  </div>
-                ))}
+                  ))
+                )}
                 <a href={`${p}/fixed-price-charter/${r.slug}`} className="jb-book-btn">Book Now</a>
+                </div>
               </div>
             );
           })}

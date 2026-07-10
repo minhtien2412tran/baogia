@@ -12,7 +12,7 @@
 | **Local** | `http://127.0.0.1:4000` | `http://127.0.0.1:4000/swagger` | `apps/api/.env` |
 | **Production** | `https://api.minhtien.online` | `https://docs.minhtien.online/swagger` | `127.0.0.1:3010` PM2 `jetbay-be` |
 
-**Kết quả mới nhất (prod):**
+**Kết quả mới nhất (prod — GĐ1 đóng 2026-07-10):**
 
 | Bộ | Script | Pass |
 |----|--------|------|
@@ -20,7 +20,9 @@
 | Docs smoke | `smoke-docs.sh` | **11/11** |
 | Admin CRUD | `smoke-admin-crud.mjs` | **16/16** |
 | Web contract | `smoke-web-api.mjs` | **8/8** |
+| Auth + booking | `smoke-auth-booking.mjs` | **4/4** |
 | Unit | `apps/api` jest | **9/9** |
+| **Tổng smoke** | `smoke-all.sh` | **55/55** |
 
 **Pass criteria deploy:** cả 4 bộ smoke prod `fail=0` + `tsc` + `jest` local.
 
@@ -150,12 +152,24 @@ Kiểm tra contract mà `apps/web` gọi (public + quote).
 | 2 | empty-legs | `GET /empty-legs` | `emptyLegs.length > 0` |
 | 3 | jet-card | `GET /jet-card/plans` | `plans.length > 0` |
 | 4 | travel-credits | `GET /travel-credits/packages` | `packages.length > 0` |
-| 5 | news | `GET /content/news` | status 200 |
+| 5 | news | `GET /content/news?locale=en` | `news.length >= 1` |
 | 6 | destinations | `GET /content/destinations?limit=5` | `destinations.length > 0` |
 | 7 | airports | `GET /airports/search?q=SGN` | `airports.length > 0` |
 | 8 | quote | `POST /quotes/request` | 200/201 |
 
 ---
+
+## 6b. `smoke-auth-booking.mjs` — 4 case
+
+**Script:** `scripts/deploy/jetbay-be/smoke-auth-booking.mjs`  
+Gọi từ `run-node-smokes.sh` / `smoke-all.sh`.
+
+| # | Case | Expect |
+|---|------|--------|
+| 1 | demo login | 200/201 + accessToken |
+| 2 | refresh token | 201 + accessToken |
+| 3 | booking create | 201 + id |
+| 4 | bookings my | 200 + count >= 1 |
 
 ## 7. Unit test (`jest`)
 
@@ -179,7 +193,7 @@ pnpm test
 
 | Case | Cách test | BE § | Ghi chú |
 |------|-----------|------|---------|
-| `POST /bookings` | Login user JWT → body hợp lệ | §4 | Bắt buộc Bearer |
+| ~~`POST /bookings`~~ | `smoke-auth-booking.mjs` | §4 | ✅ auto 2026-07-10 |
 | Payment intent/confirm | JWT + quote/booking id | §5 | Cần sandbox keys G4 |
 | Stripe/OnePay/9Pay webhook | POST signed payload | §5 | Chỉ khi có merchant |
 | OAuth Google/Apple | `POST /auth/oauth/*` | §2 | Cần client IDs |
@@ -196,7 +210,7 @@ pnpm test
 | Key | Prod | Block deploy GĐ1? |
 |-----|------|-------------------|
 | `smtp` | `true` | Không |
-| `minio` | `error` | Không (local upload fallback) |
+| `minio` | `local` | Không (GĐ1 dùng UPLOAD_PATH) |
 | `googleOAuth` | `false` | Không (G4) |
 | `appleOAuth` | `false` | Không (G4) |
 | `stripe` / `onepay` / `ninepay` | `false` | Không (G4) |
@@ -236,7 +250,7 @@ ssh root@103.200.20.100 'bash /tmp/smoke-all.sh'
 | Ngày | Môi trường | Kết quả |
 |------|------------|---------|
 | 2026-07-10 | prod full retest | 16+11+16+8 pass, jest 9/9 |
-| 2026-07-10 | Swagger fix | `API_PUBLIC_URL` + CORS docs → login 201 |
+| 2026-07-10 | **GĐ1 đóng prod** | 55/55 pass · `APP_ENV=production` · [GD1_SIGNOFF.md](./GD1_SIGNOFF.md) |
 
 ---
 

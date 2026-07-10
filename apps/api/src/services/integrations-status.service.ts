@@ -43,7 +43,7 @@ export class IntegrationsStatusService {
       },
       integrations: {
         smtp: present('SMTP_HOST'),
-        minio: minioPing,
+        minio: minioPing === 'not_configured' ? 'local' : minioPing,
         googleOAuth: present('GOOGLE_CLIENT_ID'),
         appleOAuth: present('APPLE_CLIENT_ID'),
         stripe: present('STRIPE_SECRET_KEY'),
@@ -56,6 +56,7 @@ export class IntegrationsStatusService {
       },
       notes: {
         jwt: 'Required for auth. Set JWT_SECRET + REFRESH_TOKEN_SECRET.',
+        minio: 'MinIO optional — empty MINIO_ENDPOINT uses local upload path (UPLOAD_PATH).',
         g4: 'SMTP / OAuth / Payment / SMS need customer merchant keys — see docs/JETBAY_G4_INTEGRATIONS.md',
       },
     };

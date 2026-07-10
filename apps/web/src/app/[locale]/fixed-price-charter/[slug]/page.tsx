@@ -42,7 +42,14 @@ export default async function FixedPriceDetailPage({
 
   const from = route.fromAirport as { city: string; iata: string; name?: string };
   const to = route.toAirport as { city: string; iata: string; name?: string };
-  const tiers = (route.priceOptions as Array<{ category: string; price: number; paxLimit: number }>) ?? [];
+  const tiers =
+    (route.priceOptions as Array<{
+      category: string;
+      categoryLabel?: string;
+      price: number;
+      paxLimit: number;
+      includedTerms?: string | null;
+    }>) ?? [];
   const hero = fixedPriceRouteHero(slug, route.thumbnail ? String(route.thumbnail) : null);
 
   return (
@@ -81,15 +88,20 @@ export default async function FixedPriceDetailPage({
 
         <LightSection title="Pricing tiers" subtitle="Choose the aircraft category that fits your party size.">
           <div className="jb-pricing-tiers">
-            {tiers.map((t) => (
-              <div key={t.category} className="jb-pricing-tier-card">
-                <div>
-                  <div className="jb-tier-label">{t.category} Jets</div>
-                  <div className="jb-tier-pax">Up to {t.paxLimit} passengers</div>
+            {tiers.length === 0 ? (
+              <p className="jb-tier-empty">Pricing on request — contact concierge for a quote.</p>
+            ) : (
+              tiers.map((t) => (
+                <div key={t.category} className="jb-pricing-tier-card">
+                  <div>
+                    <div className="jb-tier-label">{t.categoryLabel ?? t.category} Jets</div>
+                    <div className="jb-tier-pax">Up to {t.paxLimit} passengers</div>
+                    {t.includedTerms ? <div className="jb-tier-terms">{t.includedTerms}</div> : null}
+                  </div>
+                  <div className="jb-tier-price">USD {t.price.toLocaleString()}</div>
                 </div>
-                <div className="jb-tier-price">USD {t.price.toLocaleString()}</div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </LightSection>
 

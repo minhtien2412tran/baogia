@@ -19,6 +19,7 @@ export function AirportInput({
   placeholder?: string;
 }) {
   const [query, setQuery] = useState(value);
+  const [displayLabel, setDisplayLabel] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<Airport[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -26,6 +27,19 @@ export function AirportInput({
 
   useEffect(() => {
     setQuery(value);
+    if (!value) {
+      setDisplayLabel(null);
+      return;
+    }
+    if (value.length === 3 && /^[A-Z]{3}$/.test(value)) {
+      api
+        .searchAirports(value)
+        .then((res) => {
+          const match = res.airports.find((a) => a.iata === value);
+          if (match) setDisplayLabel(`${match.city} (${match.iata})`);
+        })
+        .catch(() => undefined);
+    }
   }, [value]);
 
   useEffect(() => {
@@ -58,36 +72,56 @@ export function AirportInput({
   }, [query]);
 
   function pick(a: Airport) {
-    setQuery(a.iata);
+    const friendly = `${a.city} (${a.iata})`;
+    setQuery(friendly);
+    setDisplayLabel(friendly);
     onChange(a.iata, a.label);
     setOpen(false);
+    setSuggestions([]);
   }
+
+  const inputValue = open ? query : (displayLabel ?? query);
 
   return (
     <div className="jb-field jb-airport-wrap" ref={wrapRef}>
       <label htmlFor={id}>{label}</label>
       <input
         id={id}
-        value={query}
+        value={inputValue}
         onChange={(e) => {
-          const v = e.target.value.toUpperCase();
+          const v = e.target.value;
           setQuery(v);
-          onChange(v);
+          setDisplayLabel(null);
+          const iataOnly = v.toUpperCase().replace(/[^A-Z]/g, '');
+          if (!v.trim()) {
+            onChange('');
+          } else if (iataOnly.length === 3 && v.trim().length === 3) {
+            onChange(iataOnly);
+          }
           setOpen(true);
         }}
-        onFocus={() => suggestions.length > 0 && setOpen(true)}
+        onFocus={() => {
+          if (suggestions.length > 0) setOpen(true);
+          if (displayLabel) {
+            setQuery(displayLabel);
+            setDisplayLabel(null);
+          }
+        }}
         placeholder={placeholder}
         autoComplete="off"
         required
       />
       {loading && <span className="jb-airport-hint">Searching...</span>}
       {open && suggestions.length > 0 && (
-        <ul className="jb-airport-list" role="listbox">
+        <ul className="jb-airport-list" role="listbox" id={`${id}-listbox`}>
           {suggestions.map((a) => (
-            <li key={a.iata}>
+            <li key={a.iata} role="option">
               <button type="button" onClick={() => pick(a)}>
-                <strong>{a.iata}</strong> — {a.city}
-                <span>{a.label}</span>
+                <span className="jb-airport-option-main">
+                  <strong>{a.iata}</strong>
+                  <span className="jb-airport-option-city">{a.city}</span>
+                </span>
+                <span className="jb-airport-option-sub">{a.label}</span>
               </button>
             </li>
           ))}

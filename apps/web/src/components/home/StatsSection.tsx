@@ -4,6 +4,21 @@ import { useEffect, useRef, useState } from 'react';
 import { JB } from '../../config/jetbay-cdn';
 import { CdnImage } from '../ui/CdnImage';
 
+const STAT_COUNTERS: Record<string, { countTo?: number; suffix?: string }> = {
+  '10K+': { countTo: 10, suffix: 'K+' },
+  '190+': { countTo: 190, suffix: '+' },
+  '5K+': { countTo: 5, suffix: 'K+' },
+};
+
+function StatNum({ value }: { value: string }) {
+  const cfg = STAT_COUNTERS[value];
+  if (!cfg) return <div className="jb-stat-num">{value}</div>;
+  return (
+    <div className="jb-stat-num" data-jb-count-to={cfg.countTo} data-jb-suffix={cfg.suffix}>
+      0{cfg.suffix}
+    </div>
+  );
+}
 const STATS = [
   {
     num: '10K+',
@@ -115,13 +130,13 @@ export function StatsSection() {
                 {s.icon && s.variant === 'plain' && (
                   <CdnImage src={s.icon} alt="" width={115} height={59} className="jb-stat-mobile-icon" />
                 )}
-                <div className="jb-stat-num">{s.num}</div>
+                <StatNum value={s.num} />
                 <div className="jb-stat-label">{s.label}</div>
                 <p className="jb-stat-desc">{s.desc}</p>
                 {s.progress != null && s.plane && (
                   <div className="jb-stat-progress">
-                    <div className="jb-stat-progress-bar" style={{ width: `${s.progress}%` }} />
-                    <CdnImage src={s.plane} alt="" width={22} height={22} className="jb-stat-plane" style={{ left: `${s.progress - 2}%` }} />
+                    <div className="jb-stat-progress-bar" data-jb-progress={`${s.progress}%`} style={{ width: `${s.progress}%` }} />
+                    <CdnImage src={s.plane} alt="" width={22} height={22} className="jb-stat-plane" style={{ left: '0%' }} />
                   </div>
                 )}
               </div>
@@ -155,13 +170,13 @@ export function StatsSection() {
                 </div>
               )}
               {s.icon && <CdnImage src={s.icon} alt="" width={115} height={59} className="jb-stat-desktop-icon" />}
-              <div className="jb-stat-num">{s.num}</div>
+              <StatNum value={s.num} />
               <div className="jb-stat-label">{s.label}</div>
               <p className="jb-stat-desc">{s.desc}</p>
               {s.progress != null && s.plane && (
                 <div className="jb-stat-progress">
-                  <div className="jb-stat-progress-bar" style={{ width: `${s.progress}%` }} />
-                  <CdnImage src={s.plane} alt="" width={25} height={25} className="jb-stat-plane" style={{ left: `${s.progress - 4}%` }} />
+                  <div className="jb-stat-progress-bar" data-jb-progress={`${s.progress}%`} style={{ width: `${s.progress}%` }} />
+                  <CdnImage src={s.plane} alt="" width={25} height={25} className="jb-stat-plane" style={{ left: '0%' }} />
                 </div>
               )}
             </article>
