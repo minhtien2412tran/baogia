@@ -13,7 +13,7 @@ import {
   VALUE_POINTS,
   statusLabel,
   type WorkStatus,
-} from '../../lib/progress-report';
+} from './progress-report';
 import { ProgressReportEffects } from './ProgressReportEffects';
 import './baocaotiendo.css';
 

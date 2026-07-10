@@ -55,3 +55,13 @@ pnpm-debug.log*
 # Playwright reports
 /playwright-report/
 /test-results/
+
+# Build artifacts
+*.tsbuildinfo
+.turbo/
+
+# Ops / secrets (keep out of docs)
+docs/DKIM_*.txt
+
+# IDE
+.cursor/

@@ -39,7 +39,7 @@
 3. (Optional) set prod `APP_ENV=production` khi secrets đã đủ mạnh  
 4. **BE modules** — tiếp phase 2+ theo [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md)  
 
-**BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) (canonical) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) · **[JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)** (kế hoạch triển khai + smoke)
+**BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) · [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)
 
 ### Đã merge + deploy (2026-07-10)
 
@@ -76,6 +76,7 @@ node scripts/deploy/jetbay-be/smoke-web-api.mjs
 
 # Chỉ deploy khi RESULT pass
 # Sau deploy: smoke lại với API_URL=https://api.minhtien.online
+# Full suite prod: bash scripts/deploy/jetbay-be/smoke-all.sh (trên VPS)
 ```
 
 ### Redeploy web (Windows)

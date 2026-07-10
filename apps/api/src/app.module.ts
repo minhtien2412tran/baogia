@@ -4,7 +4,6 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { ApiKeyGuard } from './auth/api-key.guard';
 import { IntegrationsModule } from './modules/integrations/integrations.module';
@@ -88,7 +87,6 @@ import { IntegrationsStatusService } from './services/integrations-status.servic
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useClass: ApiKeyGuard },
-    AppService,
     ApiGatewayService,
     // BookingService: provided + exported by QuotesModule (shared until BookingsModule phase 3)
     FixedPriceService,

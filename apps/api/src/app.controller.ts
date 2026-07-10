@@ -1,16 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AppService } from './app.service';
 import { IntegrationsStatusService } from './services/integrations-status.service';
 import { Public } from './auth/public.decorator';
 
 @ApiTags('System')
 @Controller()
 export class AppController {
-  constructor(
-    private readonly appService: AppService,
-    private readonly integrations: IntegrationsStatusService,
-  ) {}
+  constructor(private readonly integrations: IntegrationsStatusService) {}
 
   @Public()
   @Get()

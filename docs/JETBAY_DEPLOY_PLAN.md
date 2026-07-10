@@ -2,60 +2,23 @@
 
 **Cập nhật:** 2026-07-10  
 **Môi trường prod:** VPS `103.200.20.100` · PM2 `jetbay-be` / `jetbay-admin` / `jetbay-web`  
-**Liên quan:** [CONTINUE_AT_HOME.md](./CONTINUE_AT_HOME.md) · [BE_AUDIT.md](./BE_AUDIT.md) · [JETBAY_DELIVERY_CHECKLIST.md](./JETBAY_DELIVERY_CHECKLIST.md)
+**Liên quan:** [CONTINUE_AT_HOME.md](./CONTINUE_AT_HOME.md) · [BE_AUDIT.md](./BE_AUDIT.md) · **[BE_TEST.md](./BE_TEST.md)** · [JETBAY_DELIVERY_CHECKLIST.md](./JETBAY_DELIVERY_CHECKLIST.md)
 
 ---
 
-## 1. Kết quả test toàn bộ (2026-07-10)
+## 1. Kết quả test (tóm tắt)
 
-Chạy trên **production** từ VPS (có `API_KEY` từ `/var/www/jetbay-be/.env`).
+Chi tiết từng case, ma trận domain, lệnh chạy → **[BE_TEST.md](./BE_TEST.md)**.
 
-| Bộ test | Script | Kết quả |
-|---------|--------|---------|
-| **BE public + auth + quote** | `scripts/deploy/jetbay-be/smoke-prod.sh` | **16/16 PASS** |
-| **Docs / OpenAPI / Swagger** | `scripts/deploy/jetbay-be/smoke-docs.sh` | **11/11 PASS** |
-| **Admin CRUD** | `scripts/deploy/jetbay-be/smoke-admin-crud.mjs` | **16/16 PASS** |
-| **Web contract** | `scripts/deploy/jetbay-be/smoke-web-api.mjs` | **8/8 PASS** |
-| **Local unit** | `apps/api` → `tsc` + `jest` | **9/9 PASS** |
+| Bộ test | Script | Kết quả (2026-07-10 prod) |
+|---------|--------|---------------------------|
+| BE public + auth + quote | `smoke-prod.sh` | **16/16** |
+| Docs / OpenAPI / Swagger | `smoke-docs.sh` | **11/11** |
+| Admin CRUD | `smoke-admin-crud.mjs` | **16/16** |
+| Web contract | `smoke-web-api.mjs` | **8/8** |
+| Unit | `apps/api` jest | **9/9** |
 
-### URL smoke thủ công
-
-| URL | HTTP |
-|-----|------|
-| https://api.minhtien.online/health | 200 |
-| https://docs.minhtien.online/swagger | 200 |
-| https://docs.minhtien.online/openapi.yaml | 200 |
-| https://admin.minhtien.online/login | 200 |
-| https://www.minhtien.online/en-us | 200 |
-| https://www.minhtien.online/baocaotiendo | 200 |
-
-### Swagger / Docs (đã sửa)
-
-- OpenAPI server mặc định: `https://api.minhtien.online`
-- CORS: `https://docs.minhtien.online` → `POST /auth/login` **201**
-- Dùng Swagger: chọn server **Production** → **Authorize** `X-API-Key` → Bearer sau login
-
-### Integrations (`GET /integrations/status`)
-
-| Integration | Prod |
-|-------------|------|
-| SMTP | configured (`true`) |
-| MinIO | `error` (chưa cấu hình / không kết nối) |
-| Google OAuth | off |
-| Apple OAuth | off |
-| Stripe / OnePay / 9Pay | off |
-| SMS | off |
-
-### Ghi chú vận hành
-
-| Hạng mục | Hiện trạng | Khuyến nghị |
-|----------|------------|-------------|
-| `APP_ENV` | `development` trên prod | Chuyển `production` sau khi xác nhận secrets đủ mạnh (boot sẽ enforce) |
-| Admin login smoke | `admin@j-ta.local` (prod seed cũ) | Vẫn OK; có thể re-seed `admin@jetbay.local` khi bàn giao |
-| Upload media | local path; MinIO lỗi | GĐ2: cấu hình MinIO hoặc giữ local + backup |
-| PM2 | `jetbay-be` / `admin` / `web` **online** | `pm2 save` sau mỗi deploy |
-
-**Tổng kết:** BE + Docs + Admin + Web contract **sẵn sàng vận hành GĐ1**. GĐ4 (pay/OAuth/SMS) **chờ keys khách hàng**.
+**Tổng kết:** BE + Docs **sẵn sàng GĐ1**. GĐ4 (pay/OAuth/SMS) chờ keys KH — xem integrations trong [BE_TEST.md §9](./BE_TEST.md#9-integrations-status-prod-2026-07-10).
 
 ---
 
@@ -120,17 +83,10 @@ node scripts/deploy/jetbay-be/smoke-web-api.mjs
 # powershell -File scripts/deploy/jetbay-be/sync-be.ps1   # API
 # scp scripts/deploy/jetbay-be/smoke-*.sh root@103.200.20.100:/tmp/
 
-ssh root@103.200.20.100 '
-  bash /tmp/smoke-prod.sh &&
-  bash /tmp/smoke-docs.sh &&
-  export API_URL=https://api.minhtien.online
-  export API_KEY=$(grep -E "^API_KEY=" /var/www/jetbay-be/.env | head -1 | cut -d= -f2- | tr -d "\"")
-  node /tmp/smoke-admin-crud.mjs &&
-  node /tmp/smoke-web-api.mjs
-'
+ssh root@103.200.20.100 'bash /tmp/smoke-all.sh'
 ```
 
-**Pass criteria:** `pass=16` (prod) + `pass=11` (docs) + admin `fail=0` + web `RESULT pass`.
+**Pass criteria:** `pass=16` (prod) + `pass=11` (docs) + admin `fail=0` + web `RESULT pass` — hoặc một lệnh `smoke-all.sh`.
 
 ---
 
@@ -238,10 +194,7 @@ Database: **không** rollback migration tự động — luôn `migrate deploy` 
 [ ] sync-* .ps1
 [ ] DEPLOY_CONFIRM='ĐỒNG Ý TRIỂN KHAI'
 [ ] deploy-*.sh
-[ ] smoke-prod 16/16
-[ ] smoke-docs 11/11
-[ ] smoke-admin-crud fail=0
-[ ] smoke-web-api RESULT pass
+[ ] smoke-all.sh (hoặc từng bộ riêng)
 [ ] curl admin + web + baocaotiendo 200
 [ ] cập nhật CONTINUE_AT_HOME.md (nếu milestone)
 ```
@@ -252,6 +205,7 @@ Database: **không** rollback migration tự động — luôn `migrate deploy` 
 
 | File | Mục đích |
 |------|----------|
+| `scripts/deploy/jetbay-be/smoke-all.sh` | **Chạy full suite** prod (prod + docs + admin + web) |
 | `scripts/deploy/jetbay-be/smoke-docs.sh` | Smoke docs + OpenAPI + CORS Swagger |
 | `scripts/deploy/jetbay-be/fix-prod-swagger-env.sh` | Patch `API_PUBLIC_URL` + CORS docs |
 | `scripts/deploy/jetbay-be/run-node-smokes.sh` | Chạy admin + web smoke trên VPS |

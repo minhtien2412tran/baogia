@@ -11,6 +11,7 @@ Chat sessions do **not** remember progress. Before coding, read and update the f
 |-----|---------|
 | [docs/CONTINUE_AT_HOME.md](./docs/CONTINUE_AT_HOME.md) | **Where we left off** — start here on a new machine |
 | [docs/BE_AUDIT.md](./docs/BE_AUDIT.md) | **Backend audit** — domain-by-domain status / gaps / smoke |
+| [docs/BE_TEST.md](./docs/BE_TEST.md) | **Backend test** — smoke scripts, ma trận case ↔ domain |
 | [docs/BE_ARCHITECTURE.md](./docs/BE_ARCHITECTURE.md) | Nest module target layout + refactor phases |
 | [docs/ONBOARDING_NHAN_VIEN.md](./docs/ONBOARDING_NHAN_VIEN.md) | Full clone + setup for new teammates |
 | [docs/JETBAY_PRODUCT_MAP.md](./docs/JETBAY_PRODUCT_MAP.md) | Product vs báo giá — architecture map |

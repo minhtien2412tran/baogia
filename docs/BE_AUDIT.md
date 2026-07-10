@@ -180,6 +180,7 @@ Mọi body DTO dùng với `ValidationPipe` **phải** có decorator `class-vali
 
 | Doc | Vai trò |
 |-----|---------|
+| [BE_TEST.md](./BE_TEST.md) | **Smoke / unit / ma trận test ↔ domain** |
 | [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) | Target modules + phase refactor |
 | [API.md](./API.md) | URL / endpoint cheat sheet |
 | [DATABASE.md](./DATABASE.md) | Prisma / migrate / seed |

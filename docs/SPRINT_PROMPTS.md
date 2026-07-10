@@ -532,7 +532,7 @@ Triển khai Sprint 6.3: Performance audit.
 6. Admin table không render quá nhiều item cùng lúc.
 7. Chạy Lighthouse hoặc ghi checklist performance nếu không chạy được.
 
-Cập nhật `docs/performance-checklist.md`.
+Cập nhật `docs/PERFORMANCE_CHECKLIST.md`.
 
 ---
 
