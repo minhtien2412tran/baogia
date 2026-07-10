@@ -46,6 +46,7 @@ export class ApiKeyGuard implements CanActivate {
     if (
       path.startsWith('/swagger') ||
       path.startsWith('/openapi.json') ||
+      path.startsWith('/openapi.yaml') ||
       path.includes('/swagger-ui')
     ) {
       return true;

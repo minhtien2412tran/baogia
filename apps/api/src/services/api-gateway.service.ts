@@ -54,6 +54,7 @@ export class ApiGatewayService {
       documentation: {
         swagger: '/swagger',
         openapi: '/openapi.json',
+        openapiYaml: '/openapi.yaml',
         reference: '/docs/API.md',
         uiAudit: '/api-gateway/ui-audit',
       },

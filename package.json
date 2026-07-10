@@ -14,7 +14,9 @@
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "assets:jetbay": "node scripts/download-jetbay-assets.mjs",
-    "rebrand:jetbay": "node scripts/rebrand-jetbay.mjs"
+    "rebrand:jetbay": "node scripts/rebrand-jetbay.mjs",
+    "openapi:client": "node scripts/openapi/generate-client.mjs",
+    "openapi:client:prod": "node scripts/openapi/generate-client.mjs"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -26,7 +28,9 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.45.0",
+    "openapi-typescript-codegen": "^0.29.0",
     "pg": "^8.22.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "yaml": "^2.8.0"
   }
 }

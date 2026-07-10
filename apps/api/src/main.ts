@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { stringify as yamlStringify } from 'yaml';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 
@@ -116,9 +117,18 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
 
   const expressApp = app.getHttpAdapter().getInstance();
-  expressApp.get('/openapi.json', (_req: unknown, res: { setHeader: (k: string, v: string) => void; send: (d: unknown) => void }) => {
-    res.setHeader('Content-Type', 'application/json');
+  type Res = {
+    setHeader: (k: string, v: string) => void;
+    send: (d: unknown) => void;
+    type: (t: string) => { send: (d: unknown) => void };
+  };
+  expressApp.get('/openapi.json', (_req: unknown, res: Res) => {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.send(document);
+  });
+  expressApp.get('/openapi.yaml', (_req: unknown, res: Res) => {
+    res.setHeader('Content-Type', 'application/yaml; charset=utf-8');
+    res.send(yamlStringify(document));
   });
 
   SwaggerModule.setup('swagger', app, document, {
@@ -136,6 +146,7 @@ async function bootstrap() {
   await app.listen(port, host);
   console.log(`Jet-Bay API listening on http://${host}:${port}`);
   console.log(`Swagger: http://${host}:${port}/swagger`);
-  console.log(`OpenAPI: http://${host}:${port}/openapi.json`);
+  console.log(`OpenAPI JSON: http://${host}:${port}/openapi.json`);
+  console.log(`OpenAPI YAML: http://${host}:${port}/openapi.yaml`);
 }
 bootstrap();

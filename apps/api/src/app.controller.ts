@@ -20,6 +20,7 @@ export class AppController {
       status: 'ok',
       swagger: '/swagger',
       openapi: '/openapi.json',
+      openapiYaml: '/openapi.yaml',
       health: '/health',
       integrations: '/integrations/status',
       apiGateway: '/api-gateway',

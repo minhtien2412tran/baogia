@@ -102,6 +102,8 @@ Xem [JETBAY_G4_INTEGRATIONS.md](./JETBAY_G4_INTEGRATIONS.md) · [JETBAY_INTEGRAT
 | Airport search + quote search | ✅ |
 | `POST /quotes/request` → Admin | ✅ |
 | Swagger prod đủ mobile | ✅ |
+| OpenAPI YAML export | ✅ `/openapi.yaml` |
+| TS client generate (`@jetbay/api-client`) | ✅ `pnpm openapi:client` |
 | 5–10 aircraft + 3–5 empty-leg | ✅ (seed) |
 | Merchant/SMS/OAuth (KH) | ⬜ |
 

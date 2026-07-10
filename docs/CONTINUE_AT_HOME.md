@@ -45,6 +45,8 @@
 - [x] `feat/api-security-hardening` (+ admin screens / partner-TC) → **`main`** (`9893789`)  
 - [x] VPS API `jetbay-be` + Admin `jetbay-admin` redeployed  
 - [x] Prod smoke admin **16/16** · web **8/8**  
+- [x] Redeploy (Content DTO validators + article `#NaN` fix + Settings UI) — `ARTICLE_PATCH 200` · smoke **16/16** + **8/8**  
+- [x] OpenAPI YAML (`/openapi.yaml`) + `@jetbay/api-client` (`pnpm openapi:client`) · docs RN section in API.md · prod YAML **200**  
 
 ### Đang làm / vừa xong (admin)
 

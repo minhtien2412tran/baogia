@@ -30,7 +30,7 @@ Mỗi phần dùng cùng template: Mục tiêu · Routes · Models · Status · 
 | | |
 |--|--|
 | **Mục tiêu** | Boot an toàn, CORS allowlist, Swagger, health |
-| **Routes** | `GET /`, `GET /health`, `GET /integrations/status`, `/swagger`, `/openapi.json` (`@Public`) |
+| **Routes** | `GET /`, `GET /health`, `GET /integrations/status`, `/swagger`, `/openapi.json`, `/openapi.yaml` (`@Public`) |
 | **Models** | — |
 | **Status** | **solid** |
 | **Gaps** | Prod `.env` còn `APP_ENV=development` (nên `production` khi secrets đủ mạnh). CORS đã gồm `admin` + `www.minhtien.online`. Helmet `crossOriginResourcePolicy: cross-origin` cho browser clients. |

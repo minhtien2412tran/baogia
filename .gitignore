@@ -34,6 +34,12 @@ Thumbs.db
 .env.bak*
 *.env.bak*
 
+# Generated OpenAPI client (regenerate: pnpm openapi:client)
+/packages/api-client/src/generated/**
+!/packages/api-client/src/generated/.gitkeep
+/packages/api-client/openapi/openapi.json
+/packages/api-client/openapi/openapi.yaml
+
 # Logs
 logs
 *.log
