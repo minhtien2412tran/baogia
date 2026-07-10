@@ -42,6 +42,11 @@ EOF
 chmod 600 "${APP_ROOT}/.env.local"
 echo "[web] .env.local written (API_KEY len=${#API_KEY})"
 
+echo "[web] build i18n vendor..."
+cd "${APP_ROOT}/vendor/i18n"
+npx tsc -p tsconfig.json
+cd "${APP_ROOT}"
+
 cd "${APP_ROOT}"
 npm install --legacy-peer-deps
 npm run build

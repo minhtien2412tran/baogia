@@ -16,6 +16,12 @@ echo "[api] backup tag: ${BACKUP_DIR}"
 mkdir -p "${BACKUP_DIR}"
 
 cd "${APP_ROOT}"
+echo "[api] build i18n package..."
+cd "${APP_ROOT}/vendor/i18n"
+npm install --legacy-peer-deps 2>/dev/null || true
+npx tsc -p tsconfig.json
+cd "${APP_ROOT}"
+
 echo "[api] npm install..."
 npm install --legacy-peer-deps
 

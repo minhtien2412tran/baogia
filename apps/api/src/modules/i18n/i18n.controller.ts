@@ -1,6 +1,7 @@
 import { Controller, Get, Headers, Query } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CANONICAL_LOCALE, WEB_LOCALE_CONFIG } from '@jetbay/i18n';
+import { Public } from '../../auth/public.decorator';
 import { LocaleService } from './locale.service';
 
 @ApiTags('i18n')
@@ -9,6 +10,7 @@ export class I18nController {
   constructor(private readonly locales: LocaleService) {}
 
   @Get('config')
+  @Public()
   @ApiOperation({ summary: 'Supported locales — web ↔ DB mapping (reverse i18n)' })
   @ApiResponse({ status: 200, description: 'Locale registry for FE/Admin' })
   getConfig() {
@@ -27,6 +29,7 @@ export class I18nController {
   }
 
   @Get('resolve')
+  @Public()
   @ApiOperation({ summary: 'Resolve web/accept-language to DB locale + fallback chain' })
   @ApiQuery({ name: 'locale', required: false, example: 'en-us' })
   @ApiQuery({ name: 'cookie', required: false })
