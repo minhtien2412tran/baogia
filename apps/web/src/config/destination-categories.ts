@@ -6,7 +6,5 @@ export const DESTINATION_CATEGORIES = [
 
 export type DestinationCategory = (typeof DESTINATION_CATEGORIES)[number]['api'];
 
-export function apiLocale(locale: string): string {
-  if (locale.startsWith('en')) return 'en';
-  return locale;
-}
+/** @deprecated Use `apiLocale` from `config/locales` */
+export { apiLocale } from './locales';

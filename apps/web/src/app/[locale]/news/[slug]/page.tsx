@@ -2,12 +2,13 @@ import { SlugDetailLayout, SlugHeroImage } from '../../../../components/layout/S
 import { LightSection } from '../../../../components/layout/LightSection';
 import { QuoteSearchWidget } from '../../../../components/QuoteSearchWidget';
 import { api, safeApi } from '../../../../lib/api';
+import { apiLocale } from '../../../../config/locales';
 import { buildMetadata } from '../../../../lib/metadata';
 import { JB } from '../../../../config/jetbay-cdn';
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const article = await safeApi(() => api.getNewsArticle(slug), null);
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+  const { locale, slug } = await params;
+  const article = await safeApi(() => api.getNewsArticle(slug, apiLocale(locale)), null);
   return buildMetadata({
     title: article ? String(article.title) : 'News',
     description: article ? String(article.excerpt ?? '') : '',
@@ -20,7 +21,7 @@ export default async function NewsArticlePage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const article = await safeApi(() => api.getNewsArticle(slug), null);
+  const article = await safeApi(() => api.getNewsArticle(slug, apiLocale(locale)), null);
 
   if (!article) {
     return (

@@ -1,23 +1,36 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { DEFAULT_LOCALE, isValidLocale } from './src/config/locales';
+import { detectWebLocale } from '@jetbay/i18n';
+import { DEFAULT_LOCALE, isValidLocale, LOCALE_COOKIE } from './src/config/locales';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Standalone client progress report — no locale redirect
   if (pathname === '/baocaotiendo' || pathname.startsWith('/baocaotiendo/')) {
     return NextResponse.next();
   }
 
   const segment = pathname.split('/')[1];
-  if (segment && !isValidLocale(segment) && !pathname.startsWith('/_next') && !pathname.includes('.')) {
+  const hasLocalePrefix = segment && isValidLocale(segment);
+
+  if (!hasLocalePrefix && !pathname.startsWith('/_next') && !pathname.includes('.')) {
+    const cookieLocale = request.cookies.get(LOCALE_COOKIE)?.value;
+    const detected = detectWebLocale(request.headers.get('accept-language'), cookieLocale);
+    const locale = isValidLocale(detected) ? detected : DEFAULT_LOCALE;
     const url = request.nextUrl.clone();
-    url.pathname = `/${DEFAULT_LOCALE}${pathname}`;
-    return NextResponse.redirect(url);
+    url.pathname = `/${locale}${pathname}`;
+    const res = NextResponse.redirect(url);
+    if (!cookieLocale) {
+      res.cookies.set(LOCALE_COOKIE, locale, { path: '/', maxAge: 60 * 60 * 24 * 365, sameSite: 'lax' });
+    }
+    return res;
   }
 
-  return NextResponse.next();
+  const res = NextResponse.next();
+  if (hasLocalePrefix && segment) {
+    res.cookies.set(LOCALE_COOKIE, segment, { path: '/', maxAge: 60 * 60 * 24 * 365, sameSite: 'lax' });
+  }
+  return res;
 }
 
 export const config = {

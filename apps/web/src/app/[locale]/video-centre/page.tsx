@@ -1,6 +1,7 @@
 import { SubPageLayout } from '../../../components/layout/SubPageLayout';
 import { LightSection } from '../../../components/layout/LightSection';
 import { api, safeApi } from '../../../lib/api';
+import { apiLocale } from '../../../config/locales';
 import { buildMetadata } from '../../../lib/metadata';
 import { JB, videoThumb } from '../../../config/jetbay-cdn';
 import { CdnImage } from '../../../components/ui/CdnImage';
@@ -19,7 +20,7 @@ function formatDuration(seconds: unknown): string {
 
 export default async function VideoCentrePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const data = await safeApi(() => api.getVideos(), { videos: [] });
+  const data = await safeApi(() => api.getVideos(apiLocale(locale)), { videos: [] });
 
   return (
     <>

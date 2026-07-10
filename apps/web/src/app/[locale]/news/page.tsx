@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { SubPageLayout } from '../../../components/layout/SubPageLayout';
 import { api, safeApi } from '../../../lib/api';
+import { apiLocale } from '../../../config/locales';
 import { buildMetadata } from '../../../lib/metadata';
 import { navHref } from '../../../config/navigation';
 import { JB } from '../../../config/jetbay-cdn';
@@ -12,7 +13,7 @@ export async function generateMetadata() {
 
 export default async function NewsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const data = await safeApi(() => api.getNews(), { news: [] });
+  const data = await safeApi(() => api.getNews(apiLocale(locale)), { news: [] });
 
   return (
     <SubPageLayout locale={locale} title="News" description="Latest updates from JetBay." tag="Company" heroImage={JB.pages.newsDefault}>

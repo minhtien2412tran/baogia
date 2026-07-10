@@ -13,6 +13,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { DB_LOCALES } from '@jetbay/i18n';
 
 // --- AUTH DTOS ---
 
@@ -839,9 +840,10 @@ export class ReviewPartnerApplicationDto {
 // --- CONTENT CMS DTOS ---
 
 export class ContentTranslationDto {
-  @ApiProperty({ example: 'en' })
+  @ApiProperty({ example: 'en', enum: [...DB_LOCALES] })
   @IsString()
   @IsNotEmpty()
+  @IsIn([...DB_LOCALES, 'en-us'] as string[])
   locale: string;
 
   @ApiProperty({ example: 'Article Title' })

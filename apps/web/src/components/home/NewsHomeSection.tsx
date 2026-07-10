@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { api, safeApi } from '../../lib/api';
+import { apiLocale } from '../../config/locales';
 import { navHref } from '../../config/navigation';
 
 export async function NewsHomeSection({ locale }: { locale: string }) {
-  const data = await safeApi(() => api.getNews(), { news: [] });
+  const data = await safeApi(() => api.getNews(apiLocale(locale)), { news: [] });
   if (data.news.length === 0) return null;
 
   const items = data.news.slice(0, 3);

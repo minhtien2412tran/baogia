@@ -2,12 +2,13 @@ import { SlugDetailLayout, SlugHeroImage } from '../../../../components/layout/S
 import { LightSection } from '../../../../components/layout/LightSection';
 import { QuoteSearchWidget } from '../../../../components/QuoteSearchWidget';
 import { api, safeApi } from '../../../../lib/api';
+import { apiLocale } from '../../../../config/locales';
 import { buildMetadata } from '../../../../lib/metadata';
 import { JB } from '../../../../config/jetbay-cdn';
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const post = await safeApi(() => api.getBlog(slug), null);
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+  const { locale, slug } = await params;
+  const post = await safeApi(() => api.getBlog(slug, apiLocale(locale)), null);
   return buildMetadata({
     title: post ? String(post.title) : 'Blog',
     description: post ? String(post.excerpt ?? '') : '',
@@ -20,7 +21,7 @@ export default async function BlogPostPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const post = await safeApi(() => api.getBlog(slug), null);
+  const post = await safeApi(() => api.getBlog(slug, apiLocale(locale)), null);
 
   if (!post) {
     return (

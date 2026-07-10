@@ -43,11 +43,33 @@ export const api = {
   getFixedPriceRoute: (slug: string) => request<Record<string, unknown>>(`/fixed-price/routes/${slug}`),
   getEmptyLegs: () => request<{ emptyLegs: Array<Record<string, unknown>> }>('/empty-legs'),
   getEmptyLeg: (slug: string) => request<Record<string, unknown>>(`/empty-legs/${slug}`),
-  getNews: () => request<{ news: Array<Record<string, unknown>> }>('/content/news'),
-  getNewsArticle: (slug: string) => request<Record<string, unknown>>(`/content/news/${slug}`),
-  getBlogs: () => request<{ blogs: Array<Record<string, unknown>> }>('/content/blogs'),
-  getBlog: (slug: string) => request<Record<string, unknown>>(`/content/blogs/${slug}`),
-  getVideos: () => request<{ videos: Array<Record<string, unknown>> }>('/content/videos'),
+  getNews: (locale?: string) =>
+    request<{ news: Array<Record<string, unknown>> }>(
+      `/content/news${locale ? `?locale=${encodeURIComponent(locale)}` : ''}`,
+    ),
+  getNewsArticle: (slug: string, locale?: string) =>
+    request<Record<string, unknown>>(
+      `/content/news/${encodeURIComponent(slug)}${locale ? `?locale=${encodeURIComponent(locale)}` : ''}`,
+    ),
+  getBlogs: (locale?: string) =>
+    request<{ blogs: Array<Record<string, unknown>> }>(
+      `/content/blogs${locale ? `?locale=${encodeURIComponent(locale)}` : ''}`,
+    ),
+  getBlog: (slug: string, locale?: string) =>
+    request<Record<string, unknown>>(
+      `/content/blogs/${encodeURIComponent(slug)}${locale ? `?locale=${encodeURIComponent(locale)}` : ''}`,
+    ),
+  getVideos: (locale?: string) =>
+    request<{ videos: Array<Record<string, unknown>> }>(
+      `/content/videos${locale ? `?locale=${encodeURIComponent(locale)}` : ''}`,
+    ),
+  getI18nConfig: () =>
+    request<{
+      canonicalLocale: string;
+      dbLocales: string[];
+      webLocales: Array<{ code: string; label: string; htmlLang: string; currency: string; dbLocale: string }>;
+      mapping: Array<{ web: string; db: string; label: string; currency: string; htmlLang: string }>;
+    }>('/i18n/config'),
   getDestinations: (opts?: { category?: string; locale?: string; search?: string; limit?: number }) => {
     const params = new URLSearchParams();
     if (opts?.category) params.set('category', opts.category);

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { LOCALES } from '../../config/locales';
+import { LOCALES, LOCALE_COOKIE } from '../../config/locales';
 import { getLocaleConfig } from '../../config/locales';
 
 const CURRENCIES = ['USD', 'EUR', 'GBP', 'CNY', 'HKD'] as const;
@@ -32,6 +32,7 @@ export function LocaleCurrencySelector({
 
   function changeLocale(code: string) {
     if (code === locale) return;
+    document.cookie = `${LOCALE_COOKIE}=${code};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`;
     const path = window.location.pathname.replace(/^\/[^/]+/, `/${code}`);
     router.push(path + window.location.search);
   }

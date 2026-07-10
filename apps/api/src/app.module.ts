@@ -7,6 +7,7 @@ import { AppController } from './app.controller';
 import { PrismaModule } from './prisma/prisma.module';
 import { ApiKeyGuard } from './auth/api-key.guard';
 import { IntegrationsModule } from './modules/integrations/integrations.module';
+import { I18nModule } from './modules/i18n/i18n.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { QuotesModule } from './modules/quotes/quotes.module';
 
@@ -46,6 +47,7 @@ import { IntegrationsStatusService } from './services/integrations-status.servic
 @Module({
   imports: [
     PrismaModule,
+    I18nModule,
     IntegrationsModule,
     AuthModule,
     QuotesModule,

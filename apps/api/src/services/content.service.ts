@@ -2,6 +2,8 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { ContentArticle, ContentTranslation, Destination, Video } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
+import { LocaleService } from '../modules/i18n/locale.service';
+import { CANONICAL_LOCALE } from '@jetbay/i18n';
 import {
   ContentTranslationDto,
   CreateContentArticleDto,
@@ -29,6 +31,7 @@ export class ContentService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
+    private readonly locales: LocaleService,
   ) {}
 
   private paginate(page = 1, limit = 20) {
@@ -45,11 +48,14 @@ export class ContentService {
     return isPublished ? 'published' : 'draft';
   }
 
-  private async getTranslation(entityType: string, entityId: number, locale = 'en') {
-    const translation = await this.prisma.contentTranslation.findUnique({
-      where: { entityType_entityId_locale: { entityType, entityId, locale } },
-    });
-    if (translation) return translation;
+  private async getTranslation(entityType: string, entityId: number, locale = CANONICAL_LOCALE) {
+    const chain = this.locales.fallbackChain(locale);
+    for (const loc of chain) {
+      const translation = await this.prisma.contentTranslation.findUnique({
+        where: { entityType_entityId_locale: { entityType, entityId, locale: loc } },
+      });
+      if (translation) return translation;
+    }
     return this.prisma.contentTranslation.findFirst({
       where: { entityType, entityId },
       orderBy: { locale: 'asc' },
@@ -61,32 +67,60 @@ export class ContentService {
     entityId: number,
     dto: ContentTranslationDto,
   ) {
-    return this.prisma.contentTranslation.upsert({
+    const normalized = this.locales.normalizeTranslationDto(dto);
+    const locale = normalized.locale;
+
+    const saved = await this.prisma.contentTranslation.upsert({
       where: {
         entityType_entityId_locale: {
           entityType,
           entityId,
-          locale: dto.locale ?? 'en',
+          locale,
         },
       },
       update: {
-        title: dto.title,
-        body: dto.body,
-        excerpt: dto.excerpt,
-        seoTitle: dto.seoTitle,
-        seoDescription: dto.seoDescription,
+        title: normalized.title,
+        body: normalized.body,
+        excerpt: normalized.excerpt,
+        seoTitle: normalized.seoTitle,
+        seoDescription: normalized.seoDescription,
       },
       create: {
         entityType,
         entityId,
-        locale: dto.locale ?? 'en',
-        title: dto.title,
-        body: dto.body,
-        excerpt: dto.excerpt,
-        seoTitle: dto.seoTitle,
-        seoDescription: dto.seoDescription,
+        locale,
+        title: normalized.title,
+        body: normalized.body,
+        excerpt: normalized.excerpt,
+        seoTitle: normalized.seoTitle,
+        seoDescription: normalized.seoDescription,
       },
     });
+
+    // Reverse sync: non-canonical save mirrors to canonical if missing (unified master row)
+    if (locale !== CANONICAL_LOCALE) {
+      const canonical = await this.prisma.contentTranslation.findUnique({
+        where: {
+          entityType_entityId_locale: { entityType, entityId, locale: CANONICAL_LOCALE },
+        },
+      });
+      if (!canonical) {
+        await this.prisma.contentTranslation.create({
+          data: {
+            entityType,
+            entityId,
+            locale: CANONICAL_LOCALE,
+            title: normalized.title,
+            body: normalized.body,
+            excerpt: normalized.excerpt,
+            seoTitle: normalized.seoTitle,
+            seoDescription: normalized.seoDescription,
+          },
+        });
+      }
+    }
+
+    return saved;
   }
 
   private formatArticle(
@@ -134,7 +168,7 @@ export class ContentService {
 
   // --- PUBLIC: PAGES ---
 
-  async getPageBySlug(slug: string, locale = 'en') {
+  async getPageBySlug(slug: string, locale = CANONICAL_LOCALE) {
     const article = await this.prisma.contentArticle.findFirst({
       where: { slug, type: { in: ['PAGE', 'LEGAL'] }, isPublished: true },
     });
@@ -158,7 +192,7 @@ export class ContentService {
 
   async listArticles(type: 'NEWS' | 'BLOG', query: ListQuery) {
     const { page, limit, take, skip } = this.paginate(query.page, query.limit);
-    const locale = query.locale ?? 'en';
+    const locale = this.locales.normalize(query.locale);
     const isPublished = this.parseStatus(query.status) ?? true;
 
     const articles = await this.prisma.contentArticle.findMany({
@@ -197,7 +231,7 @@ export class ContentService {
     };
   }
 
-  async getArticleBySlug(type: 'NEWS' | 'BLOG', slug: string, locale = 'en') {
+  async getArticleBySlug(type: 'NEWS' | 'BLOG', slug: string, locale = CANONICAL_LOCALE) {
     const article = await this.prisma.contentArticle.findFirst({
       where: { slug, type, isPublished: true },
       include: { category: true },
@@ -212,7 +246,7 @@ export class ContentService {
 
   async listVideos(query: ListQuery) {
     const { page, limit, take, skip } = this.paginate(query.page, query.limit);
-    const locale = query.locale ?? 'en';
+    const locale = this.locales.normalize(query.locale);
     const isPublished = this.parseStatus(query.status) ?? true;
 
     const videos = await this.prisma.video.findMany({
@@ -259,7 +293,7 @@ export class ContentService {
 
   async listDestinations(query: ListQuery) {
     const { page, limit, take, skip } = this.paginate(query.page, query.limit);
-    const locale = query.locale ?? 'en';
+    const locale = this.locales.normalize(query.locale);
     const isPublished = this.parseStatus(query.status) ?? true;
 
     const destinations = await this.prisma.destination.findMany({
@@ -301,7 +335,7 @@ export class ContentService {
     };
   }
 
-  async getDestinationBySlug(slug: string, locale = 'en') {
+  async getDestinationBySlug(slug: string, locale = CANONICAL_LOCALE) {
     const dest = await this.prisma.destination.findFirst({
       where: { slug, isPublished: true },
     });
@@ -337,7 +371,7 @@ export class ContentService {
     await this.prisma.auditLog.create({
       data: {
         action: 'NEWSLETTER_SUBSCRIBE',
-        details: { email: body.email, locale: body.locale ?? 'en' },
+        details: { email: body.email, locale: this.locales.normalize(body.locale) },
       },
     });
     return { status: 'SUBSCRIBED', message: 'Successfully subscribed to the newsletter.' };
@@ -347,7 +381,7 @@ export class ContentService {
 
   async adminListPages(query: ListQuery) {
     const { page, limit, take, skip } = this.paginate(query.page, query.limit);
-    const locale = query.locale ?? 'en';
+    const locale = this.locales.normalize(query.locale);
     const isPublished = this.parseStatus(query.status);
 
     const pages = await this.prisma.contentArticle.findMany({
@@ -395,7 +429,7 @@ export class ContentService {
     return this.formatArticle(page, t, true);
   }
 
-  async adminGetPage(id: number, locale = 'en') {
+  async adminGetPage(id: number, locale = CANONICAL_LOCALE) {
     const page = await this.findPageOrThrow(id);
     const t = await this.getTranslation('ARTICLE', id, locale);
     const formatted = this.formatArticle(page, t, true) as Record<string, unknown>;
@@ -421,7 +455,7 @@ export class ContentService {
     });
     if (dto.translation) await this.upsertTranslation('ARTICLE', id, dto.translation);
     await this.audit.log('CONTENT_PAGE_UPDATED', { pageId: id });
-    const t = await this.getTranslation('ARTICLE', id, dto.translation?.locale ?? 'en');
+    const t = await this.getTranslation('ARTICLE', id, this.locales.normalize(dto.translation?.locale));
     return this.formatArticle(page, t, true);
   }
 
@@ -447,7 +481,7 @@ export class ContentService {
 
   async adminListArticles(query: ListQuery & { type?: string }) {
     const { page, limit, take, skip } = this.paginate(query.page, query.limit);
-    const locale = query.locale ?? 'en';
+    const locale = this.locales.normalize(query.locale);
     const isPublished = this.parseStatus(query.status);
     const typeFilter = query.type
       ? [this.articleTypeFromDto(query.type)]
@@ -478,7 +512,7 @@ export class ContentService {
     return { data, pagination: { page, limit: take, total, totalPages: Math.ceil(total / take) } };
   }
 
-  async adminGetArticle(id: number, locale = 'en') {
+  async adminGetArticle(id: number, locale = CANONICAL_LOCALE) {
     const article = await this.findArticleOrThrow(id);
     const t = await this.getTranslation('ARTICLE', id, locale);
     return this.formatArticle(article, t, true);
@@ -536,7 +570,7 @@ export class ContentService {
 
     if (dto.translation) await this.upsertTranslation('ARTICLE', id, dto.translation);
     await this.audit.log('CONTENT_ARTICLE_UPDATED', { articleId: id, type: existing.type });
-    const t = await this.getTranslation('ARTICLE', id, dto.translation?.locale ?? 'en');
+    const t = await this.getTranslation('ARTICLE', id, this.locales.normalize(dto.translation?.locale));
     return this.formatArticle(article, t, true);
   }
 
@@ -562,7 +596,7 @@ export class ContentService {
 
   async adminListVideos(query: ListQuery) {
     const { page, limit, take, skip } = this.paginate(query.page, query.limit);
-    const locale = query.locale ?? 'en';
+    const locale = this.locales.normalize(query.locale);
     const isPublished = this.parseStatus(query.status);
 
     const videos = await this.prisma.video.findMany({
@@ -619,7 +653,7 @@ export class ContentService {
     });
     if (dto.translation) await this.upsertTranslation('VIDEO', id, dto.translation);
     await this.audit.log('CONTENT_VIDEO_UPDATED', { videoId: id });
-    const t = await this.getTranslation('VIDEO', id, dto.translation?.locale ?? 'en');
+    const t = await this.getTranslation('VIDEO', id, this.locales.normalize(dto.translation?.locale));
     return this.formatVideo(video, t);
   }
 
@@ -643,7 +677,7 @@ export class ContentService {
 
   async adminListDestinations(query: ListQuery) {
     const { page, limit, take, skip } = this.paginate(query.page, query.limit);
-    const locale = query.locale ?? 'en';
+    const locale = this.locales.normalize(query.locale);
     const isPublished = this.parseStatus(query.status);
 
     const destinations = await this.prisma.destination.findMany({
@@ -705,7 +739,7 @@ export class ContentService {
     });
     if (dto.translation) await this.upsertTranslation('DESTINATION', id, dto.translation);
     await this.audit.log('CONTENT_DESTINATION_UPDATED', { destinationId: id });
-    const t = await this.getTranslation('DESTINATION', id, dto.translation?.locale ?? 'en');
+    const t = await this.getTranslation('DESTINATION', id, this.locales.normalize(dto.translation?.locale));
     return this.formatDestination(dest, t, true);
   }
 
