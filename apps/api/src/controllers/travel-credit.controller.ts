@@ -10,7 +10,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery, ApiSecurity } from '@nestjs/swagger';
 import {
   CreateTravelCreditPackageDto,
   RedeemCreditsDto,
@@ -24,6 +24,7 @@ import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 
 @ApiTags('Travel Credits')
+@ApiSecurity('X-API-Key')
 @Controller('travel-credits')
 export class TravelCreditController {
   constructor(private readonly travelCreditService: TravelCreditService) {}
@@ -62,6 +63,7 @@ export class TravelCreditController {
 }
 
 @ApiTags('Admin Travel Credits')
+@ApiSecurity('X-API-Key')
 @Controller('admin/travel-credits')
 @UseGuards(JwtAuthGuard, AdminGuard)
 @ApiBearerAuth('bearer')

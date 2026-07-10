@@ -10,13 +10,14 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiSecurity } from '@nestjs/swagger';
 import { AirportService } from '../services/airport.service';
 import { CreateAirportDto, UpdateAirportDto } from '../dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
 
 @ApiTags('Admin Airports')
+@ApiSecurity('X-API-Key')
 @Controller('admin/airports')
 @UseGuards(JwtAuthGuard, AdminGuard)
 @ApiBearerAuth('bearer')

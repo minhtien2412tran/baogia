@@ -1,5 +1,5 @@
 import { Controller, Get, Patch, Body, Param, Query, ParseIntPipe, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiSecurity } from '@nestjs/swagger';
 import { AdminUsersService } from '../services/admin-users.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
@@ -8,6 +8,7 @@ import type { AuthUser } from '../auth/auth.types';
 import { UpdateAdminUserDto } from '../dto';
 
 @ApiTags('Admin Users')
+@ApiSecurity('X-API-Key')
 @Controller('admin/users')
 @UseGuards(JwtAuthGuard, AdminGuard)
 @ApiBearerAuth('bearer')

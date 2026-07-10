@@ -130,6 +130,19 @@ async function main() {
       data: { manufacturer: 'Bombardier', model: 'Learjet 60', categoryId: midsize.id, rangeKm: 4500, speedKmh: 861, sleepCapacity: 0 },
     });
 
+  // 3b. Seed Operators (for QuoteOffer admin workflow)
+  console.log('Seeding Operators...');
+  const operatorCount = await prisma.operator.count();
+  if (operatorCount === 0) {
+    await prisma.operator.createMany({
+      data: [
+        { name: 'JetBay Asia Ops', region: 'APAC', status: 'ACTIVE' },
+        { name: 'Pacific Charter Group', region: 'APAC', status: 'ACTIVE' },
+        { name: 'EuroJet Partners', region: 'EMEA', status: 'ACTIVE' },
+      ],
+    });
+  }
+
   // European airports (jet-bay style routes)
   console.log('Seeding European Airports...');
   const ltn = await prisma.airport.upsert({

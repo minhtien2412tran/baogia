@@ -1,5 +1,5 @@
 import { Controller, Post, Get, Body, Query, Param, ParseIntPipe, Res, Req, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery, ApiSecurity } from '@nestjs/swagger';
 import type { Response, Request } from 'express';
 import {
   SearchAircraftDto,
@@ -12,11 +12,13 @@ import { QuoteService } from '../services/quote.service';
 import { DocumentService } from '../services/document.service';
 import { BookingService } from '../services/booking.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '../auth/optional-jwt-auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { Public } from '../auth/public.decorator';
 import type { AuthUser } from '../auth/auth.types';
 
 @ApiTags('Quotes & Bookings')
+@ApiSecurity('X-API-Key')
 @Controller()
 export class QuoteController {
   constructor(
@@ -32,10 +34,12 @@ export class QuoteController {
   }
 
   @Post('quotes/request')
-  @ApiOperation({ summary: 'Submit a formal quote request' })
+  @UseGuards(OptionalJwtAuthGuard)
+  @ApiBearerAuth('bearer')
+  @ApiOperation({ summary: 'Submit a formal quote request (links userId when JWT present)' })
   @ApiResponse({ status: 201, description: 'Quote request submitted.' })
-  requestQuote(@Body() body: RequestQuoteDto) {
-    return this.quoteService.requestQuote(body);
+  requestQuote(@Body() body: RequestQuoteDto, @CurrentUser() user?: AuthUser | null) {
+    return this.quoteService.requestQuote(body, { userId: user?.userId });
   }
 
   @Get('quotes/my')
@@ -169,11 +173,20 @@ export class QuoteController {
   }
 
   @Post('campaigns/world-cup/quotes')
+  @UseGuards(OptionalJwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Submit World Cup charter quote' })
-  requestWorldCupQuote(@Body() body: RequestQuoteDto) {
-    return this.quoteService.requestQuote({
-      ...body,
-      message: `[World Cup] ${body.message ?? ''}`,
-    });
+  requestWorldCupQuote(@Body() body: RequestQuoteDto, @CurrentUser() user?: AuthUser | null) {
+    return this.quoteService.requestQuote(
+      {
+        ...body,
+        message: `[World Cup] ${body.message ?? ''}`.trim(),
+      },
+      {
+        userId: user?.userId,
+        sourcePage: 'WORLD_CUP_CAMPAIGN',
+        campaignCode: 'WC2026',
+      },
+    );
   }
 }

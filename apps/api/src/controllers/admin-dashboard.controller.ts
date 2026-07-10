@@ -1,11 +1,12 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Patch, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiSecurity } from '@nestjs/swagger';
 import { AdminDashboardService } from '../services/admin-dashboard.service';
 import { UpdateQuoteStatusDto } from '../dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
 
 @ApiTags('Admin Dashboard')
+@ApiSecurity('X-API-Key')
 @Controller('admin')
 @UseGuards(JwtAuthGuard, AdminGuard)
 @ApiBearerAuth('bearer')

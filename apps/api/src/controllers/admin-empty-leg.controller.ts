@@ -9,13 +9,14 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiSecurity } from '@nestjs/swagger';
 import { CreateEmptyLegDto, UpdateEmptyLegDto } from '../dto';
 import { EmptyLegService } from '../services/empty-leg.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
 
 @ApiTags('Admin Empty Legs')
+@ApiSecurity('X-API-Key')
 @Controller('admin/empty-legs')
 @UseGuards(JwtAuthGuard, AdminGuard)
 @ApiBearerAuth('bearer')

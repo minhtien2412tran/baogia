@@ -48,6 +48,7 @@
 - [x] Videos CMS UI  
 - [x] Airport admin CRUD  
 - [x] CMS Pages editor (`/dashboard/content/pages/[id]`)  
+- [x] **API security hardening** (`feat/api-security-hardening`): JWT on `POST /bookings`, OTP CSPRNG, SMS `APP_ENV`, QuoteOffer admin API, optional JWT on quote request 
 
 ### Test trước khi deploy (bắt buộc)
 

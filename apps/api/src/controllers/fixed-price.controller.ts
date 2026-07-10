@@ -1,9 +1,10 @@
 import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery, ApiSecurity } from '@nestjs/swagger';
 import { BookFixedPriceDto } from '../dto';
 import { FixedPriceService } from '../services/fixed-price.service';
 
 @ApiTags('Fixed Price')
+@ApiSecurity('X-API-Key')
 @Controller('fixed-price')
 export class FixedPriceController {
   constructor(private readonly fixedPriceService: FixedPriceService) {}

@@ -133,6 +133,33 @@ export const adminApi = {
       method: 'PATCH',
       body: JSON.stringify({ status }),
     }),
+  getQuotes: (params?: { status?: string; page?: number; limit?: number }) => {
+    const q = new URLSearchParams();
+    if (params?.status) q.set('status', params.status);
+    if (params?.page) q.set('page', String(params.page));
+    if (params?.limit) q.set('limit', String(params.limit));
+    const qs = q.toString();
+    return adminRequest<{ data: unknown[]; pagination: Record<string, number> }>(
+      `/admin/quotes${qs ? `?${qs}` : ''}`,
+    );
+  },
+  getQuote: (id: number) => adminRequest<Record<string, unknown>>(`/admin/quotes/${id}`),
+  getOperators: () => adminRequest<{ operators: unknown[] }>('/admin/operators'),
+  createQuoteOffer: (
+    quoteId: number,
+    body: {
+      aircraftModelId: number;
+      operatorId: number;
+      price: number;
+      expiresAt: string;
+      pricingBreakdown?: Record<string, unknown>;
+    },
+  ) =>
+    adminRequest<unknown>(`/admin/quotes/${quoteId}/offers`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  getAircraftModels: () => adminRequest<{ models: unknown[] }>('/admin/aircraft/models'),
   getAirports: () => adminRequest<{ data: unknown[] }>('/admin/airports?limit=200'),
   createAirport: (body: unknown) =>
     adminRequest<unknown>('/admin/airports', { method: 'POST', body: JSON.stringify(body) }),

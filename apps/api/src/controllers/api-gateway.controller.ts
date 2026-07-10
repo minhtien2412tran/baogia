@@ -1,9 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiSecurity } from '@nestjs/swagger';
 import { ApiGatewayService } from '../services/api-gateway.service';
 import { Public } from '../auth/public.decorator';
 
 @ApiTags('API Gateway')
+@ApiSecurity('X-API-Key')
 @Controller('api-gateway')
 export class ApiGatewayController {
   constructor(private readonly gateway: ApiGatewayService) {}

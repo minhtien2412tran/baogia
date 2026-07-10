@@ -10,13 +10,7 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiBearerAuth,
-  ApiQuery,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery, ApiSecurity } from '@nestjs/swagger';
 import type { Request } from 'express';
 import { BookingService } from '../services/booking.service';
 import { CreateBookingDto, UpdateBookingStatusDto } from '../dto';
@@ -30,6 +24,7 @@ function clientIp(req: Request): string | undefined {
 }
 
 @ApiTags('Bookings')
+@ApiSecurity('X-API-Key')
 @Controller('bookings')
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
@@ -80,6 +75,7 @@ export class BookingController {
 }
 
 @ApiTags('Admin Bookings')
+@ApiSecurity('X-API-Key')
 @Controller('admin/bookings')
 @UseGuards(JwtAuthGuard, AdminGuard)
 @ApiBearerAuth('bearer')

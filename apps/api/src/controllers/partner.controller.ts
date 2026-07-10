@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiSecurity } from '@nestjs/swagger';
 import { PartnerApplicationDto } from '../dto';
 import { PartnerService } from '../services/partner.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -7,6 +7,7 @@ import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 
 @ApiTags('Partners')
+@ApiSecurity('X-API-Key')
 @Controller('partners')
 export class PartnerController {
   constructor(private readonly partnerService: PartnerService) {}

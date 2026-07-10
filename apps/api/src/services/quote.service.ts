@@ -73,7 +73,10 @@ export class QuoteService {
     };
   }
 
-  async requestQuote(body: RequestQuoteDto) {
+  async requestQuote(
+    body: RequestQuoteDto,
+    opts?: { userId?: number; sourcePage?: string; campaignCode?: string },
+  ) {
     if (!body.isConsentAccepted) throw new BadRequestException('Consent is required');
     if (!body.legs?.length) throw new BadRequestException('At least one leg is required');
 
@@ -105,20 +108,43 @@ export class QuoteService {
       });
     }
 
+    const tripType =
+      body.tripType ??
+      (body.legs.length > 1 ? 'MULTI_CITY' : 'ONE_WAY');
+
     const quote = await this.prisma.quoteRequest.create({
       data: {
+        userId: opts?.userId,
         email: body.email,
         phone: body.phone,
         firstName: body.firstName,
         lastName: body.lastName,
+        tripType,
         message: body.message,
         isConsentAccepted: body.isConsentAccepted,
-        sourcePage: 'WEB_QUOTE_FORM',
+        sourcePage: opts?.sourcePage ?? 'WEB_QUOTE_FORM',
         legs: { create: legData },
+        ...(opts?.campaignCode
+          ? { worldCupItinerary: { create: { campaignCode: opts.campaignCode } } }
+          : {}),
       },
     });
 
-    await this.audit.log('QUOTE_REQUESTED', { quoteId: quote.id, email: body.email });
+    if (opts?.userId) {
+      await this.prisma.consentLog.create({
+        data: {
+          userId: opts.userId,
+          subject: 'QUOTE_CONSENT',
+          policyVersion: '1.0',
+        },
+      });
+    }
+
+    await this.audit.log(
+      'QUOTE_REQUESTED',
+      { quoteId: quote.id, email: body.email },
+      opts?.userId,
+    );
     await this.email.sendQuoteConfirmation({
       email: body.email,
       firstName: body.firstName,

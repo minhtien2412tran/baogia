@@ -9,13 +9,14 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiSecurity } from '@nestjs/swagger';
 import { CreateFixedPriceRouteDto, UpdateFixedPriceRouteDto } from '../dto';
 import { FixedPriceService } from '../services/fixed-price.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
 
 @ApiTags('Admin Fixed Price')
+@ApiSecurity('X-API-Key')
 @Controller('admin/fixed-price/routes')
 @UseGuards(JwtAuthGuard, AdminGuard)
 @ApiBearerAuth('bearer')

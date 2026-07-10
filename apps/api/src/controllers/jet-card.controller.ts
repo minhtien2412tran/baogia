@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param, ParseIntPipe, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth, ApiSecurity } from '@nestjs/swagger';
 import { JetCardEnquiryDto } from '../dto';
 import { JetCardService } from '../services/jet-card.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -7,6 +7,7 @@ import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 
 @ApiTags('Jet Card')
+@ApiSecurity('X-API-Key')
 @Controller('jet-card')
 export class JetCardController {
   constructor(private readonly jetCardService: JetCardService) {}

@@ -198,6 +198,14 @@ export class RequestQuoteDto {
   @IsString()
   message?: string;
 
+  @ApiPropertyOptional({
+    example: 'ONE_WAY',
+    enum: ['ONE_WAY', 'ROUND_TRIP', 'MULTI_CITY'],
+  })
+  @IsOptional()
+  @IsIn(['ONE_WAY', 'ROUND_TRIP', 'MULTI_CITY'])
+  tripType?: 'ONE_WAY' | 'ROUND_TRIP' | 'MULTI_CITY';
+
   @ApiProperty({ example: true })
   @IsBoolean()
   isConsentAccepted: boolean;
@@ -754,6 +762,32 @@ export class UpdateQuoteStatusDto {
   })
   @IsIn(['PENDING', 'OFFERED', 'EXPIRED', 'CONVERTED', 'CANCELLED'])
   status: 'PENDING' | 'OFFERED' | 'EXPIRED' | 'CONVERTED' | 'CANCELLED';
+}
+
+export class CreateQuoteOfferDto {
+  @ApiProperty({ example: 1 })
+  @Type(() => Number)
+  @IsInt()
+  aircraftModelId: number;
+
+  @ApiProperty({ example: 1 })
+  @Type(() => Number)
+  @IsInt()
+  operatorId: number;
+
+  @ApiProperty({ example: 18500 })
+  @Type(() => Number)
+  @Min(1)
+  price: number;
+
+  @ApiProperty({ example: '2026-12-31T23:59:59.000Z' })
+  @IsString()
+  @IsNotEmpty()
+  expiresAt: string;
+
+  @ApiPropertyOptional({ example: { base: 16000, fees: 2500 } })
+  @IsOptional()
+  pricingBreakdown?: Record<string, unknown>;
 }
 
 export class CreateAirportDto {

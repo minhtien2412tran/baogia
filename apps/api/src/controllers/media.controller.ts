@@ -12,7 +12,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiConsumes, ApiBody, ApiSecurity } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { StorageService } from '../services/storage.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -36,6 +36,7 @@ function toStorageKey(objectKey: string): string {
 }
 
 @ApiTags('Media')
+@ApiSecurity('X-API-Key')
 @Controller()
 export class MediaController {
   constructor(private readonly storage: StorageService) {}

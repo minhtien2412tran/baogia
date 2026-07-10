@@ -27,6 +27,7 @@ import { AdminAirportController } from './controllers/admin-airport.controller';
 import { ApiGatewayController } from './controllers/api-gateway.controller';
 import { AdminAircraftController } from './controllers/admin-aircraft.controller';
 import { MediaController } from './controllers/media.controller';
+import { AdminQuotesController } from './controllers/admin-quotes.controller';
 import { BookingService } from './services/booking.service';
 import { AuditService } from './services/audit.service';
 import { FixedPriceService } from './services/fixed-price.service';
@@ -35,6 +36,7 @@ import { JetCardService } from './services/jet-card.service';
 import { TravelCreditService } from './services/travel-credit.service';
 import { ContentService } from './services/content.service';
 import { AdminDashboardService } from './services/admin-dashboard.service';
+import { AdminQuotesService } from './services/admin-quotes.service';
 import { AirportService } from './services/airport.service';
 import { QuoteService } from './services/quote.service';
 import { AuthService } from './services/auth.service';
@@ -95,6 +97,7 @@ import { ApiKeyGuard } from './auth/api-key.guard';
     AdminAircraftController,
     ApiGatewayController,
     MediaController,
+    AdminQuotesController,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
@@ -109,6 +112,7 @@ import { ApiKeyGuard } from './auth/api-key.guard';
     TravelCreditService,
     ContentService,
     AdminDashboardService,
+    AdminQuotesService,
     AirportService,
     QuoteService,
     AuthService,

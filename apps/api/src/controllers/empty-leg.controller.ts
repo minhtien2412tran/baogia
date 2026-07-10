@@ -1,9 +1,10 @@
 import { Controller, Get, Post, Body, Param, ParseIntPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiSecurity } from '@nestjs/swagger';
 import { EmptyLegRequestDto, EmptyLegAlertSubscribeDto } from '../dto';
 import { EmptyLegService } from '../services/empty-leg.service';
 
 @ApiTags('Empty Legs')
+@ApiSecurity('X-API-Key')
 @Controller('empty-legs')
 export class EmptyLegController {
   constructor(private readonly emptyLegService: EmptyLegService) {}

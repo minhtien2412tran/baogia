@@ -1,29 +1,36 @@
-import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import Redis from 'ioredis';
 
 @Injectable()
-export class RedisService implements OnModuleDestroy {
+export class RedisService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(RedisService.name);
   private client: Redis | null = null;
+  private connectPromise: Promise<void> | null = null;
 
   isConfigured(): boolean {
     return Boolean(process.env.REDIS_URL);
   }
 
-  private getClient(): Redis | null {
-    if (this.client) return this.client;
+  onModuleInit() {
     const url = process.env.REDIS_URL?.trim();
-    if (!url) return null;
+    if (!url) return;
     this.client = new Redis(url, { maxRetriesPerRequest: 1, lazyConnect: true });
     this.client.on('error', (err) => this.logger.warn(`Redis error: ${err.message}`));
+    this.connectPromise = this.client.connect().catch((err) => {
+      this.logger.warn(`Redis connect failed: ${err instanceof Error ? err.message : err}`);
+    });
+  }
+
+  private async ensureConnected(): Promise<Redis | null> {
+    if (!this.client) return null;
+    if (this.connectPromise) await this.connectPromise;
     return this.client;
   }
 
   async ping(): Promise<'ok' | 'error' | 'not_configured'> {
-    const redis = this.getClient();
+    const redis = await this.ensureConnected();
     if (!redis) return 'not_configured';
     try {
-      await redis.connect();
       const pong = await redis.ping();
       return pong === 'PONG' ? 'ok' : 'error';
     } catch (e) {
@@ -33,7 +40,7 @@ export class RedisService implements OnModuleDestroy {
   }
 
   async get(key: string): Promise<string | null> {
-    const redis = this.getClient();
+    const redis = await this.ensureConnected();
     if (!redis) return null;
     try {
       return await redis.get(key);
@@ -43,7 +50,7 @@ export class RedisService implements OnModuleDestroy {
   }
 
   async set(key: string, value: string, ttlSeconds?: number): Promise<void> {
-    const redis = this.getClient();
+    const redis = await this.ensureConnected();
     if (!redis) return;
     try {
       if (ttlSeconds) await redis.set(key, value, 'EX', ttlSeconds);
@@ -54,7 +61,7 @@ export class RedisService implements OnModuleDestroy {
   }
 
   async del(key: string): Promise<void> {
-    const redis = this.getClient();
+    const redis = await this.ensureConnected();
     if (!redis) return;
     try {
       await redis.del(key);

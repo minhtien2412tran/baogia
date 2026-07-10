@@ -1,8 +1,9 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiQuery, ApiSecurity } from '@nestjs/swagger';
 import { AirportService } from '../services/airport.service';
 
 @ApiTags('Airports')
+@ApiSecurity('X-API-Key')
 @Controller('airports')
 export class AirportController {
   constructor(private readonly airportService: AirportService) {}
