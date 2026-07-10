@@ -9,6 +9,8 @@
 | **Integrations** | `GET /integrations/status` | boolean readiness, **no secrets** |
 | **Admin UI** | http://127.0.0.1:3001 | https://admin.minhtien.online/login |
 
+**Audit đầy đủ theo domain:** [BE_AUDIT.md](./BE_AUDIT.md) · **Kiến trúc modules:** [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md)
+
 OpenAPI title: **Jet-Bay API**. In Swagger Authorize:
 
 1. **X-API-Key** — app key (`API_KEY` / `NEXT_PUBLIC_API_KEY`)
@@ -26,6 +28,8 @@ Full page mapping: [API_UI_AUDIT.md](./API_UI_AUDIT.md) · Secrets: [SECURITY_SE
 | Login | `POST /auth/login` → `{ accessToken, refreshToken }` |
 | Me | `GET /me` + `Authorization: Bearer <accessToken>` |
 | Refresh | `POST /auth/refresh` (body refresh token) |
+| OAuth | `POST /auth/oauth/google`, `POST /auth/oauth/apple` (ENV-gated) |
+| OTP | `POST /auth/otp/send`, `verify-login`, `verify-register` |
 
 After production secret rotation, all sessions are invalidated — login again.
 
@@ -39,19 +43,20 @@ After production secret rotation, all sessions are invalidated — login again.
 | Jet Card | `GET /jet-card/plans`, `POST /jet-card/enquiries` |
 | Travel Credits | `GET /travel-credits/packages`, `POST /travel-credits/enquiries` |
 | Content | `GET /content/news`, `/content/blogs`, `/content/videos`, `/content/destinations`, `/content/pages/:slug`, `POST /newsletter/subscribe` |
-| Quotes | `POST /quotes/request`, `POST /quotes/search-aircraft` |
+| Quotes | `POST /quotes/request` (optional JWT), `POST /quotes/search-aircraft` |
 | Campaigns | `GET /campaigns/world-cup/matches`, `POST /campaigns/world-cup/quotes` |
 | Partners | `GET /partners/programs`, `POST /partners/applications` |
 
 ## Admin endpoints
 
-All require `Authorization: Bearer <token>` (ADMIN role).
+All require `Authorization: Bearer <token>` (ADMIN role) + `X-API-Key`.
 
 | Group | Endpoints |
 |-------|-----------|
 | Dashboard | `GET /admin/dashboard/stats`, `/recent-quotes`, `/recent-bookings`, `/revenue-demo` |
+| Quotes | `GET /admin/quotes`, `GET /admin/quotes/:id`, `PATCH /admin/quotes/:id/status`, `POST /admin/quotes/:id/offers`, `GET /admin/operators` |
 | System | `GET /admin/audit-logs`, `/admin/system-health` |
-| CRUD | `/admin/fixed-price/routes`, `/admin/empty-legs`, `/admin/jet-card/plans`, `/admin/content/*`, `/admin/bookings`, `/admin/users`, `/admin/aircraft` |
+| CRUD | `/admin/fixed-price/routes`, `/admin/empty-legs`, `/admin/jet-card/plans`, `/admin/travel-credits/*`, `/admin/content/*`, `/admin/bookings`, `/admin/users`, `/admin/aircraft`, `/admin/airports`, `/admin/partners`, `/admin/media` |
 
 ## Gateway / audit
 

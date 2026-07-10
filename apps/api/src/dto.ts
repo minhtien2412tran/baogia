@@ -306,14 +306,20 @@ export class SubscribeNewsletterDto {
 
 export class PaymentIntentDto {
   @ApiProperty({ example: 123, description: 'Booking ID' })
+  @Type(() => Number)
+  @IsInt()
   bookingId: number;
 
   @ApiProperty({ example: 'CREDIT_CARD', description: 'CREDIT_CARD, BANK_TRANSFER, or HOLD' })
+  @IsString()
+  @IsNotEmpty()
   method: string;
 }
 
 export class ConfirmPaymentDto {
   @ApiProperty({ example: 'payment-intent-id-xyz' })
+  @IsString()
+  @IsNotEmpty()
   paymentIntentId: string;
 }
 
@@ -321,68 +327,108 @@ export class ConfirmPaymentDto {
 
 export class BookingContactDto {
   @ApiProperty({ example: 'John' })
+  @IsString()
+  @IsNotEmpty()
   firstName: string;
 
   @ApiProperty({ example: 'Doe' })
+  @IsString()
+  @IsNotEmpty()
   lastName: string;
 
   @ApiProperty({ example: 'john.doe@example.com' })
+  @IsEmail()
   email: string;
 
   @ApiProperty({ example: '+84900000000' })
+  @IsString()
+  @IsNotEmpty()
   phone: string;
 }
 
 export class BookingPassengerDto {
   @ApiProperty({ example: 'John' })
+  @IsString()
+  @IsNotEmpty()
   firstName: string;
 
   @ApiProperty({ example: 'Doe' })
+  @IsString()
+  @IsNotEmpty()
   lastName: string;
 
   @ApiPropertyOptional({ example: 'AB1234567' })
+  @IsOptional()
+  @IsString()
   passportNumber?: string;
 
   @ApiPropertyOptional({ example: '1990-01-15' })
+  @IsOptional()
+  @IsString()
   dateOfBirth?: string;
 
   @ApiPropertyOptional({ example: 'US' })
+  @IsOptional()
+  @IsString()
   nationality?: string;
 }
 
 export class BookingItineraryLegDto {
   @ApiProperty({ example: 'LTN' })
+  @IsString()
+  @IsNotEmpty()
   fromAirport: string;
 
   @ApiProperty({ example: 'LBG' })
+  @IsString()
+  @IsNotEmpty()
   toAirport: string;
 
   @ApiProperty({ example: '2026-12-01T10:00:00Z' })
+  @IsString()
+  @IsNotEmpty()
   departureAt: string;
 }
 
 export class BookingItineraryDto {
   @ApiProperty({ example: 'ONE_WAY' })
+  @IsString()
+  @IsNotEmpty()
   tripType: string;
 
   @ApiProperty({ type: [BookingItineraryLegDto] })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => BookingItineraryLegDto)
   legs: BookingItineraryLegDto[];
 }
 
 export class CreateBookingDto {
   @ApiPropertyOptional({ example: 1, description: 'Quote request or offer ID' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
   quoteId?: number;
 
-  @ApiProperty({ example: 'CHARTER' })
+  @ApiPropertyOptional({ example: 'CHARTER' })
+  @IsOptional()
+  @IsString()
   bookingType?: string;
 
   @ApiProperty({ type: BookingItineraryDto })
+  @ValidateNested()
+  @Type(() => BookingItineraryDto)
   itinerary: BookingItineraryDto;
 
   @ApiProperty({ type: [BookingPassengerDto] })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => BookingPassengerDto)
   passengers: BookingPassengerDto[];
 
   @ApiProperty({ type: BookingContactDto })
+  @ValidateNested()
+  @Type(() => BookingContactDto)
   contact: BookingContactDto;
 }
 
@@ -794,70 +840,112 @@ export class ReviewPartnerApplicationDto {
 
 export class ContentTranslationDto {
   @ApiProperty({ example: 'en' })
+  @IsString()
+  @IsNotEmpty()
   locale: string;
 
   @ApiProperty({ example: 'Article Title' })
+  @IsString()
+  @IsNotEmpty()
   title: string;
 
   @ApiProperty({ example: 'Full article body content...' })
+  @IsString()
+  @IsNotEmpty()
   body: string;
 
   @ApiPropertyOptional({ example: 'Short summary' })
+  @IsOptional()
+  @IsString()
   excerpt?: string;
 
   @ApiPropertyOptional({ example: 'SEO Title' })
+  @IsOptional()
+  @IsString()
   seoTitle?: string;
 
   @ApiPropertyOptional({ example: 'SEO description' })
+  @IsOptional()
+  @IsString()
   seoDescription?: string;
 }
 
 export class CreateContentArticleDto {
   @ApiProperty({ example: 'news', enum: ['news', 'blog'] })
+  @IsIn(['news', 'blog'])
   type: string;
 
   @ApiProperty({ example: 'jetbay-expands-fleet' })
+  @IsString()
+  @IsNotEmpty()
   slug: string;
 
   @ApiProperty({ example: 'PR Team' })
+  @IsOptional()
+  @IsString()
   author?: string;
 
   @ApiPropertyOptional({ example: 'https://cdn.example.com/thumb.jpg' })
+  @IsOptional()
+  @IsString()
   thumbnail?: string;
 
   @ApiPropertyOptional({ example: 'news' })
+  @IsOptional()
+  @IsString()
   category?: string;
 
   @ApiPropertyOptional({ example: 'published', enum: ['draft', 'published'] })
+  @IsOptional()
+  @IsIn(['draft', 'published'])
   status?: string;
 
   @ApiPropertyOptional({ example: '2026-06-25T00:00:00Z' })
+  @IsOptional()
+  @IsString()
   publishedAt?: string;
 
   @ApiProperty({ type: ContentTranslationDto })
+  @ValidateNested()
+  @Type(() => ContentTranslationDto)
   translation: ContentTranslationDto;
 }
 
 export class UpdateContentArticleDto {
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   slug?: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   author?: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   thumbnail?: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   category?: string;
 
   @ApiPropertyOptional({ enum: ['draft', 'published'] })
+  @IsOptional()
+  @IsIn(['draft', 'published'])
   status?: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   publishedAt?: string;
 
   @ApiPropertyOptional({ type: ContentTranslationDto })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => ContentTranslationDto)
   translation?: ContentTranslationDto;
 }
 
@@ -972,108 +1060,178 @@ export class UpdateAirportDto {
 
 export class CreateContentPageDto {
   @ApiProperty({ example: 'privacy-policy' })
+  @IsString()
+  @IsNotEmpty()
   slug: string;
 
   @ApiPropertyOptional({ example: 'published', enum: ['draft', 'published'] })
+  @IsOptional()
+  @IsIn(['draft', 'published'])
   status?: string;
 
   @ApiProperty({ type: ContentTranslationDto })
+  @ValidateNested()
+  @Type(() => ContentTranslationDto)
   translation: ContentTranslationDto;
 }
 
 export class UpdateContentPageDto {
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   slug?: string;
 
   @ApiPropertyOptional({ enum: ['draft', 'published'] })
+  @IsOptional()
+  @IsIn(['draft', 'published'])
   status?: string;
 
   @ApiPropertyOptional({ type: ContentTranslationDto })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => ContentTranslationDto)
   translation?: ContentTranslationDto;
 }
 
 export class CreateVideoDto {
   @ApiProperty({ example: 'inside-g650-cabin' })
+  @IsString()
+  @IsNotEmpty()
   slug: string;
 
   @ApiProperty({ example: 'https://cdn.example.com/video.mp4' })
+  @IsString()
+  @IsNotEmpty()
   videoUrl: string;
 
   @ApiPropertyOptional({ example: 'https://cdn.example.com/thumb.jpg' })
+  @IsOptional()
+  @IsString()
   thumbnail?: string;
 
   @ApiPropertyOptional({ example: 180 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
   duration?: number;
 
   @ApiPropertyOptional({ enum: ['draft', 'published'] })
+  @IsOptional()
+  @IsIn(['draft', 'published'])
   status?: string;
 
   @ApiProperty({ type: ContentTranslationDto })
+  @ValidateNested()
+  @Type(() => ContentTranslationDto)
   translation: ContentTranslationDto;
 }
 
 export class UpdateVideoDto {
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   slug?: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   videoUrl?: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   thumbnail?: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
   duration?: number;
 
   @ApiPropertyOptional({ enum: ['draft', 'published'] })
+  @IsOptional()
+  @IsIn(['draft', 'published'])
   status?: string;
 
   @ApiPropertyOptional({ type: ContentTranslationDto })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => ContentTranslationDto)
   translation?: ContentTranslationDto;
 }
 
 export class CreateDestinationDto {
   @ApiProperty({ example: 'nassau' })
+  @IsString()
+  @IsNotEmpty()
   slug: string;
 
   @ApiProperty({ example: 'ISLAND', enum: ['ISLAND', 'SKI', 'GOLF'] })
+  @IsIn(['ISLAND', 'SKI', 'GOLF'])
   category: string;
 
   @ApiProperty({ example: 'Nassau' })
+  @IsString()
+  @IsNotEmpty()
   city: string;
 
   @ApiProperty({ example: 'The Bahamas' })
+  @IsString()
+  @IsNotEmpty()
   country: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   thumbnail?: string;
 
   @ApiPropertyOptional({ enum: ['draft', 'published'] })
+  @IsOptional()
+  @IsIn(['draft', 'published'])
   status?: string;
 
   @ApiProperty({ type: ContentTranslationDto })
+  @ValidateNested()
+  @Type(() => ContentTranslationDto)
   translation: ContentTranslationDto;
 }
 
 export class UpdateDestinationDto {
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   slug?: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsIn(['ISLAND', 'SKI', 'GOLF'])
   category?: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   city?: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   country?: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   thumbnail?: string;
 
   @ApiPropertyOptional({ enum: ['draft', 'published'] })
+  @IsOptional()
+  @IsIn(['draft', 'published'])
   status?: string;
 
   @ApiPropertyOptional({ type: ContentTranslationDto })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => ContentTranslationDto)
   translation?: ContentTranslationDto;
 }

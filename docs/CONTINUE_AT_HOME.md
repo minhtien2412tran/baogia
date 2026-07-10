@@ -36,6 +36,9 @@
 1. **Polish clone** (ongoing) — so `scratch/` vs live  
 2. **G4 keys** — SMTP / OAuth / payment / SMS **chờ KH** (code sẵn, ENV-gated)  
 3. (Optional) set prod `APP_ENV=production` khi secrets đã đủ mạnh  
+4. **BE modules** — tiếp phase 2+ theo [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md)  
+
+**BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) (canonical) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md)
 
 ### Đã merge + deploy (2026-07-10)
 

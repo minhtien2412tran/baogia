@@ -6,8 +6,12 @@ import { PassportModule } from '@nestjs/passport';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
-import { AuthController } from './controllers/auth.controller';
-import { QuoteController } from './controllers/quote.controller';
+import { ApiKeyGuard } from './auth/api-key.guard';
+import { IntegrationsModule } from './modules/integrations/integrations.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { QuotesModule } from './modules/quotes/quotes.module';
+
+// Remaining domains (phase 2–5) — still registered on AppModule
 import { FixedPriceController } from './controllers/fixed-price.controller';
 import { AdminFixedPriceController } from './controllers/admin-fixed-price.controller';
 import { EmptyLegController } from './controllers/empty-leg.controller';
@@ -27,40 +31,25 @@ import { AdminAirportController } from './controllers/admin-airport.controller';
 import { ApiGatewayController } from './controllers/api-gateway.controller';
 import { AdminAircraftController } from './controllers/admin-aircraft.controller';
 import { MediaController } from './controllers/media.controller';
-import { AdminQuotesController } from './controllers/admin-quotes.controller';
-import { BookingService } from './services/booking.service';
-import { AuditService } from './services/audit.service';
 import { FixedPriceService } from './services/fixed-price.service';
 import { EmptyLegService } from './services/empty-leg.service';
 import { JetCardService } from './services/jet-card.service';
 import { TravelCreditService } from './services/travel-credit.service';
 import { ContentService } from './services/content.service';
 import { AdminDashboardService } from './services/admin-dashboard.service';
-import { AdminQuotesService } from './services/admin-quotes.service';
 import { AirportService } from './services/airport.service';
-import { QuoteService } from './services/quote.service';
-import { AuthService } from './services/auth.service';
 import { PartnerService } from './services/partner.service';
 import { ApiGatewayService } from './services/api-gateway.service';
-import { EmailService } from './services/email.service';
-import { PaymentService } from './services/payment.service';
-import { DocumentService } from './services/document.service';
-import { OAuthService } from './services/oauth.service';
-import { OtpService } from './services/otp.service';
-import { SmsService } from './services/sms.service';
-import { OnepayService } from './services/onepay.service';
-import { NinepayService } from './services/ninepay.service';
 import { AdminUsersService } from './services/admin-users.service';
-import { StorageService } from './services/storage.service';
-import { RedisService } from './services/redis.service';
 import { AircraftService } from './services/aircraft.service';
 import { IntegrationsStatusService } from './services/integrations-status.service';
-import { JwtStrategy } from './auth/jwt.strategy';
-import { ApiKeyGuard } from './auth/api-key.guard';
 
 @Module({
   imports: [
     PrismaModule,
+    IntegrationsModule,
+    AuthModule,
+    QuotesModule,
     ThrottlerModule.forRoot([
       { name: 'default', ttl: 60_000, limit: 120 },
       { name: 'auth', ttl: 60_000, limit: 20 },
@@ -74,8 +63,6 @@ import { ApiKeyGuard } from './auth/api-key.guard';
   ],
   controllers: [
     AppController,
-    AuthController,
-    QuoteController,
     AirportController,
     AdminAirportController,
     FixedPriceController,
@@ -97,40 +84,24 @@ import { ApiKeyGuard } from './auth/api-key.guard';
     AdminAircraftController,
     ApiGatewayController,
     MediaController,
-    AdminQuotesController,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useClass: ApiKeyGuard },
     AppService,
     ApiGatewayService,
-    BookingService,
-    AuditService,
+    // BookingService: provided + exported by QuotesModule (shared until BookingsModule phase 3)
     FixedPriceService,
     EmptyLegService,
     JetCardService,
     TravelCreditService,
     ContentService,
     AdminDashboardService,
-    AdminQuotesService,
     AirportService,
-    QuoteService,
-    AuthService,
     PartnerService,
-    EmailService,
-    PaymentService,
-    DocumentService,
-    OAuthService,
-    OtpService,
-    SmsService,
-    OnepayService,
-    NinepayService,
     AdminUsersService,
-    StorageService,
-    RedisService,
     AircraftService,
     IntegrationsStatusService,
-    JwtStrategy,
   ],
 })
 export class AppModule {}
