@@ -278,6 +278,38 @@
   box-shadow: 0 4px 12px rgba(184, 151, 90, 0.35);
 }
 
+/* White heritage cards on dark pages — always dark readable text */
+.jb-step-item--heritage h3,
+.jb-step-item--heritage .jb-step-content h3 {
+  color: var(--jb-text-on-light, #1a1f2e) !important;
+}
+
+.jb-step-item--heritage p,
+.jb-step-item--heritage .jb-step-content p {
+  color: var(--jb-text-muted-on-light, #3d4654) !important;
+}
+
+.jb-feature-card--heritage h3 {
+  color: var(--jb-ink, #1a1f2e) !important;
+}
+
+.jb-feature-card--heritage p {
+  color: var(--jb-ink-muted, #3d4654) !important;
+}
+
+.jb-step-item--heritage .jb-step-img {
+  width: 120px;
+  max-width: 120px;
+  flex-shrink: 0;
+}
+
+.jb-step-item--heritage .jb-step-image {
+  width: 100%;
+  height: auto;
+  max-height: 96px;
+  object-fit: contain;
+}
+
 /* ── Aircraft showcase (dark band, light cards) ── */
 .jb-aircraft-showcase {
   padding: 48px 0 56px;

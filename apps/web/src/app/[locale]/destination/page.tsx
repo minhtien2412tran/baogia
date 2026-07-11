@@ -7,7 +7,7 @@ import { buildMetadata } from '../../../lib/metadata';
 import { navHref } from '../../../config/navigation';
 import { apiLocale } from '../../../config/destination-categories';
 import { destinationThumb } from '../../../config/jetbay-cdn';
-import { CdnImage } from '../../../components/ui/CdnImage';
+import { MediaHeroImage } from '../../../components/ui/MediaHeroImage';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -34,11 +34,7 @@ export default async function DestinationHubPage({
       const thumb = item.thumbnail ? String(item.thumbnail) : destinationThumb(String(item.slug));
       return (
         <SubPageLayout locale={locale} title={String(item.title ?? item.city)} tag={t(locale, 'destinationTag')}>
-          {thumb && (
-            <div className="jb-dest-detail-hero">
-              <CdnImage src={thumb} alt={String(item.city)} width={1200} height={400} className="jb-route-detail-img" />
-            </div>
-          )}
+          {thumb ? <MediaHeroImage src={thumb} alt={String(item.city)} variant="wide" /> : null}
           <div className="jb-content-block">
             <p>{String(item.tagline ?? `${item.city}, ${item.country}`)}</p>
             {item.description ? <p className="jb-section-desc">{String(item.description)}</p> : null}

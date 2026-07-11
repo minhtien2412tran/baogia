@@ -1,0 +1,330 @@
+/**
+ * FlightScrollRail — hide native scrollbars, aviation-themed nav + route progress
+ */
+
+.jb-hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.jb-hide-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* ── Rail shell ── */
+.jb-flight-rail {
+  position: relative;
+  padding: 0 44px 36px;
+}
+
+.jb-flight-rail--compact {
+  padding: 0 0 4px;
+}
+
+.jb-quote-card .jb-trip-tabs-rail.jb-flight-rail--compact {
+  padding: 0;
+  margin-bottom: 4px;
+}
+
+.jb-quote-card .jb-trip-tabs-rail .jb-flight-rail__nav {
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+}
+
+.jb-quote-card .jb-trip-tabs-rail .jb-flight-rail__nav:hover:not(:disabled) {
+  transform: translateY(-50%) scale(1.05);
+}
+
+.jb-flight-rail__track.jb-trip-tabs,
+.jb-flight-rail__track.jb-media-tabs {
+  flex-wrap: nowrap;
+}
+
+.jb-flight-rail__track.jb-logos-row {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  padding: 32px 0;
+  opacity: 0.5;
+}
+
+.jb-flight-rail__track.jb-logos-row .jb-media-logo,
+.jb-flight-rail__track.jb-logos-row .jb-social-icon {
+  flex-shrink: 0;
+}
+
+.jb-flight-rail[data-overflow='false'] {
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+}
+
+.jb-flight-rail__track {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  padding: 4px 2px 8px;
+}
+
+.jb-flight-rail[data-overflow='true'] .jb-flight-rail__track {
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 28px,
+    #000 calc(100% - 28px),
+    transparent 100%
+  );
+}
+
+.jb-flight-rail--compact .jb-flight-rail__track {
+  mask-image: linear-gradient(90deg, transparent, #000 12px, #000 calc(100% - 12px), transparent);
+  padding-bottom: 4px;
+}
+
+.jb-flight-rail__track > * {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+/* ── Nav buttons (takeoff / landing) ── */
+.jb-flight-rail__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(calc(-50% - 12px));
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 164, 92, 0.45);
+  background: rgba(12, 12, 14, 0.92);
+  color: var(--jb-gold, #c9a45c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    opacity 0.2s,
+    transform 0.2s;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.jb-flight-rail__nav:hover:not(:disabled) {
+  background: rgba(201, 164, 92, 0.15);
+  border-color: var(--jb-gold, #c9a45c);
+  transform: translateY(calc(-50% - 12px)) scale(1.05);
+}
+
+.jb-flight-rail__nav:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.jb-flight-rail__nav--prev {
+  left: 0;
+}
+
+.jb-flight-rail__nav--next {
+  right: 0;
+}
+
+.jb-flight-rail__plane-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.jb-flight-rail__plane-icon--left {
+  transform: rotate(-135deg);
+}
+
+.jb-flight-rail__plane-icon--right {
+  transform: rotate(-45deg);
+}
+
+/* ── Flight path progress ── */
+.jb-flight-rail__route {
+  position: absolute;
+  left: 44px;
+  right: 44px;
+  bottom: 0;
+  height: 28px;
+  pointer-events: none;
+}
+
+.jb-flight-rail[data-overflow='false'] .jb-flight-rail__route {
+  display: none;
+}
+
+.jb-flight-rail__route-line {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.jb-flight-rail__route-dash {
+  flex: 1;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(201, 164, 92, 0.55) 0,
+    rgba(201, 164, 92, 0.55) 8px,
+    transparent 8px,
+    transparent 18px
+  );
+  mask: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.jb-flight-rail__route-dot--end {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--jb-gold, #c9a45c);
+  box-shadow: 0 0 10px rgba(201, 164, 92, 0.6);
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+.jb-flight-rail__route-plane {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(12, 12, 14, 0.95);
+  border: 1px solid rgba(201, 164, 92, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--jb-gold, #c9a45c);
+  transition: left 0.15s ease-out;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.jb-flight-rail__route-plane .jb-flight-rail__plane-icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* ── Fixed price routes (inside rail) ── */
+.jb-routes-scroll {
+  display: flex;
+  gap: 16px;
+  padding-bottom: 0;
+}
+
+.jb-route-card {
+  flex: 0 0 320px;
+  scroll-snap-align: start;
+}
+
+/* ── Empty legs horizontal rail (home) ── */
+.jb-empty-rail .jb-empty-card {
+  flex: 0 0 min(300px, 85vw);
+  scroll-snap-align: start;
+}
+
+/* ── Aircraft carousel (refactored) ── */
+.jb-aircraft-rail .jb-aircraft-card {
+  flex: 0 0 min(320px, 88vw);
+}
+
+/* ── Stats mobile ── */
+.jb-stats-rail .jb-stat-mobile-card {
+  flex: 0 0 min(88vw, 340px);
+  scroll-snap-align: center;
+}
+
+/* ── Legacy: hide scrollbars on horizontal strips without rail wrapper ── */
+.jb-aircraft-carousel,
+.jb-stats-mobile-carousel,
+.jb-media-tabs,
+.jb-trip-tabs,
+.jb-mega-sidebar,
+.jb-compare-wrap,
+.jb-account-table-wrap,
+.jb-logos-row {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.jb-aircraft-carousel::-webkit-scrollbar,
+.jb-stats-mobile-carousel::-webkit-scrollbar,
+.jb-media-tabs::-webkit-scrollbar,
+.jb-trip-tabs::-webkit-scrollbar,
+.jb-mega-sidebar::-webkit-scrollbar,
+.jb-compare-wrap::-webkit-scrollbar,
+.jb-account-table-wrap::-webkit-scrollbar,
+.jb-logos-row::-webkit-scrollbar {
+  display: none;
+}
+
+.jb-media-tabs,
+.jb-trip-tabs {
+  mask-image: linear-gradient(90deg, transparent, #000 8px, #000 calc(100% - 8px), transparent);
+}
+
+.jb-compare-wrap,
+.jb-account-table-wrap {
+  position: relative;
+  mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+}
+
+@media (min-width: 900px) {
+  .jb-stats-rail-wrap {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .jb-flight-rail {
+    padding: 0 36px 32px;
+  }
+
+  .jb-flight-rail__nav {
+    width: 36px;
+    height: 36px;
+  }
+
+  .jb-flight-rail__route {
+    left: 36px;
+    right: 36px;
+  }
+
+  .jb-route-card {
+    flex: 0 0 min(260px, 88vw);
+  }
+}
+
+@media (max-width: 480px) {
+  .jb-flight-rail {
+    padding: 0 32px 28px;
+  }
+
+  .jb-flight-rail__nav {
+    width: 32px;
+    height: 32px;
+  }
+
+  .jb-flight-rail__route {
+    left: 32px;
+    right: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jb-flight-rail__track {
+    scroll-behavior: auto;
+  }
+
+  .jb-flight-rail__route-plane {
+    transition: none;
+  }
+}

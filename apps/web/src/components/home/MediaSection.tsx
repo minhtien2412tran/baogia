@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { tn } from '@jetbay/i18n';
 import { JB } from '../../config/jetbay-cdn';
 import { CdnImage } from '../ui/CdnImage';
+import { FlightScrollRail } from '../ui/FlightScrollRail';
 
 type TabId = 'media' | 'membership' | 'social';
 
@@ -26,7 +27,7 @@ export function MediaSection({ locale }: { locale: string }) {
           <span className="jb-tag">{tn(locale, 'exploreTag')}</span>
           <h2 className="jb-section-title">{tn(locale, 'exploreWorldTitle')}</h2>
         </div>
-        <div className="jb-media-tabs" role="tablist" aria-label={tn(locale, 'exploreWorldTitle')}>
+        <FlightScrollRail compact trackClassName="jb-media-tabs" ariaLabel={tn(locale, 'exploreWorldTitle')}>
           {tabs.map((t) => (
             <button
               key={t.id}
@@ -39,29 +40,29 @@ export function MediaSection({ locale }: { locale: string }) {
               {t.label}
             </button>
           ))}
-        </div>
+        </FlightScrollRail>
         {tab === 'media' && (
-          <div className="jb-logos-row" role="tabpanel">
+          <FlightScrollRail compact trackClassName="jb-logos-row" ariaLabel={tn(locale, 'featuredMediaTab')}>
             {JB.media.map((m) => (
               <CdnImage key={m.alt} src={m.src} alt={m.alt} width={120} height={40} className="jb-media-logo" />
             ))}
-          </div>
+          </FlightScrollRail>
         )}
         {tab === 'membership' && (
-          <div className="jb-logos-row" role="tabpanel">
+          <FlightScrollRail compact trackClassName="jb-logos-row" ariaLabel={tn(locale, 'industryMembershipTab')}>
             {JB.membership.map((m) => (
               <CdnImage key={m.alt} src={m.src} alt={m.alt} width={80} height={44} className="jb-media-logo" />
             ))}
-          </div>
+          </FlightScrollRail>
         )}
         {tab === 'social' && (
-          <div className="jb-logos-row jb-social-tab" role="tabpanel">
+          <FlightScrollRail compact trackClassName="jb-logos-row jb-social-tab" ariaLabel={tn(locale, 'socialMediaTab')}>
             {JB.social.map((s) => (
               <a key={s.alt} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.alt}>
                 <CdnImage src={s.src} alt={s.alt} width={48} height={48} className="jb-social-icon" />
               </a>
             ))}
-          </div>
+          </FlightScrollRail>
         )}
       </div>
     </section>

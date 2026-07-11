@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { t } from '@jetbay/i18n';
 import { SubPageLayout } from '../../../components/layout/SubPageLayout';
+import { LightSection } from '../../../components/layout/LightSection';
 import { EmptyLegAlertsForm } from '../../../components/home/EmptyLegAlertsForm';
 import { StepsTimeline } from '../../../components/layout/StepsTimeline';
 import { api, safeApi } from '../../../lib/api';
@@ -29,49 +30,50 @@ export default async function EmptyLegPage({ params }: { params: Promise<{ local
   ];
 
   return (
-    <SubPageLayout
-      locale={locale}
-      title={t(locale, 'emptyLegPageTitle')}
-      description={t(locale, 'emptyLegPageDesc')}
-      tag={t(locale, 'deals')}
-      heroImage={JB.pages.emptyLeg.hero}
-      showQuoteWidget
-    >
-      <section className="jb-sub-section">
-        <h2 className="jb-section-title">{t(locale, 'availableEmptyLegs')}</h2>
-        {data.emptyLegs.length === 0 ? (
-          <p className="jb-section-desc">{t(locale, 'emptyLegsEmptyDesc')}</p>
-        ) : (
-          <div className="jb-empty-grid">
-            {data.emptyLegs.map((el: Record<string, unknown>) => {
-              const from = el.fromAirport as { city?: string };
-              const to = el.toAirport as { city?: string };
-              return (
-                <Link
-                  key={String(el.slug)}
-                  href={navHref(locale, `/empty-leg-recommendation/${el.slug}`)}
-                  className="jb-empty-card"
-                >
-                  <span className="jb-discount-badge">
-                    {t(locale, 'discountOff', { n: String(el.discountPct) })}
-                  </span>
-                  <div className="jb-route-line">
-                    {from?.city} → {to?.city}
-                  </div>
-                  <div className="jb-price">USD {Number(el.price).toLocaleString()}</div>
-                </Link>
-              );
-            })}
-          </div>
-        )}
-      </section>
+    <>
+      <SubPageLayout
+        locale={locale}
+        title={t(locale, 'emptyLegPageTitle')}
+        description={t(locale, 'emptyLegPageDesc')}
+        tag={t(locale, 'deals')}
+        heroImage={JB.pages.emptyLeg.hero}
+        showQuoteWidget
+      >
+        <section className="jb-sub-section">
+          <h2 className="jb-section-title">{t(locale, 'availableEmptyLegs')}</h2>
+          {data.emptyLegs.length === 0 ? (
+            <p className="jb-section-desc">{t(locale, 'emptyLegsEmptyDesc')}</p>
+          ) : (
+            <div className="jb-empty-grid">
+              {data.emptyLegs.map((el: Record<string, unknown>) => {
+                const from = el.fromAirport as { city?: string };
+                const to = el.toAirport as { city?: string };
+                return (
+                  <Link
+                    key={String(el.slug)}
+                    href={navHref(locale, `/empty-leg-recommendation/${el.slug}`)}
+                    className="jb-empty-card"
+                  >
+                    <span className="jb-discount-badge">
+                      {t(locale, 'discountOff', { n: String(el.discountPct) })}
+                    </span>
+                    <div className="jb-route-line">
+                      {from?.city} → {to?.city}
+                    </div>
+                    <div className="jb-price">USD {Number(el.price).toLocaleString()}</div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </section>
 
-      <section className="jb-sub-section">
-        <h2 className="jb-section-title">{t(locale, 'howEmptyLegsWork')}</h2>
+        <EmptyLegAlertsForm locale={locale} />
+      </SubPageLayout>
+
+      <LightSection title={t(locale, 'howEmptyLegsWork')}>
         <StepsTimeline steps={howItWorks} />
-      </section>
-
-      <EmptyLegAlertsForm locale={locale} />
-    </SubPageLayout>
+      </LightSection>
+    </>
   );
 }

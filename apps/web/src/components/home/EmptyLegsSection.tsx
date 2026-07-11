@@ -1,5 +1,6 @@
 import { t } from '@jetbay/i18n';
 import { EmptyLegAlertsForm } from './EmptyLegAlertsForm';
+import { FlightScrollRail } from '../ui/FlightScrollRail';
 
 type EmptyLeg = Record<string, unknown>;
 
@@ -21,10 +22,12 @@ export function EmptyLegsSection({ locale, emptyLegs }: { locale: string; emptyL
         {emptyLegs.length === 0 ? (
           <p className="jb-section-desc">{t(locale, 'emptyLegsEmptyDesc')}</p>
         ) : (
-          <div className="jb-empty-grid">
+          <FlightScrollRail trackClassName="jb-empty-rail" ariaLabel={t(locale, 'emptyLegsNearYou')}>
             {emptyLegs.map((el) => {
               const from = el.fromAirport as { city?: string; iata?: string } | undefined;
               const to = el.toAirport as { city?: string; iata?: string } | undefined;
+              const discount = Number(el.discountPct ?? 0);
+              const departAt = el.departAt ? new Date(String(el.departAt)) : null;
               return (
                 <a
                   key={String(el.slug)}
@@ -32,17 +35,24 @@ export function EmptyLegsSection({ locale, emptyLegs }: { locale: string; emptyL
                   className="jb-empty-card"
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
-                  <span className="jb-discount-badge">
-                    {t(locale, 'discountOff', { n: String(el.discountPct) })}
-                  </span>
+                  {discount > 0 ? (
+                    <span className="jb-discount-badge">
+                      {t(locale, 'discountOff', { n: String(discount) })}
+                    </span>
+                  ) : null}
                   <div className="jb-route-line">
                     {from?.city ?? from?.iata} → {to?.city ?? to?.iata}
                   </div>
+                  {departAt && !Number.isNaN(departAt.getTime()) ? (
+                    <div className="jb-empty-leg-date">
+                      {t(locale, 'emptyLegDepartLabel')}: {departAt.toLocaleDateString(locale)}
+                    </div>
+                  ) : null}
                   <div className="jb-price">USD {Number(el.price).toLocaleString()}</div>
                 </a>
               );
             })}
-          </div>
+          </FlightScrollRail>
         )}
 
         <EmptyLegAlertsForm locale={locale} />

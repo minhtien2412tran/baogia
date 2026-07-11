@@ -18,6 +18,40 @@ export class ApiError extends Error {
   }
 }
 
+export type QuoteLegPayload = {
+  fromAirport: string;
+  toAirport: string;
+  departureDate: string;
+  passengers: number;
+};
+
+export type AircraftSearchOption = {
+  categoryId: number;
+  categoryCode: string;
+  categoryLabel: string;
+  maxPassengers: number;
+  aircraftModel: string;
+  estimatedPrice: number;
+  currency: string;
+};
+
+export type SearchAircraftResponse = {
+  searchId: string;
+  tripType: string;
+  options: AircraftSearchOption[];
+};
+
+export type RequestQuotePayload = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  legs: QuoteLegPayload[];
+  tripType: 'ONE_WAY' | 'ROUND_TRIP' | 'MULTI_CITY';
+  isConsentAccepted: boolean;
+  message?: string;
+};
+
 /** Parse Nest validation / API error JSON for user-facing forms */
 export function parseApiErrorMessage(err: unknown, fallback: string): string {
   if (!(err instanceof ApiError)) return fallback;
@@ -118,10 +152,21 @@ export const api = {
       `/content/destinations/${encodeURIComponent(slug)}${locale ? `?locale=${encodeURIComponent(locale)}` : ''}`,
     ),
   searchAirports: (q: string) => request<{ airports: Array<{ iata: string; label: string; city: string }> }>(`/airports/search?q=${encodeURIComponent(q)}`),
-  searchAircraft: (body: Record<string, unknown>) =>
-    request<{ searchId: string; options: Array<Record<string, unknown>> }>('/quotes/search-aircraft', { method: 'POST', body: JSON.stringify(body) }),
-  requestQuote: (body: Record<string, unknown>) =>
-    request<{ requestId: number; status: string; message: string }>('/quotes/request', { method: 'POST', body: JSON.stringify(body) }),
+  searchAircraft: (body: {
+    tripType: string;
+    legs: QuoteLegPayload[];
+    locale?: string;
+    currency?: string;
+  }) =>
+    request<SearchAircraftResponse>('/quotes/search-aircraft', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  requestQuote: (body: RequestQuotePayload) =>
+    request<{ requestId: number; status: string; message: string }>('/quotes/request', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
   login: (email: string, password: string) =>
     request<{ user: { id: number }; tokens: { accessToken: string } }>('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) }),
   sendOtp: (phone: string, purpose: 'LOGIN' | 'REGISTER') =>

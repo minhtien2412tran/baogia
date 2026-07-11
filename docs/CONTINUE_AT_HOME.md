@@ -59,6 +59,10 @@
 - [x] **Service page CSS heritage** (2026-07-11) — `jetbay-service.css` · Playfair/Cormorant fonts · fix contrast light bands · neo-classical gold/cream
 - [x] **Home stats + logo polish** (2026-07-11) — fix invisible counter gradient on light band · uniform stat cards · retina logo · news grid width cap · footer newsletter placeholder contrast
 - [x] **Modern UI audit** (2026-07-11) — news card thumbnail + read more · footer 4-col + fix newsletter title wrap · media logo grid · payment/social chips · `jetbay-modern.css`
+- [x] **UI polish v2** (2026-07-11) — SVG logo Retina · newsletter band · empty states · skeleton loading · focus rings + skip link
+- [x] **Quote widget FE↔BE** (2026-07-11) — tách search vs request quote · tripType · consent + email bắt buộc · typed API · empty leg departAt · JetCard plan.name từ API
+- [x] **FlightScrollRail** (2026-07-11) — bỏ scrollbar ngang · nút máy bay + đường bay progress · Fixed Price · Empty Legs · Stats mobile · Aircraft · Media · trip tabs
+- [x] **Light cards + MediaHero** (2026-07-11) — fix chữ trắng trên card trắng (StepsTimeline/FeatureGrid) · ảnh destination/article 16:9 cover · Empty Leg steps → LightSection
 
 - [x] `feat/api-security-hardening` (+ admin screens / partner-TC) → **`main`** (`9893789`)  
 - [x] VPS API `jetbay-be` + Admin `jetbay-admin` redeployed  

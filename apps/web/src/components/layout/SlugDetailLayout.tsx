@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { navHref } from '../../config/navigation';
 import { cdnUrl } from '../../config/jetbay-cdn';
-import { CdnImage } from '../ui/CdnImage';
+import { MediaHeroImage } from '../ui/MediaHeroImage';
 
 export function SlugDetailLayout({
   locale,
@@ -74,9 +74,5 @@ export function SlugDetailLayout({
 }
 
 export function SlugHeroImage({ src, alt }: { src: string; alt: string }) {
-  return (
-    <div className="jb-slug-featured-img">
-      <CdnImage src={src} alt={alt} width={1200} height={630} className="jb-slug-featured-photo" priority />
-    </div>
-  );
+  return <MediaHeroImage src={src} alt={alt} priority />;
 }

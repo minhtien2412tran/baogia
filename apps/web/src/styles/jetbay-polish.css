@@ -1202,6 +1202,7 @@
 .jb-booking-step-body h3 {
   margin: 0 0 10px;
   font-size: 20px;
+  color: var(--jb-text-on-light);
 }
 
 .jb-booking-step-body p {

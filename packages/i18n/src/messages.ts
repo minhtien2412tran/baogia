@@ -28,6 +28,12 @@ export type MessageKey =
   | 'passengers'
   | 'searchAircraft'
   | 'searching'
+  | 'requestQuoteBtn'
+  | 'quoteConsentLabel'
+  | 'quoteEmailRequired'
+  | 'quoteSearchFirst'
+  | 'noAircraftFound'
+  | 'emptyLegDepartLabel'
   | 'availableAircraft'
   | 'bookRoute'
   | 'loading'
@@ -37,6 +43,7 @@ export type MessageKey =
   | 'noNewsDesc'
   | 'noNewsCta'
   | 'viewAll'
+  | 'skipToContent'
   | 'heroTitle'
   | 'heroSubtitle'
   | 'securePayment'
@@ -184,6 +191,12 @@ const en: Catalog = {
   passengers: 'Passengers',
   searchAircraft: 'Search Available Aircraft',
   searching: 'Searching aircraft…',
+  requestQuoteBtn: 'Request Quote',
+  quoteConsentLabel: 'I agree to be contacted about this charter request.',
+  quoteEmailRequired: 'Email is required to request a quote.',
+  quoteSearchFirst: 'Search for aircraft first, then request a quote.',
+  noAircraftFound: 'No aircraft match your passenger count for this route.',
+  emptyLegDepartLabel: 'Departure',
   availableAircraft: 'Available Aircraft',
   bookRoute: 'Book this route',
   loading: 'Loading…',
@@ -193,6 +206,7 @@ const en: Catalog = {
   noNewsDesc: 'Check back soon for updates on private aviation, fleet expansions, and exclusive offers.',
   noNewsCta: 'Get a charter quote',
   viewAll: 'View all',
+  skipToContent: 'Skip to content',
   heroTitle: 'Global Private Jet Charter: Access to 10,000+ Aircraft',
   heroSubtitle: 'Seamless, trusted access to private aviation worldwide.',
   securePayment: 'Secure Payment',
@@ -338,12 +352,22 @@ const vi: Catalog = {
   passengers: 'Hành khách',
   searchAircraft: 'Tìm máy bay khả dụng',
   searching: 'Đang tìm máy bay…',
+  requestQuoteBtn: 'Yêu cầu báo giá',
+  quoteConsentLabel: 'Tôi đồng ý được liên hệ về yêu cầu charter này.',
+  quoteEmailRequired: 'Cần email để gửi yêu cầu báo giá.',
+  quoteSearchFirst: 'Hãy tìm máy bay trước, sau đó yêu cầu báo giá.',
+  noAircraftFound: 'Không có máy bay phù hợp số hành khách cho tuyến này.',
+  emptyLegDepartLabel: 'Khởi hành',
   availableAircraft: 'Máy bay khả dụng',
   bookRoute: 'Đặt tuyến này',
   loading: 'Đang xử lý…',
   readMore: 'Xem thêm',
   latestNews: 'Tin mới nhất',
+  noNewsTitle: 'Chưa có tin tức',
+  noNewsDesc: 'Quay lại sau để cập nhật hàng không tư nhân, mở rộng đội bay và ưu đãi độc quyền.',
+  noNewsCta: 'Nhận báo giá charter',
   viewAll: 'Xem tất cả',
+  skipToContent: 'Chuyển tới nội dung',
   heroTitle: 'Thuê máy bay riêng toàn cầu: Truy cập 10.000+ máy bay',
   heroSubtitle: 'Truy cập liền mạch, đáng tin cậy vào hàng không tư nhân trên toàn thế giới.',
   securePayment: 'Thanh toán an toàn',
@@ -491,12 +515,22 @@ const zhCn: Catalog = {
   passengers: '乘客',
   searchAircraft: '搜索可用飞机',
   searching: '正在搜索飞机…',
+  requestQuoteBtn: '请求报价',
+  quoteConsentLabel: '我同意就此次包机请求与我联系。',
+  quoteEmailRequired: '请求报价需要填写邮箱。',
+  quoteSearchFirst: '请先搜索飞机，再请求报价。',
+  noAircraftFound: '没有符合乘客人数的飞机适用于此航线。',
+  emptyLegDepartLabel: '出发',
   availableAircraft: '可用飞机',
   bookRoute: '预订此航线',
   loading: '处理中…',
   readMore: '阅读更多',
   latestNews: '最新资讯',
+  noNewsTitle: '暂无新闻',
+  noNewsDesc: '请稍后查看私人航空、机队扩展和独家优惠的最新动态。',
+  noNewsCta: '获取包机报价',
   viewAll: '查看全部',
+  skipToContent: '跳到主要内容',
   heroTitle: '全球私人飞机包机：接入10,000+飞机',
   heroSubtitle: '无缝、可信赖的全球私人航空接入。',
   securePayment: '安全支付',
@@ -627,10 +661,20 @@ const zhHk: Catalog = {
   newsletter: '訂閱通訊',
   searchAircraft: '搜尋可用飛機',
   searching: '正在搜尋飛機…',
+  requestQuoteBtn: '請求報價',
+  quoteConsentLabel: '我同意就此次包機請求與我聯絡。',
+  quoteEmailRequired: '請求報價需要填寫電郵。',
+  quoteSearchFirst: '請先搜尋飛機，再請求報價。',
+  noAircraftFound: '沒有符合乘客人數的飛機適用於此航線。',
+  emptyLegDepartLabel: '出發',
   availableAircraft: '可用飛機',
   readMore: '閱讀更多',
   latestNews: '最新資訊',
+  noNewsTitle: '暫無新聞',
+  noNewsDesc: '請稍後查看私人航空、機隊擴展和獨家優惠的最新動態。',
+  noNewsCta: '獲取包機報價',
   viewAll: '查看全部',
+  skipToContent: '跳到主要內容',
   heroTitle: '全球私人飛機包機：接入10,000+飛機',
   heroSubtitle: '無縫、可信賴的全球私人航空接入。',
   concierge24: '24/7全球禮賓支援',

@@ -8,7 +8,7 @@ import { api, safeApi } from '../../../../lib/api';
 import { buildMetadata } from '../../../../lib/metadata';
 import { navHref } from '../../../../config/navigation';
 import { fixedPriceRouteHero } from '../../../../config/jetbay-cdn';
-import { CdnImage } from '../../../../components/ui/CdnImage';
+import { MediaHeroImage } from '../../../../components/ui/MediaHeroImage';
 
 export async function generateMetadata({
   params,
@@ -81,16 +81,7 @@ export default async function FixedPriceDetailPage({
         backHref="/fixed-price-charter"
         backLabel={t(locale, 'allFixedPriceRoutesBack')}
       >
-        <div className="jb-route-detail-hero">
-          <CdnImage
-            src={hero}
-            alt={`${from.city} → ${to.city}`}
-            width={1200}
-            height={400}
-            className="jb-route-detail-img"
-            priority
-          />
-        </div>
+        <MediaHeroImage src={hero} alt={`${from.city} → ${to.city}`} variant="wide" priority />
 
         <div className="jb-route-detail-airports">
           <div className="jb-route-detail-airport">

@@ -43,9 +43,9 @@ export function JetCardHomeSection({ locale, plans }: { locale: string; plans: P
                   />
                 </div>
                 <div className="jb-jetcard-body">
-                  <div className="jb-jetcard-hours">{hours} Hour Jet Card</div>
+                  <div className="jb-jetcard-hours">{String(plan.name ?? `${hours} Hour Jet Card`)}</div>
                   <div className="jb-jetcard-tagline">{copy.subtitle}</div>
-                  <div className="jb-jetcard-subtitle">{copy.desc}</div>
+                  {copy.desc ? <div className="jb-jetcard-subtitle">{copy.desc}</div> : null}
                   <a href={`${p}/jet-card`} className="jb-unlock-link">
                     Unlock Now ›
                   </a>

@@ -66,7 +66,7 @@ export function HomePageSkeleton() {
       <section className="jb-section">
         <div className="jb-container">
           <Skeleton className="jb-skeleton-line jb-skeleton-line--lg" style={{ width: 280 }} />
-          <div className="jb-routes-scroll" style={{ marginTop: 24 }}>
+          <div className="jb-routes-scroll jb-hide-scrollbar" style={{ marginTop: 24 }}>
             <RouteCardSkeleton />
             <RouteCardSkeleton />
             <RouteCardSkeleton />

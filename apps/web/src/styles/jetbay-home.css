@@ -496,14 +496,11 @@
 
 .jb-subscribe-row .jb-field { flex: 1; min-width: 180px; }
 
-/* ── Fixed price routes ── */
+/* ── Fixed price routes (scroll via FlightScrollRail) ── */
 .jb-routes-scroll {
   display: flex;
   gap: 16px;
-  overflow-x: auto;
-  padding-bottom: 8px;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0;
 }
 
 .jb-route-card {
@@ -513,6 +510,7 @@
   border: 1px solid var(--jb-border);
   border-radius: var(--jb-radius-lg);
   padding: 24px;
+  overflow: hidden;
 }
 
 .jb-route-airports {

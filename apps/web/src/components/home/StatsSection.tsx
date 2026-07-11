@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
 import { JB } from '../../config/jetbay-cdn';
 import { CdnImage } from '../ui/CdnImage';
+import { FlightScrollRail } from '../ui/FlightScrollRail';
 
 const STAT_COUNTERS: Record<string, { countTo?: number; suffix?: string }> = {
   '10K+': { countTo: 10, suffix: 'K+' },
@@ -85,24 +85,6 @@ const DESKTOP_STATS = [
 ];
 
 export function StatsSection() {
-  const mobileRef = useRef<HTMLDivElement>(null);
-  const [activeSlide, setActiveSlide] = useState(0);
-
-  useEffect(() => {
-    const el = mobileRef.current;
-    if (!el) return;
-
-    function onScroll() {
-      const card = el!.querySelector<HTMLElement>('.jb-stat-mobile-card');
-      if (!card) return;
-      const w = card.offsetWidth + 16;
-      setActiveSlide(Math.round(el!.scrollLeft / w));
-    }
-
-    el.addEventListener('scroll', onScroll, { passive: true });
-    return () => el.removeEventListener('scroll', onScroll);
-  }, []);
-
   return (
     <section className="jb-stats jb-stats-light">
       <div className="jb-container">
@@ -111,8 +93,11 @@ export function StatsSection() {
           <h2 className="jb-section-title jb-stats-title">A leading global private jet charter platform</h2>
         </div>
 
-        {/* Mobile: horizontal snap carousel (jet-bay.com mobile stats UX) */}
-        <div className="jb-stats-mobile-carousel" ref={mobileRef}>
+        <FlightScrollRail
+          className="jb-stats-rail-wrap"
+          trackClassName="jb-stats-rail jb-stats-mobile-carousel"
+          ariaLabel="Platform statistics"
+        >
           {STATS.map((s) => (
             <article
               key={s.label}
@@ -142,23 +127,7 @@ export function StatsSection() {
               </div>
             </article>
           ))}
-        </div>
-        <div className="jb-stats-mobile-dots">
-          {STATS.map((s, i) => (
-            <button
-              key={s.label}
-              type="button"
-              className={`jb-dot${i === activeSlide ? ' active' : ''}`}
-              aria-label={`Stat ${i + 1}`}
-              onClick={() => {
-                const el = mobileRef.current;
-                const card = el?.querySelector<HTMLElement>('.jb-stat-mobile-card');
-                if (!el || !card) return;
-                el.scrollTo({ left: i * (card.offsetWidth + 16), behavior: 'smooth' });
-              }}
-            />
-          ))}
-        </div>
+        </FlightScrollRail>
 
         {/* Desktop: 4-column rich grid */}
         <div className="jb-stats-desktop-grid">

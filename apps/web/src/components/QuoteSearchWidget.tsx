@@ -2,11 +2,12 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import { api } from '../lib/api';
+import { api, parseApiErrorMessage, type AircraftSearchOption } from '../lib/api';
 import { t } from '../lib/i18n';
 import { JB, localAsset } from '../config/jetbay-cdn';
-import { AircraftRowSkeleton } from '../ui/Skeleton';
+import { AircraftRowSkeleton } from './ui/Skeleton';
 import { AirportInput } from './AirportInput';
+import { FlightScrollRail } from './ui/FlightScrollRail';
 
 type TripType = 'ONE_WAY' | 'ROUND_TRIP' | 'MULTI_CITY';
 
@@ -16,20 +17,10 @@ type Leg = {
   departure: string;
 };
 
-type AircraftOption = {
-  categoryId: number;
-  categoryCode: string;
-  categoryLabel: string;
-  maxPassengers: number;
-  aircraftModel: string;
-  estimatedPrice: number;
-  currency: string;
-};
-
 function defaultLeg(): Leg {
   return {
-    from: 'LTN',
-    to: 'LBG',
+    from: '',
+    to: '',
     departure: new Date().toISOString().slice(0, 10),
   };
 }
@@ -38,6 +29,15 @@ function CdnIcon({ src, alt = '' }: { src: string; alt?: string }) {
   return (
     <Image src={localAsset(src)} alt={alt} width={20} height={20} unoptimized className="jb-field-icon" />
   );
+}
+
+function splitNameFromEmail(email: string): { firstName: string; lastName: string } {
+  const local = email.split('@')[0] ?? 'Guest';
+  const parts = local.replace(/[._+-]/g, ' ').trim().split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) {
+    return { firstName: parts[0], lastName: parts.slice(1).join(' ') };
+  }
+  return { firstName: parts[0] || 'Guest', lastName: 'User' };
 }
 
 export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { locale?: string; currency?: string }) {
@@ -51,27 +51,40 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
   const [passengers, setPassengers] = useState(4);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [options, setOptions] = useState<AircraftOption[] | null>(null);
+  const [consent, setConsent] = useState(false);
+  const [searching, setSearching] = useState(false);
+  const [quoting, setQuoting] = useState(false);
+  const [searchId, setSearchId] = useState<string | null>(null);
+  const [options, setOptions] = useState<AircraftSearchOption[] | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   function buildApiLegs() {
     const base = legs.map((leg) => ({
-      fromAirport: leg.from,
-      toAirport: leg.to,
+      fromAirport: leg.from.toUpperCase(),
+      toAirport: leg.to.toUpperCase(),
       departureDate: new Date(leg.departure).toISOString(),
       passengers,
     }));
     if (tripType === 'ROUND_TRIP' && legs[0]) {
       base.push({
-        fromAirport: legs[0].to,
-        toAirport: legs[0].from,
+        fromAirport: legs[0].to.toUpperCase(),
+        toAirport: legs[0].from.toUpperCase(),
         departureDate: new Date(returnDate).toISOString(),
         passengers,
       });
     }
     return base;
+  }
+
+  function validateLegs(): string | null {
+    for (const leg of buildApiLegs()) {
+      if (!/^[A-Z]{3}$/.test(leg.fromAirport) || !/^[A-Z]{3}$/.test(leg.toAirport)) {
+        return 'Please select valid departure and destination airports.';
+      }
+    }
+    return null;
   }
 
   function swapLeg(idx: number) {
@@ -95,10 +108,18 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
 
   async function onSearch(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError(null);
     setResult(null);
+    const legError = validateLegs();
+    if (legError) {
+      setError(legError);
+      return;
+    }
+
+    setSearching(true);
     setOptions(null);
+    setSelectedId(null);
+    setSearchId(null);
     try {
       const search = await api.searchAircraft({
         tripType,
@@ -106,21 +127,59 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
         locale,
         currency,
       });
-      setOptions(search.options as AircraftOption[]);
+      setSearchId(search.searchId);
+      setOptions(search.options);
+      if (search.options.length > 0) {
+        setSelectedId(search.options[0].categoryId);
+      }
+    } catch (err) {
+      setError(parseApiErrorMessage(err, t(locale, 'quoteError')));
+    } finally {
+      setSearching(false);
+    }
+  }
 
+  async function onRequestQuote() {
+    setError(null);
+    setResult(null);
+
+    if (!options?.length || selectedId == null) {
+      setError(t(locale, 'quoteSearchFirst'));
+      return;
+    }
+    if (!email.trim()) {
+      setError(t(locale, 'quoteEmailRequired'));
+      return;
+    }
+    if (!consent) {
+      setError(t(locale, 'quoteConsentLabel'));
+      return;
+    }
+
+    const selected = options.find((o) => o.categoryId === selectedId);
+    const { firstName, lastName } = splitNameFromEmail(email.trim());
+
+    setQuoting(true);
+    try {
       const quote = await api.requestQuote({
-        firstName: 'Guest',
-        lastName: 'User',
-        email: email || 'guest@example.com',
-        phone: phone || '+10000000000',
-        isConsentAccepted: true,
+        firstName,
+        lastName,
+        email: email.trim(),
+        phone: phone.trim() || '+10000000000',
+        tripType,
         legs: buildApiLegs(),
+        isConsentAccepted: true,
+        message: selected
+          ? `Selected aircraft: ${selected.categoryLabel} (${selected.aircraftModel}) — ${selected.currency} ${selected.estimatedPrice.toLocaleString()}${searchId ? ` · searchId=${searchId}` : ''}`
+          : searchId
+            ? `searchId=${searchId}`
+            : undefined,
       });
       setResult(quote.message);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Request failed');
+      setError(parseApiErrorMessage(err, t(locale, 'quoteError')));
     } finally {
-      setLoading(false);
+      setQuoting(false);
     }
   }
 
@@ -130,24 +189,26 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
     { id: 'MULTI_CITY', label: t(locale, 'multiCity') },
   ];
 
+  const loading = searching || quoting;
+
   return (
-    <div className={`jb-quote-card jb-booking-widget${loading ? ' jb-booking-widget--searching' : ''}`}>
+    <div className={`jb-quote-card jb-booking-widget${searching ? ' jb-booking-widget--searching' : ''}`}>
       <form onSubmit={onSearch}>
-        <div className="jb-trip-tabs">
-          {tabs.map((t) => (
+        <FlightScrollRail compact className="jb-trip-tabs-rail" trackClassName="jb-trip-tabs" ariaLabel="Trip type">
+          {tabs.map((tab) => (
             <button
-              key={t.id}
+              key={tab.id}
               type="button"
-              className={`jb-trip-tab${tripType === t.id ? ' active' : ''}`}
+              className={`jb-trip-tab${tripType === tab.id ? ' active' : ''}`}
               onClick={() => {
-                setTripType(t.id);
-                if (t.id !== 'MULTI_CITY') setLegs([legs[0] ?? defaultLeg()]);
+                setTripType(tab.id);
+                if (tab.id !== 'MULTI_CITY') setLegs([legs[0] ?? defaultLeg()]);
               }}
             >
-              {t.label}
+              {tab.label}
             </button>
           ))}
-        </div>
+        </FlightScrollRail>
 
         {legs.map((leg, idx) => (
           <div key={idx} className="jb-leg-block">
@@ -232,19 +293,8 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
           </button>
         )}
 
-        <div className="jb-contact-row">
-          <div className="jb-field">
-            <label htmlFor="email">{t(locale, 'emailOptional')}</label>
-            <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
-          </div>
-          <div className="jb-field">
-            <label htmlFor="phone">{t(locale, 'phoneOptional')}</label>
-            <input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+1..." />
-          </div>
-        </div>
-
         <button type="submit" className="jb-search-btn" disabled={loading}>
-          {loading ? (
+          {searching ? (
             <span className="jb-search-btn__label">
               <span className="jb-search-radar" aria-hidden />
               {t(locale, 'searching')}
@@ -254,7 +304,7 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
           )}
         </button>
 
-        {loading && (
+        {searching && (
           <div className="jb-aircraft-results jb-booking-results" aria-busy="true" aria-live="polite">
             <h4>{t(locale, 'availableAircraft')}</h4>
             <AircraftRowSkeleton />
@@ -263,27 +313,70 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
           </div>
         )}
 
-        {!loading && options && options.length > 0 && (
+        {!searching && options && options.length === 0 && (
+          <p className="jb-form-msg error">{t(locale, 'noAircraftFound')}</p>
+        )}
+
+        {!searching && options && options.length > 0 && (
           <div className="jb-aircraft-results jb-booking-results">
             <h4>{t(locale, 'availableAircraft')}</h4>
             {options.map((o, i) => (
-              <div
+              <button
                 key={o.categoryId}
-                className="jb-aircraft-row jb-booking-result-row jb-tilt-card"
+                type="button"
+                className={`jb-aircraft-row jb-booking-result-row jb-tilt-card${selectedId === o.categoryId ? ' jb-aircraft-row--selected' : ''}`}
                 data-tilt-max="6"
                 style={{ animationDelay: `${i * 0.08}s` }}
+                onClick={() => setSelectedId(o.categoryId)}
+                aria-pressed={selectedId === o.categoryId}
               >
                 <div className="jb-tilt-card__inner jb-aircraft-row-inner">
-                <div>
-                  <strong>{o.categoryLabel}</strong>
-                  <div className="jb-aircraft-meta">{o.aircraftModel} · {t(locale, 'upToPax', { n: o.maxPassengers })}</div>
+                  <div>
+                    <strong>{o.categoryLabel}</strong>
+                    <div className="jb-aircraft-meta">
+                      {o.aircraftModel} · {t(locale, 'upToPax', { n: o.maxPassengers })}
+                    </div>
+                  </div>
+                  <div className="jb-aircraft-price">
+                    {o.currency} {o.estimatedPrice.toLocaleString()}
+                  </div>
                 </div>
-                <div className="jb-aircraft-price">
-                  {o.currency} {o.estimatedPrice.toLocaleString()}
-                </div>
-                </div>
-              </div>
+              </button>
             ))}
+          </div>
+        )}
+
+        {options && options.length > 0 && (
+          <div className="jb-quote-request-block">
+            <div className="jb-contact-row">
+              <div className="jb-field">
+                <label htmlFor="email">{t(locale, 'emailPlaceholder')}</label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  required
+                />
+              </div>
+              <div className="jb-field">
+                <label htmlFor="phone">{t(locale, 'phoneOptional')}</label>
+                <input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+1..." />
+              </div>
+            </div>
+            <label className="jb-consent-row">
+              <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
+              <span>{t(locale, 'quoteConsentLabel')}</span>
+            </label>
+            <button
+              type="button"
+              className="jb-search-btn jb-search-btn--secondary"
+              disabled={loading}
+              onClick={onRequestQuote}
+            >
+              {quoting ? t(locale, 'processing') : t(locale, 'requestQuoteBtn')}
+            </button>
           </div>
         )}
 

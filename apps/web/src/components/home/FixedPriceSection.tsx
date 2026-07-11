@@ -1,4 +1,5 @@
 import { t } from '@jetbay/i18n';
+import { FlightScrollRail } from '../ui/FlightScrollRail';
 
 type Route = Record<string, unknown>;
 
@@ -17,7 +18,7 @@ export function FixedPriceSection({ locale, routes }: { locale: string; routes: 
           </a>
         </div>
 
-        <div className="jb-routes-scroll">
+        <FlightScrollRail trackClassName="jb-routes-scroll" ariaLabel={t(locale, 'fixedPricePageTitle')}>
           {routes.map((r) => {
             const from = r.fromAirport as { city: string; iata: string };
             const to = r.toAirport as { city: string; iata: string };
@@ -66,7 +67,7 @@ export function FixedPriceSection({ locale, routes }: { locale: string; routes: 
               </div>
             );
           })}
-        </div>
+        </FlightScrollRail>
       </div>
     </section>
   );
