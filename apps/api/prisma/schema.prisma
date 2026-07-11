@@ -543,3 +543,37 @@ model RefreshToken {
 
   @@index([userId])
 }
+
+// --- CUSTOMER CARE EMAIL ---
+
+model EmailSubscriber {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  userId    Int?
+  locale    String   @default("en")
+  source    String   @default("NEWSLETTER")
+  status    String   @default("ACTIVE")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+}
+
+model EmailCampaignLog {
+  id          Int       @id @default(autoincrement())
+  email       String
+  userId      Int?
+  campaignKey String
+  referenceId String    @default("")
+  locale      String    @default("en")
+  status      String    @default("PENDING")
+  scheduledAt DateTime  @default(now())
+  sentAt      DateTime?
+  error       String?
+  meta        Json?
+  createdAt   DateTime  @default(now())
+
+  @@unique([campaignKey, email, referenceId])
+  @@index([status, scheduledAt])
+  @@index([email])
+}
