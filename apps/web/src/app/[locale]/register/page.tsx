@@ -1,15 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { api } from '../../../lib/api';
 import { DEFAULT_LOCALE } from '../../../config/locales';
 import { AuthTabs, storeAuthSession, type AuthMode } from '../../../components/auth/auth-shared';
 import { AppleSignInButton, GoogleSignInButton } from '../../../components/auth/GoogleSignInButton';
 
-export default function RegisterPage({ params }: { params: { locale: string } }) {
+export default function RegisterPage() {
   const router = useRouter();
-  const locale = params?.locale ?? DEFAULT_LOCALE;
+  const params = useParams();
+  const locale = (params.locale as string | undefined) ?? DEFAULT_LOCALE;
   const [mode, setMode] = useState<AuthMode>('email');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

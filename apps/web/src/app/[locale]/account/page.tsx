@@ -1,6 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { formatNumber } from '../../../config/locales';
 import { api } from '../../../lib/api';
 import { useAccount } from '../../../components/account/AccountContext';
 import {
@@ -113,7 +115,7 @@ function OverviewContent({ locale }: { locale: string }) {
               <div className="jb-account-mini-card">
                 <span className="jb-account-mini-card__label">{t(locale, 'travelCredits')}</span>
                 <strong>
-                  {data.travelCredits.credits.toLocaleString()} {data.travelCredits.currency}
+                  {formatNumber(data.travelCredits.credits, locale)} {data.travelCredits.currency}
                 </strong>
               </div>
             )}
@@ -124,7 +126,8 @@ function OverviewContent({ locale }: { locale: string }) {
   );
 }
 
-export default function AccountPage({ params }: { params: { locale: string } }) {
-  const locale = params?.locale ?? 'en-us';
+export default function AccountPage() {
+  const params = useParams();
+  const locale = (params.locale as string | undefined) ?? 'en-us';
   return <OverviewContent locale={locale} />;
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { useAccount } from '../../../../components/account/AccountContext';
 import { AccountEmpty, AccountPanel } from '../../../../components/account/AccountUI';
 import { t } from '../../../../lib/i18n';
@@ -55,7 +56,8 @@ function JetCardContent({ locale }: { locale: string }) {
   );
 }
 
-export default function AccountJetCardPage({ params }: { params: { locale: string } }) {
-  const locale = params?.locale ?? 'en-us';
+export default function AccountJetCardPage() {
+  const params = useParams();
+  const locale = (params.locale as string | undefined) ?? 'en-us';
   return <JetCardContent locale={locale} />;
 }

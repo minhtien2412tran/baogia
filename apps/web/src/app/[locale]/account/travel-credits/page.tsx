@@ -1,6 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { formatNumber } from '../../../../config/locales';
 import { useAccount } from '../../../../components/account/AccountContext';
 import { AccountEmpty, AccountPanel } from '../../../../components/account/AccountUI';
 import { t } from '../../../../lib/i18n';
@@ -19,7 +21,7 @@ function TravelCreditsContent({ locale }: { locale: string }) {
       <AccountPanel title="Credit Balance">
         <div className="jb-account-credit-hero">
           <span className="jb-account-credit-hero__value" data-account-count={balance.credits}>
-            {balance.credits.toLocaleString()}
+            {formatNumber(balance.credits, locale)}
           </span>
           <span className="jb-account-credit-hero__currency">{balance.currency}</span>
         </div>
@@ -36,7 +38,7 @@ function TravelCreditsContent({ locale }: { locale: string }) {
           <ul className="jb-account-list" style={{ marginTop: 24 }}>
             {balance.expirySummary.map((b, i) => (
               <li key={i} className="jb-account-list-item">
-                <span>{b.amount.toLocaleString()} credits</span>
+                <span>{formatNumber(b.amount, locale)} credits</span>
                 <span className="jb-account-meta">expires {b.expiresAt.slice(0, 10)}</span>
               </li>
             ))}
@@ -47,7 +49,8 @@ function TravelCreditsContent({ locale }: { locale: string }) {
   );
 }
 
-export default function AccountTravelCreditsPage({ params }: { params: { locale: string } }) {
-  const locale = params?.locale ?? 'en-us';
+export default function AccountTravelCreditsPage() {
+  const params = useParams();
+  const locale = (params.locale as string | undefined) ?? 'en-us';
   return <TravelCreditsContent locale={locale} />;
 }

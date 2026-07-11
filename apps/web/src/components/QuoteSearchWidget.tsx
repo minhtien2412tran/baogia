@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { api, parseApiErrorMessage, type AircraftSearchOption } from '../lib/api';
+import { formatNumber } from '../config/locales';
 import { t } from '../lib/i18n';
 import { JB, localAsset } from '../config/jetbay-cdn';
 import { AircraftRowSkeleton } from './ui/Skeleton';
@@ -170,7 +171,7 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
         legs: buildApiLegs(),
         isConsentAccepted: true,
         message: selected
-          ? `Selected aircraft: ${selected.categoryLabel} (${selected.aircraftModel}) — ${selected.currency} ${selected.estimatedPrice.toLocaleString()}${searchId ? ` · searchId=${searchId}` : ''}`
+          ? `Selected aircraft: ${selected.categoryLabel} (${selected.aircraftModel}) — ${selected.currency} ${formatNumber(selected.estimatedPrice, locale)}${searchId ? ` · searchId=${searchId}` : ''}`
           : searchId
             ? `searchId=${searchId}`
             : undefined,
@@ -340,7 +341,7 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
                     </div>
                   </div>
                   <div className="jb-aircraft-price">
-                    {o.currency} {o.estimatedPrice.toLocaleString()}
+                    {o.currency} {formatNumber(o.estimatedPrice, locale)}
                   </div>
                 </div>
               </button>

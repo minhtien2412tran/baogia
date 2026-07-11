@@ -1,5 +1,7 @@
 'use client';
 
+import { useParams } from 'next/navigation';
+import { formatNumber } from '../../../../config/locales';
 import { useAccount } from '../../../../components/account/AccountContext';
 import { AccountEmpty, AccountPanel, StatusBadge } from '../../../../components/account/AccountUI';
 import { t } from '../../../../lib/i18n';
@@ -36,7 +38,7 @@ function PaymentsContent({ locale }: { locale: string }) {
                     <td>#{p.bookingId}</td>
                     <td>{p.method}</td>
                     <td>
-                      {p.currency} {p.amount.toLocaleString()}
+                      {p.currency} {formatNumber(p.amount, locale)}
                     </td>
                     <td>
                       <StatusBadge status={p.status} />
@@ -52,7 +54,8 @@ function PaymentsContent({ locale }: { locale: string }) {
   );
 }
 
-export default function AccountPaymentsPage({ params }: { params: { locale: string } }) {
-  const locale = params?.locale ?? 'en-us';
+export default function AccountPaymentsPage() {
+  const params = useParams();
+  const locale = (params.locale as string | undefined) ?? 'en-us';
   return <PaymentsContent locale={locale} />;
 }
