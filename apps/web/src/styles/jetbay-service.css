@@ -1,0 +1,408 @@
+/* JETBAY Service pages — neo-classical aviation luxury
+   High contrast · serif display · gold accents · modern motion */
+
+.jb-page {
+  --jb-cream: #f7f2ea;
+  --jb-cream-deep: #ede6d9;
+  --jb-navy: #0c1219;
+  --jb-navy-soft: #141c28;
+  --jb-ink: #121820;
+  --jb-ink-muted: #3d4654;
+  --jb-ink-soft: #5c6678;
+  --jb-gold-rich: #b8975a;
+  --jb-gold-glow: rgba(201, 164, 92, 0.35);
+  --jb-font-display: var(--font-display), 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --jb-font-serif: var(--font-serif), 'Cormorant Garamond', Georgia, serif;
+}
+
+/* ── Display typography (dark sections) ── */
+.jb-service-page .jb-section-title,
+.jb-subpage .jb-section-title,
+.jb-subpage .jb-sub-hero h1,
+.jb-subpage .jb-page-hero h1 {
+  font-family: var(--jb-font-display);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  color: #faf8f4;
+}
+
+.jb-service-page .jb-section-desc,
+.jb-subpage .jb-section-desc {
+  font-family: var(--jb-font-serif);
+  font-size: clamp(16px, 2vw, 18px);
+  line-height: 1.65;
+  color: #c8cdd6;
+  max-width: 52ch;
+}
+
+.jb-service-page .jb-section-title::after,
+.jb-subpage .jb-intro-stats .jb-section-title::after {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 2px;
+  margin-top: 14px;
+  background: linear-gradient(90deg, var(--jb-gold), transparent);
+}
+
+.jb-light-section .jb-light-title::after {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 2px;
+  margin: 14px auto 0;
+  background: linear-gradient(90deg, transparent, var(--jb-gold-rich), transparent);
+}
+
+/* ── Light heritage bands (warm cream, strong contrast) ── */
+.jb-light-section--heritage {
+  position: relative;
+  background: linear-gradient(180deg, var(--jb-cream) 0%, #faf6ef 50%, var(--jb-cream-deep) 100%);
+  color: var(--jb-ink);
+  border-top: 1px solid rgba(184, 151, 90, 0.22);
+  border-bottom: 1px solid rgba(184, 151, 90, 0.22);
+  overflow: hidden;
+}
+
+.jb-light-section--heritage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201, 164, 92, 0.08), transparent 60%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23b8975a' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.jb-light-section--heritage > .jb-container {
+  position: relative;
+  z-index: 1;
+}
+
+.jb-light-section--heritage .jb-light-title {
+  font-family: var(--jb-font-display);
+  font-size: clamp(26px, 3.5vw, 34px);
+  font-weight: 600;
+  color: var(--jb-ink) !important;
+  letter-spacing: 0.02em;
+}
+
+.jb-light-section--heritage .jb-light-subtitle {
+  font-family: var(--jb-font-serif);
+  font-size: clamp(17px, 2.2vw, 19px);
+  color: var(--jb-ink-soft) !important;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.55;
+}
+
+/* ── Feature cards on light bands ── */
+.jb-feature-card--heritage {
+  position: relative;
+  background: #fff !important;
+  border: 1px solid rgba(184, 151, 90, 0.2) !important;
+  border-radius: 16px;
+  padding: 28px 22px !important;
+  box-shadow:
+    0 4px 24px rgba(18, 24, 32, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.jb-feature-card--heritage::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  height: 3px;
+  border-radius: 0 0 4px 4px;
+  background: linear-gradient(90deg, transparent, var(--jb-gold-rich), transparent);
+  opacity: 0.6;
+}
+
+.jb-feature-card--heritage:hover {
+  transform: translateY(-6px);
+  border-color: rgba(184, 151, 90, 0.45) !important;
+  box-shadow:
+    0 16px 40px rgba(18, 24, 32, 0.12),
+    0 0 24px var(--jb-gold-glow);
+}
+
+.jb-light-section--heritage .jb-feature-card--heritage h3 {
+  font-family: var(--jb-font-display);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--jb-ink) !important;
+  margin-bottom: 10px;
+}
+
+.jb-light-section--heritage .jb-feature-card--heritage p {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--jb-ink-muted) !important;
+}
+
+.jb-light-section--heritage .jb-feature-card-icon {
+  filter: drop-shadow(0 4px 8px rgba(184, 151, 90, 0.2));
+  transition: transform 0.35s ease;
+}
+
+.jb-feature-card--heritage:hover .jb-feature-card-icon {
+  transform: scale(1.08);
+}
+
+/* ── Service blocks (alternating image + copy) ── */
+.jb-service-blocks--heritage {
+  gap: 56px;
+}
+
+.jb-service-block--heritage {
+  padding: 8px 0;
+}
+
+.jb-service-block-frame {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.jb-service-block-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(201, 164, 92, 0.35);
+  border-radius: 20px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.jb-service-block-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(201, 164, 92, 0.12) 0%, transparent 45%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.jb-service-block--heritage .jb-service-block-img {
+  border-radius: 20px;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.jb-service-block--heritage:hover .jb-service-block-img {
+  transform: scale(1.03);
+}
+
+.jb-service-block--heritage .jb-service-block-body h3 {
+  font-family: var(--jb-font-display);
+  font-size: clamp(22px, 2.8vw, 28px);
+  font-weight: 600;
+  color: #faf8f4;
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+}
+
+.jb-service-block--heritage .jb-service-block-body p {
+  font-family: var(--jb-font-serif);
+  font-size: 17px;
+  line-height: 1.75;
+  color: #b8c0cc !important;
+}
+
+/* ── Intro stats strip ── */
+.jb-intro-stats {
+  padding: 40px 0 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 56px !important;
+}
+
+.jb-intro-stats .jb-mini-stats {
+  background: linear-gradient(135deg, rgba(201, 164, 92, 0.08), rgba(20, 28, 40, 0.6));
+  border: 1px solid rgba(201, 164, 92, 0.2);
+  border-radius: 16px;
+  padding: 28px 20px;
+}
+
+.jb-intro-stats .jb-mini-stats strong {
+  font-family: var(--jb-font-display);
+  font-size: clamp(28px, 4vw, 36px);
+  background: linear-gradient(135deg, #e2c98a, #b8975a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.jb-intro-stats .jb-mini-stats span {
+  color: #a8b0bc;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ── Process steps on light band ── */
+.jb-step-item--heritage {
+  background: #fff !important;
+  border: 1px solid rgba(184, 151, 90, 0.18) !important;
+  border-radius: 16px;
+  box-shadow: 0 8px 28px rgba(18, 24, 32, 0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.jb-step-item--heritage:hover {
+  transform: translateX(4px);
+  box-shadow: 0 12px 36px rgba(18, 24, 32, 0.1);
+}
+
+.jb-light-section--heritage .jb-step-item--heritage h3 {
+  font-family: var(--jb-font-display);
+  font-size: 18px;
+  color: var(--jb-ink) !important;
+}
+
+.jb-light-section--heritage .jb-step-item--heritage p {
+  color: var(--jb-ink-muted) !important;
+  line-height: 1.65;
+}
+
+.jb-step-item--heritage .jb-step-num {
+  background: linear-gradient(135deg, #d4b06a, #9a7b3c);
+  box-shadow: 0 4px 12px rgba(184, 151, 90, 0.35);
+}
+
+/* ── Aircraft showcase (dark band, light cards) ── */
+.jb-aircraft-showcase {
+  padding: 48px 0 56px;
+  margin-top: 16px;
+  background: linear-gradient(180deg, var(--jb-navy-soft) 0%, var(--jb-navy) 100%);
+  border-radius: 24px;
+  border: 1px solid rgba(201, 164, 92, 0.15);
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.jb-aircraft-showcase .jb-section-title {
+  text-align: center;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.jb-aircraft-showcase .jb-section-title::after {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.jb-aircraft-showcase .jb-section-desc {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  color: #a8b0bc;
+}
+
+.jb-aircraft-showcase .jb-aircraft-card {
+  border: 1px solid rgba(184, 151, 90, 0.25);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s ease;
+}
+
+.jb-aircraft-showcase .jb-aircraft-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28), 0 0 32px var(--jb-gold-glow);
+}
+
+.jb-aircraft-showcase .jb-aircraft-card-name {
+  font-family: var(--jb-font-display);
+  color: var(--jb-ink);
+}
+
+.jb-aircraft-showcase .jb-aircraft-card-desc {
+  color: var(--jb-ink-muted) !important;
+}
+
+.jb-aircraft-showcase .jb-aircraft-spec-row strong {
+  color: var(--jb-ink);
+  font-weight: 600;
+}
+
+/* ── FAQ section ── */
+.jb-service-page .jb-section .jb-section-title {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.jb-service-page .jb-faq-trigger {
+  font-family: var(--jb-font-serif);
+  font-size: 17px;
+  color: #e8ecf1;
+}
+
+.jb-service-page .jb-faq-panel p {
+  color: #a8b0bc;
+}
+
+/* ── Content blocks on dark subpages ── */
+.jb-service-page .jb-content-block h2 {
+  font-family: var(--jb-font-display);
+  color: #faf8f4;
+  margin-bottom: 16px;
+}
+
+.jb-service-page .jb-content-block p,
+.jb-service-page .jb-bullet-list li {
+  font-family: var(--jb-font-serif);
+  font-size: 17px;
+  line-height: 1.75;
+  color: #b8c0cc;
+}
+
+/* ── Promo row ── */
+.jb-service-page .jb-promo-banner-card {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.jb-service-page .jb-promo-banner-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* ── Sub body spacing ── */
+.jb-service-page .jb-sub-body {
+  padding-top: 48px;
+  padding-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .jb-aircraft-showcase {
+    border-radius: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .jb-service-block--heritage .jb-service-block-body h3 {
+    font-size: 22px;
+  }
+
+  .jb-light-section--heritage {
+    padding: 40px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jb-feature-card--heritage:hover,
+  .jb-service-block--heritage:hover .jb-service-block-img,
+  .jb-aircraft-showcase .jb-aircraft-card:hover,
+  .jb-step-item--heritage:hover {
+    transform: none;
+  }
+}

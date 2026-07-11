@@ -13,7 +13,7 @@ robocopy "$Repo\apps\web" "$tmp\web" /E /XD node_modules .next coverage /NFL /ND
 if ($LASTEXITCODE -ge 8) { throw "robocopy web failed: $LASTEXITCODE" }
 robocopy "$Repo\packages\ui" "$tmp\ui" /E /XD node_modules /NFL /NDL /NJH /NJS /nc /ns /np
 if ($LASTEXITCODE -ge 8) { throw "robocopy ui failed: $LASTEXITCODE" }
-robocopy "$Repo\packages\i18n" "$tmp\i18n" /E /XD node_modules /NFL /NDL /NJH /NJS /nc /ns /np
+robocopy "$Repo\packages\i18n" "$tmp\i18n" /E /XD node_modules dist /NFL /NDL /NJH /NJS /nc /ns /np
 if ($LASTEXITCODE -ge 8) { throw "robocopy i18n failed: $LASTEXITCODE" }
 
 Copy-Item "$Repo\scripts\deploy\jetbay-be\www.minhtien.online.http.conf" "$tmp\deploy\"

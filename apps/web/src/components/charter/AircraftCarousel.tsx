@@ -17,7 +17,7 @@ export function AircraftCarousel() {
   }
 
   return (
-    <section className="jb-sub-section">
+    <section className="jb-sub-section jb-aircraft-showcase">
       <h2 className="jb-section-title">Compare and Book Our Most Popular Private Jets</h2>
       <p className="jb-section-desc">
         Explore a handpicked selection of our popular top-rated jets designed for ultimate comfort, privacy, and performance.

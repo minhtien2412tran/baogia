@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { ContentArticle, ContentTranslation, Destination, Video } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
+import { CustomerCareService } from './customer-care/customer-care.service';
 import { LocaleService } from '../modules/i18n/locale.service';
 import { CANONICAL_LOCALE } from '@jetbay/i18n';
 import {
@@ -32,6 +33,7 @@ export class ContentService {
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
     private readonly locales: LocaleService,
+    private readonly customerCare: CustomerCareService,
   ) {}
 
   private paginate(page = 1, limit = 20) {
@@ -97,7 +99,7 @@ export class ContentService {
       },
     });
 
-    // Reverse sync: non-canonical save mirrors to canonical if missing (unified master row)
+    // Reverse sync: ensure canonical row exists (stub — do not copy non-English text into en)
     if (locale !== CANONICAL_LOCALE) {
       const canonical = await this.prisma.contentTranslation.findUnique({
         where: {
@@ -110,11 +112,11 @@ export class ContentService {
             entityType,
             entityId,
             locale: CANONICAL_LOCALE,
-            title: normalized.title,
-            body: normalized.body,
-            excerpt: normalized.excerpt,
-            seoTitle: normalized.seoTitle,
-            seoDescription: normalized.seoDescription,
+            title: normalized.title ? `[${locale}] ${normalized.title}` : `[${locale}]`,
+            body: '',
+            excerpt: '',
+            seoTitle: normalized.seoTitle ?? '',
+            seoDescription: normalized.seoDescription ?? '',
           },
         });
       }
@@ -371,12 +373,14 @@ export class ContentService {
   // --- NEWSLETTER ---
 
   async subscribeNewsletter(body: SubscribeNewsletterDto) {
+    const locale = this.locales.normalize(body.locale);
     await this.prisma.auditLog.create({
       data: {
         action: 'NEWSLETTER_SUBSCRIBE',
-        details: { email: body.email, locale: this.locales.normalize(body.locale) },
+        details: { email: body.email, locale },
       },
     });
+    void this.customerCare.onNewsletterSubscribe(body.email, locale);
     return { status: 'SUBSCRIBED', message: 'Successfully subscribed to the newsletter.' };
   }
 

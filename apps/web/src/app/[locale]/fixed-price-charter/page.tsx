@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { t } from '@jetbay/i18n';
 import { SubPageLayout } from '../../../components/layout/SubPageLayout';
 import { api, safeApi } from '../../../lib/api';
 import { buildMetadata } from '../../../lib/metadata';
@@ -6,8 +7,13 @@ import { navHref } from '../../../config/navigation';
 import { JB, fixedPriceRegion } from '../../../config/jetbay-cdn';
 import { CdnImage } from '../../../components/ui/CdnImage';
 
-export async function generateMetadata() {
-  return buildMetadata({ title: 'Fixed Price Charter', description: 'Transparent fixed-price private jet routes.' });
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return buildMetadata({
+    title: t(locale, 'fixedPricePageTitle'),
+    description: t(locale, 'fixedPriceMetaDesc'),
+    path: `/${locale}/fixed-price-charter`,
+  });
 }
 
 export default async function FixedPricePage({ params }: { params: Promise<{ locale: string }> }) {
@@ -17,25 +23,25 @@ export default async function FixedPricePage({ params }: { params: Promise<{ loc
   return (
     <SubPageLayout
       locale={locale}
-      title="Fixed-Price Charter Routes"
-      description="Experience price certainty on our most requested global routes."
-      tag="Deals"
+      title={t(locale, 'fixedPricePageTitle')}
+      description={t(locale, 'fixedPricePageDesc')}
+      tag={t(locale, 'deals')}
       heroImage={JB.pages.fixedPrice.hero}
       showQuoteWidget
     >
       <section className="jb-sub-section">
-        <h2 className="jb-section-title">Popular routes</h2>
+        <h2 className="jb-section-title">{t(locale, 'popularRoutes')}</h2>
         <div className="jb-hot-routes">
           {JB.pages.fixedPrice.hotRoutes.map((img) => (
             <div key={img} className="jb-hot-route-card">
-              <CdnImage src={img} alt="Fixed price route" fill className="jb-cover-img" sizes="25vw" />
+              <CdnImage src={img} alt={t(locale, 'fixedPriceRouteAlt')} fill className="jb-cover-img" sizes="25vw" />
             </div>
           ))}
         </div>
       </section>
 
       <section className="jb-sub-section">
-        <h2 className="jb-section-title">All fixed-price routes</h2>
+        <h2 className="jb-section-title">{t(locale, 'allFixedPriceRoutes')}</h2>
         <div className="jb-routes-scroll" style={{ flexWrap: 'wrap', overflow: 'visible' }}>
           {data.routes.map((r: Record<string, unknown>) => {
             const from = r.fromAirport as { city: string; iata: string };
@@ -56,20 +62,24 @@ export default async function FixedPricePage({ params }: { params: Promise<{ loc
                   <div><div className="jb-iata">{to?.iata}</div><div className="jb-city">{to?.city}</div></div>
                 </div>
                 {tiers.length === 0 ? (
-                  <p className="jb-tier-empty">Pricing on request</p>
+                  <p className="jb-tier-empty">{t(locale, 'pricingOnRequest')}</p>
                 ) : (
-                  tiers.map((t) => (
-                    <div key={t.category} className="jb-tier">
+                  tiers.map((tier) => (
+                    <div key={tier.category} className="jb-tier">
                       <div>
-                        <div className="jb-tier-label">{t.categoryLabel ?? t.category} Jets</div>
-                        <div className="jb-tier-pax">Up to {t.paxLimit} pax</div>
-                        {t.includedTerms ? <div className="jb-tier-terms">{t.includedTerms}</div> : null}
+                        <div className="jb-tier-label">
+                          {t(locale, 'categoryJets', { category: tier.categoryLabel ?? tier.category })}
+                        </div>
+                        <div className="jb-tier-pax">{t(locale, 'upToPassengers', { n: tier.paxLimit })}</div>
+                        {tier.includedTerms ? <div className="jb-tier-terms">{tier.includedTerms}</div> : null}
                       </div>
-                      <div className="jb-tier-price">USD {t.price.toLocaleString()}</div>
+                      <div className="jb-tier-price">USD {tier.price.toLocaleString()}</div>
                     </div>
                   ))
                 )}
-                <Link href={navHref(locale, `/fixed-price-charter/${r.slug}`)} className="jb-book-btn">Book Now</Link>
+                <Link href={navHref(locale, `/fixed-price-charter/${r.slug}`)} className="jb-book-btn">
+                  {t(locale, 'bookNow')}
+                </Link>
               </div>
             );
           })}

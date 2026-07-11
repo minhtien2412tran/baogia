@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { tn } from '@jetbay/i18n';
 import { navHref } from '../../config/navigation';
 
 export function CookieBanner({ locale }: { locale: string }) {
@@ -23,15 +24,14 @@ export function CookieBanner({ locale }: { locale: string }) {
     <div className="jb-cookie-banner" role="dialog" aria-label="Cookie consent">
       <div className="jb-cookie-inner">
         <p>
-          We use cookies to improve your experience, analyze traffic, and personalize content.
-          See our{' '}
-          <Link href={navHref(locale, '/article/cookie')}>Cookie Notice</Link>
-          {' '}and{' '}
-          <Link href={navHref(locale, '/article/policy')}>Privacy Policy</Link>.
+          {tn(locale, 'cookieConsent')}{' '}
+          <Link href={navHref(locale, '/article/cookie')}>{tn(locale, 'cookieNotice')}</Link>
+          {' '}{tn(locale, 'cookieAnd')}{' '}
+          <Link href={navHref(locale, '/article/policy')}>{tn(locale, 'privacyPolicyShort')}</Link>.
         </p>
         <div className="jb-cookie-actions">
-          <button type="button" className="jb-btn-outline" onClick={accept}>Accept All</button>
-          <Link href={navHref(locale, '/article/cookie')} className="jb-btn-outline">Manage Preferences</Link>
+          <button type="button" className="jb-btn-outline" onClick={accept}>{tn(locale, 'acceptCookies')}</button>
+          <Link href={navHref(locale, '/article/cookie')} className="jb-btn-outline">{tn(locale, 'managePreferences')}</Link>
         </div>
       </div>
     </div>

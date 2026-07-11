@@ -1,72 +1,65 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { api } from '../../../../lib/api';
-import { AccountShell, useAccountAuth } from '../../../../components/account/AccountShell';
+import Link from 'next/link';
+import { useAccount } from '../../../../components/account/AccountContext';
+import { AccountEmpty, AccountPanel, StatusBadge } from '../../../../components/account/AccountUI';
+import { t } from '../../../../lib/i18n';
 
-type DocRow = {
-  id: number;
-  documentType: string;
-  status: string;
-  fileUrl?: string;
-  htmlUrl?: string;
-  bookingId?: number;
-};
-
-export default function AccountDocumentsPage({ params }: { params: { locale: string } }) {
-  const locale = params?.locale ?? 'en-us';
-  const { requireToken } = useAccountAuth(locale);
-  const [docs, setDocs] = useState<DocRow[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const token = requireToken();
-    if (!token) return;
-    api
-      .getMyBookings(token)
-      .then((bookings) => {
-        const rows: DocRow[] = [];
-        for (const b of bookings as { id: number; documents?: DocRow[] }[]) {
-          for (const d of b.documents ?? []) {
-            rows.push({ ...d, bookingId: b.id });
-          }
-        }
-        setDocs(rows);
-      })
-      .catch(() => setDocs([]))
-      .finally(() => setLoading(false));
-  }, [locale, requireToken]);
+function DocumentsContent({ locale }: { locale: string }) {
+  const { data } = useAccount();
+  if (!data) return null;
 
   return (
-    <AccountShell locale={locale}>
-      <div className="jb-account-card">
-        <h2>Charter Documents</h2>
-        {loading ? (
-          <p className="jb-account-meta">Loading…</p>
-        ) : docs.length === 0 ? (
-          <p className="jb-account-meta">No documents yet. Documents appear when you have an active booking.</p>
+    <>
+      <header className="jb-account-hero">
+        <h1>{t(locale, 'documents')}</h1>
+        <p>{data.documents.length} charter documents</p>
+      </header>
+      <AccountPanel title="Charter Documents" subtitle="Agreements and contracts for your bookings">
+        {data.documents.length === 0 ? (
+          <AccountEmpty
+            title="No documents yet"
+            hint="Documents are generated when you have an active or completed booking."
+            action={
+              data.bookings.length === 0 ? (
+                <Link href={`/${locale}`} className="jb-btn-primary">
+                  {t(locale, 'searchFlights')}
+                </Link>
+              ) : undefined
+            }
+          />
         ) : (
-          <ul className="jb-bullet-list">
-            {docs.map((d) => (
-              <li key={d.id} style={{ marginBottom: 12 }}>
-                <strong>{d.documentType.replace(/_/g, ' ')}</strong> — Booking #{d.bookingId} · {d.status}
-                <div style={{ marginTop: 8, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+          <div className="jb-account-doc-grid">
+            {data.documents.map((d) => (
+              <article key={d.id} className="jb-account-doc-card">
+                <div className="jb-account-doc-card__icon" aria-hidden>📄</div>
+                <div>
+                  <h3>{d.documentType.replace(/_/g, ' ')}</h3>
+                  <p className="jb-account-meta">Booking #{d.bookingId}</p>
+                  <StatusBadge status={d.status} />
+                </div>
+                <div className="jb-account-doc-card__actions">
                   {d.fileUrl && (
                     <a href={d.fileUrl} className="jb-btn-ghost" target="_blank" rel="noreferrer">
-                      Download PDF
+                      PDF
                     </a>
                   )}
                   {d.htmlUrl && (
                     <a href={d.htmlUrl} className="jb-btn-ghost" target="_blank" rel="noreferrer">
-                      View HTML
+                      HTML
                     </a>
                   )}
                 </div>
-              </li>
+              </article>
             ))}
-          </ul>
+          </div>
         )}
-      </div>
-    </AccountShell>
+      </AccountPanel>
+    </>
   );
+}
+
+export default function AccountDocumentsPage({ params }: { params: { locale: string } }) {
+  const locale = params?.locale ?? 'en-us';
+  return <DocumentsContent locale={locale} />;
 }

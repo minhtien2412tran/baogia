@@ -44,6 +44,7 @@ echo "[web] .env.local written (API_KEY len=${#API_KEY})"
 
 echo "[web] build i18n vendor..."
 cd "${APP_ROOT}/vendor/i18n"
+npm install --legacy-peer-deps 2>/dev/null || true
 npx tsc -p tsconfig.json
 cd "${APP_ROOT}"
 

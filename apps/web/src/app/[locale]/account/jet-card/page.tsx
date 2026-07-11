@@ -1,62 +1,61 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { api } from '../../../../lib/api';
-import { AccountShell, useAccountAuth } from '../../../../components/account/AccountShell';
+import Link from 'next/link';
+import { useAccount } from '../../../../components/account/AccountContext';
+import { AccountEmpty, AccountPanel } from '../../../../components/account/AccountUI';
+import { t } from '../../../../lib/i18n';
 
-type JetCardAccount = {
-  accountId: number;
-  planName: string;
-  remainingHours: number;
-  expiryDate: string;
-  purchasedAt: string;
-  recentTransactions: { txnType: string; hoursDelta: number; date: string }[];
-};
+function JetCardContent({ locale }: { locale: string }) {
+  const { data } = useAccount();
+  if (!data) return null;
+
+  return (
+    <>
+      <header className="jb-account-hero">
+        <h1>{t(locale, 'jetCard')}</h1>
+        <p>{data.stats.jetCardHours} hours across {data.jetCards.length} account(s)</p>
+      </header>
+      <AccountPanel title="Jet Card Balance">
+        {data.jetCards.length === 0 ? (
+          <AccountEmpty
+            title="No active Jet Card membership"
+            action={
+              <Link href={`/${locale}/jet-card`} className="jb-btn-primary">
+                Explore plans
+              </Link>
+            }
+          />
+        ) : (
+          <div className="jb-account-doc-grid">
+            {data.jetCards.map((a) => (
+              <article key={a.accountId} className="jb-account-doc-card jb-account-doc-card--gold">
+                <div>
+                  <h3>{a.planName}</h3>
+                  <p className="jb-account-stat__value" style={{ fontSize: 32, margin: '8px 0' }}>
+                    {a.remainingHours}h
+                  </p>
+                  <p className="jb-account-meta">Expires {a.expiryDate.slice(0, 10)}</p>
+                </div>
+                {a.recentTransactions.length > 0 && (
+                  <ul className="jb-account-list" style={{ marginTop: 12 }}>
+                    {a.recentTransactions.map((tx, i) => (
+                      <li key={i} className="jb-account-meta">
+                        {tx.date}: {tx.txnType} {tx.hoursDelta > 0 ? '+' : ''}
+                        {tx.hoursDelta}h
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </article>
+            ))}
+          </div>
+        )}
+      </AccountPanel>
+    </>
+  );
+}
 
 export default function AccountJetCardPage({ params }: { params: { locale: string } }) {
   const locale = params?.locale ?? 'en-us';
-  const { requireToken } = useAccountAuth(locale);
-  const [accounts, setAccounts] = useState<JetCardAccount[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const token = requireToken();
-    if (!token) return;
-    api
-      .getMyJetCardAccounts(token)
-      .then(setAccounts)
-      .catch(() => setAccounts([]))
-      .finally(() => setLoading(false));
-  }, [locale, requireToken]);
-
-  return (
-    <AccountShell locale={locale}>
-      <div className="jb-account-card">
-        <h2>Jet Card Balance</h2>
-        {loading ? (
-          <p className="jb-account-meta">Loading…</p>
-        ) : accounts.length === 0 ? (
-          <p className="jb-account-meta">No active Jet Card membership. <a href={`/${locale}/jet-card`}>Explore plans</a></p>
-        ) : (
-          accounts.map((a) => (
-            <div key={a.accountId} style={{ marginBottom: 20, paddingBottom: 16, borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-              <p><strong>{a.planName}</strong></p>
-              <p>{a.remainingHours} hours remaining</p>
-              <p className="jb-account-meta">Expires {a.expiryDate.slice(0, 10)}</p>
-              {a.recentTransactions.length > 0 && (
-                <>
-                  <p className="jb-account-meta" style={{ marginTop: 8 }}>Recent activity:</p>
-                  <ul className="jb-bullet-list">
-                    {a.recentTransactions.map((t, i) => (
-                      <li key={i}>{t.date}: {t.txnType} {t.hoursDelta > 0 ? '+' : ''}{t.hoursDelta}h</li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </div>
-          ))
-        )}
-      </div>
-    </AccountShell>
-  );
+  return <JetCardContent locale={locale} />;
 }

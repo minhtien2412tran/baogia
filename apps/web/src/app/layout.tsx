@@ -1,11 +1,22 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Cormorant_Garamond, Geist, Geist_Mono, Playfair_Display } from 'next/font/google';
 import { BRAND_NAME, BRAND_TAGLINE } from '../lib/brand';
 import { DEFAULT_OG_IMAGE, siteMetadataBase } from '../lib/metadata';
 import './globals.css';
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
+const playfair = Playfair_Display({
+  variable: '--font-display',
+  subsets: ['latin'],
+  display: 'swap',
+});
+const cormorant = Cormorant_Garamond({
+  variable: '--font-serif',
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: siteMetadataBase(),
@@ -36,7 +47,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${cormorant.variable}`}>{children}</body>
     </html>
   );
 }

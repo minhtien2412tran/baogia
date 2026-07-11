@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { api } from '../../lib/api';
+import { t } from '../../lib/i18n';
 import { AirportInput } from '../AirportInput';
 
 export function EmptyLegAlertsForm({ locale }: { locale: string }) {
@@ -22,7 +23,7 @@ export function EmptyLegAlertsForm({ locale }: { locale: string }) {
       setFrom('');
       setTo('');
     } catch (err) {
-      setMsg({ type: 'err', text: err instanceof Error ? err.message : 'Failed to subscribe' });
+      setMsg({ type: 'err', text: err instanceof Error ? err.message : t(locale, 'subscribeFailed') });
     } finally {
       setLoading(false);
     }
@@ -30,19 +31,42 @@ export function EmptyLegAlertsForm({ locale }: { locale: string }) {
 
   return (
     <form className="jb-subscribe-box" onSubmit={onSubmit}>
-      <p className="jb-subscribe-title">Not seeing your route? Subscribe for matching empty legs</p>
+      <p className="jb-subscribe-title">{t(locale, 'emptyLegSubscribeTitle')}</p>
       <div className="jb-subscribe-row">
         <div className="jb-field">
-          <label htmlFor="el-email">Email</label>
-          <input id="el-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required />
+          <label htmlFor="el-email">{t(locale, 'emailAriaLabel')}</label>
+          <input
+            id="el-email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={t(locale, 'emailPlaceholder')}
+            required
+          />
         </div>
-        <AirportInput id="el-from" label="Departure city or airport" value={from} onChange={setFrom} placeholder="From" />
-        <AirportInput id="el-to" label="Destination city or airport" value={to} onChange={setTo} placeholder="To" />
+        <AirportInput
+          id="el-from"
+          label={t(locale, 'departurePlaceholder')}
+          value={from}
+          onChange={setFrom}
+          placeholder={t(locale, 'from')}
+        />
+        <AirportInput
+          id="el-to"
+          label={t(locale, 'destinationPlaceholder')}
+          value={to}
+          onChange={setTo}
+          placeholder={t(locale, 'to')}
+        />
         <button type="submit" className="jb-btn-primary" disabled={loading}>
-          {loading ? 'Saving...' : 'Get Alerts'}
+          {loading ? t(locale, 'saving') : t(locale, 'getAlerts')}
         </button>
       </div>
-      {msg && <p className={`jb-form-msg ${msg.type === 'ok' ? 'success' : 'error'}`} style={{ marginTop: 12 }}>{msg.text}</p>}
+      {msg && (
+        <p className={`jb-form-msg ${msg.type === 'ok' ? 'success' : 'error'}`} style={{ marginTop: 12 }}>
+          {msg.text}
+        </p>
+      )}
     </form>
   );
 }

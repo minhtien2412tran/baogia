@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
+import { CustomerCareService } from './customer-care/customer-care.service';
 import { CreateBookingDto, UpdateBookingStatusDto } from '../dto';
 
 const BOOKING_STATUSES = [
@@ -40,6 +41,7 @@ export class BookingService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
+    private readonly customerCare: CustomerCareService,
   ) {}
 
   private normalizeStatus(status: string): BookingStatus {
@@ -190,6 +192,15 @@ export class BookingService {
       userId,
       ipAddress,
     );
+
+    if (booking.user) {
+      void this.customerCare.onBookingCreated({
+        bookingId: booking.id,
+        userId,
+        email: booking.user.email,
+        firstName: booking.user.firstName,
+      });
+    }
 
     return this.formatBooking(booking);
   }

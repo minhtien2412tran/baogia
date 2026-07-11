@@ -43,6 +43,8 @@ import { ApiGatewayService } from './services/api-gateway.service';
 import { AdminUsersService } from './services/admin-users.service';
 import { AircraftService } from './services/aircraft.service';
 import { IntegrationsStatusService } from './services/integrations-status.service';
+import { AccountController } from './controllers/account.controller';
+import { AccountService } from './services/account.service';
 
 @Module({
   imports: [
@@ -85,6 +87,7 @@ import { IntegrationsStatusService } from './services/integrations-status.servic
     AdminAircraftController,
     ApiGatewayController,
     MediaController,
+    AccountController,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
@@ -102,6 +105,7 @@ import { IntegrationsStatusService } from './services/integrations-status.servic
     AdminUsersService,
     AircraftService,
     IntegrationsStatusService,
+    AccountService,
   ],
 })
 export class AppModule {}

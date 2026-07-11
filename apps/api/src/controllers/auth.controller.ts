@@ -1,5 +1,5 @@
 import { Controller, Post, Get, Body, UseGuards } from '@nestjs/common';
-import { Throttle } from '@nestjs/throttler';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiSecurity } from '@nestjs/swagger';
 import { RegisterDto, LoginDto, OAuthDto, RefreshTokenDto, OtpSendDto, OtpVerifyDto } from '../dto';
 import { AuthService } from '../services/auth.service';
@@ -79,6 +79,7 @@ export class AuthController {
   }
 
   @Get('me')
+  @SkipThrottle()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Get current user profile' })

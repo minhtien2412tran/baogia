@@ -1,4 +1,5 @@
 import { JB } from '../config/jetbay-cdn';
+import { getPageOverlay, mergePageOverlay } from '@jetbay/i18n';
 
 export type PageSection = {
   heading: string;
@@ -302,6 +303,10 @@ export const PAGE_CONTENT: Record<string, PageContent> = {
   },
 };
 
-export function getPageContent(key: string): PageContent | undefined {
-  return PAGE_CONTENT[key];
+export function getPageContent(key: string, locale?: string): PageContent | undefined {
+  const base = PAGE_CONTENT[key];
+  if (!base) return undefined;
+  if (!locale) return base;
+  const overlay = getPageOverlay(key, locale);
+  return mergePageOverlay(base, overlay) as PageContent;
 }

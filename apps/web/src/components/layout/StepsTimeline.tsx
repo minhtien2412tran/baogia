@@ -4,7 +4,7 @@ export function StepsTimeline({ steps }: { steps: { title: string; body: string;
   return (
     <div className="jb-steps">
       {steps.map((step, i) => (
-        <div key={step.title} className="jb-step-item">
+        <div key={step.title} className="jb-step-item jb-step-item--heritage">
           <div className="jb-step-num">{i + 1}</div>
           {step.image && (
             <div className="jb-step-img">

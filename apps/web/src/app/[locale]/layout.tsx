@@ -1,7 +1,8 @@
 import '../../styles/jetbay-home.css';
 import '../../styles/jetbay-polish.css';
 import '../../styles/jetbay-motion.css';
-import { JetBayHeader } from '../../components/home/JetBayHeader';
+import '../../styles/jetbay-account.css';
+import '../../styles/jetbay-service.css';import { JetBayHeader } from '../../components/home/JetBayHeader';
 import { JetBayFooter } from '../../components/home/JetBayFooter';
 import { CookieBanner } from '../../components/home/CookieBanner';
 import { JetBayMotion } from '../../components/motion/JetBayMotion';

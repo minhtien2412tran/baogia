@@ -50,6 +50,13 @@
 - [x] **Motion v2** (2026-07-10) — counter 10K+/190+ · 3D tilt cards · page transition · booking flow FX
 - [x] **i18n GĐ1** (2026-07-10) — `@jetbay/i18n` · reverse locale DB `en` · `/i18n/config` · FE middleware cookie · [I18N_ROADMAP.md](./I18N_ROADMAP.md)
 - [x] **Deploy i18n GĐ1 prod** (2026-07-10) — API `jetbay-be` + web `jetbay-web` · `/i18n/config` public · vendor i18n `dist/`
+- [x] **i18n review fixes** (2026-07-11) — `isValidDbLocale` · article metadata locale · canonical stub · deploy-web npm install · `/en`→`/en-us` redirect
+- [x] **i18n đa ngôn ngữ UI** (2026-07-11) — LanguagePicker tìm kiếm · nav/footer dịch 6 locale · page content overlay · booking widget `t()`
+- [x] **Auth header + account UI** (2026-07-11) — HeaderUserMenu khi đăng nhập · sidebar account dashboard · deploy prod
+- [x] **Account dashboard v2** (2026-07-11) — `GET /account/dashboard` · fetch 1 lần · UI hiện đại + motion · stats/quotes/bookings/payments/docs
+- [x] **Customer care email** (2026-07-11) — `EmailSubscriber` + `EmailCampaignLog` · `CustomerCareService` cron · templates HTML · hooks register/quote/newsletter/booking/payment · fix 429 account (`SkipThrottle` + layout provider)
+- [x] **i18n dịch sạch FP + newsletter** (2026-07-11) — Fixed Price / Empty Leg / footer newsletter · ~50 key mới trong `@jetbay/i18n` · wire `t()` toàn trang listing
+- [x] **Service page CSS heritage** (2026-07-11) — `jetbay-service.css` · Playfair/Cormorant fonts · fix contrast light bands · neo-classical gold/cream
 
 - [x] `feat/api-security-hardening` (+ admin screens / partner-TC) → **`main`** (`9893789`)  
 - [x] VPS API `jetbay-be` + Admin `jetbay-admin` redeployed  

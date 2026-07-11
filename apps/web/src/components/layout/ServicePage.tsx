@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { getPageContent } from '../../lib/page-content';
 
 import { navHref } from '../../config/navigation';
+import { apiLocale } from '../../config/locales';
+import { tn } from '@jetbay/i18n';
 
 import { api, safeApi } from '../../lib/api';
 
@@ -32,13 +34,13 @@ import { AircraftCarousel } from '../charter/AircraftCarousel';
 
 export async function ServicePage({ locale, pageKey }: { locale: string; pageKey: string }) {
 
-  const content = getPageContent(pageKey);
+  const content = getPageContent(pageKey, locale);
 
   const cmsSlug = PAGE_CMS_SLUG[pageKey];
 
   const cms = cmsSlug
 
-    ? await safeApi(() => api.getContentPage(cmsSlug, locale), null)
+    ? await safeApi(() => api.getContentPage(cmsSlug, apiLocale(locale)), null)
 
     : null;
 
@@ -48,13 +50,13 @@ export async function ServicePage({ locale, pageKey }: { locale: string; pageKey
 
     return (
 
-      <main className="jb-subpage">
+      <main className="jb-subpage jb-service-page">
 
-        <PageHero locale={locale} title="Page not found" />
+        <PageHero locale={locale} title={tn(locale, 'pageNotFound')} />
 
         <div className="jb-container jb-sub-body">
 
-          <p className="jb-section-desc">This page is not available.</p>
+          <p className="jb-section-desc">{tn(locale, 'pageUnavailable')}</p>
 
         </div>
 
@@ -74,7 +76,7 @@ export async function ServicePage({ locale, pageKey }: { locale: string; pageKey
 
     <>
 
-      <main className="jb-subpage">
+      <main className="jb-subpage jb-service-page">
 
         <PageHero
 

@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { api } from '../lib/api';
+import { t } from '../lib/i18n';
 import { JB, localAsset } from '../config/jetbay-cdn';
 import { AirportInput } from './AirportInput';
 
@@ -123,9 +124,9 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
   }
 
   const tabs: { id: TripType; label: string }[] = [
-    { id: 'ONE_WAY', label: 'One-way' },
-    { id: 'ROUND_TRIP', label: 'Round-Trip' },
-    { id: 'MULTI_CITY', label: 'Multi-City' },
+    { id: 'ONE_WAY', label: t(locale, 'oneWay') },
+    { id: 'ROUND_TRIP', label: t(locale, 'roundTrip') },
+    { id: 'MULTI_CITY', label: t(locale, 'multiCity') },
   ];
 
   return (
@@ -151,7 +152,7 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
           <div key={idx} className="jb-leg-block">
             {tripType === 'MULTI_CITY' && legs.length > 1 && (
               <div className="jb-leg-header">
-                <span>Leg {idx + 1}</span>
+                <span>{t(locale, 'leg')} {idx + 1}</span>
                 <button type="button" className="jb-leg-remove" onClick={() => removeLeg(idx)}>
                   <CdnIcon src={JB.icons.minus} alt="Remove leg" />
                 </button>
@@ -160,23 +161,23 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
             <div className="jb-quote-grid">
               <AirportInput
                 id={`from-${idx}`}
-                label="From"
+                label={t(locale, 'from')}
                 value={leg.from}
                 onChange={(iata) => updateLeg(idx, { from: iata })}
-                placeholder="Departure city or airport"
+                placeholder={t(locale, 'departurePlaceholder')}
               />
-              <button type="button" className="jb-swap-btn" onClick={() => swapLeg(idx)} aria-label="Swap airports">
+              <button type="button" className="jb-swap-btn" onClick={() => swapLeg(idx)} aria-label={t(locale, 'swapAirports')}>
                 <CdnIcon src={JB.icons.swap} alt="Swap" />
               </button>
               <AirportInput
                 id={`to-${idx}`}
-                label="To"
+                label={t(locale, 'to')}
                 value={leg.to}
                 onChange={(iata) => updateLeg(idx, { to: iata })}
-                placeholder="Destination city or airport"
+                placeholder={t(locale, 'destinationPlaceholder')}
               />
               <div className="jb-field jb-field-icon-wrap">
-                <label htmlFor={`dep-${idx}`}>Departure (Local)</label>
+                <label htmlFor={`dep-${idx}`}>{t(locale, 'departure')}</label>
                 <div className="jb-input-with-icon">
                   <CdnIcon src={JB.icons.calendar} alt="" />
                   <input
@@ -190,13 +191,13 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
               </div>
               {idx === 0 && (
                 <div className="jb-field">
-                  <label>Passengers</label>
+                  <label>{t(locale, 'passengers')}</label>
                   <div className="jb-pax-control">
-                    <button type="button" className="jb-pax-btn" onClick={() => setPassengers((p) => Math.max(1, p - 1))} aria-label="Decrease passengers">
+                    <button type="button" className="jb-pax-btn" onClick={() => setPassengers((p) => Math.max(1, p - 1))} aria-label={t(locale, 'decreasePax')}>
                       <CdnIcon src={JB.icons.minus} alt="" />
                     </button>
                     <span className="jb-pax-value">{passengers}</span>
-                    <button type="button" className="jb-pax-btn" onClick={() => setPassengers((p) => Math.min(16, p + 1))} aria-label="Increase passengers">
+                    <button type="button" className="jb-pax-btn" onClick={() => setPassengers((p) => Math.min(16, p + 1))} aria-label={t(locale, 'increasePax')}>
                       <CdnIcon src={JB.icons.plus} alt="" />
                     </button>
                   </div>
@@ -208,7 +209,7 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
 
         {tripType === 'ROUND_TRIP' && (
           <div className="jb-field jb-field-icon-wrap" style={{ maxWidth: 260, marginTop: 12 }}>
-            <label htmlFor="return">Return (Local)</label>
+            <label htmlFor="return">{t(locale, 'returnDate')}</label>
             <div className="jb-input-with-icon">
               <CdnIcon src={JB.icons.calendar} alt="" />
               <input
@@ -226,17 +227,17 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
         {tripType === 'MULTI_CITY' && (
           <button type="button" className="jb-add-leg-btn" onClick={addLeg}>
             <CdnIcon src={JB.icons.addLeg} alt="" />
-            Add another flight leg
+            {t(locale, 'addLeg')}
           </button>
         )}
 
         <div className="jb-contact-row">
           <div className="jb-field">
-            <label htmlFor="email">Email (optional)</label>
+            <label htmlFor="email">{t(locale, 'emailOptional')}</label>
             <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
           </div>
           <div className="jb-field">
-            <label htmlFor="phone">Phone (optional)</label>
+            <label htmlFor="phone">{t(locale, 'phoneOptional')}</label>
             <input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+1..." />
           </div>
         </div>
@@ -245,16 +246,16 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
           {loading ? (
             <span className="jb-search-btn__label">
               <span className="jb-search-radar" aria-hidden />
-              Searching aircraft…
+              {t(locale, 'searching')}
             </span>
           ) : (
-            'Search Available Aircraft'
+            t(locale, 'searchAircraft')
           )}
         </button>
 
         {options && options.length > 0 && (
           <div className="jb-aircraft-results jb-booking-results">
-            <h4>Available Aircraft</h4>
+            <h4>{t(locale, 'availableAircraft')}</h4>
             {options.map((o, i) => (
               <div
                 key={o.categoryId}
@@ -265,7 +266,7 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
                 <div className="jb-tilt-card__inner jb-aircraft-row-inner">
                 <div>
                   <strong>{o.categoryLabel}</strong>
-                  <div className="jb-aircraft-meta">{o.aircraftModel} · up to {o.maxPassengers} pax</div>
+                  <div className="jb-aircraft-meta">{o.aircraftModel} · {t(locale, 'upToPax', { n: o.maxPassengers })}</div>
                 </div>
                 <div className="jb-aircraft-price">
                   {o.currency} {o.estimatedPrice.toLocaleString()}

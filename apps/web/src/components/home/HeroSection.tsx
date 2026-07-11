@@ -1,6 +1,7 @@
 import { JB } from '../../config/jetbay-cdn';
 import { CdnImage } from '../ui/CdnImage';
 import { QuoteSearchWidget } from '../QuoteSearchWidget';
+import { t } from '../../lib/i18n';
 
 export function HeroSection({ locale, currency }: { locale: string; currency?: string }) {
   return (
@@ -41,23 +42,23 @@ export function HeroSection({ locale, currency }: { locale: string; currency?: s
         <span className="jb-hero-cloud jb-hero-cloud--c" />
       </div>
       <div className="jb-hero-content">
-        <h1>Global Private Jet Charter: Access to 10,000+ Aircraft</h1>
-        <p className="jb-hero-sub">Seamless, trusted access to private aviation worldwide.</p>
+        <h1>{t(locale, 'heroTitle')}</h1>
+        <p className="jb-hero-sub">{t(locale, 'heroSubtitle')}</p>
 
         <div className="jb-trust-row">
           <span className="jb-trust-item">
             <CdnImage src={JB.trust.shield} alt="" width={16} height={16} className="jb-trust-icon-img" />
-            Secure Payment
+            {t(locale, 'securePayment')}
           </span>
           <span className="jb-trust-divider">|</span>
           <span className="jb-trust-item">
             <CdnImage src={JB.trust.support} alt="" width={16} height={16} className="jb-trust-icon-img" />
-            24/7 Global Concierge Support
+            {t(locale, 'concierge24')}
           </span>
           <span className="jb-trust-divider">|</span>
           <span className="jb-trust-item">
             <CdnImage src={JB.trust.star} alt="" width={16} height={16} className="jb-trust-icon-img" />
-            Premium Aircraft
+            {t(locale, 'premiumAircraft')}
           </span>
         </div>
 

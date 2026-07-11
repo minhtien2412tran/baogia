@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { t, tn } from '@jetbay/i18n';
 import { SubPageLayout } from '../../../components/layout/SubPageLayout';
 import { api, safeApi } from '../../../lib/api';
 import { apiLocale } from '../../../config/locales';
@@ -7,8 +8,13 @@ import { navHref } from '../../../config/navigation';
 import { JB } from '../../../config/jetbay-cdn';
 import { CdnImage } from '../../../components/ui/CdnImage';
 
-export async function generateMetadata() {
-  return buildMetadata({ title: 'News', description: 'Latest news from JetBay private aviation.' });
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return buildMetadata({
+    title: tn(locale, 'news'),
+    description: t(locale, 'newsMetaDesc'),
+    path: `/${locale}/news`,
+  });
 }
 
 export default async function NewsPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -16,7 +22,13 @@ export default async function NewsPage({ params }: { params: Promise<{ locale: s
   const data = await safeApi(() => api.getNews(apiLocale(locale)), { news: [] });
 
   return (
-    <SubPageLayout locale={locale} title="News" description="Latest updates from JetBay." tag="Company" heroImage={JB.pages.newsDefault}>
+    <SubPageLayout
+      locale={locale}
+      title={tn(locale, 'news')}
+      description={t(locale, 'newsHeroDesc')}
+      tag={tn(locale, 'navCompany')}
+      heroImage={JB.pages.newsDefault}
+    >
       <div className="jb-news-grid">
         {data.news.map((n: Record<string, unknown>) => {
           const thumb = n.thumbnail ? String(n.thumbnail) : JB.pages.newsDefault;

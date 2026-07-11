@@ -12,7 +12,7 @@ export function LightSection({
   subtitle?: string;
 }) {
   return (
-    <section className={`jb-light-section ${className}`.trim()}>
+    <section className={`jb-light-section jb-light-section--heritage ${className}`.trim()}>
       <div className="jb-container">
         {title && (
           <div className="jb-light-section-head">

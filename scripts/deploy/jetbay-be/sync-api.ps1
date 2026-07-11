@@ -11,7 +11,7 @@ New-Item -ItemType Directory -Path "$tmp\api", "$tmp\i18n", "$tmp\deploy" | Out-
 
 robocopy "$Repo\apps\api" "$tmp\api" /E /XD node_modules dist coverage /XF .env .env.local /NFL /NDL /NJH /NJS /nc /ns /np
 if ($LASTEXITCODE -ge 8) { throw "robocopy api failed: $LASTEXITCODE" }
-robocopy "$Repo\packages\i18n" "$tmp\i18n" /E /XD node_modules /NFL /NDL /NJH /NJS /nc /ns /np
+robocopy "$Repo\packages\i18n" "$tmp\i18n" /E /XD node_modules dist /NFL /NDL /NJH /NJS /nc /ns /np
 if ($LASTEXITCODE -ge 8) { throw "robocopy i18n failed: $LASTEXITCODE" }
 Remove-Item "$tmp\api\.env" -ErrorAction SilentlyContinue
 Remove-Item "$tmp\api\.env.local" -ErrorAction SilentlyContinue

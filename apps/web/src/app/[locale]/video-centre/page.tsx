@@ -1,3 +1,4 @@
+import { t, tn } from '@jetbay/i18n';
 import { SubPageLayout } from '../../../components/layout/SubPageLayout';
 import { LightSection } from '../../../components/layout/LightSection';
 import { api, safeApi } from '../../../lib/api';
@@ -6,8 +7,13 @@ import { buildMetadata } from '../../../lib/metadata';
 import { JB, videoThumb } from '../../../config/jetbay-cdn';
 import { CdnImage } from '../../../components/ui/CdnImage';
 
-export async function generateMetadata() {
-  return buildMetadata({ title: 'Video Centre', description: 'Aircraft tours and destination videos.' });
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return buildMetadata({
+    title: tn(locale, 'videoCentre'),
+    description: t(locale, 'videoMetaDesc'),
+    path: `/${locale}/video-centre`,
+  });
 }
 
 function formatDuration(seconds: unknown): string {
@@ -26,9 +32,9 @@ export default async function VideoCentrePage({ params }: { params: Promise<{ lo
     <>
       <SubPageLayout
         locale={locale}
-        title="Video Centre"
-        description="Explore our fleet, destinations, and events on video."
-        tag="Media"
+        title={tn(locale, 'videoCentre')}
+        description={t(locale, 'videoHeroDesc')}
+        tag={t(locale, 'mediaTag')}
         heroImage={JB.videoThumbs[0]}
       >
         <div className="jb-video-grid">
@@ -39,7 +45,9 @@ export default async function VideoCentrePage({ params }: { params: Promise<{ lo
               <article key={String(v.slug)} className="jb-video-card">
                 <div className="jb-video-thumb">
                   <CdnImage src={thumb} alt={String(v.title ?? 'Video')} fill className="jb-cover-img" sizes="(max-width:768px) 100vw, 33vw" />
-                  <span className="jb-video-play" aria-hidden>▶</span>
+                  <span className="jb-video-play" aria-hidden>
+                    ▶
+                  </span>
                   {v.duration != null && Number(v.duration) > 0 && (
                     <span className="jb-video-duration">{formatDuration(v.duration)}</span>
                   )}
@@ -47,10 +55,12 @@ export default async function VideoCentrePage({ params }: { params: Promise<{ lo
                 <div className="jb-video-body">
                   <h3>{String(v.title ?? v.slug)}</h3>
                   {v.viewCount != null && (
-                    <p className="jb-video-meta">{Number(v.viewCount).toLocaleString()} views</p>
+                    <p className="jb-video-meta">{t(locale, 'videoViews', { n: Number(v.viewCount).toLocaleString() })}</p>
                   )}
                   {url && url.startsWith('http') && (
-                    <a href={url} target="_blank" rel="noopener noreferrer" className="jb-link-gold">Watch video →</a>
+                    <a href={url} target="_blank" rel="noopener noreferrer" className="jb-link-gold">
+                      {t(locale, 'watchVideo')}
+                    </a>
                   )}
                 </div>
               </article>
@@ -60,13 +70,15 @@ export default async function VideoCentrePage({ params }: { params: Promise<{ lo
       </SubPageLayout>
 
       {data.videos.length === 0 && (
-        <LightSection title="Featured videos" subtitle="Highlights from JetBay events and aircraft tours.">
+        <LightSection title={t(locale, 'featuredVideos')} subtitle={t(locale, 'featuredVideosSubtitle')}>
           <div className="jb-video-grid">
             {JB.videoThumbs.slice(0, 6).map((thumb, i) => (
               <article key={thumb} className="jb-video-card">
                 <div className="jb-video-thumb">
-                  <CdnImage src={thumb} alt={`Featured video ${i + 1}`} fill className="jb-cover-img" sizes="33vw" />
-                  <span className="jb-video-play" aria-hidden>▶</span>
+                  <CdnImage src={thumb} alt={`Video ${i + 1}`} fill className="jb-cover-img" sizes="33vw" />
+                  <span className="jb-video-play" aria-hidden>
+                    ▶
+                  </span>
                 </div>
                 <div className="jb-video-body">
                   <h3>JetBay Highlights {i + 1}</h3>

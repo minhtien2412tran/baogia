@@ -2,15 +2,18 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { MEGA_MENU, QUICK_LINKS, navHref, navLinkIcon } from '../../config/navigation';
+import { getMegaMenu, tn } from '@jetbay/i18n';
+import { navHref, navLinkIcon } from '../../config/navigation';
 import { JB } from '../../config/jetbay-cdn';
 import { CdnImage } from '../ui/CdnImage';
-import { LocaleCurrencySelector } from './LocaleCurrencySelector';
+import { LanguagePicker, LocaleCurrencySelector } from './LocaleCurrencySelector';
+import { HeaderUserMenu, MegaMenuAuthLinks } from './HeaderUserMenu';
 import { t } from '../../lib/i18n';
 
 export function JetBayHeader({ locale, currency = 'USD' }: { locale: string; currency?: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeGroup, setActiveGroup] = useState(MEGA_MENU[0].title);
+  const [activeGroupIdx, setActiveGroupIdx] = useState(0);
+  const menu = getMegaMenu(locale);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
@@ -21,7 +24,7 @@ export function JetBayHeader({ locale, currency = 'USD' }: { locale: string; cur
     setMenuOpen(false);
   }
 
-  const currentGroup = MEGA_MENU.find((g) => g.title === activeGroup) ?? MEGA_MENU[0];
+  const currentGroup = menu[activeGroupIdx] ?? menu[0];
 
   return (
     <>
@@ -37,7 +40,7 @@ export function JetBayHeader({ locale, currency = 'USD' }: { locale: string; cur
             <CdnImage src={JB.logo} alt="JetBay" width={120} height={32} className="jb-logo-img" priority />
           </Link>
           <nav className="jb-desktop-nav jb-hide-mobile" aria-label="Main">
-            {MEGA_MENU.slice(0, 4).map((group) => (
+            {menu.slice(0, 4).map((group) => (
               <div key={group.title} className="jb-nav-dropdown">
                 <button type="button" className="jb-nav-trigger">{group.title}</button>
                 <div className="jb-nav-panel">
@@ -61,12 +64,12 @@ export function JetBayHeader({ locale, currency = 'USD' }: { locale: string; cur
               </div>
             ))}
             <button type="button" className="jb-nav-trigger" onClick={() => setMenuOpen(true)}>
-              More
+              {tn(locale, 'more')}
             </button>
           </nav>
           <div className="jb-header-actions">
             <LocaleCurrencySelector locale={locale} currency={currency} />
-            <Link href={navHref(locale, '/login')} className="jb-header-link jb-hide-mobile">{t(locale, 'login')}</Link>
+            <HeaderUserMenu locale={locale} />
             <Link href={navHref(locale, '/private-jet-charter')} className="jb-btn-contact">
               <CdnImage src={JB.callIcon} alt="" width={16} height={16} className="jb-header-icon-sm" />
               {t(locale, 'contactUs')}
@@ -83,14 +86,18 @@ export function JetBayHeader({ locale, currency = 'USD' }: { locale: string; cur
             <button type="button" className="jb-menu-btn" onClick={closeMenu} aria-label="Close menu">✕</button>
           </div>
 
+          <div className="jb-mega-lang">
+            <LanguagePicker locale={locale} className="jb-lang-picker--mobile" />
+          </div>
+
           <div className="jb-mega-vertical">
             <nav className="jb-mega-sidebar" aria-label="Menu categories">
-              {MEGA_MENU.map((group) => (
+              {menu.map((group, idx) => (
                 <button
                   key={group.title}
                   type="button"
-                  className={`jb-mega-sidebar-item${activeGroup === group.title ? ' active' : ''}`}
-                  onClick={() => setActiveGroup(group.title)}
+                  className={`jb-mega-sidebar-item${activeGroupIdx === idx ? ' active' : ''}`}
+                  onClick={() => setActiveGroupIdx(idx)}
                 >
                   {group.title}
                 </button>
@@ -98,9 +105,9 @@ export function JetBayHeader({ locale, currency = 'USD' }: { locale: string; cur
             </nav>
 
             <div className="jb-mega-content">
-              <h2 className="jb-mega-content-title">{currentGroup.title}</h2>
+              <h2 className="jb-mega-content-title">{currentGroup?.title}</h2>
               <ul className="jb-mega-link-list">
-                {currentGroup.links.map((link) => {
+                {currentGroup?.links.map((link) => {
                   const icon = navLinkIcon(link.href);
                   return (
                     <li key={link.href}>
@@ -124,9 +131,7 @@ export function JetBayHeader({ locale, currency = 'USD' }: { locale: string; cur
           </div>
 
           <div className="jb-mega-footer">
-            {QUICK_LINKS.map((l) => (
-              <Link key={l.href} href={navHref(locale, l.href)} onClick={closeMenu}>{l.label}</Link>
-            ))}
+            <MegaMenuAuthLinks locale={locale} onNavigate={closeMenu} />
           </div>
         </div>
       </div>

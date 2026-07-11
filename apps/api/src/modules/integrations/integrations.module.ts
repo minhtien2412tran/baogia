@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { AuditService } from '../../services/audit.service';
 import { EmailService } from '../../services/email.service';
+import { CustomerCareService } from '../../services/customer-care/customer-care.service';
 import { PaymentService } from '../../services/payment.service';
 import { DocumentService } from '../../services/document.service';
 import { OnepayService } from '../../services/onepay.service';
@@ -18,6 +19,7 @@ import { SmsService } from '../../services/sms.service';
   providers: [
     AuditService,
     EmailService,
+    CustomerCareService,
     PaymentService,
     DocumentService,
     OnepayService,
@@ -29,6 +31,7 @@ import { SmsService } from '../../services/sms.service';
   exports: [
     AuditService,
     EmailService,
+    CustomerCareService,
     PaymentService,
     DocumentService,
     OnepayService,

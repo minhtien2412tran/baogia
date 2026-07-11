@@ -1,3 +1,5 @@
+import { t } from '@jetbay/i18n';
+
 type Route = Record<string, unknown>;
 
 export function FixedPriceSection({ locale, routes }: { locale: string; routes: Route[] }) {
@@ -7,10 +9,12 @@ export function FixedPriceSection({ locale, routes }: { locale: string; routes: 
       <div className="jb-container">
         <div className="jb-section-header">
           <div>
-            <h2 className="jb-section-title">Fixed-Price Charter Routes</h2>
-            <p className="jb-section-desc">Experience price certainty on our most requested global routes.</p>
+            <h2 className="jb-section-title">{t(locale, 'fixedPricePageTitle')}</h2>
+            <p className="jb-section-desc">{t(locale, 'fixedPricePageDesc')}</p>
           </div>
-          <a href={`${p}/fixed-price-charter`} className="jb-link-gold">View All Fixed-Price Routes →</a>
+          <a href={`${p}/fixed-price-charter`} className="jb-link-gold">
+            {t(locale, 'viewAllFixedPriceRoutes')}
+          </a>
         </div>
 
         <div className="jb-routes-scroll">
@@ -28,32 +32,36 @@ export function FixedPriceSection({ locale, routes }: { locale: string; routes: 
             return (
               <div key={String(r.slug)} className="jb-route-card jb-tilt-card" data-tilt-max="8">
                 <div className="jb-tilt-card__inner">
-                <div className="jb-route-airports">
-                  <div>
-                    <div className="jb-iata">{from?.iata}</div>
-                    <div className="jb-city">{from?.city}</div>
-                  </div>
-                  <span className="jb-route-arrow">→</span>
-                  <div>
-                    <div className="jb-iata">{to?.iata}</div>
-                    <div className="jb-city">{to?.city}</div>
-                  </div>
-                </div>
-                {tiers.length === 0 ? (
-                  <p className="jb-tier-empty">Pricing on request</p>
-                ) : (
-                  tiers.map((t) => (
-                    <div key={t.category} className="jb-tier">
-                      <div>
-                        <div className="jb-tier-label">{t.categoryLabel ?? t.category} Jets</div>
-                        <div className="jb-tier-pax">Up to {t.paxLimit} passengers</div>
-                        {t.includedTerms ? <div className="jb-tier-terms">{t.includedTerms}</div> : null}
-                      </div>
-                      <div className="jb-tier-price">USD {t.price.toLocaleString()}</div>
+                  <div className="jb-route-airports">
+                    <div>
+                      <div className="jb-iata">{from?.iata}</div>
+                      <div className="jb-city">{from?.city}</div>
                     </div>
-                  ))
-                )}
-                <a href={`${p}/fixed-price-charter/${r.slug}`} className="jb-book-btn">Book Now</a>
+                    <span className="jb-route-arrow">→</span>
+                    <div>
+                      <div className="jb-iata">{to?.iata}</div>
+                      <div className="jb-city">{to?.city}</div>
+                    </div>
+                  </div>
+                  {tiers.length === 0 ? (
+                    <p className="jb-tier-empty">{t(locale, 'pricingOnRequest')}</p>
+                  ) : (
+                    tiers.map((tier) => (
+                      <div key={tier.category} className="jb-tier">
+                        <div>
+                          <div className="jb-tier-label">
+                            {t(locale, 'categoryJets', { category: tier.categoryLabel ?? tier.category })}
+                          </div>
+                          <div className="jb-tier-pax">{t(locale, 'upToPassengers', { n: tier.paxLimit })}</div>
+                          {tier.includedTerms ? <div className="jb-tier-terms">{tier.includedTerms}</div> : null}
+                        </div>
+                        <div className="jb-tier-price">USD {tier.price.toLocaleString()}</div>
+                      </div>
+                    ))
+                  )}
+                  <a href={`${p}/fixed-price-charter/${r.slug}`} className="jb-book-btn">
+                    {t(locale, 'bookNow')}
+                  </a>
                 </div>
               </div>
             );

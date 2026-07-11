@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { api } from '../../lib/api';
+import { useAccount } from './AccountContext';
+import { AccountMotion, AccountSkeleton } from './AccountUI';
 import { t } from '../../lib/i18n';
 
 const links: { href: string; key: 'overview' | 'myQuotes' | 'jetCard' | 'travelCredits' | 'payments' | 'documents' }[] = [
@@ -14,80 +15,92 @@ const links: { href: string; key: 'overview' | 'myQuotes' | 'jetCard' | 'travelC
   { href: '/documents', key: 'documents' },
 ];
 
-export function AccountShell({
-  locale,
-  children,
-}: {
-  locale: string;
-  children: React.ReactNode;
-}) {
+export function AccountLayoutInner({ locale, children }: { locale: string; children: React.ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
+  const { data, loading, error, displayName, initials, logout, refresh } = useAccount();
   const base = `/${locale}/account`;
 
-  async function logout() {
-    const refreshToken = localStorage.getItem('jetbay_refresh_token');
-    if (refreshToken) {
-      try {
-        await api.logout(refreshToken);
-      } catch {
-        /* revoke best-effort */
-      }
-    }
-    localStorage.removeItem('jetbay_token');
-    localStorage.removeItem('jetbay_refresh_token');
-    localStorage.removeItem('jetbay_user_id');
-    router.push(`/${locale}/login`);
-  }
-
   return (
-    <main className="jb-subpage">
-      <div className="jb-container jb-sub-body">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-          <h1 className="jb-auth-title" style={{ margin: 0 }}>
-            {t(locale, 'myAccount')}
-          </h1>
-          <button type="button" className="jb-btn jb-btn-ghost" onClick={logout}>
-            {t(locale, 'logout')}
-          </button>
+    <main className="jb-subpage jb-account-page">
+      <AccountMotion />
+      <div className="jb-container">
+        <div className="jb-account-layout">
+          <aside className="jb-account-sidebar jb-motion-reveal">
+            <div className="jb-account-user-card">
+              <span className="jb-account-avatar" aria-hidden>{initials}</span>
+              <div className="jb-account-user-meta">
+                <strong>{displayName || t(locale, 'myAccount')}</strong>
+                {data?.profile.email && <span>{data.profile.email}</span>}
+                {data?.profile.phone && <span>{data.profile.phone}</span>}
+                {data?.profile.accountType && (
+                  <span className="jb-account-badge">{data.profile.accountType}</span>
+                )}
+              </div>
+            </div>
+
+            <nav className="jb-account-nav" aria-label={t(locale, 'myAccount')}>
+              {links.map((l) => {
+                const href = `${base}${l.href}`;
+                const active = l.href === '' ? pathname === base : pathname?.startsWith(href);
+                const count =
+                  l.key === 'myQuotes'
+                    ? data?.stats.quotes
+                    : l.key === 'payments'
+                      ? data?.stats.payments
+                      : l.key === 'documents'
+                        ? data?.stats.documents
+                        : undefined;
+                return (
+                  <Link
+                    key={l.href}
+                    href={href}
+                    className={`jb-account-nav-link${active ? ' active' : ''}`}
+                  >
+                    <span>{t(locale, l.key)}</span>
+                    {count !== undefined && count > 0 && (
+                      <span className="jb-account-nav-count">{count}</span>
+                    )}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            <button type="button" className="jb-account-logout" onClick={() => void logout()}>
+              {t(locale, 'logout')}
+            </button>
+          </aside>
+
+          <div className="jb-account-main">
+            {loading ? (
+              <AccountSkeleton />
+            ) : error ? (
+              <div className="jb-account-panel jb-account-panel--error">
+                <h2>{t(locale, 'loading')}</h2>
+                <p className="jb-account-meta">{error}</p>
+                <button type="button" className="jb-btn-primary" onClick={() => void refresh()}>
+                  Retry
+                </button>
+              </div>
+            ) : (
+              children
+            )}
+          </div>
         </div>
-
-        <nav className="jb-account-nav" style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 24 }}>
-          {links.map((l) => {
-            const href = `${base}${l.href}`;
-            const active = l.href === '' ? pathname === base : pathname?.startsWith(href);
-            return (
-              <Link
-                key={l.href}
-                href={href}
-                style={{
-                  color: active ? '#c9a84c' : 'rgba(255,255,255,0.7)',
-                  textDecoration: 'none',
-                  fontWeight: active ? 600 : 400,
-                }}
-              >
-                {t(locale, l.key)}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {children}
       </div>
     </main>
   );
 }
 
-function getToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem('jetbay_token');
+/** @deprecated Use account layout AccountLayoutClient — kept for pages not yet migrated */
+export function AccountShell({ locale, children }: { locale: string; children: React.ReactNode }) {
+  return <AccountLayoutInner locale={locale}>{children}</AccountLayoutInner>;
 }
 
 export function useAccountAuth(locale: string) {
   const router = useRouter();
 
   function requireToken(): string | null {
-    const token = getToken();
+    const token = typeof window !== 'undefined' ? localStorage.getItem('jetbay_token') : null;
     if (!token) {
       router.push(`/${locale}/login`);
       return null;

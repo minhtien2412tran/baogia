@@ -1,61 +1,53 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { api } from '../../../../lib/api';
-import { AccountShell, useAccountAuth } from '../../../../components/account/AccountShell';
+import Link from 'next/link';
+import { useAccount } from '../../../../components/account/AccountContext';
+import { AccountEmpty, AccountPanel } from '../../../../components/account/AccountUI';
+import { t } from '../../../../lib/i18n';
 
-type CreditBalance = {
-  credits: number;
-  currency: string;
-  expirySummary: { amount: number; expiresAt: string }[];
-};
+function TravelCreditsContent({ locale }: { locale: string }) {
+  const { data } = useAccount();
+  if (!data) return null;
+  const balance = data.travelCredits;
+
+  return (
+    <>
+      <header className="jb-account-hero">
+        <h1>{t(locale, 'travelCredits')}</h1>
+        <p>Prepaid credits for flexible charter booking</p>
+      </header>
+      <AccountPanel title="Credit Balance">
+        <div className="jb-account-credit-hero">
+          <span className="jb-account-credit-hero__value" data-account-count={balance.credits}>
+            {balance.credits.toLocaleString()}
+          </span>
+          <span className="jb-account-credit-hero__currency">{balance.currency}</span>
+        </div>
+        {balance.expirySummary.length === 0 ? (
+          <AccountEmpty
+            title="No credits on account"
+            action={
+              <Link href={`/${locale}/travel-credit`} className="jb-btn-primary">
+                Buy credits
+              </Link>
+            }
+          />
+        ) : (
+          <ul className="jb-account-list" style={{ marginTop: 24 }}>
+            {balance.expirySummary.map((b, i) => (
+              <li key={i} className="jb-account-list-item">
+                <span>{b.amount.toLocaleString()} credits</span>
+                <span className="jb-account-meta">expires {b.expiresAt.slice(0, 10)}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </AccountPanel>
+    </>
+  );
+}
 
 export default function AccountTravelCreditsPage({ params }: { params: { locale: string } }) {
   const locale = params?.locale ?? 'en-us';
-  const { requireToken } = useAccountAuth(locale);
-  const [balance, setBalance] = useState<CreditBalance | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const token = requireToken();
-    if (!token) return;
-    api
-      .getTravelCreditBalance(token)
-      .then(setBalance)
-      .catch(() => setBalance(null))
-      .finally(() => setLoading(false));
-  }, [locale, requireToken]);
-
-  return (
-    <AccountShell locale={locale}>
-      <div className="jb-account-card">
-        <h2>Travel Credits</h2>
-        {loading ? (
-          <p className="jb-account-meta">Loading…</p>
-        ) : !balance ? (
-          <p className="jb-account-meta">Unable to load balance.</p>
-        ) : (
-          <>
-            <p style={{ fontSize: 28, fontWeight: 600, color: '#c9a84c' }}>
-              {balance.credits.toLocaleString()} {balance.currency}
-            </p>
-            {balance.expirySummary.length > 0 ? (
-              <>
-                <p className="jb-account-meta" style={{ marginTop: 16 }}>Credit buckets:</p>
-                <ul className="jb-bullet-list">
-                  {balance.expirySummary.map((b, i) => (
-                    <li key={i}>
-                      {b.amount.toLocaleString()} credits — expires {b.expiresAt.slice(0, 10)}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            ) : (
-              <p className="jb-account-meta">No credits on account. <a href={`/${locale}/travel-credit`}>Buy credits</a></p>
-            )}
-          </>
-        )}
-      </div>
-    </AccountShell>
-  );
+  return <TravelCreditsContent locale={locale} />;
 }

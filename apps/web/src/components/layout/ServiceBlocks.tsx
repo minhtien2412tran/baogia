@@ -6,10 +6,10 @@ export function ServiceBlocks({
   items: ReadonlyArray<{ title: string; body: string; image: string }>;
 }) {
   return (
-    <div className="jb-service-blocks">
+    <div className="jb-service-blocks jb-service-blocks--heritage">
       {items.map((item, i) => (
-        <article key={item.title} className={`jb-service-block${i % 2 === 1 ? ' reverse' : ''}`}>
-          <div className="jb-service-block-visual">
+        <article key={item.title} className={`jb-service-block jb-service-block--heritage${i % 2 === 1 ? ' reverse' : ''}`}>
+          <div className="jb-service-block-visual jb-service-block-frame">
             <CdnImage src={item.image} alt={item.title} width={560} height={360} className="jb-service-block-img" />
           </div>
           <div className="jb-service-block-body">

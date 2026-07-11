@@ -1,5 +1,7 @@
 'use client';
 
+import { notifyAuthChanged } from '../../lib/auth-session';
+
 export function storeAuthSession(res: {
   user: { id: number };
   tokens: { accessToken: string; refreshToken?: string };
@@ -9,6 +11,7 @@ export function storeAuthSession(res: {
   if (res.tokens.refreshToken) {
     localStorage.setItem('jetbay_refresh_token', res.tokens.refreshToken);
   }
+  notifyAuthChanged();
 }
 
 export type AuthMode = 'email' | 'otp';

@@ -26,6 +26,14 @@ export function middleware(request: NextRequest) {
     return res;
   }
 
+  if (segment === 'en') {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname === '/en' ? '/en-us' : `/en-us${pathname.slice(3)}`;
+    const redirect = NextResponse.redirect(url, 308);
+    redirect.cookies.set(LOCALE_COOKIE, 'en-us', { path: '/', maxAge: 60 * 60 * 24 * 365, sameSite: 'lax' });
+    return redirect;
+  }
+
   const res = NextResponse.next();
   if (hasLocalePrefix && segment) {
     res.cookies.set(LOCALE_COOKIE, segment, { path: '/', maxAge: 60 * 60 * 24 * 365, sameSite: 'lax' });

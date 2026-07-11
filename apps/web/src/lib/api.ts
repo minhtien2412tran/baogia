@@ -9,6 +9,9 @@ function resolveApiUrl(): string {
 const API_URL = resolveApiUrl();
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY ?? '';
 
+/** Default DB locale for API calls when page locale is unavailable */
+const DEFAULT_API_LOCALE = 'en';
+
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
     super(message);
@@ -182,10 +185,20 @@ export const api = {
       { headers: { Authorization: `Bearer ${token}` } },
     ),
   getMe: (token: string) =>
-    request<{ id: number; email: string; firstName?: string; lastName?: string; accountType?: string }>(
-      '/me',
-      { headers: { Authorization: `Bearer ${token}` } },
-    ),
+    request<{
+      id: number;
+      email: string;
+      firstName?: string | null;
+      lastName?: string | null;
+      phone?: string | null;
+      accountType?: string | null;
+      role?: string;
+      status?: string;
+    }>('/me', { headers: { Authorization: `Bearer ${token}` } }),
+  getAccountDashboard: (token: string) =>
+    request<import('./account-types').AccountDashboard>('/account/dashboard', {
+      headers: { Authorization: `Bearer ${token}` },
+    }),
   getJetCardPlans: () => request<{ plans: Array<Record<string, unknown>> }>('/jet-card/plans'),
   submitJetCardEnquiry: (body: Record<string, unknown>) =>
     request<{ enquiryId: number; status: string; message: string }>('/jet-card/enquiries', {
@@ -224,9 +237,9 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(body),
     }),
-  getContentPage: (slug: string, locale = 'en') =>
-    request<Record<string, unknown>>(`/content/pages/${slug}?locale=${locale}`),
-  subscribeNewsletter: (email: string, locale = 'en') =>
+  getContentPage: (slug: string, locale = DEFAULT_API_LOCALE) =>
+    request<Record<string, unknown>>(`/content/pages/${slug}?locale=${encodeURIComponent(locale)}`),
+  subscribeNewsletter: (email: string, locale = DEFAULT_API_LOCALE) =>
     request<{ status: string; message: string }>('/newsletter/subscribe', {
       method: 'POST',
       body: JSON.stringify({ email, locale }),

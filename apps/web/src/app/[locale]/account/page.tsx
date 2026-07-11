@@ -1,107 +1,130 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { api } from '../../../lib/api';
-import { AccountShell, useAccountAuth } from '../../../components/account/AccountShell';
+import { useAccount } from '../../../components/account/AccountContext';
+import {
+  AccountEmpty,
+  AccountPanel,
+  AccountStatGrid,
+  StatusBadge,
+} from '../../../components/account/AccountUI';
+import { t } from '../../../lib/i18n';
+import { navHref } from '../../../config/navigation';
 
-type UserProfile = {
-  id: number;
-  email: string;
-  firstName?: string;
-  lastName?: string;
-  accountType?: string;
-};
+function OverviewContent({ locale }: { locale: string }) {
+  const { data, token } = useAccount();
+  if (!data) return null;
 
-type Booking = {
-  id: number;
-  status?: string;
-  bookingStatus?: string;
-};
+  async function payBooking(bookingId: number, gateway: 'onepay' | '9pay') {
+    if (!token) return;
+    const returnUrl = `${window.location.origin}/${locale}/account`;
+    const res = await api.createGatewayPayment(token, { bookingId, gateway, returnUrl });
+    window.location.href = res.redirectUrl;
+  }
+
+  return (
+    <>
+      <header className="jb-account-hero">
+        <h1>{t(locale, 'myAccount')}</h1>
+        <p>Welcome back, {data.profile.firstName || data.profile.email}</p>
+      </header>
+
+      <AccountStatGrid stats={data.stats} />
+
+      <div className="jb-account-grid-2">
+        <AccountPanel title="Recent Quotes" subtitle={`${data.quotes.length} total requests`}>
+          {data.quotes.length === 0 ? (
+            <AccountEmpty
+              title="No quote requests yet"
+              hint="Search aircraft on the homepage to get started."
+              action={
+                <Link href={navHref(locale, '/')} className="jb-btn-primary">
+                  {t(locale, 'searchFlights')}
+                </Link>
+              }
+            />
+          ) : (
+            <ul className="jb-account-list">
+              {data.quotes.slice(0, 5).map((q) => (
+                <li key={q.id} className="jb-account-list-item">
+                  <div>
+                    <strong>#{q.id}</strong> · {q.tripType}
+                    <div className="jb-account-meta">
+                      {q.legs.map((l) => `${l.from}→${l.to}`).join(' · ')}
+                    </div>
+                  </div>
+                  <StatusBadge status={q.status} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </AccountPanel>
+
+        <AccountPanel title="Active Bookings" subtitle={`${data.bookings.length} bookings`}>
+          {data.bookings.length === 0 ? (
+            <AccountEmpty title="No bookings yet" hint="Confirm a quote to create your first booking." />
+          ) : (
+            <ul className="jb-account-list">
+              {data.bookings.slice(0, 5).map((b) => {
+                const leg = b.itinerary?.legs?.[0];
+                const canPay = ['pending', 'confirmed'].includes(String(b.status).toLowerCase());
+                return (
+                  <li key={b.id} className="jb-account-list-item jb-account-list-item--stack">
+                    <div className="jb-account-list-item__row">
+                      <div>
+                        <strong>Booking #{b.id}</strong>
+                        {leg && (
+                          <div className="jb-account-meta">
+                            {leg.fromAirport} → {leg.toAirport}
+                          </div>
+                        )}
+                      </div>
+                      <StatusBadge status={b.status} />
+                    </div>
+                    {canPay && (
+                      <div className="jb-account-actions">
+                        <button type="button" className="jb-btn-ghost" onClick={() => payBooking(b.id, 'onepay')}>
+                          OnePay
+                        </button>
+                        <button type="button" className="jb-btn-ghost" onClick={() => payBooking(b.id, '9pay')}>
+                          9Pay
+                        </button>
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </AccountPanel>
+      </div>
+
+      {(data.jetCards.length > 0 || data.travelCredits.credits > 0) && (
+        <AccountPanel title="Membership & Credits">
+          <div className="jb-account-membership-row">
+            {data.jetCards.map((c) => (
+              <div key={c.accountId} className="jb-account-mini-card">
+                <span className="jb-account-mini-card__label">{c.planName}</span>
+                <strong>{c.remainingHours}h</strong>
+              </div>
+            ))}
+            {data.travelCredits.credits > 0 && (
+              <div className="jb-account-mini-card">
+                <span className="jb-account-mini-card__label">{t(locale, 'travelCredits')}</span>
+                <strong>
+                  {data.travelCredits.credits.toLocaleString()} {data.travelCredits.currency}
+                </strong>
+              </div>
+            )}
+          </div>
+        </AccountPanel>
+      )}
+    </>
+  );
+}
 
 export default function AccountPage({ params }: { params: { locale: string } }) {
   const locale = params?.locale ?? 'en-us';
-  const { requireToken } = useAccountAuth(locale);
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [user, setUser] = useState<UserProfile | null>(null);
-  const [payMsg, setPayMsg] = useState<string | null>(null);
-  const [payingId, setPayingId] = useState<number | null>(null);
-
-  useEffect(() => {
-    const token = requireToken();
-    if (!token) return;
-    api.getMe(token).then(setUser).catch(() => setUser(null));
-    api.getMyBookings(token).then((b) => setBookings(b as Booking[])).catch(() => setBookings([]));
-  }, [locale, requireToken]);
-
-  async function payBooking(bookingId: number, gateway: 'onepay' | '9pay') {
-    const token = requireToken();
-    if (!token) return;
-    setPayingId(bookingId);
-    setPayMsg(null);
-    try {
-      const returnUrl = `${window.location.origin}/${locale}/account`;
-      const res = await api.createGatewayPayment(token, { bookingId, gateway, returnUrl });
-      window.location.href = res.redirectUrl;
-    } catch (e) {
-      setPayMsg(e instanceof Error ? e.message : 'Payment could not be started');
-      setPayingId(null);
-    }
-  }
-
-  const displayName =
-    user?.firstName || user?.lastName
-      ? [user.firstName, user.lastName].filter(Boolean).join(' ')
-      : user?.email;
-
-  return (
-    <AccountShell locale={locale}>
-      {user && (
-        <div className="jb-account-card">
-          <h2>Profile</h2>
-          <p>{displayName}</p>
-          <p className="jb-account-meta">{user.email}</p>
-          {user.accountType && <p className="jb-account-meta">Account type: {user.accountType}</p>}
-        </div>
-      )}
-      <div className="jb-account-card">
-        <h2>My Bookings</h2>
-        {payMsg && <p className="jb-auth-error">{payMsg}</p>}
-        {bookings.length === 0 ? (
-          <p className="jb-account-meta">No bookings yet.</p>
-        ) : (
-          <ul className="jb-bullet-list">
-            {bookings.map((b) => {
-              const status = String(b.status ?? b.bookingStatus ?? 'pending');
-              const canPay = ['pending', 'confirmed', 'PENDING', 'CONFIRMED'].includes(status);
-              return (
-                <li key={b.id} style={{ marginBottom: 12 }}>
-                  Booking #{b.id} — {status}
-                  {canPay && (
-                    <div style={{ marginTop: 8, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                      <button
-                        type="button"
-                        className="jb-btn-ghost"
-                        disabled={payingId === b.id}
-                        onClick={() => payBooking(b.id, 'onepay')}
-                      >
-                        Pay with OnePay
-                      </button>
-                      <button
-                        type="button"
-                        className="jb-btn-ghost"
-                        disabled={payingId === b.id}
-                        onClick={() => payBooking(b.id, '9pay')}
-                      >
-                        Pay with 9Pay
-                      </button>
-                    </div>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </div>
-    </AccountShell>
-  );
+  return <OverviewContent locale={locale} />;
 }

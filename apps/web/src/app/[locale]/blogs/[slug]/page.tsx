@@ -1,3 +1,4 @@
+import { t, tn } from '@jetbay/i18n';
 import { SlugDetailLayout, SlugHeroImage } from '../../../../components/layout/SlugDetailLayout';
 import { LightSection } from '../../../../components/layout/LightSection';
 import { QuoteSearchWidget } from '../../../../components/QuoteSearchWidget';
@@ -10,8 +11,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale, slug } = await params;
   const post = await safeApi(() => api.getBlog(slug, apiLocale(locale)), null);
   return buildMetadata({
-    title: post ? String(post.title) : 'Blog',
+    title: post ? String(post.title) : t(locale, 'blogTag'),
     description: post ? String(post.excerpt ?? '') : '',
+    path: `/${locale}/blogs/${slug}`,
   });
 }
 
@@ -27,12 +29,16 @@ export default async function BlogPostPage({
     return (
       <SlugDetailLayout
         locale={locale}
-        title="Post not found"
-        breadcrumb={[{ label: 'Home', href: '' }, { label: 'Blogs', href: '/blogs' }, { label: 'Not found' }]}
+        title={t(locale, 'postNotFound')}
+        breadcrumb={[
+          { label: tn(locale, 'home'), href: '' },
+          { label: tn(locale, 'blogs'), href: '/blogs' },
+          { label: t(locale, 'notFoundShort') },
+        ]}
         backHref="/blogs"
-        backLabel="Blogs"
+        backLabel={tn(locale, 'blogs')}
       >
-        <p>This post is no longer available.</p>
+        <p>{t(locale, 'postUnavailable')}</p>
       </SlugDetailLayout>
     );
   }
@@ -43,14 +49,18 @@ export default async function BlogPostPage({
     <SlugDetailLayout
       locale={locale}
       title={String(post.title)}
-      tag="Blog"
+      tag={t(locale, 'blogTag')}
       heroImage={thumb}
       excerpt={String(post.excerpt ?? '')}
-      breadcrumb={[{ label: 'Home', href: '' }, { label: 'Blogs', href: '/blogs' }, { label: String(post.title) }]}
+      breadcrumb={[
+        { label: tn(locale, 'home'), href: '' },
+        { label: tn(locale, 'blogs'), href: '/blogs' },
+        { label: String(post.title) },
+      ]}
       backHref="/blogs"
-      backLabel="All Blogs"
+      backLabel={t(locale, 'allBlogs')}
       footer={
-        <LightSection title="Plan your next flight" subtitle="Search available aircraft worldwide.">
+        <LightSection title={t(locale, 'planNextFlight')} subtitle={t(locale, 'planNextFlightSubtitle')}>
           <QuoteSearchWidget locale={locale} />
         </LightSection>
       }

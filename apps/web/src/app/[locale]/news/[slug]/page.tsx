@@ -1,3 +1,4 @@
+import { t, tn } from '@jetbay/i18n';
 import { SlugDetailLayout, SlugHeroImage } from '../../../../components/layout/SlugDetailLayout';
 import { LightSection } from '../../../../components/layout/LightSection';
 import { QuoteSearchWidget } from '../../../../components/QuoteSearchWidget';
@@ -10,8 +11,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale, slug } = await params;
   const article = await safeApi(() => api.getNewsArticle(slug, apiLocale(locale)), null);
   return buildMetadata({
-    title: article ? String(article.title) : 'News',
+    title: article ? String(article.title) : t(locale, 'newsTag'),
     description: article ? String(article.excerpt ?? '') : '',
+    path: `/${locale}/news/${slug}`,
   });
 }
 
@@ -27,12 +29,16 @@ export default async function NewsArticlePage({
     return (
       <SlugDetailLayout
         locale={locale}
-        title="Article not found"
-        breadcrumb={[{ label: 'Home', href: '' }, { label: 'News', href: '/news' }, { label: 'Not found' }]}
+        title={t(locale, 'articleNotFound')}
+        breadcrumb={[
+          { label: tn(locale, 'home'), href: '' },
+          { label: tn(locale, 'news'), href: '/news' },
+          { label: t(locale, 'notFoundShort') },
+        ]}
         backHref="/news"
-        backLabel="News"
+        backLabel={tn(locale, 'news')}
       >
-        <p>This article is no longer available.</p>
+        <p>{t(locale, 'articleUnavailable')}</p>
       </SlugDetailLayout>
     );
   }
@@ -41,26 +47,28 @@ export default async function NewsArticlePage({
   const publishedAt = String(article.publishedAt ?? '');
 
   return (
-    <>
-      <SlugDetailLayout
-        locale={locale}
-        title={String(article.title)}
-        tag="News"
-        heroImage={thumb}
-        publishedAt={publishedAt}
-        excerpt={String(article.excerpt ?? '')}
-        breadcrumb={[{ label: 'Home', href: '' }, { label: 'News', href: '/news' }, { label: String(article.title) }]}
-        backHref="/news"
-        backLabel="All News"
-        footer={
-          <LightSection title="Ready to fly?" subtitle="Search available aircraft for your next journey.">
-            <QuoteSearchWidget locale={locale} />
-          </LightSection>
-        }
-      >
-        <SlugHeroImage src={thumb} alt={String(article.title)} />
-        <div className="jb-prose jb-slug-prose">{String(article.body ?? article.excerpt ?? '')}</div>
-      </SlugDetailLayout>
-    </>
+    <SlugDetailLayout
+      locale={locale}
+      title={String(article.title)}
+      tag={t(locale, 'newsTag')}
+      heroImage={thumb}
+      publishedAt={publishedAt}
+      excerpt={String(article.excerpt ?? '')}
+      breadcrumb={[
+        { label: tn(locale, 'home'), href: '' },
+        { label: tn(locale, 'news'), href: '/news' },
+        { label: String(article.title) },
+      ]}
+      backHref="/news"
+      backLabel={t(locale, 'allNews')}
+      footer={
+        <LightSection title={t(locale, 'readyToFly')} subtitle={t(locale, 'readyToFlySubtitle')}>
+          <QuoteSearchWidget locale={locale} />
+        </LightSection>
+      }
+    >
+      <SlugHeroImage src={thumb} alt={String(article.title)} />
+      <div className="jb-prose jb-slug-prose">{String(article.body ?? article.excerpt ?? '')}</div>
+    </SlugDetailLayout>
   );
 }

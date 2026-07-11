@@ -32,12 +32,14 @@ export class I18nController {
   @Public()
   @ApiOperation({ summary: 'Resolve web/accept-language to DB locale + fallback chain' })
   @ApiQuery({ name: 'locale', required: false, example: 'en-us' })
-  @ApiQuery({ name: 'cookie', required: false })
+  @ApiQuery({ name: 'cookieLocale', required: false, description: 'Simulate jb_locale cookie value' })
   resolve(
     @Query('locale') locale?: string,
-    @Query('cookie') cookie?: string,
+    @Query('cookieLocale') cookieLocale?: string,
+    @Query('cookie') cookieLegacy?: string,
     @Headers('accept-language') acceptLanguage?: string,
   ) {
+    const cookie = cookieLocale ?? cookieLegacy;
     const web = this.locales.detectWeb(acceptLanguage, cookie ?? locale);
     const db = this.locales.normalize(locale ?? cookie ?? web);
     return {

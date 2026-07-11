@@ -1,14 +1,20 @@
 import Link from 'next/link';
+import { t, tn } from '@jetbay/i18n';
 import { SubPageLayout } from '../../../components/layout/SubPageLayout';
 import { api, safeApi } from '../../../lib/api';
 import { apiLocale } from '../../../config/locales';
 import { buildMetadata } from '../../../lib/metadata';
 import { navHref } from '../../../config/navigation';
-import { JB, destinationThumb } from '../../../config/jetbay-cdn';
+import { JB } from '../../../config/jetbay-cdn';
 import { CdnImage } from '../../../components/ui/CdnImage';
 
-export async function generateMetadata() {
-  return buildMetadata({ title: 'Blogs', description: 'Private aviation insights and travel guides.' });
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return buildMetadata({
+    title: tn(locale, 'blogs'),
+    description: t(locale, 'blogsMetaDesc'),
+    path: `/${locale}/blogs`,
+  });
 }
 
 export default async function BlogsPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -18,9 +24,9 @@ export default async function BlogsPage({ params }: { params: Promise<{ locale: 
   return (
     <SubPageLayout
       locale={locale}
-      title="Blogs"
-      description="Insights, guides, and stories from the world of private aviation."
-      tag="Company"
+      title={tn(locale, 'blogs')}
+      description={t(locale, 'blogsHeroDesc')}
+      tag={tn(locale, 'navCompany')}
       heroImage={JB.pages.newsDefault}
     >
       <div className="jb-news-grid">

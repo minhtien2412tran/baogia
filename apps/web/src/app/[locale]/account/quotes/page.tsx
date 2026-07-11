@@ -1,57 +1,47 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { api } from '../../../../lib/api';
-import { AccountShell, useAccountAuth } from '../../../../components/account/AccountShell';
+import Link from 'next/link';
+import { useAccount } from '../../../../components/account/AccountContext';
+import { AccountEmpty, AccountPanel, StatusBadge } from '../../../../components/account/AccountUI';
+import { t } from '../../../../lib/i18n';
 
-type Quote = {
-  id: number;
-  status: string;
-  tripType: string;
-  createdAt: string;
-  legs: { from: string; to: string; departure: string; passengers: number }[];
-};
-
-export default function AccountQuotesPage({ params }: { params: { locale: string } }) {
-  const locale = params?.locale ?? 'en-us';
-  const { requireToken } = useAccountAuth(locale);
-  const [quotes, setQuotes] = useState<Quote[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const token = requireToken();
-    if (!token) return;
-    api
-      .getMyQuotes(token)
-      .then(setQuotes)
-      .catch(() => setQuotes([]))
-      .finally(() => setLoading(false));
-  }, [locale, requireToken]);
+function QuotesContent({ locale }: { locale: string }) {
+  const { data } = useAccount();
+  if (!data) return null;
 
   return (
-    <AccountShell locale={locale}>
-      <div className="jb-account-card">
-        <h2>My Quote Requests</h2>
-        {loading ? (
-          <p className="jb-account-meta">Loading…</p>
-        ) : quotes.length === 0 ? (
-          <p className="jb-account-meta">No quote requests yet.</p>
+    <>
+      <header className="jb-account-hero">
+        <h1>{t(locale, 'myQuotes')}</h1>
+        <p>{data.quotes.length} quote requests on your account</p>
+      </header>
+      <AccountPanel title="All Quote Requests">
+        {data.quotes.length === 0 ? (
+          <AccountEmpty title="No quote requests yet" hint="Use the search widget to request a charter quote." />
         ) : (
-          <ul className="jb-bullet-list">
-            {quotes.map((q) => (
-              <li key={q.id} style={{ marginBottom: 12 }}>
-                <strong>#{q.id}</strong> — {q.status} · {q.tripType}
-                <br />
-                <span className="jb-account-meta">
+          <ul className="jb-account-list">
+            {data.quotes.map((q) => (
+              <li key={q.id} className="jb-account-list-item jb-account-list-item--stack">
+                <div className="jb-account-list-item__row">
+                  <div>
+                    <strong>Quote #{q.id}</strong> · {q.tripType}
+                    <div className="jb-account-meta">Submitted {q.createdAt.slice(0, 10)}</div>
+                  </div>
+                  <StatusBadge status={q.status} />
+                </div>
+                <div className="jb-account-meta">
                   {q.legs.map((l) => `${l.from}→${l.to} (${l.departure}, ${l.passengers} pax)`).join(' · ')}
-                </span>
-                <br />
-                <span className="jb-account-meta">Submitted {q.createdAt.slice(0, 10)}</span>
+                </div>
               </li>
             ))}
           </ul>
         )}
-      </div>
-    </AccountShell>
+      </AccountPanel>
+    </>
   );
+}
+
+export default function AccountQuotesPage({ params }: { params: { locale: string } }) {
+  const locale = params?.locale ?? 'en-us';
+  return <QuotesContent locale={locale} />;
 }

@@ -4,6 +4,7 @@ import * as bcrypt from 'bcryptjs';
 import { createHash } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
+import { CustomerCareService } from './customer-care/customer-care.service';
 import { OAuthService, type OAuthProfile } from './oauth.service';
 import { OtpService } from './otp.service';
 import { LoginDto, RegisterDto } from '../dto';
@@ -17,6 +18,7 @@ export class AuthService {
     private readonly jwt: JwtService,
     private readonly oauth: OAuthService,
     private readonly otp: OtpService,
+    private readonly customerCare: CustomerCareService,
   ) {}
 
   private hashRefreshToken(token: string) {
@@ -78,6 +80,7 @@ export class AuthService {
       },
     });
     await this.audit.log('USER_REGISTERED', { userId: user.id }, user.id);
+    void this.customerCare.onUserRegistered({ userId: user.id, email: user.email });
     return {
       message: 'User successfully registered',
       user: {
@@ -212,6 +215,11 @@ export class AuthService {
         },
       });
       await this.audit.log('USER_REGISTERED_OAUTH', { provider: profile.provider }, user.id);
+      void this.customerCare.onUserRegistered({
+        userId: user.id,
+        email: user.email,
+        firstName: user.firstName,
+      });
     }
 
     await this.prisma.userAuthProvider.create({
@@ -268,6 +276,7 @@ export class AuthService {
       },
     });
     await this.audit.log('USER_REGISTERED_OTP', { phone: normalized }, user.id);
+    void this.customerCare.onUserRegistered({ userId: user.id, email: userEmail });
     return {
       message: 'User successfully registered',
       user: {

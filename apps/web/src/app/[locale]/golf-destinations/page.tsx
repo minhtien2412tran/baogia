@@ -1,14 +1,20 @@
 import Link from 'next/link';
+import { t, tn } from '@jetbay/i18n';
 import { SubPageLayout } from '../../../components/layout/SubPageLayout';
 import { api, safeApi } from '../../../lib/api';
 import { buildMetadata } from '../../../lib/metadata';
 import { navHref } from '../../../config/navigation';
-import { apiLocale } from '../../../config/destination-categories';
+import { apiLocale } from '../../../config/locales';
 import { JB, destinationThumb } from '../../../config/jetbay-cdn';
 import { CdnImage } from '../../../components/ui/CdnImage';
 
-export async function generateMetadata() {
-  return buildMetadata({ title: 'Golf Destinations', description: 'Private jet charters to championship golf destinations.' });
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return buildMetadata({
+    title: tn(locale, 'golfGetaways'),
+    description: tn(locale, 'golfGetawaysDesc'),
+    path: `/${locale}/golf-destinations`,
+  });
 }
 
 export default async function GolfDestinationsPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -20,9 +26,9 @@ export default async function GolfDestinationsPage({ params }: { params: Promise
   return (
     <SubPageLayout
       locale={locale}
-      title="Golf Getaways"
-      description="Arrive in style at the world's most exclusive golf courses."
-      tag="Destinations"
+      title={tn(locale, 'golfGetaways')}
+      description={tn(locale, 'golfGetawaysDesc')}
+      tag={tn(locale, 'navDestinations')}
       heroImage={JB.sections.islandBg}
     >
       <div className="jb-dest-grid">
@@ -37,7 +43,9 @@ export default async function GolfDestinationsPage({ params }: { params: Promise
               <div className="jb-dest-body">
                 <span className="jb-dest-tag">{String(d.category)}</span>
                 <h3 className="jb-dest-name">{String(d.title ?? d.city)}</h3>
-                <p className="jb-dest-meta">{String(d.city)}, {String(d.country)}</p>
+                <p className="jb-dest-meta">
+                  {String(d.city)}, {String(d.country)}
+                </p>
               </div>
             </Link>
           );

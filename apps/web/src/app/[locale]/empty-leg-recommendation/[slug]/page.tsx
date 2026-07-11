@@ -1,13 +1,18 @@
 import Link from 'next/link';
+import { t, tn } from '@jetbay/i18n';
 import { SubPageLayout } from '../../../../components/layout/SubPageLayout';
 import { EmptyLegRequestForm } from '../../../../components/forms/EmptyLegRequestForm';
 import { api, safeApi } from '../../../../lib/api';
 import { buildMetadata } from '../../../../lib/metadata';
 import { navHref } from '../../../../config/navigation';
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  return buildMetadata({ title: `Empty Leg: ${slug}`, description: 'Empty leg private jet offer.' });
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+  const { locale, slug } = await params;
+  return buildMetadata({
+    title: `${tn(locale, 'emptyLegs')}: ${slug}`,
+    description: t(locale, 'emptyLegMetaDesc'),
+    path: `/${locale}/empty-leg-recommendation/${slug}`,
+  });
 }
 
 export default async function EmptyLegDetailPage({
@@ -20,8 +25,10 @@ export default async function EmptyLegDetailPage({
 
   if (!el) {
     return (
-      <SubPageLayout locale={locale} title="Offer not found">
-        <Link href={navHref(locale, '/empty-leg')} className="jb-link-gold">← All empty legs</Link>
+      <SubPageLayout locale={locale} title={t(locale, 'offerNotFound')}>
+        <Link href={navHref(locale, '/empty-leg')} className="jb-link-gold">
+          ← {t(locale, 'allEmptyLegsBack')}
+        </Link>
       </SubPageLayout>
     );
   }
@@ -33,18 +40,25 @@ export default async function EmptyLegDetailPage({
     <SubPageLayout
       locale={locale}
       title={`${from.city} → ${to.city}`}
-      description={`${el.discountPct}% off · USD ${Number(el.price).toLocaleString()}`}
-      tag="Empty Leg"
+      description={`${t(locale, 'discountOff', { n: String(el.discountPct) })} · USD ${Number(el.price).toLocaleString()}`}
+      tag={t(locale, 'emptyLegOfferTag')}
       breadcrumb={[
-        { label: 'Home', href: '' },
-        { label: 'Empty Legs', href: '/empty-leg' },
+        { label: tn(locale, 'home'), href: '' },
+        { label: tn(locale, 'emptyLegs'), href: '/empty-leg' },
         { label: String(el.slug) },
       ]}
     >
       <div className="jb-content-block">
-        <p><strong>Aircraft:</strong> {String(el.aircraftModel ?? 'TBC')}</p>
-        <p><strong>Departure:</strong> {String(el.departAt ?? '').slice(0, 16)}</p>
-        <p><strong>Price:</strong> USD {Number(el.price).toLocaleString()} ({String(el.discountPct)}% discount)</p>
+        <p>
+          <strong>{t(locale, 'labelAircraft')}:</strong> {String(el.aircraftModel ?? 'TBC')}
+        </p>
+        <p>
+          <strong>{t(locale, 'labelDeparture')}:</strong> {String(el.departAt ?? '').slice(0, 16)}
+        </p>
+        <p>
+          <strong>{t(locale, 'labelPrice')}:</strong> USD {Number(el.price).toLocaleString()} (
+          {String(el.discountPct)}% {t(locale, 'labelDiscount')})
+        </p>
       </div>
       <EmptyLegRequestForm emptyLegId={Number(el.id)} />
     </SubPageLayout>

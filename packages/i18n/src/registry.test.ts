@@ -6,6 +6,8 @@ import {
   resolveLocaleFallbackChain,
   detectWebLocale,
   webLocalesForDb,
+  isValidDbLocale,
+  getWebLocaleConfig,
 } from './registry';
 
 describe('toDbLocale', () => {
@@ -23,6 +25,30 @@ describe('toDbLocale', () => {
   it('defaults unknown to en', () => {
     assert.equal(toDbLocale('fr'), 'en');
     assert.equal(toDbLocale(''), 'en');
+  });
+});
+
+describe('isValidDbLocale', () => {
+  it('accepts canonical DB codes only', () => {
+    assert.equal(isValidDbLocale('en'), true);
+    assert.equal(isValidDbLocale('zh-cn'), true);
+    assert.equal(isValidDbLocale('vi'), true);
+  });
+
+  it('rejects web aliases and unknown codes', () => {
+    assert.equal(isValidDbLocale('en-us'), false);
+    assert.equal(isValidDbLocale('fr'), false);
+    assert.equal(isValidDbLocale(''), false);
+  });
+});
+
+describe('getWebLocaleConfig', () => {
+  it('returns config for known code', () => {
+    assert.equal(getWebLocaleConfig('zh-cn').currency, 'CNY');
+  });
+
+  it('falls back to en-us for unknown', () => {
+    assert.equal(getWebLocaleConfig('xx').code, 'en-us');
   });
 });
 
@@ -55,5 +81,9 @@ describe('detectWebLocale', () => {
 
   it('parses accept-language', () => {
     assert.equal(detectWebLocale('vi-VN,vi;q=0.9'), 'vi');
+  });
+
+  it('ignores malformed accept-language', () => {
+    assert.equal(detectWebLocale(',,;'), 'en-us');
   });
 });

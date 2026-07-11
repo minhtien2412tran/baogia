@@ -79,7 +79,8 @@ export function isValidWebLocale(code: string): code is WebLocale {
 }
 
 export function isValidDbLocale(code: string): code is DbLocale {
-  return DB_SET.has(toDbLocale(code));
+  const raw = code.trim().toLowerCase();
+  return DB_SET.has(raw);
 }
 
 /**

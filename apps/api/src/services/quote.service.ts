@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
-import { EmailService } from './email.service';
+import { CustomerCareService } from './customer-care/customer-care.service';
 import { PaymentService } from './payment.service';
 import { OnepayService } from './onepay.service';
 import { NinepayService } from './ninepay.service';
@@ -25,7 +25,7 @@ export class QuoteService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
-    private readonly email: EmailService,
+    private readonly customerCare: CustomerCareService,
     private readonly payments: PaymentService,
     private readonly onepay: OnepayService,
     private readonly ninepay: NinepayService,
@@ -145,10 +145,11 @@ export class QuoteService {
       { quoteId: quote.id, email: body.email },
       opts?.userId,
     );
-    await this.email.sendQuoteConfirmation({
+    void this.customerCare.onQuoteReceived({
+      quoteId: quote.id,
       email: body.email,
       firstName: body.firstName,
-      requestId: quote.id,
+      userId: opts?.userId,
     });
     return {
       requestId: quote.id,
@@ -294,6 +295,7 @@ export class QuoteService {
     });
 
     await this.audit.log('PAYMENT_CONFIRMED', { paymentId: updated.id });
+    void this.customerCare.onPaymentConfirmed(updated.id);
 
     return {
       paymentIntentId: String(updated.id),
@@ -421,6 +423,7 @@ export class QuoteService {
       data: { status: 'PAID' },
     });
     await this.audit.log('GATEWAY_PAYMENT_CONFIRMED', { paymentId: payment.id, orderRef });
+    void this.customerCare.onPaymentConfirmed(payment.id);
   }
 
   async handleStripeWebhook(payload: Buffer, signature: string) {
@@ -436,6 +439,7 @@ export class QuoteService {
           data: { status: 'PAID', transactionRef: intent.id },
         });
         await this.audit.log('STRIPE_PAYMENT_CONFIRMED', { paymentId, intentId: intent.id });
+        void this.customerCare.onPaymentConfirmed(paymentId);
       }
     }
 

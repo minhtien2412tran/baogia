@@ -1,5 +1,12 @@
-import type { ReactNode } from 'react';
+import { AccountLayoutClient } from '../../../components/account/AccountLayoutClient';
 
-export default function AccountLayout({ children }: { children: ReactNode }) {
-  return children;
+export default async function AccountLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  return <AccountLayoutClient locale={locale}>{children}</AccountLayoutClient>;
 }

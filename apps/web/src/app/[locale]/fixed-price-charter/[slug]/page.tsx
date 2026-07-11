@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { t, tn } from '@jetbay/i18n';
 import { SlugDetailLayout } from '../../../../components/layout/SlugDetailLayout';
 import { FixedPriceBookForm } from '../../../../components/forms/FixedPriceBookForm';
 import { LightSection } from '../../../../components/layout/LightSection';
@@ -9,13 +10,21 @@ import { navHref } from '../../../../config/navigation';
 import { fixedPriceRouteHero } from '../../../../config/jetbay-cdn';
 import { CdnImage } from '../../../../components/ui/CdnImage';
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
+  const { locale, slug } = await params;
   const route = await safeApi(() => api.getFixedPriceRoute(slug), null);
   const title = route
     ? `${(route.fromAirport as { city: string })?.city} → ${(route.toAirport as { city: string })?.city}`
-    : 'Fixed Price Route';
-  return buildMetadata({ title, description: 'Fixed-price private jet charter route.' });
+    : t(locale, 'routeNotFound');
+  return buildMetadata({
+    title,
+    description: t(locale, 'fixedPriceRouteMetaDesc'),
+    path: `/${locale}/fixed-price-charter/${slug}`,
+  });
 }
 
 export default async function FixedPriceDetailPage({
@@ -30,12 +39,16 @@ export default async function FixedPriceDetailPage({
     return (
       <SlugDetailLayout
         locale={locale}
-        title="Route not found"
-        breadcrumb={[{ label: 'Home', href: '' }, { label: 'Fixed Price', href: '/fixed-price-charter' }, { label: 'Not found' }]}
+        title={t(locale, 'routeNotFound')}
+        breadcrumb={[
+          { label: tn(locale, 'home'), href: '' },
+          { label: tn(locale, 'fixedPriceCharter'), href: '/fixed-price-charter' },
+          { label: t(locale, 'routeNotFound') },
+        ]}
         backHref="/fixed-price-charter"
-        backLabel="All routes"
+        backLabel={t(locale, 'allRoutes')}
       >
-        <p>This route is no longer available.</p>
+        <p>{t(locale, 'routeUnavailable')}</p>
       </SlugDetailLayout>
     );
   }
@@ -57,19 +70,26 @@ export default async function FixedPriceDetailPage({
       <SlugDetailLayout
         locale={locale}
         title={`${from.city} → ${to.city}`}
-        tag="Fixed Price"
+        tag={t(locale, 'fixedPriceLabel')}
         heroImage={hero}
-        excerpt={`Transparent fixed pricing from ${from.iata} to ${to.iata}. Price certainty on this popular route.`}
+        excerpt={t(locale, 'fixedPriceExcerpt', { from: from.iata, to: to.iata })}
         breadcrumb={[
-          { label: 'Home', href: '' },
-          { label: 'Fixed Price', href: '/fixed-price-charter' },
+          { label: tn(locale, 'home'), href: '' },
+          { label: tn(locale, 'fixedPriceCharter'), href: '/fixed-price-charter' },
           { label: `${from.iata} → ${to.iata}` },
         ]}
         backHref="/fixed-price-charter"
-        backLabel="All Fixed-Price Routes"
+        backLabel={t(locale, 'allFixedPriceRoutesBack')}
       >
         <div className="jb-route-detail-hero">
-          <CdnImage src={hero} alt={`${from.city} to ${to.city}`} width={1200} height={400} className="jb-route-detail-img" priority />
+          <CdnImage
+            src={hero}
+            alt={`${from.city} → ${to.city}`}
+            width={1200}
+            height={400}
+            className="jb-route-detail-img"
+            priority
+          />
         </div>
 
         <div className="jb-route-detail-airports">
@@ -86,19 +106,21 @@ export default async function FixedPriceDetailPage({
           </div>
         </div>
 
-        <LightSection title="Pricing tiers" subtitle="Choose the aircraft category that fits your party size.">
+        <LightSection title={t(locale, 'pricingTiers')} subtitle={t(locale, 'pricingTiersSubtitle')}>
           <div className="jb-pricing-tiers">
             {tiers.length === 0 ? (
-              <p className="jb-tier-empty">Pricing on request — contact concierge for a quote.</p>
+              <p className="jb-tier-empty">{t(locale, 'pricingOnRequestDetail')}</p>
             ) : (
-              tiers.map((t) => (
-                <div key={t.category} className="jb-pricing-tier-card">
+              tiers.map((tier) => (
+                <div key={tier.category} className="jb-pricing-tier-card">
                   <div>
-                    <div className="jb-tier-label">{t.categoryLabel ?? t.category} Jets</div>
-                    <div className="jb-tier-pax">Up to {t.paxLimit} passengers</div>
-                    {t.includedTerms ? <div className="jb-tier-terms">{t.includedTerms}</div> : null}
+                    <div className="jb-tier-label">
+                      {t(locale, 'categoryJets', { category: tier.categoryLabel ?? tier.category })}
+                    </div>
+                    <div className="jb-tier-pax">{t(locale, 'upToPassengers', { n: tier.paxLimit })}</div>
+                    {tier.includedTerms ? <div className="jb-tier-terms">{tier.includedTerms}</div> : null}
                   </div>
-                  <div className="jb-tier-price">USD {t.price.toLocaleString()}</div>
+                  <div className="jb-tier-price">USD {tier.price.toLocaleString()}</div>
                 </div>
               ))
             )}
@@ -106,31 +128,32 @@ export default async function FixedPriceDetailPage({
         </LightSection>
 
         <section className="jb-sub-section">
-          <h2 className="jb-section-title">What&apos;s included</h2>
+          <h2 className="jb-section-title">{t(locale, 'whatsIncluded')}</h2>
           <ul className="jb-bullet-list">
-            <li>Aircraft, crew, and standard handling fees</li>
-            <li>Departure and arrival at private terminals (FBO)</li>
-            <li>24/7 JetBay concierge support</li>
+            <li>{t(locale, 'fpIncluded1')}</li>
+            <li>{t(locale, 'fpIncluded2')}</li>
+            <li>{t(locale, 'fpIncluded3')}</li>
           </ul>
-          <h2 className="jb-section-title" style={{ marginTop: 32 }}>What&apos;s not included</h2>
+          <h2 className="jb-section-title" style={{ marginTop: 32 }}>
+            {t(locale, 'whatsNotIncluded')}
+          </h2>
           <ul className="jb-bullet-list">
-            <li>Catering upgrades and ground transportation</li>
-            <li>International handling and overflight permits where applicable</li>
-            <li>De-icing, hangar, or overnight fees if required</li>
+            <li>{t(locale, 'fpNotIncluded1')}</li>
+            <li>{t(locale, 'fpNotIncluded2')}</li>
+            <li>{t(locale, 'fpNotIncluded3')}</li>
           </ul>
         </section>
 
-        <FixedPriceBookForm
-          routeId={Number(route.id)}
-          tiers={tiers}
-        />
+        <FixedPriceBookForm locale={locale} routeId={Number(route.id)} tiers={tiers} />
 
         <div className="jb-cta-row">
-          <Link href={navHref(locale, '/booking-process')} className="jb-btn-outline">How Booking Works</Link>
+          <Link href={navHref(locale, '/booking-process')} className="jb-btn-outline">
+            {t(locale, 'howBookingWorks')}
+          </Link>
         </div>
       </SlugDetailLayout>
 
-      <LightSection title="Search this route" subtitle="Get a tailored quote in minutes.">
+      <LightSection title={t(locale, 'searchThisRoute')} subtitle={t(locale, 'searchThisRouteSubtitle')}>
         <QuoteSearchWidget locale={locale} />
       </LightSection>
     </>
