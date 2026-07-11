@@ -45,10 +45,6 @@
   padding: 0 24px;
 }
 
-.jb-logo-link {
-  flex-shrink: 0;
-}
-
 .jb-header-actions {
   display: flex;
   align-items: center;
@@ -75,13 +71,32 @@
   align-items: center;
   text-decoration: none;
   flex-shrink: 0;
+  width: 120px;
+  max-width: 120px;
+  height: 32px;
+  overflow: hidden;
+  line-height: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.jb-logo-link > span {
+  display: block !important;
+  width: 120px !important;
+  max-width: 120px !important;
+  height: 32px !important;
+  max-height: 32px !important;
+  line-height: 0 !important;
 }
 
 .jb-logo-img {
-  height: 36px;
-  width: auto;
-  max-width: 160px;
+  display: block;
+  width: 120px !important;
+  max-width: 120px !important;
+  height: 32px !important;
+  max-height: 32px !important;
   object-fit: contain;
+  object-position: left center;
 }
 
 .jb-cover-img {
@@ -801,6 +816,34 @@
   pointer-events: none;
   overflow: hidden;
   border-radius: var(--jb-radius);
+}
+
+.jb-stat-desktop-featured .jb-stat-bg,
+.jb-stat-mobile-hero-bg {
+  opacity: 1;
+}
+
+.jb-stat-desktop-featured .jb-stat-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(25, 59, 67, 0.45) 0%,
+    rgba(10, 12, 15, 0.82) 100%
+  );
+  z-index: 1;
+}
+
+.jb-stat-desktop-featured {
+  background: #193b43;
+}
+
+.jb-stat-desktop-featured .jb-stat-num,
+.jb-stat-desktop-featured .jb-stat-label,
+.jb-stat-desktop-featured .jb-stat-desc {
+  position: relative;
+  z-index: 2;
 }
 
 /* ── Media logos ── */

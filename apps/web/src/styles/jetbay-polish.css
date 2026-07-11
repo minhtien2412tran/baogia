@@ -1481,6 +1481,31 @@
   overflow: hidden;
   color: #fff;
   padding: 24px;
+  background: #193b43;
+}
+
+.jb-stat-desktop-featured .jb-stat-bg {
+  opacity: 1;
+  border-radius: 16px;
+}
+
+.jb-stat-desktop-featured .jb-stat-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(25, 59, 67, 0.4) 0%,
+    rgba(10, 12, 15, 0.78) 100%
+  );
+}
+
+.jb-stat-desktop-featured .jb-stat-num,
+.jb-stat-desktop-featured .jb-stat-label,
+.jb-stat-desktop-featured .jb-stat-desc {
+  position: relative;
+  z-index: 2;
 }
 
 .jb-stat-desktop-featured .jb-stat-label {

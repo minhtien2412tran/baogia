@@ -311,8 +311,19 @@
     gap: 8px;
   }
 
-  .jb-logo-img {
-    height: 28px;
+  .jb-logo-img,
+  .jb-logo-link {
+    width: 108px !important;
+    max-width: 108px !important;
+    height: 28px !important;
+    max-height: 28px !important;
+  }
+
+  .jb-logo-link > span {
+    width: 108px !important;
+    max-width: 108px !important;
+    height: 28px !important;
+    max-height: 28px !important;
   }
 
   .jb-hero h1,

@@ -6,6 +6,7 @@ import { getMegaMenu, tn } from '@jetbay/i18n';
 import { navHref, navLinkIcon } from '../../config/navigation';
 import { JB } from '../../config/jetbay-cdn';
 import { CdnImage } from '../ui/CdnImage';
+import { JetBayLogo } from '../ui/JetBayLogo';
 import { LanguagePicker, LocaleCurrencySelector } from './LocaleCurrencySelector';
 import { HeaderUserMenu, MegaMenuAuthLinks } from './HeaderUserMenu';
 import { t } from '../../lib/i18n';
@@ -37,7 +38,7 @@ export function JetBayHeader({ locale, currency = 'USD' }: { locale: string; cur
             <span className="jb-menu-label jb-hide-mobile">{t(locale, 'menu')}</span>
           </button>
           <Link href={navHref(locale, '')} className="jb-logo-link">
-            <CdnImage src={JB.logo} alt="JetBay" width={240} height={64} className="jb-logo-img" priority />
+            <JetBayLogo priority />
           </Link>
           <nav className="jb-desktop-nav jb-hide-mobile" aria-label="Main">
             {menu.slice(0, 4).map((group) => (
@@ -82,7 +83,7 @@ export function JetBayHeader({ locale, currency = 'USD' }: { locale: string; cur
         <div className="jb-mega-backdrop" onClick={closeMenu} />
         <div className="jb-mega-panel jb-mega-vertical-panel">
           <div className="jb-mega-header">
-            <CdnImage src={JB.logo} alt="JetBay" width={200} height={53} className="jb-logo-img" />
+            <JetBayLogo />
             <button type="button" className="jb-menu-btn" onClick={closeMenu} aria-label="Close menu">✕</button>
           </div>
 

@@ -6,6 +6,7 @@ import '../../styles/jetbay-service.css';
 import '../../styles/jetbay-jetcard.css';
 import '../../styles/jetbay-responsive.css';
 import '../../styles/jetbay-promo.css';
+import '../../styles/jetbay-modern.css';
 import { JetBayHeader } from '../../components/home/JetBayHeader';
 import { JetBayFooter } from '../../components/home/JetBayFooter';
 import { CookieBanner } from '../../components/home/CookieBanner';

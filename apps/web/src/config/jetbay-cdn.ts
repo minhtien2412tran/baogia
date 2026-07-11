@@ -1,7 +1,7 @@
 /** Local mirror of asserts.jet-bay.com — no external CDN at runtime */
 export const LOCAL_ASSET_ROOT = '/assets/jetbay';
-export const JTA_LOGO = '/assets/jetbay/v4/alt/jetbay-logo.webp';
-/** Retina-friendly logo path (same asset, rendered at 2× via CdnImage width) */
+export const JTA_LOGO = '/assets/jetbay/jetbay-logo.svg';
+/** Sharp vector wordmark for header/footer (Retina-safe) */
 export const JETBAY_LOGO = JTA_LOGO;
 
 export function localAsset(path: string): string {

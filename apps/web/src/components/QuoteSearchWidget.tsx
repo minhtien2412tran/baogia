@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { api } from '../lib/api';
 import { t } from '../lib/i18n';
 import { JB, localAsset } from '../config/jetbay-cdn';
+import { AircraftRowSkeleton } from '../ui/Skeleton';
 import { AirportInput } from './AirportInput';
 
 type TripType = 'ONE_WAY' | 'ROUND_TRIP' | 'MULTI_CITY';
@@ -253,7 +254,16 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
           )}
         </button>
 
-        {options && options.length > 0 && (
+        {loading && (
+          <div className="jb-aircraft-results jb-booking-results" aria-busy="true" aria-live="polite">
+            <h4>{t(locale, 'availableAircraft')}</h4>
+            <AircraftRowSkeleton />
+            <AircraftRowSkeleton />
+            <AircraftRowSkeleton />
+          </div>
+        )}
+
+        {!loading && options && options.length > 0 && (
           <div className="jb-aircraft-results jb-booking-results">
             <h4>{t(locale, 'availableAircraft')}</h4>
             {options.map((o, i) => (

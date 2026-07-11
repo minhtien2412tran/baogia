@@ -7,6 +7,7 @@ import { buildMetadata } from '../../../lib/metadata';
 import { navHref } from '../../../config/navigation';
 import { JB } from '../../../config/jetbay-cdn';
 import { CdnImage } from '../../../components/ui/CdnImage';
+import { EmptyState } from '../../../components/ui/EmptyState';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -29,23 +30,33 @@ export default async function NewsPage({ params }: { params: Promise<{ locale: s
       tag={tn(locale, 'navCompany')}
       heroImage={JB.pages.newsDefault}
     >
-      <div className="jb-news-grid">
-        {data.news.map((n: Record<string, unknown>) => {
-          const thumb = n.thumbnail ? String(n.thumbnail) : JB.pages.newsDefault;
-          return (
-            <Link key={String(n.slug)} href={navHref(locale, `/news/${n.slug}`)} className="jb-news-card">
-              <div className="jb-news-card-img">
-                <CdnImage src={thumb} alt={String(n.title)} fill className="jb-cover-img" sizes="(max-width:768px) 100vw, 33vw" />
-              </div>
-              <div className="jb-news-card-body">
-                <h3>{String(n.title)}</h3>
-                <p>{String(n.excerpt ?? '')}</p>
-                <small>{String(n.publishedAt ?? '').slice(0, 10)}</small>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
+      {data.news.length === 0 ? (
+        <EmptyState
+          variant="dark"
+          icon="news"
+          title={t(locale, 'noNewsTitle')}
+          description={t(locale, 'noNewsDesc')}
+          action={{ label: t(locale, 'noNewsCta'), href: navHref(locale, '/private-jet-charter') }}
+        />
+      ) : (
+        <div className="jb-news-grid">
+          {data.news.map((n: Record<string, unknown>) => {
+            const thumb = n.thumbnail ? String(n.thumbnail) : JB.pages.newsDefault;
+            return (
+              <Link key={String(n.slug)} href={navHref(locale, `/news/${n.slug}`)} className="jb-news-card">
+                <div className="jb-news-card-img">
+                  <CdnImage src={thumb} alt={String(n.title)} fill className="jb-cover-img" sizes="(max-width:768px) 100vw, 33vw" />
+                </div>
+                <div className="jb-news-card-body">
+                  <h3>{String(n.title)}</h3>
+                  <p>{String(n.excerpt ?? '')}</p>
+                  <small>{String(n.publishedAt ?? '').slice(0, 10)}</small>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </SubPageLayout>
   );
 }

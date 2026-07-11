@@ -32,6 +32,10 @@ export type MessageKey =
   | 'bookRoute'
   | 'loading'
   | 'readMore'
+  | 'latestNews'
+  | 'noNewsTitle'
+  | 'noNewsDesc'
+  | 'noNewsCta'
   | 'viewAll'
   | 'heroTitle'
   | 'heroSubtitle'
@@ -184,6 +188,10 @@ const en: Catalog = {
   bookRoute: 'Book this route',
   loading: 'Loading…',
   readMore: 'Read more',
+  latestNews: 'Latest news',
+  noNewsTitle: 'No news yet',
+  noNewsDesc: 'Check back soon for updates on private aviation, fleet expansions, and exclusive offers.',
+  noNewsCta: 'Get a charter quote',
   viewAll: 'View all',
   heroTitle: 'Global Private Jet Charter: Access to 10,000+ Aircraft',
   heroSubtitle: 'Seamless, trusted access to private aviation worldwide.',
@@ -334,6 +342,7 @@ const vi: Catalog = {
   bookRoute: 'Đặt tuyến này',
   loading: 'Đang xử lý…',
   readMore: 'Xem thêm',
+  latestNews: 'Tin mới nhất',
   viewAll: 'Xem tất cả',
   heroTitle: 'Thuê máy bay riêng toàn cầu: Truy cập 10.000+ máy bay',
   heroSubtitle: 'Truy cập liền mạch, đáng tin cậy vào hàng không tư nhân trên toàn thế giới.',
@@ -486,6 +495,7 @@ const zhCn: Catalog = {
   bookRoute: '预订此航线',
   loading: '处理中…',
   readMore: '阅读更多',
+  latestNews: '最新资讯',
   viewAll: '查看全部',
   heroTitle: '全球私人飞机包机：接入10,000+飞机',
   heroSubtitle: '无缝、可信赖的全球私人航空接入。',
@@ -619,6 +629,7 @@ const zhHk: Catalog = {
   searching: '正在搜尋飛機…',
   availableAircraft: '可用飛機',
   readMore: '閱讀更多',
+  latestNews: '最新資訊',
   viewAll: '查看全部',
   heroTitle: '全球私人飛機包機：接入10,000+飛機',
   heroSubtitle: '無縫、可信賴的全球私人航空接入。',

@@ -58,6 +58,7 @@
 - [x] **i18n dịch sạch FP + newsletter** (2026-07-11) — Fixed Price / Empty Leg / footer newsletter · ~50 key mới trong `@jetbay/i18n` · wire `t()` toàn trang listing
 - [x] **Service page CSS heritage** (2026-07-11) — `jetbay-service.css` · Playfair/Cormorant fonts · fix contrast light bands · neo-classical gold/cream
 - [x] **Home stats + logo polish** (2026-07-11) — fix invisible counter gradient on light band · uniform stat cards · retina logo · news grid width cap · footer newsletter placeholder contrast
+- [x] **Modern UI audit** (2026-07-11) — news card thumbnail + read more · footer 4-col + fix newsletter title wrap · media logo grid · payment/social chips · `jetbay-modern.css`
 
 - [x] `feat/api-security-hardening` (+ admin screens / partner-TC) → **`main`** (`9893789`)  
 - [x] VPS API `jetbay-be` + Admin `jetbay-admin` redeployed  
