@@ -235,21 +235,37 @@ export class BookFixedPriceDto {
 
 export class JetCardEnquiryDto {
   @ApiProperty({ example: 'Jane' })
+  @IsString()
+  @IsNotEmpty()
   firstName: string;
 
   @ApiProperty({ example: 'Smith' })
+  @IsString()
+  @IsNotEmpty()
   lastName: string;
 
   @ApiProperty({ example: 'jane.smith@example.com' })
+  @IsEmail()
   email: string;
 
   @ApiProperty({ example: '+1234567890' })
+  @IsString()
+  @IsNotEmpty()
   phone: string;
 
-  @ApiProperty({ example: 'Looking for a 25-hour Gold Card' })
+  @ApiPropertyOptional({ example: 'Looking for a 25-hour Gold Card' })
+  @IsOptional()
+  @IsString()
   message?: string;
 
+  @ApiPropertyOptional({ type: [String], description: 'URLs from POST /enquiries/attachments' })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  attachmentUrls?: string[];
+
   @ApiProperty({ example: true })
+  @IsBoolean()
   isConsentAccepted: boolean;
 }
 
@@ -734,24 +750,43 @@ export class UpdateJetCardPlanDto {
 
 export class TravelCreditEnquiryDto {
   @ApiProperty({ example: 'Jane' })
+  @IsString()
+  @IsNotEmpty()
   firstName: string;
 
   @ApiProperty({ example: 'Smith' })
+  @IsString()
+  @IsNotEmpty()
   lastName: string;
 
   @ApiProperty({ example: 'jane@example.com' })
+  @IsEmail()
   email: string;
 
   @ApiProperty({ example: '+44123456789' })
+  @IsString()
+  @IsNotEmpty()
   phone: string;
 
   @ApiProperty({ example: 1, description: 'Travel credit package ID' })
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
   packageId: number;
 
   @ApiPropertyOptional({ example: 'Interested in corporate package' })
+  @IsOptional()
+  @IsString()
   message?: string;
 
+  @ApiPropertyOptional({ type: [String], description: 'URLs from POST /enquiries/attachments' })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  attachmentUrls?: string[];
+
   @ApiProperty({ example: true })
+  @IsBoolean()
   isConsentAccepted: boolean;
 }
 

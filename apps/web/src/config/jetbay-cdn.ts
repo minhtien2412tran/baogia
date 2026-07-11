@@ -1,6 +1,8 @@
 /** Local mirror of asserts.jet-bay.com — no external CDN at runtime */
 export const LOCAL_ASSET_ROOT = '/assets/jetbay';
 export const JTA_LOGO = '/assets/jetbay/v4/alt/jetbay-logo.webp';
+/** Retina-friendly logo path (same asset, rendered at 2× via CdnImage width) */
+export const JETBAY_LOGO = JTA_LOGO;
 
 export function localAsset(path: string): string {
   if (path.startsWith('/assets/')) return path;
@@ -29,8 +31,8 @@ export function cdnUrl(path: string, _width?: 750 | 1200 | 1920): string {
 const L = localAsset;
 
 export const JB = {
-  logo: JTA_LOGO,
-  logoDefault: JTA_LOGO,
+  logo: JETBAY_LOGO,
+  logoDefault: JETBAY_LOGO,
   homeBg: L('/v4/default/homeBg-904817913171628032.webp'),
   callIcon: L('/v4/default/call-910545791444205568.webp'),
   globalIcon: L('/jetbayImg/common/global_b.png'),

@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
+import { EnquiryMailService } from './enquiry-mail.service';
 import {
   CreateTravelCreditPackageDto,
   RedeemCreditsDto,
@@ -13,6 +14,7 @@ export class TravelCreditService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
+    private readonly enquiryMail: EnquiryMailService,
   ) {}
 
   private mapPackage(p: {
@@ -112,8 +114,21 @@ export class TravelCreditService {
           email: body.email,
           phone: body.phone,
           message: body.message ?? null,
+          attachmentUrls: body.attachmentUrls ?? [],
         },
       },
+    });
+
+    void this.enquiryMail.notifyEnquiry({
+      enquiryId: record.id,
+      kind: 'travel_credit',
+      firstName: body.firstName,
+      lastName: body.lastName,
+      email: body.email,
+      phone: body.phone,
+      message: body.message,
+      packageName: pkg.name,
+      attachmentUrls: body.attachmentUrls,
     });
 
     return {

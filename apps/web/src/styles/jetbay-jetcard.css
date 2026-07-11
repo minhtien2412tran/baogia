@@ -1,0 +1,252 @@
+/* Jet Card page — crisp cards, fixed step layout, high contrast */
+
+/* ── Benefits row (dark section) ── */
+.jb-jetcard-benefits {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.jb-jetcard-benefits .jb-feature-card--heritage {
+  background: rgba(22, 26, 33, 0.92) !important;
+  border: 1px solid rgba(201, 164, 92, 0.22) !important;
+  padding: 22px 16px !important;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25) !important;
+}
+
+.jb-jetcard-benefits .jb-feature-card--heritage::before {
+  display: none;
+}
+
+.jb-jetcard-benefits .jb-feature-card-icon {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 12px;
+  object-fit: contain;
+  filter: none;
+}
+
+.jb-jetcard-benefits .jb-feature-card--heritage h3 {
+  font-family: var(--jb-font-display);
+  font-size: 15px;
+  font-weight: 600;
+  color: #f5f0e8 !important;
+  margin-bottom: 6px;
+}
+
+.jb-jetcard-benefits .jb-feature-card--heritage p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #a8b0bc !important;
+}
+
+/* ── Plan cards grid (page + home premium variant) ── */
+.jb-jetcard-page .jb-jetcard-grid,
+.jb-jetcard-grid--premium {
+  gap: 24px;
+  margin-top: 28px;
+}
+
+.jb-jetcard-page .jb-jetcard-item,
+.jb-jetcard-grid--premium .jb-jetcard-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  text-align: center;
+  background: linear-gradient(165deg, #1c2230 0%, #12151a 55%, #0e1014 100%);
+  border: 1px solid rgba(201, 164, 92, 0.22);
+  border-radius: 16px;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease,
+    box-shadow 0.35s ease;
+}
+
+.jb-jetcard-page .jb-jetcard-item:hover,
+.jb-jetcard-grid--premium .jb-jetcard-item:hover {
+  transform: translateY(-6px);
+  border-color: rgba(201, 164, 92, 0.55);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.35), 0 0 32px rgba(201, 164, 92, 0.12);
+}
+
+.jb-jetcard-page .jb-jetcard-art,
+.jb-jetcard-grid--premium .jb-jetcard-art {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  margin: 0;
+  border-radius: 0;
+  overflow: hidden;
+  background: #0a0c0f;
+}
+
+.jb-jetcard-page .jb-jetcard-img,
+.jb-jetcard-grid--premium .jb-jetcard-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.jb-jetcard-page .jb-jetcard-body,
+.jb-jetcard-grid--premium .jb-jetcard-body {
+  padding: 22px 20px 26px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.jb-jetcard-page .jb-jetcard-hours,
+.jb-jetcard-grid--premium .jb-jetcard-hours {
+  font-family: var(--jb-font-display);
+  font-size: clamp(22px, 2.5vw, 28px);
+  font-weight: 600;
+  color: var(--jb-gold);
+  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+
+.jb-jetcard-page .jb-jetcard-tagline,
+.jb-jetcard-grid--premium .jb-jetcard-tagline {
+  font-weight: 600;
+  font-size: 15px;
+  color: #f0f2f5;
+  margin-bottom: 8px;
+}
+
+.jb-jetcard-page .jb-jetcard-subtitle,
+.jb-jetcard-grid--premium .jb-jetcard-subtitle {
+  font-family: var(--jb-font-serif);
+  font-size: 15px;
+  line-height: 1.55;
+  color: #b8c0cc;
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.jb-jetcard-page .jb-unlock-link,
+.jb-jetcard-grid--premium .jb-unlock-link {
+  display: inline-block;
+  margin-top: 18px;
+  padding: 10px 22px;
+  border: 1px solid rgba(201, 164, 92, 0.45);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.jb-jetcard-page .jb-unlock-link:hover,
+.jb-jetcard-grid--premium .jb-unlock-link:hover {
+  background: rgba(201, 164, 92, 0.12);
+  border-color: var(--jb-gold);
+  color: var(--jb-gold-light);
+  text-decoration: none;
+}
+
+/* ── Join steps (light band, no image column) ── */
+.jb-step-item--compact {
+  grid-template-columns: 52px 1fr !important;
+  align-items: center;
+  gap: 28px !important;
+  padding: 28px 36px !important;
+}
+
+.jb-light-section--heritage .jb-step-item--compact .jb-step-num {
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.jb-light-section--heritage .jb-step-item--compact .jb-step-content h3 {
+  font-family: var(--jb-font-display);
+  font-size: clamp(18px, 2.2vw, 22px);
+  font-weight: 600;
+  color: var(--jb-ink) !important;
+  margin: 0 0 10px;
+  line-height: 1.3;
+}
+
+.jb-light-section--heritage .jb-step-item--compact .jb-step-content p {
+  font-family: var(--jb-font-serif);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--jb-ink-muted) !important;
+  margin: 0;
+  max-width: 56ch;
+}
+
+.jb-light-section--heritage .jb-step-item--compact:hover {
+  transform: translateY(-2px) !important;
+}
+
+/* Light band subtitle — stronger contrast on jet-card page */
+.jb-jetcard-page .jb-light-section--heritage .jb-light-subtitle {
+  color: #2a3340 !important;
+  font-size: 17px;
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+}
+
+.jb-jetcard-page .jb-light-section--heritage .jb-light-title {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Comparison table on jet-card page ── */
+.jb-jetcard-page .jb-compare-table td,
+.jb-jetcard-page .jb-compare-table th {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.jb-jetcard-page .jb-compare-table td:first-child {
+  color: #c8cdd6;
+  font-weight: 500;
+}
+
+.jb-jetcard-page .jb-compare-table td:nth-child(2) {
+  color: var(--jb-gold);
+}
+
+.jb-jetcard-page .jb-compare-table td:nth-child(3) {
+  color: var(--jb-text-muted);
+}
+
+@media (max-width: 900px) {
+  .jb-jetcard-benefits {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .jb-jetcard-page .jb-jetcard-grid,
+  .jb-jetcard-grid--premium {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .jb-jetcard-benefits {
+    grid-template-columns: 1fr;
+  }
+
+  .jb-step-item--compact {
+    grid-template-columns: 44px 1fr !important;
+    padding: 22px 20px !important;
+    gap: 16px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jb-jetcard-page .jb-jetcard-item:hover,
+  .jb-jetcard-grid--premium .jb-jetcard-item:hover,
+  .jb-light-section--heritage .jb-step-item--compact:hover {
+    transform: none;
+  }
+}

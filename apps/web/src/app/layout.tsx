@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Cormorant_Garamond, Geist, Geist_Mono, Playfair_Display } from 'next/font/google';
 import { BRAND_NAME, BRAND_TAGLINE } from '../lib/brand';
 import { DEFAULT_OG_IMAGE, siteMetadataBase } from '../lib/metadata';
@@ -42,6 +42,12 @@ export const metadata: Metadata = {
     description: 'Global private jet charter platform — access 10,000+ aircraft with 24/7 concierge support.',
     images: [DEFAULT_OG_IMAGE],
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#0a0c0f',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { JB } from '../../config/jetbay-cdn';
-import { cdnUrl } from '../../config/jetbay-cdn';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { JB, cdnUrl } from '../../config/jetbay-cdn';
 
 const SLIDES = [
   {
@@ -23,50 +22,127 @@ const SLIDES = [
     desktop: JB.promo.cabin.desktop,
     mobile: JB.promo.cabin.mobile,
   },
-];
+] as const;
+
+const AUTO_MS = 6500;
+const SWIPE_THRESHOLD = 52;
 
 export function PromoCarousel({ locale }: { locale: string }) {
   const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const reducedMotion = useRef(false);
   const p = `/${locale}`;
 
   useEffect(() => {
-    const t = setInterval(() => setActive((i) => (i + 1) % SLIDES.length), 5000);
-    return () => clearInterval(t);
+    reducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }, []);
 
+  const goTo = useCallback((index: number) => {
+    setActive((index + SLIDES.length) % SLIDES.length);
+    setProgress(0);
+  }, []);
+
+  const next = useCallback(() => goTo(active + 1), [active, goTo]);
+  const prev = useCallback(() => goTo(active - 1), [active, goTo]);
+
+  useEffect(() => {
+    if (paused || reducedMotion.current) return;
+    setProgress(0);
+    const started = Date.now();
+    const id = window.setInterval(() => {
+      const pct = (Date.now() - started) / AUTO_MS;
+      if (pct >= 1) {
+        setActive((i) => (i + 1) % SLIDES.length);
+        setProgress(0);
+      } else {
+        setProgress(pct);
+      }
+    }, 40);
+    return () => window.clearInterval(id);
+  }, [paused, active]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') next();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [next, prev]);
+
   return (
-    <section className="jb-promo">
+    <section className="jb-promo" aria-roledescription="carousel" aria-label="Featured offers">
       <div className="jb-container">
-        <div className="jb-carousel">
-          <div className="jb-carousel-track" style={{ transform: `translateX(-${active * 100}%)` }}>
-            {SLIDES.map((s) => (
+        <div
+          className="jb-carousel jb-promo-carousel"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onFocusCapture={() => setPaused(true)}
+          onBlurCapture={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget as Node)) setPaused(false);
+          }}
+          onTouchStart={(e) => {
+            touchStartX.current = e.changedTouches[0]?.clientX ?? null;
+          }}
+          onTouchEnd={(e) => {
+            if (touchStartX.current == null) return;
+            const dx = (e.changedTouches[0]?.clientX ?? 0) - touchStartX.current;
+            if (Math.abs(dx) >= SWIPE_THRESHOLD) {
+              if (dx < 0) next();
+              else prev();
+            }
+            touchStartX.current = null;
+          }}
+        >
+          <div className="jb-carousel-track" style={{ transform: `translate3d(-${active * 100}%, 0, 0)` }}>
+            {SLIDES.map((s, i) => (
               <a
-                key={s.title}
+                key={s.href}
                 href={`${p}${s.href}`}
-                className="jb-promo-slide"
-                style={{
-                  backgroundImage: `linear-gradient(transparent 50%, rgba(0,0,0,0.75)), url(${cdnUrl(s.desktop, 1920)})`,
-                }}
+                className={`jb-promo-slide${i === active ? ' is-active' : ''}`}
+                aria-hidden={i !== active}
+                tabIndex={i === active ? 0 : -1}
               >
+                <picture className="jb-promo-slide-media">
+                  <source media="(max-width: 768px)" srcSet={cdnUrl(s.mobile)} />
+                  <img
+                    src={cdnUrl(s.desktop)}
+                    alt=""
+                    loading={i <= 1 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    draggable={false}
+                  />
+                </picture>
+                <div className="jb-promo-slide-shade" aria-hidden />
                 <span className="jb-promo-caption">{s.title}</span>
               </a>
             ))}
           </div>
-          <button type="button" className="jb-carousel-btn prev" onClick={() => setActive((i) => (i - 1 + SLIDES.length) % SLIDES.length)} aria-label="Previous">
+
+          <button type="button" className="jb-carousel-btn prev" onClick={prev} aria-label="Previous slide">
             ‹
           </button>
-          <button type="button" className="jb-carousel-btn next" onClick={() => setActive((i) => (i + 1) % SLIDES.length)} aria-label="Next">
+          <button type="button" className="jb-carousel-btn next" onClick={next} aria-label="Next slide">
             ›
           </button>
-          <div className="jb-carousel-dots">
+
+          <div className="jb-carousel-dots" role="tablist" aria-label="Choose slide">
             {SLIDES.map((_, i) => (
               <button
                 key={i}
                 type="button"
+                role="tab"
+                aria-selected={i === active}
                 className={`jb-dot${i === active ? ' active' : ''}`}
-                onClick={() => setActive(i)}
+                onClick={() => goTo(i)}
                 aria-label={`Slide ${i + 1}`}
-              />
+              >
+                {i === active && (
+                  <span className="jb-dot-progress" style={{ transform: `scaleX(${paused ? progress : progress})` }} />
+                )}
+              </button>
             ))}
           </div>
         </div>

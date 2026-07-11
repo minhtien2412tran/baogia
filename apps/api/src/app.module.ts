@@ -31,6 +31,7 @@ import { AdminAirportController } from './controllers/admin-airport.controller';
 import { ApiGatewayController } from './controllers/api-gateway.controller';
 import { AdminAircraftController } from './controllers/admin-aircraft.controller';
 import { MediaController } from './controllers/media.controller';
+import { EnquiryController } from './controllers/enquiry.controller';
 import { FixedPriceService } from './services/fixed-price.service';
 import { EmptyLegService } from './services/empty-leg.service';
 import { JetCardService } from './services/jet-card.service';
@@ -87,6 +88,7 @@ import { AccountService } from './services/account.service';
     AdminAircraftController,
     ApiGatewayController,
     MediaController,
+    EnquiryController,
     AccountController,
   ],
   providers: [

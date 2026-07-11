@@ -1,0 +1,475 @@
+/**
+ * JetBay — global responsive layer (all pages / slugs)
+ * Breakpoints: 1200 · 1024 · 768 · 640 · 480 · 360
+ * Import last in [locale]/layout.tsx
+ */
+
+/* ── Global media safety ── */
+.jb-page img,
+.jb-slug-prose img,
+.jb-slug-featured-photo {
+  max-width: 100%;
+  height: auto;
+}
+
+.jb-slug-prose {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.jb-slug-prose table,
+.jb-slug-prose pre,
+.jb-slug-prose iframe {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.jb-compare-wrap,
+.jb-account-table-wrap,
+.jb-routes-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Large tablet (≤1200px) ── */
+@media (max-width: 1200px) {
+  .jb-mega-vertical-panel {
+    width: min(920px, calc(100vw - 32px));
+  }
+
+  .jb-quote-card {
+    max-width: 100%;
+  }
+}
+
+/* ── Tablet (≤1024px) ── */
+@media (max-width: 1024px) {
+  .jb-section {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+
+  .jb-sub-section {
+    margin-bottom: 40px;
+  }
+
+  .jb-empty-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .jb-dest-grid,
+  .jb-video-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .jb-split {
+    gap: 32px;
+  }
+
+  .jb-newsletter-band {
+    padding: 40px 0;
+  }
+}
+
+/* Footer: 2 columns on tablet — brand spans full width */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .jb-footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px 24px;
+  }
+
+  .jb-footer-grid > div:first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ── Mobile landscape / small tablet (≤768px) ── */
+@media (max-width: 768px) {
+  .jb-container,
+  .jb-sub-body {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .jb-light-section--heritage > .jb-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .jb-sub-body {
+    padding-top: 32px;
+    padding-bottom: 40px;
+  }
+
+  /* Heroes */
+  .jb-hero {
+    min-height: auto;
+    padding: 40px 0 48px;
+  }
+
+  .jb-hero-content {
+    padding-top: 16px;
+  }
+
+  .jb-page-hero {
+    padding: 28px 0 36px;
+  }
+
+  .jb-page-hero-search {
+    padding-bottom: 40px;
+  }
+
+  .jb-slug-hero {
+    padding: 28px 0 40px;
+    min-height: 0;
+  }
+
+  .jb-slug-excerpt {
+    font-size: 15px;
+  }
+
+  /* Section headers: stack title + CTA */
+  .jb-section-header,
+  .jb-section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .jb-section-title {
+    font-size: clamp(22px, 5vw, 28px);
+  }
+
+  /* Grids → single column */
+  .jb-empty-grid,
+  .jb-dest-grid,
+  .jb-video-grid,
+  .jb-feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .jb-jetcard-benefits {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .jb-subscribe-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .jb-subscribe-row .jb-field {
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* Split / service blocks: image on top */
+  .jb-split-visual,
+  .jb-service-block--heritage .jb-service-block-frame {
+    order: -1;
+  }
+
+  .jb-split {
+    gap: 24px;
+  }
+
+  /* Promo / carousel */
+  .jb-promo-slide,
+  .jb-carousel .jb-promo-slide {
+    aspect-ratio: unset;
+  }
+
+  .jb-carousel-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Trust row */
+  .jb-trust-row {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 16px;
+  }
+
+  .jb-trust-divider {
+    display: none;
+  }
+
+  /* About / booking / media */
+  .jb-about-pillars,
+  .jb-about-team-grid,
+  .jb-about-why-grid,
+  .jb-about-offices {
+    grid-template-columns: 1fr !important;
+  }
+
+  .jb-booking-step {
+    grid-template-columns: 1fr !important;
+  }
+
+  .jb-media-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+
+  .jb-intro-stats .jb-mini-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Account */
+  .jb-account-hero h1 {
+    font-size: 1.5rem;
+  }
+
+  .jb-account-panel__head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .jb-account-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  /* FAQ */
+  .jb-faq-panel p {
+    padding-right: 8px;
+  }
+}
+
+/* ── Phone (≤640px) ── */
+@media (max-width: 640px) {
+  .jb-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .jb-enquiry-form,
+  .jb-newsletter-form,
+  .jb-auth-form {
+    max-width: 100%;
+  }
+
+  .jb-enquiry-form input,
+  .jb-enquiry-form textarea,
+  .jb-enquiry-form select,
+  .jb-newsletter-form input,
+  .jb-auth-form input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .jb-enquiry-form .jb-btn-primary,
+  .jb-newsletter-form button,
+  .jb-auth-form .jb-btn-primary {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .jb-cta-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .jb-cta-row .jb-btn-primary,
+  .jb-cta-row .jb-btn-outline,
+  .jb-cta-row .jb-link-gold {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .jb-partner-strip {
+    flex-direction: column;
+  }
+
+  .jb-partner-strip-item {
+    width: 100%;
+  }
+
+  .jb-empty-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .jb-route-card {
+    flex: 0 0 min(260px, 88vw);
+  }
+}
+
+/* ── Small phone (≤480px) ── */
+@media (max-width: 480px) {
+  .jb-container,
+  .jb-sub-body,
+  .jb-light-section--heritage > .jb-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .jb-header-inner {
+    padding-left: 12px;
+    padding-right: 12px;
+    gap: 8px;
+  }
+
+  .jb-logo-img {
+    height: 28px;
+  }
+
+  .jb-hero h1,
+  .jb-page-hero h1 {
+    font-size: clamp(24px, 7vw, 32px);
+  }
+
+  .jb-quote-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .jb-trip-tabs {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .jb-trip-tab {
+    flex-shrink: 0;
+    min-height: 40px;
+  }
+
+  .jb-swap-btn {
+    width: 100%;
+    min-height: 44px;
+    border-radius: var(--jb-radius);
+  }
+
+  .jb-pax-control {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .jb-search-btn {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .jb-field input,
+  .jb-field select {
+    min-height: 44px;
+    font-size: 16px; /* prevents iOS zoom on focus */
+  }
+
+  .jb-jetcard-benefits {
+    grid-template-columns: 1fr !important;
+  }
+
+  .jb-step-item--compact {
+    padding: 18px 16px !important;
+    gap: 16px !important;
+    grid-template-columns: 40px 1fr !important;
+  }
+
+  .jb-light-section--heritage .jb-step-item--compact .jb-step-content p {
+    max-width: none;
+    font-size: 15px;
+  }
+
+  .jb-compare-table {
+    font-size: 12px;
+    min-width: 300px;
+  }
+
+  .jb-compare-table th,
+  .jb-compare-table td {
+    padding: 10px 8px;
+  }
+
+  .jb-account-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .jb-account-nav {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .jb-account-nav-link {
+    flex: 1 1 calc(50% - 4px);
+    text-align: center;
+    font-size: 13px;
+    padding: 10px 8px;
+  }
+
+  .jb-auth-wrap {
+    padding: 24px 16px;
+  }
+
+  .jb-cookie-banner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .jb-cookie-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .jb-cookie-actions button {
+    width: 100%;
+  }
+
+  .jb-dest-detail-hero {
+    min-height: 200px;
+  }
+
+  .jb-light-section--heritage {
+    padding: 36px 0;
+  }
+
+  .jb-light-section-head {
+    margin-bottom: 24px;
+  }
+}
+
+/* ── Extra small (≤360px) ── */
+@media (max-width: 360px) {
+  .jb-container,
+  .jb-sub-body {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .jb-account-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .jb-account-nav-link {
+    flex: 1 1 100%;
+  }
+
+  .jb-mobile-panel {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* ── Landscape phones ── */
+@media (max-height: 500px) and (orientation: landscape) {
+  .jb-hero {
+    min-height: auto;
+    padding: 24px 0 32px;
+  }
+
+  .jb-page-hero {
+    padding: 20px 0 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jb-carousel-track,
+  .jb-promo-track {
+    scroll-behavior: auto;
+  }
+}

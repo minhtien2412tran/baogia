@@ -128,7 +128,7 @@ export function StatsSection() {
                   <CdnImage src={s.icon} alt="" width={41} height={60} className="jb-stat-mobile-arrow" />
                 )}
                 {s.icon && s.variant === 'plain' && (
-                  <CdnImage src={s.icon} alt="" width={115} height={59} className="jb-stat-mobile-icon" />
+                  <CdnImage src={s.icon} alt="" width={230} height={118} className="jb-stat-mobile-icon" />
                 )}
                 <StatNum value={s.num} />
                 <div className="jb-stat-label">{s.label}</div>
@@ -169,7 +169,7 @@ export function StatsSection() {
                   <CdnImage src={s.bg} alt="" fill className="jb-cover-img" sizes="25vw" />
                 </div>
               )}
-              {s.icon && <CdnImage src={s.icon} alt="" width={115} height={59} className="jb-stat-desktop-icon" />}
+              {s.icon && <CdnImage src={s.icon} alt="" width={230} height={118} className="jb-stat-desktop-icon" />}
               <StatNum value={s.num} />
               <div className="jb-stat-label">{s.label}</div>
               <p className="jb-stat-desc">{s.desc}</p>

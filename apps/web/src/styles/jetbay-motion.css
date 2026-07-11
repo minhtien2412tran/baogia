@@ -287,6 +287,10 @@
   transform: scale(1.02);
 }
 
+.jb-promo-carousel .jb-promo-slide:hover {
+  transform: none;
+}
+
 .jb-carousel-dots .jb-dot {
   transition: transform 0.3s ease, background 0.3s ease;
 }
@@ -411,6 +415,20 @@
 }
 
 .jb-stat-num[data-jb-count-to] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Light stats band — dark gold gradient (white gradient is invisible on #f8f9fb) */
+.jb-stats-light .jb-stat-num[data-jb-count-to] {
+  background: linear-gradient(135deg, #6b5428 0%, #a97f3f 42%, #c9a45c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Featured / hero stat cards keep light gradient on dark imagery */
+.jb-stat-desktop-featured .jb-stat-num[data-jb-count-to],
+.jb-stat-mobile-hero .jb-stat-num[data-jb-count-to] {
   background: linear-gradient(135deg, var(--jb-text) 0%, var(--jb-gold-light) 100%);
   -webkit-background-clip: text;
   background-clip: text;

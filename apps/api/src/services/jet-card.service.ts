@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
+import { EnquiryMailService } from './enquiry-mail.service';
 import {
   CreateJetCardPlanDto,
   JetCardEnquiryDto,
@@ -12,6 +13,7 @@ export class JetCardService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
+    private readonly enquiryMail: EnquiryMailService,
   ) {}
 
   private formatPlan(plan: {
@@ -53,8 +55,20 @@ export class JetCardService {
           email: body.email,
           phone: body.phone,
           message: body.message ?? null,
+          attachmentUrls: body.attachmentUrls ?? [],
         },
       },
+    });
+
+    void this.enquiryMail.notifyEnquiry({
+      enquiryId: record.id,
+      kind: 'jet_card',
+      firstName: body.firstName,
+      lastName: body.lastName,
+      email: body.email,
+      phone: body.phone,
+      message: body.message,
+      attachmentUrls: body.attachmentUrls,
     });
 
     return {

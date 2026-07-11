@@ -102,6 +102,23 @@ const checks = [
       ),
   ],
   [
+    'travel-credit-enquiry',
+    () =>
+      get('/travel-credits/packages').then(async ({ j }) => {
+        const pkgId = j.packages?.[0]?.id ?? 1;
+        const { status, j: res } = await post('/travel-credits/enquiries', {
+          firstName: 'Smoke',
+          lastName: 'Test',
+          email: 'smoke-test@jetbay.local',
+          phone: '+10000000001',
+          packageId: pkgId,
+          message: 'automated smoke',
+          isConsentAccepted: true,
+        });
+        ok('travel-credit-enquiry', status === 201 && res.enquiryId, `id=${res.enquiryId}`);
+      }),
+  ],
+  [
     'news',
     () =>
       get('/content/news?locale=en').then(({ status, j }) =>

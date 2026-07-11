@@ -18,6 +18,37 @@ export class ApiError extends Error {
   }
 }
 
+/** Parse Nest validation / API error JSON for user-facing forms */
+export function parseApiErrorMessage(err: unknown, fallback: string): string {
+  if (!(err instanceof ApiError)) return fallback;
+  try {
+    const parsed = JSON.parse(err.message) as { message?: string | string[] };
+    const msg = parsed.message;
+    if (Array.isArray(msg)) return msg.join('. ');
+    if (typeof msg === 'string' && msg.trim()) return msg;
+  } catch {
+    if (err.message && err.message.length < 200) return err.message;
+  }
+  if (err.status === 401 || err.status === 403) return 'Service temporarily unavailable. Please try again later.';
+  return fallback;
+}
+
+async function uploadFile(path: string, file: File): Promise<{ url: string; filename: string }> {
+  const form = new FormData();
+  form.append('file', file);
+  const res = await fetch(`${API_URL}${path}`, {
+    method: 'POST',
+    headers: API_KEY ? { 'X-API-Key': API_KEY } : {},
+    body: form,
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => res.statusText);
+    throw new ApiError(res.status, text);
+  }
+  const data = (await res.json()) as { url: string; filename?: string };
+  return { url: data.url, filename: data.filename ?? file.name };
+}
+
 function apiHeaders(extra?: HeadersInit): HeadersInit {
   return {
     'Content-Type': 'application/json',
@@ -211,6 +242,7 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(body),
     }),
+  uploadEnquiryAttachment: (file: File) => uploadFile('/enquiries/attachments', file),
   requestFixedPriceQuote: (body: Record<string, unknown>) =>
     request<{ quoteId: number; status: string; message: string }>('/fixed-price/quote', {
       method: 'POST',

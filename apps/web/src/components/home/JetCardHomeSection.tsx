@@ -27,19 +27,29 @@ export function JetCardHomeSection({ locale, plans }: { locale: string; plans: P
           <a href={`${p}/jet-card`} className="jb-link-gold">More information about Jet Card →</a>
         </div>
 
-        <div className="jb-jetcard-grid">
+        <div className="jb-jetcard-grid jb-jetcard-grid--premium">
           {plans.map((plan) => {
             const hours = Number(plan.hours ?? 10);
             const copy = PLAN_COPY[hours] ?? { subtitle: String(plan.name), desc: '' };
             return (
               <div key={String(plan.id)} className="jb-jetcard-item">
                 <div className="jb-jetcard-art">
-                  <CdnImage src={jetCardArt(hours)} alt={`${hours} hour Jet Card`} width={280} height={160} className="jb-jetcard-img" />
+                  <CdnImage
+                    src={jetCardArt(hours)}
+                    alt={`${hours} hour Jet Card`}
+                    fill
+                    sizes="(max-width:900px) 100vw, 33vw"
+                    className="jb-jetcard-img"
+                  />
                 </div>
-                <div className="jb-jetcard-hours">{hours} Hour Jet Card</div>
-                <div style={{ fontWeight: 600, marginBottom: 4 }}>{copy.subtitle}</div>
-                <div className="jb-jetcard-subtitle">{copy.desc}</div>
-                <a href={`${p}/jet-card`} className="jb-unlock-link">Unlock Now ›</a>
+                <div className="jb-jetcard-body">
+                  <div className="jb-jetcard-hours">{hours} Hour Jet Card</div>
+                  <div className="jb-jetcard-tagline">{copy.subtitle}</div>
+                  <div className="jb-jetcard-subtitle">{copy.desc}</div>
+                  <a href={`${p}/jet-card`} className="jb-unlock-link">
+                    Unlock Now ›
+                  </a>
+                </div>
               </div>
             );
           })}

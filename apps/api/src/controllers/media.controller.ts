@@ -4,6 +4,7 @@ import {
   Post,
   Delete,
   Param,
+  Req,
   Res,
   UseGuards,
   UseInterceptors,
@@ -13,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiConsumes, ApiBody, ApiSecurity } from '@nestjs/swagger';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 import { StorageService } from '../services/storage.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
@@ -27,12 +28,12 @@ const ALLOWED_TYPES = new Set([
   'application/pdf',
 ]);
 
-function toStorageKey(objectKey: string): string {
-  const decoded = decodeURIComponent(objectKey);
-  if (decoded.includes('..') || decoded.includes('/')) {
-    throw new BadRequestException('Invalid object key');
-  }
-  return `media/${decoded}`;
+function toStorageKey(relativePath: string): string {
+  const decoded = decodeURIComponent(relativePath);
+  if (decoded.includes('..')) throw new BadRequestException('Invalid object key');
+  const clean = decoded.replace(/^\/+/, '').replace(/\/+$/, '');
+  if (!clean) throw new BadRequestException('Invalid object key');
+  return clean.startsWith('media/') ? clean : `media/${clean}`;
 }
 
 @ApiTags('Media')
@@ -84,11 +85,12 @@ export class MediaController {
     return { message: 'Deleted', key };
   }
 
-  @Get('media/:objectKey')
-  @ApiOperation({ summary: 'Serve a media file from MinIO' })
-  async serveMedia(@Param('objectKey') objectKey: string, @Res() res: Response) {
+  @Get('media/*')
+  @ApiOperation({ summary: 'Serve a media file (MinIO or local UPLOAD_PATH)' })
+  async serveMedia(@Req() req: Request, @Res() res: Response) {
     if (!this.storage.isConfigured()) throw new NotFoundException('Media storage not configured');
-    const key = toStorageKey(objectKey);
+    const relative = (req.params as Record<string, string>)['0'] ?? '';
+    const key = toStorageKey(relative);
     try {
       const { stream, contentType, size } = await this.storage.getObject(key);
       res.setHeader('Content-Type', contentType);

@@ -17,7 +17,7 @@ export function JetBayFooter({ locale }: { locale: string }) {
         <div className="jb-footer-grid">
           <div>
             <Link href={p} className="jb-logo-link" style={{ display: 'inline-block', marginBottom: 16 }}>
-              <CdnImage src={JB.logo} alt="JetBay" width={120} height={32} className="jb-logo-img" />
+              <CdnImage src={JB.logo} alt="JetBay" width={240} height={64} className="jb-logo-img" />
             </Link>
             <p style={{ color: 'var(--jb-text-muted)', fontSize: 14, margin: '0 0 20px', lineHeight: 1.6 }}>
               {tn(locale, 'footerTagline')}

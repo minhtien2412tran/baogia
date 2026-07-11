@@ -57,6 +57,7 @@
 - [x] **Customer care email** (2026-07-11) — `EmailSubscriber` + `EmailCampaignLog` · `CustomerCareService` cron · templates HTML · hooks register/quote/newsletter/booking/payment · fix 429 account (`SkipThrottle` + layout provider)
 - [x] **i18n dịch sạch FP + newsletter** (2026-07-11) — Fixed Price / Empty Leg / footer newsletter · ~50 key mới trong `@jetbay/i18n` · wire `t()` toàn trang listing
 - [x] **Service page CSS heritage** (2026-07-11) — `jetbay-service.css` · Playfair/Cormorant fonts · fix contrast light bands · neo-classical gold/cream
+- [x] **Home stats + logo polish** (2026-07-11) — fix invisible counter gradient on light band · uniform stat cards · retina logo · news grid width cap · footer newsletter placeholder contrast
 
 - [x] `feat/api-security-hardening` (+ admin screens / partner-TC) → **`main`** (`9893789`)  
 - [x] VPS API `jetbay-be` + Admin `jetbay-admin` redeployed  
