@@ -288,8 +288,20 @@ export const api = {
       body: JSON.stringify(body),
     }),
   uploadEnquiryAttachment: (file: File) => uploadFile('/enquiries/attachments', file),
-  requestFixedPriceQuote: (body: Record<string, unknown>) =>
-    request<{ quoteId: number; status: string; message: string }>('/fixed-price/quote', {
+  requestFixedPriceQuote: (body: {
+    routeId: number;
+    category: string;
+    date: string;
+    passengers: number;
+    email: string;
+  }) =>
+    request<{
+      quoteId: number;
+      status: string;
+      message: string;
+      price?: number;
+      categoryLabel?: string;
+    }>('/fixed-price/quote', {
       method: 'POST',
       body: JSON.stringify(body),
     }),

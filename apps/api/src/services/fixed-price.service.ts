@@ -70,10 +70,11 @@ export class FixedPriceService {
       routeId: body.routeId,
       slug: route.slug,
       category: body.category,
+      categoryLabel: option.category.label,
       price: Number(option.price),
       currency: 'USD',
       status: 'PENDING',
-      message: 'Fixed-price quote generated. Proceed to payment verification.',
+      message: `Fixed-price quote confirmed — ${option.category.label}: USD ${Number(option.price).toLocaleString()}. Our team will contact you at ${body.email} within 3 hours.`,
     };
   }
 

@@ -216,18 +216,28 @@ export class RequestQuoteDto {
 
 export class BookFixedPriceDto {
   @ApiProperty({ example: 1, description: 'Route ID' })
+  @Type(() => Number)
+  @IsInt()
   routeId: number;
 
   @ApiProperty({ example: 'LIGHT', description: 'Aircraft Category code' })
+  @IsString()
+  @IsNotEmpty()
   category: string;
 
   @ApiProperty({ example: '2026-12-10' })
+  @IsString()
+  @IsNotEmpty()
   date: string;
 
   @ApiProperty({ example: 6 })
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
   passengers: number;
 
   @ApiProperty({ example: 'john.doe@example.com' })
+  @IsEmail()
   email: string;
 }
 

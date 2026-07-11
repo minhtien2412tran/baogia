@@ -8,6 +8,7 @@ import '../../styles/jetbay-responsive.css';
 import '../../styles/jetbay-promo.css';
 import '../../styles/jetbay-modern.css';
 import '../../styles/jetbay-flight-rail.css';
+import '../../styles/jetbay-fixed-price.css';
 import { JetBayHeader } from '../../components/home/JetBayHeader';
 import { JetBayFooter } from '../../components/home/JetBayFooter';
 import { CookieBanner } from '../../components/home/CookieBanner';

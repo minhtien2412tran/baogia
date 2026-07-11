@@ -1,0 +1,414 @@
+/**
+ * Fixed-price route detail — layout, booking card, flight banner, date picker
+ */
+
+/* ── Animated route banner ── */
+.jb-route-flight-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 auto 32px;
+  max-width: 720px;
+  padding: 20px 24px;
+  border-radius: var(--jb-radius-lg);
+  border: 1px solid rgba(201, 164, 92, 0.25);
+  background: linear-gradient(135deg, rgba(201, 164, 92, 0.08) 0%, rgba(12, 14, 18, 0.6) 100%);
+}
+
+.jb-route-flight-end {
+  flex-shrink: 0;
+  text-align: center;
+  min-width: 64px;
+}
+
+.jb-route-flight-iata {
+  display: block;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--jb-gold);
+  letter-spacing: 0.04em;
+}
+
+.jb-route-flight-city {
+  display: block;
+  font-size: 11px;
+  color: var(--jb-text-muted);
+  margin-top: 2px;
+  max-width: 88px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jb-route-flight-track {
+  flex: 1;
+  position: relative;
+  height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+.jb-route-flight-dash {
+  flex: 1;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(201, 164, 92, 0.55) 0,
+    rgba(201, 164, 92, 0.55) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+}
+
+.jb-route-flight-plane {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  width: 28px;
+  height: 28px;
+  color: var(--jb-gold);
+  filter: drop-shadow(0 2px 8px rgba(201, 164, 92, 0.45));
+  animation: jb-route-fly 3.5s ease-in-out infinite;
+}
+
+.jb-route-flight-plane svg {
+  width: 100%;
+  height: 100%;
+}
+
+.jb-route-flight-dot {
+  position: absolute;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--jb-gold);
+  box-shadow: 0 0 10px rgba(201, 164, 92, 0.6);
+}
+
+@keyframes jb-route-fly {
+  0% {
+    left: 0;
+    opacity: 0.6;
+  }
+  50% {
+    left: 50%;
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0.6;
+  }
+}
+
+/* ── Two-column route detail ── */
+.jb-fp-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr min(380px, 36vw);
+  gap: 40px 32px;
+  align-items: start;
+  margin-top: 8px;
+}
+
+.jb-fp-detail-main {
+  min-width: 0;
+}
+
+.jb-fp-tier-section {
+  margin-bottom: 36px;
+}
+
+.jb-fp-tier-section .jb-section-title {
+  margin-bottom: 8px;
+}
+
+.jb-fp-tier-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.jb-fp-tier-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 22px;
+  border-radius: var(--jb-radius-lg);
+  border: 1px solid var(--jb-border);
+  background: var(--jb-bg-card);
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.jb-fp-tier-card:hover {
+  border-color: rgba(201, 164, 92, 0.35);
+  transform: translateX(4px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+}
+
+.jb-fp-inclusions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.jb-fp-inclusion-panel {
+  padding: 22px 24px;
+  border-radius: var(--jb-radius-lg);
+  border: 1px solid var(--jb-border);
+  background: var(--jb-bg-elevated);
+}
+
+.jb-fp-inclusion-panel h3 {
+  font-size: 16px;
+  margin: 0 0 14px;
+  color: var(--jb-gold);
+}
+
+.jb-fp-inclusion-panel .jb-bullet-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.jb-fp-inclusion-panel .jb-bullet-list li {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--jb-text-muted);
+  margin-bottom: 8px;
+}
+
+/* ── Sticky booking card ── */
+.jb-fp-book-card {
+  position: sticky;
+  top: 88px;
+  border-radius: 20px;
+  border: 1px solid rgba(201, 164, 92, 0.3);
+  background: linear-gradient(165deg, rgba(22, 24, 28, 0.98) 0%, rgba(10, 12, 15, 0.98) 100%);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  overflow: hidden;
+}
+
+.jb-fp-book-card__head {
+  padding: 22px 22px 16px;
+  border-bottom: 1px solid rgba(201, 164, 92, 0.15);
+  background: linear-gradient(180deg, rgba(201, 164, 92, 0.1) 0%, transparent 100%);
+}
+
+.jb-fp-book-card__route {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--jb-gold);
+  margin-bottom: 6px;
+}
+
+.jb-fp-book-card__title {
+  margin: 0 0 10px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.jb-fp-book-card__price {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--jb-gold);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.jb-fp-book-card__price span {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--jb-text-muted);
+}
+
+.jb-fp-book-form {
+  padding: 20px 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.jb-fp-book-form .jb-field-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--jb-text-muted);
+  margin-bottom: 6px;
+}
+
+.jb-fp-select,
+.jb-fp-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--jb-border);
+  border-radius: var(--jb-radius);
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--jb-text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.jb-fp-select:focus,
+.jb-fp-input:focus {
+  outline: none;
+  border-color: rgba(201, 164, 92, 0.55);
+  box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.12);
+}
+
+.jb-fp-book-submit {
+  width: 100%;
+  margin-top: 4px;
+  min-height: 48px;
+  font-size: 15px;
+}
+
+.jb-fp-book-form--success {
+  animation: jb-fp-success-pulse 0.6s ease;
+}
+
+@keyframes jb-fp-success-pulse {
+  0% {
+    box-shadow: inset 0 0 0 0 rgba(72, 187, 120, 0);
+  }
+  40% {
+    box-shadow: inset 0 0 0 2px rgba(72, 187, 120, 0.35);
+  }
+  100% {
+    box-shadow: inset 0 0 0 0 rgba(72, 187, 120, 0);
+  }
+}
+
+.jb-fp-detail-foot {
+  margin-top: 32px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* ── Date field with visible calendar button ── */
+.jb-field--date .jb-date-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+.jb-date-input {
+  flex: 1;
+  width: 100%;
+  padding: 12px 52px 12px 14px;
+  border: 1px solid var(--jb-border);
+  border-radius: var(--jb-radius);
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--jb-text);
+  color-scheme: dark;
+  min-height: 46px;
+}
+
+.jb-date-input:focus {
+  outline: none;
+  border-color: rgba(201, 164, 92, 0.55);
+  box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.12);
+}
+
+.jb-date-input::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  width: 48px;
+  height: 100%;
+  cursor: pointer;
+}
+
+.jb-date-trigger {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 10px;
+  background: rgba(201, 164, 92, 0.18);
+  color: var(--jb-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.jb-date-trigger:hover {
+  background: rgba(201, 164, 92, 0.32);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.jb-date-trigger:focus-visible {
+  outline: 2px solid var(--jb-gold);
+  outline-offset: 2px;
+}
+
+/* Light band date fields (quote widget) */
+.jb-light-band .jb-date-input,
+.jb-light-section .jb-date-input {
+  background: #f3f4f6;
+  color: var(--jb-text-on-light);
+  color-scheme: light;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.jb-light-band .jb-date-trigger,
+.jb-light-section .jb-date-trigger {
+  background: rgba(154, 123, 60, 0.15);
+  color: #9a7b3c;
+}
+
+@media (max-width: 960px) {
+  .jb-fp-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .jb-fp-book-card {
+    position: static;
+    order: -1;
+  }
+
+  .jb-fp-inclusions {
+    grid-template-columns: 1fr;
+  }
+
+  .jb-route-flight-banner {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .jb-route-flight-track {
+    order: 3;
+    flex-basis: 100%;
+    margin-top: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jb-route-flight-plane {
+    animation: none;
+    left: 50%;
+  }
+
+  .jb-fp-book-form--success {
+    animation: none;
+  }
+}

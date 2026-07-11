@@ -101,6 +101,8 @@ export type MessageKey =
   | 'allFixedPriceRoutesBack'
   | 'getFixedPriceQuote'
   | 'quoteError'
+  | 'aircraftCategory'
+  | 'emailAddress'
   | 'processing'
   | 'emptyLegsNearYou'
   | 'emptyLegsSectionDesc'
@@ -264,6 +266,8 @@ const en: Catalog = {
   allFixedPriceRoutesBack: 'All Fixed-Price Routes',
   getFixedPriceQuote: 'Get fixed-price quote',
   quoteError: 'Unable to generate quote. Please try again.',
+  aircraftCategory: 'Aircraft category',
+  emailAddress: 'Email address',
   processing: 'Processing…',
   emptyLegsNearYou: 'Empty Legs Near You',
   emptyLegsSectionDesc: 'Last-minute private jet deals at reduced rates',
@@ -425,6 +429,8 @@ const vi: Catalog = {
   allFixedPriceRoutesBack: 'Tất cả tuyến giá cố định',
   getFixedPriceQuote: 'Nhận báo giá cố định',
   quoteError: 'Không thể tạo báo giá. Vui lòng thử lại.',
+  aircraftCategory: 'Loại máy bay',
+  emailAddress: 'Địa chỉ email',
   processing: 'Đang xử lý…',
   emptyLegsNearYou: 'Empty leg gần bạn',
   emptyLegsSectionDesc: 'Ưu đãi máy bay riêng phút chót với giá giảm',
@@ -588,6 +594,8 @@ const zhCn: Catalog = {
   allFixedPriceRoutesBack: '全部固定价格航线',
   getFixedPriceQuote: '获取固定价格报价',
   quoteError: '无法生成报价，请重试。',
+  aircraftCategory: '机型',
+  emailAddress: '电子邮箱',
   processing: '处理中…',
   emptyLegsNearYou: '附近的空腿航班',
   emptyLegsSectionDesc: '限时私人飞机优惠特价',
