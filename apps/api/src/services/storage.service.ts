@@ -181,7 +181,7 @@ export class StorageService {
         const stat = await fs.stat(full);
         items.push({
           key,
-          url: this.buildPublicUrl(key.replace(/^media\//, '')),
+          url: this.buildPublicUrl(key),
           size: stat.size,
           contentType: 'application/octet-stream',
           lastModified: stat.mtime.toISOString(),

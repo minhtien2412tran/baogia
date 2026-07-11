@@ -237,8 +237,13 @@ export const adminApi = {
     if (!res.ok) throw new Error(`${res.status}: ${await res.text()}`);
     return res.json() as Promise<{ key: string; url: string }>;
   },
-  deleteMedia: (objectKey: string) =>
-    adminRequest<unknown>(`/admin/media/${encodeURIComponent(objectKey)}`, { method: 'DELETE' }),
+  deleteMedia: (objectKey: string) => {
+    const path = objectKey
+      .split('/')
+      .map((seg) => encodeURIComponent(seg))
+      .join('/');
+    return adminRequest<unknown>(`/admin/media/${path}`, { method: 'DELETE' });
+  },
   getAircraftCategories: () => adminRequest<{ categories: unknown[] }>('/admin/aircraft/categories'),
   createAircraftCategory: (body: unknown) =>
     adminRequest<unknown>('/admin/aircraft/categories', { method: 'POST', body: JSON.stringify(body) }),

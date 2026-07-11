@@ -38,6 +38,12 @@ EOF
   chmod 600 .env.local
 fi
 
+echo "[admin] build i18n vendor..."
+cd "${APP_ROOT}/vendor/i18n"
+npm install --legacy-peer-deps 2>/dev/null || true
+npx tsc -p tsconfig.json
+cd "${APP_ROOT}"
+
 npm install --legacy-peer-deps 2>/dev/null || true
 npm run build
 

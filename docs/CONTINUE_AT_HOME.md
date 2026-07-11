@@ -65,6 +65,8 @@
 - [x] **Light cards + MediaHero** (2026-07-11) — fix chữ trắng trên card trắng (StepsTimeline/FeatureGrid) · ảnh destination/article 16:9 cover · Empty Leg steps → LightSection
 - [x] **FP detail spacing + colors** (2026-07-11) — bỏ `jb-motion-reveal` ẩn nội dung · `jb-slug-body--wide` · hero service compact · tier/inclusion contrast · btn-outline gold
 - [x] **Airport search locale** (2026-07-11) — `?locale=` trên `/airports/search` · nhãn vi/zh · alias hcm/hue/HUI · autoSelect khi gõ tắt
+- [x] **Deploy prod** (2026-07-11) — API + web + seed HUI · smoke hcm/hue locale vi/en · FP/corporate/home **200**
+- [x] **Media public URLs** (2026-07-11) — `@Public()` GET `/media/*` · fix NestJS wildcard truncate · admin URL textarea · sync-admin + i18n vendor
 
 - [x] `feat/api-security-hardening` (+ admin screens / partner-TC) → **`main`** (`9893789`)  
 - [x] VPS API `jetbay-be` + Admin `jetbay-admin` redeployed  

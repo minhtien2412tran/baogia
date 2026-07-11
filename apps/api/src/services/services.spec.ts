@@ -20,13 +20,20 @@ describe('Auth token hashing', () => {
 describe('StorageService URL builder', () => {
   function buildPublicUrl(base: string, key: string) {
     const objectKey = key.startsWith('media/') ? key.slice('media/'.length) : key;
-    return `${base.replace(/\/$/, '')}/media/${encodeURIComponent(objectKey)}`;
+    const encoded = objectKey.split('/').map(encodeURIComponent).join('/');
+    return `${base.replace(/\/$/, '')}/media/${encoded}`;
   }
 
   it('builds media URLs without double prefix', () => {
     expect(buildPublicUrl('http://127.0.0.1:4000', 'media/photo.jpg')).toBe(
       'http://127.0.0.1:4000/media/photo.jpg',
     );
+  });
+
+  it('preserves nested object keys in public URLs', () => {
+    expect(
+      buildPublicUrl('https://api.minhtien.online', 'media/enquiries/1783744994129-file.webp'),
+    ).toBe('https://api.minhtien.online/media/enquiries/1783744994129-file.webp');
   });
 });
 

@@ -130,12 +130,29 @@ export default function MediaAdminPage() {
                 <p style={{ fontSize: 11, color: '#888', margin: '0 0 8px' }}>
                   {formatBytes(obj.size)} · {obj.lastModified.slice(0, 10)}
                 </p>
-                <input
+                <textarea
                   readOnly
+                  rows={2}
                   value={obj.url}
-                  style={{ width: '100%', fontSize: 11, marginBottom: 8 }}
+                  title={obj.url}
+                  style={{
+                    width: '100%',
+                    fontSize: 11,
+                    marginBottom: 8,
+                    resize: 'vertical',
+                    wordBreak: 'break-all',
+                    fontFamily: 'monospace',
+                  }}
                   onFocus={(e) => e.target.select()}
                 />
+                <a
+                  href={obj.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontSize: 11, color: '#c9a45c', display: 'block', marginBottom: 8 }}
+                >
+                  Open public URL
+                </a>
                 <ActionBtn variant="danger" onClick={() => remove(obj.key)}>
                   Delete
                 </ActionBtn>
