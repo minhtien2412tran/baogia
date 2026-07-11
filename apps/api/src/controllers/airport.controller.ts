@@ -12,8 +12,9 @@ export class AirportController {
   @ApiOperation({ summary: 'Search airports by IATA, city, or name' })
   @ApiQuery({ name: 'q', required: true, example: 'London' })
   @ApiQuery({ name: 'limit', required: false })
-  search(@Query('q') q: string, @Query('limit') limit?: string) {
-    return this.airportService.search(q, limit ? Number(limit) : 10);
+  @ApiQuery({ name: 'locale', required: false, example: 'vi' })
+  search(@Query('q') q: string, @Query('limit') limit?: string, @Query('locale') locale?: string) {
+    return this.airportService.search(q, limit ? Number(limit) : 10, locale);
   }
 
   @Get()

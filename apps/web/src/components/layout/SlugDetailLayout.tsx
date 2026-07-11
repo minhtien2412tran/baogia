@@ -15,6 +15,7 @@ export function SlugDetailLayout({
   backLabel,
   children,
   footer,
+  wideBody,
 }: {
   locale: string;
   title: string;
@@ -27,6 +28,7 @@ export function SlugDetailLayout({
   backLabel: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
+  wideBody?: boolean;
 }) {
   const bg = heroImage ? cdnUrl(heroImage, 1920) : undefined;
 
@@ -66,7 +68,7 @@ export function SlugDetailLayout({
 
       <div className="jb-container jb-sub-body">
         <Link href={navHref(locale, backHref)} className="jb-back-link">← {backLabel}</Link>
-        <article className="jb-slug-body">{children}</article>
+        <article className={`jb-slug-body${wideBody ? ' jb-slug-body--wide' : ''}`}>{children}</article>
       </div>
       {footer}
     </main>

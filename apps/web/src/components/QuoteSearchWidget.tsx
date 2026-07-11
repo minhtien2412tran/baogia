@@ -81,7 +81,7 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
   function validateLegs(): string | null {
     for (const leg of buildApiLegs()) {
       if (!/^[A-Z]{3}$/.test(leg.fromAirport) || !/^[A-Z]{3}$/.test(leg.toAirport)) {
-        return 'Please select valid departure and destination airports.';
+        return t(locale, 'airportSelectRequired');
       }
     }
     return null;
@@ -227,6 +227,7 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
                 value={leg.from}
                 onChange={(iata) => updateLeg(idx, { from: iata })}
                 placeholder={t(locale, 'departurePlaceholder')}
+                locale={locale}
               />
               <button type="button" className="jb-swap-btn" onClick={() => swapLeg(idx)} aria-label={t(locale, 'swapAirports')}>
                 <CdnIcon src={JB.icons.swap} alt="Swap" />
@@ -237,6 +238,7 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
                 value={leg.to}
                 onChange={(iata) => updateLeg(idx, { to: iata })}
                 placeholder={t(locale, 'destinationPlaceholder')}
+                locale={locale}
               />
               <div className="jb-field jb-field-icon-wrap">
                 <label htmlFor={`dep-${idx}`}>{t(locale, 'departure')}</label>

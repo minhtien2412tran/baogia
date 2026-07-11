@@ -671,12 +671,19 @@
 
 .jb-btn-outline {
   padding: 12px 24px;
-  background: transparent;
-  border: 1px solid var(--jb-border);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(201, 164, 92, 0.45);
   border-radius: var(--jb-radius);
-  color: var(--jb-text);
+  color: #f0ebe3;
   font-size: 14px;
   text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.jb-btn-outline:hover {
+  background: rgba(201, 164, 92, 0.12);
+  border-color: var(--jb-gold);
+  color: #fff;
 }
 
 /* ── Jet card home ── */
@@ -1056,7 +1063,7 @@
   background: #1e2430;
   border: 1px solid rgba(201, 164, 92, 0.25);
   border-radius: var(--jb-radius);
-  max-height: 260px;
+  max-height: 280px;
   overflow-y: auto;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
 }
@@ -1115,6 +1122,25 @@
   bottom: 14px;
   font-size: 11px;
   color: var(--jb-text-muted);
+}
+
+.jb-airport-hint--pick {
+  position: static;
+  display: block;
+  margin-top: 6px;
+  color: var(--jb-gold);
+  font-size: 12px;
+}
+
+.jb-airport-empty {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--jb-text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed var(--jb-border);
+  border-radius: var(--jb-radius);
 }
 
 /* ── Quote form extras ── */
@@ -1565,7 +1591,36 @@
 }
 
 .jb-page-hero-search {
-  padding-bottom: 56px;
+  padding-bottom: 40px;
+}
+
+.jb-page-hero-search .jb-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.jb-page-hero-search .jb-page-hero-desc {
+  margin-bottom: 0;
+}
+
+.jb-page-hero-search .jb-page-hero-widget {
+  margin-top: 0;
+  width: 100%;
+}
+
+/* Quote widget in service hero — visible immediately (no scroll-reveal gap) */
+.jb-page-hero-search .jb-quote-card.jb-motion-reveal {
+  opacity: 1;
+  transform: none;
+}
+
+.jb-page-hero-search .jb-quote-card {
+  border-color: rgba(201, 164, 92, 0.28);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
 }
 
 .jb-page-hero h1 {
@@ -2135,6 +2190,10 @@
 
 .jb-slug-body {
   max-width: 760px;
+}
+
+.jb-slug-body--wide {
+  max-width: var(--jb-max);
 }
 
 .jb-slug-featured-img {

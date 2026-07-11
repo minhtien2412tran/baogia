@@ -1,7 +1,14 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
 import { CreateAirportDto, UpdateAirportDto } from '../dto';
+import {
+  buildAliasOrFilters,
+  normalizeAirportQuery,
+  resolveAirportAlias,
+} from '../constants/airport-search-aliases';
+import { formatAirportDisplay } from '../constants/airport-display-locale';
 
 @Injectable()
 export class AirportService {
@@ -10,33 +17,112 @@ export class AirportService {
     private readonly audit: AuditService,
   ) {}
 
-  async search(q: string, limit = 10) {
-    if (!q || q.length < 1) return { airports: [] };
-    const term = q.trim().toUpperCase();
+  async search(q: string, limit = 10, locale?: string) {
+    if (!q || q.length < 1) return { airports: [], autoSelect: undefined as string | undefined };
+
+    const raw = q.trim();
+    const term = raw.toUpperCase();
+    const alias = resolveAirportAlias(raw);
+
+    const orConditions: Prisma.AirportWhereInput[] = [
+      { iata: { contains: term, mode: 'insensitive' } },
+      { icao: { contains: term, mode: 'insensitive' } },
+      { city: { contains: raw, mode: 'insensitive' } },
+      { name: { contains: raw, mode: 'insensitive' } },
+      { country: { contains: raw, mode: 'insensitive' } },
+    ];
+
+    if (alias) {
+      orConditions.push(...buildAliasOrFilters(alias));
+    }
+
+    const norm = normalizeAirportQuery(raw);
+    if (norm !== raw.toLowerCase()) {
+      orConditions.push(
+        { city: { contains: norm, mode: 'insensitive' } },
+        { country: { contains: norm, mode: 'insensitive' } },
+      );
+    }
+
     const airports = await this.prisma.airport.findMany({
       where: {
         status: 'ACTIVE',
-        OR: [
-          { iata: { contains: term, mode: 'insensitive' } },
-          { icao: { contains: term, mode: 'insensitive' } },
-          { city: { contains: q.trim(), mode: 'insensitive' } },
-          { name: { contains: q.trim(), mode: 'insensitive' } },
-        ],
+        OR: orConditions,
       },
-      take: Math.min(limit, 25),
-      orderBy: { iata: 'asc' },
+      take: Math.min(Math.max(limit, 1), 25),
+      orderBy: [{ city: 'asc' }, { iata: 'asc' }],
     });
+
+    const scored = airports
+      .map((a) => ({
+        airport: a,
+        score: this.scoreMatch(a, raw, term, alias),
+      }))
+      .sort((a, b) => b.score - a.score || a.airport.iata.localeCompare(b.airport.iata));
+
+    const take = Math.min(Math.max(limit, 1), 25);
+    const top = scored.slice(0, take);
+
+    let autoSelect: string | undefined;
+    if (alias?.iata) {
+      autoSelect = alias.iata.toUpperCase();
+    } else if (top.length === 1) {
+      autoSelect = top[0].airport.iata;
+    } else if (top.length > 1 && top[0].score >= 70 && top[0].score - top[1].score >= 25) {
+      autoSelect = top[0].airport.iata;
+    }
+
     return {
-      airports: airports.map((a) => ({
-        id: a.id,
-        iata: a.iata,
-        icao: a.icao,
-        name: a.name,
-        city: a.city,
-        country: a.country,
-        label: `${a.city} (${a.iata}) — ${a.name}`,
-      })),
+      autoSelect,
+      airports: top.map(({ airport: a }) => {
+        const display = formatAirportDisplay(
+          { iata: a.iata, city: a.city, country: a.country, name: a.name },
+          locale,
+        );
+        return {
+          id: a.id,
+          iata: a.iata,
+          icao: a.icao,
+          name: display.name,
+          city: display.city,
+          country: display.country,
+          label: display.label,
+        };
+      }),
     };
+  }
+
+  private scoreMatch(
+    a: { iata: string; city: string; country: string; name: string },
+    raw: string,
+    term: string,
+    alias: ReturnType<typeof resolveAirportAlias>,
+  ): number {
+    let score = 0;
+    const cityLower = a.city.toLowerCase();
+    const countryLower = a.country.toLowerCase();
+    const rawLower = raw.toLowerCase();
+    const norm = normalizeAirportQuery(raw);
+
+    if (a.iata.toUpperCase() === term) score += 100;
+    else if (a.iata.toUpperCase().startsWith(term)) score += 80;
+
+    if (alias?.iata && a.iata.toUpperCase() === alias.iata.toUpperCase()) score += 120;
+
+    if (cityLower === rawLower || cityLower === norm) score += 70;
+    else if (cityLower.startsWith(rawLower) || cityLower.startsWith(norm)) score += 50;
+    else if (cityLower.includes(rawLower)) score += 30;
+
+    if (countryLower === rawLower || countryLower.includes(rawLower)) score += 40;
+
+    if (alias?.countries?.some((c) => countryLower.includes(c.toLowerCase()))) score += 35;
+    if (alias?.cities?.some((c) => cityLower.includes(c.toLowerCase()))) score += 45;
+
+    // Prefer major private-jet hubs when searching by country
+    const hubIata = new Set(['LBG', 'NCE', 'LTN', 'TEB', 'VNY', 'OPF', 'SGN', 'HAN', 'HUI', 'DAD', 'DXB', 'SIN']);
+    if (alias && hubIata.has(a.iata)) score += 15;
+
+    return score;
   }
 
   async list(page = 1, limit = 50) {

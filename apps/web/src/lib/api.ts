@@ -151,7 +151,10 @@ export const api = {
     request<Record<string, unknown>>(
       `/content/destinations/${encodeURIComponent(slug)}${locale ? `?locale=${encodeURIComponent(locale)}` : ''}`,
     ),
-  searchAirports: (q: string) => request<{ airports: Array<{ iata: string; label: string; city: string }> }>(`/airports/search?q=${encodeURIComponent(q)}`),
+  searchAirports: (q: string, locale?: string) =>
+    request<{ airports: Array<{ iata: string; label: string; city: string; country?: string; name?: string }>; autoSelect?: string }>(
+      `/airports/search?q=${encodeURIComponent(q)}&limit=12${locale ? `&locale=${encodeURIComponent(locale)}` : ''}`,
+    ),
   searchAircraft: (body: {
     tripType: string;
     legs: QuoteLegPayload[];

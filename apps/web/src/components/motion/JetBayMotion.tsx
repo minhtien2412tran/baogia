@@ -36,6 +36,9 @@ export function JetBayMotion() {
       revealEls.add(el);
     });
 
+    /* Elements marked jb-motion-reveal in markup (e.g. fixed-price detail) */
+    root.querySelectorAll<HTMLElement>('.jb-motion-reveal').forEach((el) => revealEls.add(el));
+
     revealEls.forEach((el) => {
       if (!el.classList.contains('jb-motion-reveal')) el.classList.add('jb-motion-reveal');
     });
@@ -59,7 +62,7 @@ export function JetBayMotion() {
     }
 
     const heroItems = root.querySelectorAll<HTMLElement>(
-      '.jb-hero h1, .jb-hero-sub, .jb-trust-row, .jb-quote-card',
+      '.jb-hero h1, .jb-hero-sub, .jb-trust-row, .jb-hero .jb-quote-card, .jb-page-hero-widget .jb-quote-card',
     );
     heroItems.forEach((el) => el.classList.add('jb-motion-reveal'));
     if (!reduce) {

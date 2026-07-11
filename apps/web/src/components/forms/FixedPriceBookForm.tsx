@@ -54,7 +54,7 @@ export function FixedPriceBookForm({
   if (tiers.length === 0) return null;
 
   return (
-    <aside className="jb-fp-book-card jb-motion-reveal">
+    <aside className="jb-fp-book-card">
       <div className="jb-fp-book-card__head">
         <span className="jb-fp-book-card__route">
           {fromIata} → {toIata}

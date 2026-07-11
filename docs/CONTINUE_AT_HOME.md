@@ -63,6 +63,8 @@
 - [x] **Quote widget FE↔BE** (2026-07-11) — tách search vs request quote · tripType · consent + email bắt buộc · typed API · empty leg departAt · JetCard plan.name từ API
 - [x] **FlightScrollRail** (2026-07-11) — bỏ scrollbar ngang · nút máy bay + đường bay progress · Fixed Price · Empty Legs · Stats mobile · Aircraft · Media · trip tabs
 - [x] **Light cards + MediaHero** (2026-07-11) — fix chữ trắng trên card trắng (StepsTimeline/FeatureGrid) · ảnh destination/article 16:9 cover · Empty Leg steps → LightSection
+- [x] **FP detail spacing + colors** (2026-07-11) — bỏ `jb-motion-reveal` ẩn nội dung · `jb-slug-body--wide` · hero service compact · tier/inclusion contrast · btn-outline gold
+- [x] **Airport search locale** (2026-07-11) — `?locale=` trên `/airports/search` · nhãn vi/zh · alias hcm/hue/HUI · autoSelect khi gõ tắt
 
 - [x] `feat/api-security-hardening` (+ admin screens / partner-TC) → **`main`** (`9893789`)  
 - [x] VPS API `jetbay-be` + Admin `jetbay-admin` redeployed  

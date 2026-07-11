@@ -103,6 +103,10 @@ export type MessageKey =
   | 'quoteError'
   | 'aircraftCategory'
   | 'emailAddress'
+  | 'airportSelectRequired'
+  | 'airportSearching'
+  | 'airportNoResults'
+  | 'airportPickHint'
   | 'processing'
   | 'emptyLegsNearYou'
   | 'emptyLegsSectionDesc'
@@ -268,6 +272,10 @@ const en: Catalog = {
   quoteError: 'Unable to generate quote. Please try again.',
   aircraftCategory: 'Aircraft category',
   emailAddress: 'Email address',
+  airportSelectRequired: 'Please pick a departure and destination airport from the suggestions list.',
+  airportSearching: 'Searching airports…',
+  airportNoResults: 'No airports found — try a city, country, or IATA code (e.g. LBG, Paris).',
+  airportPickHint: 'Select an airport from the list below.',
   processing: 'Processing…',
   emptyLegsNearYou: 'Empty Legs Near You',
   emptyLegsSectionDesc: 'Last-minute private jet deals at reduced rates',
@@ -431,6 +439,10 @@ const vi: Catalog = {
   quoteError: 'Không thể tạo báo giá. Vui lòng thử lại.',
   aircraftCategory: 'Loại máy bay',
   emailAddress: 'Địa chỉ email',
+  airportSelectRequired: 'Vui lòng chọn sân bay đi và đến từ danh sách gợi ý.',
+  airportSearching: 'Đang tìm sân bay…',
+  airportNoResults: 'Không tìm thấy sân bay — thử tên thành phố, quốc gia hoặc mã IATA (vd. LBG, Paris).',
+  airportPickHint: 'Chọn một sân bay trong danh sách gợi ý.',
   processing: 'Đang xử lý…',
   emptyLegsNearYou: 'Empty leg gần bạn',
   emptyLegsSectionDesc: 'Ưu đãi máy bay riêng phút chót với giá giảm',
@@ -596,6 +608,10 @@ const zhCn: Catalog = {
   quoteError: '无法生成报价，请重试。',
   aircraftCategory: '机型',
   emailAddress: '电子邮箱',
+  airportSelectRequired: '请从建议列表中选择出发和到达机场。',
+  airportSearching: '正在搜索机场…',
+  airportNoResults: '未找到机场 — 请尝试城市、国家或 IATA 代码（如 LBG、Paris）。',
+  airportPickHint: '请从下方列表中选择机场。',
   processing: '处理中…',
   emptyLegsNearYou: '附近的空腿航班',
   emptyLegsSectionDesc: '限时私人飞机优惠特价',

@@ -7,8 +7,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 0 auto 32px;
-  max-width: 720px;
+  margin: 0 auto 24px;
+  max-width: 100%;
   padding: 20px 24px;
   border-radius: var(--jb-radius-lg);
   border: 1px solid rgba(201, 164, 92, 0.25);
@@ -106,9 +106,16 @@
 .jb-fp-detail-grid {
   display: grid;
   grid-template-columns: 1fr min(380px, 36vw);
-  gap: 40px 32px;
+  gap: 32px 28px;
   align-items: start;
-  margin-top: 8px;
+  margin-top: 4px;
+}
+
+/* Never hide route detail behind scroll-reveal (content must show on load) */
+.jb-fp-detail-grid .jb-motion-reveal,
+.jb-fp-book-card.jb-motion-reveal {
+  opacity: 1;
+  transform: none;
 }
 
 .jb-fp-detail-main {
@@ -116,11 +123,16 @@
 }
 
 .jb-fp-tier-section {
-  margin-bottom: 36px;
+  margin-bottom: 28px;
 }
 
 .jb-fp-tier-section .jb-section-title {
   margin-bottom: 8px;
+  color: #faf8f4;
+}
+
+.jb-fp-tier-section .jb-section-desc {
+  color: #b8c0cc;
 }
 
 .jb-fp-tier-cards {
@@ -137,12 +149,26 @@
   gap: 16px;
   padding: 20px 22px;
   border-radius: var(--jb-radius-lg);
-  border: 1px solid var(--jb-border);
-  background: var(--jb-bg-card);
+  border: 1px solid rgba(201, 164, 92, 0.22);
+  background: linear-gradient(145deg, rgba(22, 26, 33, 0.98) 0%, rgba(14, 16, 20, 0.98) 100%);
   transition:
     border-color 0.25s ease,
     transform 0.25s ease,
     box-shadow 0.25s ease;
+}
+
+.jb-fp-tier-card .jb-tier-label {
+  color: #f0ebe3;
+  font-weight: 600;
+}
+
+.jb-fp-tier-card .jb-tier-pax {
+  color: #a8b0bc;
+}
+
+.jb-fp-tier-card .jb-tier-price {
+  color: var(--jb-gold-light);
+  font-weight: 700;
 }
 
 .jb-fp-tier-card:hover {
@@ -160,14 +186,14 @@
 .jb-fp-inclusion-panel {
   padding: 22px 24px;
   border-radius: var(--jb-radius-lg);
-  border: 1px solid var(--jb-border);
-  background: var(--jb-bg-elevated);
+  border: 1px solid rgba(201, 164, 92, 0.18);
+  background: linear-gradient(160deg, rgba(20, 24, 30, 0.95) 0%, rgba(12, 14, 18, 0.98) 100%);
 }
 
 .jb-fp-inclusion-panel h3 {
   font-size: 16px;
   margin: 0 0 14px;
-  color: var(--jb-gold);
+  color: var(--jb-gold-light);
 }
 
 .jb-fp-inclusion-panel .jb-bullet-list {
@@ -178,7 +204,7 @@
 .jb-fp-inclusion-panel .jb-bullet-list li {
   font-size: 14px;
   line-height: 1.65;
-  color: var(--jb-text-muted);
+  color: #c8cdd6;
   margin-bottom: 8px;
 }
 
@@ -292,9 +318,13 @@
 }
 
 .jb-fp-detail-foot {
-  margin-top: 32px;
+  margin-top: 24px;
   display: flex;
   justify-content: flex-start;
+}
+
+.jb-sub-body .jb-media-hero--wide {
+  max-width: 100%;
 }
 
 /* ── Date field with visible calendar button ── */

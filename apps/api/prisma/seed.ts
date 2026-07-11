@@ -3,6 +3,7 @@ import * as bcrypt from 'bcryptjs';
 import { aboutUsCmsJson } from '../src/constants/about-us-cms';
 import { bookingProcessCmsJson } from '../src/constants/booking-process-cms';
 import { DESTINATION_SEEDS } from '../src/constants/destination-seeds';
+import { GLOBAL_AIRPORT_SEEDS } from '../src/constants/airport-seeds';
 
 const prisma = new PrismaClient();
 
@@ -75,25 +76,33 @@ async function main() {
     },
   });
 
-  // 2. Seed Airports
+  // 2. Seed Airports (global private-aviation hubs)
   console.log('Seeding Airports...');
-  const sgn = await prisma.airport.upsert({
-    where: { iata: 'SGN' },
-    update: {},
-    create: { iata: 'SGN', icao: 'VVTS', name: 'Tan Son Nhat International Airport', city: 'Ho Chi Minh City', country: 'Vietnam', timezone: 'Asia/Ho_Chi_Minh' },
-  });
-
-  const han = await prisma.airport.upsert({
-    where: { iata: 'HAN' },
-    update: {},
-    create: { iata: 'HAN', icao: 'VVNB', name: 'Noi Bai International Airport', city: 'Hanoi', country: 'Vietnam', timezone: 'Asia/Ho_Chi_Minh' },
-  });
-
-  const cxr = await prisma.airport.upsert({
-    where: { iata: 'CXR' },
-    update: {},
-    create: { iata: 'CXR', icao: 'VVCR', name: 'Cam Ranh International Airport', city: 'Nha Trang', country: 'Vietnam', timezone: 'Asia/Ho_Chi_Minh' },
-  });
+  for (const a of GLOBAL_AIRPORT_SEEDS) {
+    await prisma.airport.upsert({
+      where: { iata: a.iata },
+      update: {
+        icao: a.icao,
+        name: a.name,
+        city: a.city,
+        country: a.country,
+        timezone: a.timezone,
+        status: 'ACTIVE',
+      },
+      create: { ...a, status: 'ACTIVE' },
+    });
+  }
+  const sgn = await prisma.airport.findUniqueOrThrow({ where: { iata: 'SGN' } });
+  const han = await prisma.airport.findUniqueOrThrow({ where: { iata: 'HAN' } });
+  const ltn = await prisma.airport.findUniqueOrThrow({ where: { iata: 'LTN' } });
+  const lbg = await prisma.airport.findUniqueOrThrow({ where: { iata: 'LBG' } });
+  const nce = await prisma.airport.findUniqueOrThrow({ where: { iata: 'NCE' } });
+  const gva = await prisma.airport.findUniqueOrThrow({ where: { iata: 'GVA' } });
+  const vny = await prisma.airport.findUniqueOrThrow({ where: { iata: 'VNY' } });
+  const las = await prisma.airport.findUniqueOrThrow({ where: { iata: 'LAS' } });
+  const teb = await prisma.airport.findUniqueOrThrow({ where: { iata: 'TEB' } });
+  const opf = await prisma.airport.findUniqueOrThrow({ where: { iata: 'OPF' } });
+  const iad = await prisma.airport.findUniqueOrThrow({ where: { iata: 'IAD' } });
 
   // 3. Seed Aircraft Categories & Models
   console.log('Seeding Aircraft Categories & Models...');
@@ -142,57 +151,6 @@ async function main() {
       ],
     });
   }
-
-  // European airports (jet-bay style routes)
-  console.log('Seeding European Airports...');
-  const ltn = await prisma.airport.upsert({
-    where: { iata: 'LTN' },
-    update: {},
-    create: { iata: 'LTN', icao: 'EGGW', name: 'London Luton Airport', city: 'London', country: 'UK', timezone: 'Europe/London' },
-  });
-  const lbg = await prisma.airport.upsert({
-    where: { iata: 'LBG' },
-    update: {},
-    create: { iata: 'LBG', icao: 'LFPB', name: 'Paris Le Bourget Airport', city: 'Paris', country: 'France', timezone: 'Europe/Paris' },
-  });
-  const nce = await prisma.airport.upsert({
-    where: { iata: 'NCE' },
-    update: {},
-    create: { iata: 'NCE', icao: 'LFMN', name: "Nice Cote d'Azur Airport", city: 'Nice', country: 'France', timezone: 'Europe/Paris' },
-  });
-  const gva = await prisma.airport.upsert({
-    where: { iata: 'GVA' },
-    update: {},
-    create: { iata: 'GVA', icao: 'LSGG', name: 'Geneva Airport', city: 'Geneva', country: 'Switzerland', timezone: 'Europe/Zurich' },
-  });
-
-  // US airports (jet-bay.com en-us fixed-price routes)
-  console.log('Seeding US Airports...');
-  const vny = await prisma.airport.upsert({
-    where: { iata: 'VNY' },
-    update: {},
-    create: { iata: 'VNY', icao: 'KVNY', name: 'Van Nuys Airport', city: 'Los Angeles', country: 'USA', timezone: 'America/Los_Angeles' },
-  });
-  const las = await prisma.airport.upsert({
-    where: { iata: 'LAS' },
-    update: {},
-    create: { iata: 'LAS', icao: 'KLAS', name: 'Harry Reid International Airport', city: 'Las Vegas', country: 'USA', timezone: 'America/Los_Angeles' },
-  });
-  const teb = await prisma.airport.upsert({
-    where: { iata: 'TEB' },
-    update: {},
-    create: { iata: 'TEB', icao: 'KTEB', name: 'Teterboro Airport', city: 'New York', country: 'USA', timezone: 'America/New_York' },
-  });
-  const opf = await prisma.airport.upsert({
-    where: { iata: 'OPF' },
-    update: {},
-    create: { iata: 'OPF', icao: 'KOPF', name: 'Miami-Opa Locka Executive Airport', city: 'Miami', country: 'USA', timezone: 'America/New_York' },
-  });
-  const iad = await prisma.airport.upsert({
-    where: { iata: 'IAD' },
-    update: {},
-    create: { iata: 'IAD', icao: 'KIAD', name: 'Washington Dulles International Airport', city: 'Washington', country: 'USA', timezone: 'America/New_York' },
-  });
 
   // 4. Seed Jet Card Plans
   console.log('Seeding Jet Card Plans...');
