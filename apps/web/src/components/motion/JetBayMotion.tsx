@@ -1,14 +1,12 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { animateCounter } from '../../lib/motion-utils';
 
 /**
  * Site-wide motion: scroll reveal, parallax, counters, tilt fallback, booking flow.
  */
 export function JetBayMotion() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
   useEffect(() => {
     const root = document.querySelector('.jb-page');
     if (!root) return;
@@ -188,14 +186,16 @@ export function JetBayMotion() {
       cleanups.push(() => stepIo.disconnect());
     }
 
-    // ── Hero particles ──
-    const canvas = canvasRef.current;
+    // ── Hero particles (canvas lives outside React tree to avoid removeChild errors) ──
+    let canvas: HTMLCanvasElement | null = null;
     let raf = 0;
 
-    if (canvas && !reduce) {
+    if (!reduce) {
       const hero = root.querySelector('.jb-hero');
       if (hero) {
+        canvas = document.createElement('canvas');
         canvas.className = 'jb-hero-particles';
+        canvas.setAttribute('aria-hidden', 'true');
         hero.insertBefore(canvas, hero.firstChild?.nextSibling ?? null);
 
         const ctx = canvas.getContext('2d');
@@ -209,10 +209,10 @@ export function JetBayMotion() {
             const rect = hero.getBoundingClientRect();
             w = rect.width;
             h = rect.height;
-            canvas.width = Math.floor(w * dpr);
-            canvas.height = Math.floor(h * dpr);
-            canvas.style.width = `${w}px`;
-            canvas.style.height = `${h}px`;
+            canvas!.width = Math.floor(w * dpr);
+            canvas!.height = Math.floor(h * dpr);
+            canvas!.style.width = `${w}px`;
+            canvas!.style.height = `${h}px`;
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
           };
           resize();
@@ -255,5 +255,5 @@ export function JetBayMotion() {
     return () => cleanups.forEach((fn) => fn());
   }, []);
 
-  return <canvas ref={canvasRef} aria-hidden style={{ display: 'none' }} />;
+  return null;
 }
