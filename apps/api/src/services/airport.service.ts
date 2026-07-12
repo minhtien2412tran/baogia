@@ -140,10 +140,81 @@ export class AirportService {
         name: a.name,
         city: a.city,
         country: a.country,
+        countryCode: a.countryCode,
+        continentCode: a.continentCode,
         timezone: a.timezone,
         status: a.status,
+        canParkAircraft: a.canParkAircraft,
       })),
       pagination: { page, limit: take, total, totalPages: Math.ceil(total / take) },
+    };
+  }
+
+  async getById(id: number) {
+    const a = await this.prisma.airport.findUnique({ where: { id } });
+    if (!a) throw new NotFoundException(`Airport #${id} not found`);
+    return {
+      id: a.id,
+      iata: a.iata,
+      icao: a.icao,
+      name: a.name,
+      city: a.city,
+      country: a.country,
+      countryCode: a.countryCode,
+      continentCode: a.continentCode,
+      timezone: a.timezone,
+      latitude: a.latitude != null ? Number(a.latitude) : null,
+      longitude: a.longitude != null ? Number(a.longitude) : null,
+      status: a.status,
+      canParkAircraft: a.canParkAircraft,
+      opsNotes: a.opsNotes,
+    };
+  }
+
+  async getFees(id: number) {
+    const a = await this.prisma.airport.findUnique({ where: { id } });
+    if (!a) throw new NotFoundException(`Airport #${id} not found`);
+    return {
+      airportId: a.id,
+      iata: a.iata,
+      feeCurrency: a.feeCurrency ?? 'USD',
+      landingFee: a.landingFee != null ? Number(a.landingFee) : null,
+      parkingFee: a.parkingFee != null ? Number(a.parkingFee) : null,
+      overnightFee: a.overnightFee != null ? Number(a.overnightFee) : null,
+      handlingFee: a.handlingFee != null ? Number(a.handlingFee) : null,
+      feeUpdatedAt: a.feeUpdatedAt?.toISOString() ?? null,
+    };
+  }
+
+  async getAvailableAircraft(id: number) {
+    const a = await this.prisma.airport.findUnique({ where: { id } });
+    if (!a) throw new NotFoundException(`Airport #${id} not found`);
+    const fleet = await this.prisma.aircraft.findMany({
+      where: { currentAirportId: id, availabilityStatus: 'AVAILABLE' },
+      include: {
+        aircraftModel: { include: { category: true } },
+        operator: true,
+      },
+      orderBy: { registration: 'asc' },
+    });
+    return {
+      airportId: a.id,
+      iata: a.iata,
+      hasAvailableAircraft: fleet.length > 0,
+      count: fleet.length,
+      aircraft: fleet.map((ac) => ({
+        id: ac.id,
+        registration: ac.registration,
+        availabilityStatus: ac.availabilityStatus,
+        hourlyRate: Number(ac.hourlyRate),
+        hourlyRateCurrency: ac.hourlyRateCurrency,
+        minimumBillableHours: Number(ac.minimumBillableHours),
+        model: `${ac.aircraftModel.manufacturer} ${ac.aircraftModel.model}`,
+        categoryCode: ac.aircraftModel.category.code,
+        maxPassengers: ac.aircraftModel.category.maxPassengers,
+        operator: ac.operator?.name ?? null,
+        availableFrom: ac.availableFrom?.toISOString() ?? null,
+      })),
     };
   }
 
@@ -152,6 +223,12 @@ export class AirportService {
     const existing = await this.prisma.airport.findUnique({ where: { iata } });
     if (existing) throw new BadRequestException(`Airport ${iata} already exists`);
 
+    const hasFees =
+      body.landingFee != null ||
+      body.parkingFee != null ||
+      body.overnightFee != null ||
+      body.handlingFee != null;
+
     const airport = await this.prisma.airport.create({
       data: {
         iata,
@@ -159,7 +236,19 @@ export class AirportService {
         name: body.name.trim(),
         city: body.city.trim(),
         country: body.country.trim(),
+        countryCode: body.countryCode?.trim().toUpperCase(),
+        continentCode: body.continentCode?.trim().toUpperCase(),
         timezone: body.timezone?.trim() || 'UTC',
+        latitude: body.latitude,
+        longitude: body.longitude,
+        canParkAircraft: body.canParkAircraft ?? true,
+        landingFee: body.landingFee,
+        parkingFee: body.parkingFee,
+        overnightFee: body.overnightFee,
+        handlingFee: body.handlingFee,
+        feeCurrency: body.feeCurrency ?? 'USD',
+        feeUpdatedAt: hasFees ? new Date() : undefined,
+        opsNotes: body.opsNotes,
         status: body.status ?? 'ACTIVE',
       },
     });
@@ -179,6 +268,13 @@ export class AirportService {
       if (clash) throw new BadRequestException(`Airport ${iata} already exists`);
     }
 
+    const feeTouched =
+      body.landingFee != null ||
+      body.parkingFee != null ||
+      body.overnightFee != null ||
+      body.handlingFee != null ||
+      body.feeCurrency != null;
+
     const airport = await this.prisma.airport.update({
       where: { id },
       data: {
@@ -187,8 +283,22 @@ export class AirportService {
         ...(body.name != null ? { name: body.name.trim() } : {}),
         ...(body.city != null ? { city: body.city.trim() } : {}),
         ...(body.country != null ? { country: body.country.trim() } : {}),
+        ...(body.countryCode != null ? { countryCode: body.countryCode.trim().toUpperCase() } : {}),
+        ...(body.continentCode != null
+          ? { continentCode: body.continentCode.trim().toUpperCase() }
+          : {}),
         ...(body.timezone != null ? { timezone: body.timezone.trim() } : {}),
+        ...(body.latitude != null ? { latitude: body.latitude } : {}),
+        ...(body.longitude != null ? { longitude: body.longitude } : {}),
+        ...(body.canParkAircraft != null ? { canParkAircraft: body.canParkAircraft } : {}),
+        ...(body.landingFee != null ? { landingFee: body.landingFee } : {}),
+        ...(body.parkingFee != null ? { parkingFee: body.parkingFee } : {}),
+        ...(body.overnightFee != null ? { overnightFee: body.overnightFee } : {}),
+        ...(body.handlingFee != null ? { handlingFee: body.handlingFee } : {}),
+        ...(body.feeCurrency != null ? { feeCurrency: body.feeCurrency } : {}),
+        ...(body.opsNotes != null ? { opsNotes: body.opsNotes } : {}),
         ...(body.status != null ? { status: body.status } : {}),
+        ...(feeTouched ? { feeUpdatedAt: new Date() } : {}),
       },
     });
     await this.audit.log('AIRPORT_UPDATED', { airportId: id });

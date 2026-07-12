@@ -677,3 +677,93 @@
     max-height: min(50vw, 240px);
   }
 }
+
+/* Empty Leg continent / airport filters (CR §4) */
+.jb-el-filters {
+  margin: 0 0 28px;
+  padding: 20px 22px;
+  background: linear-gradient(165deg, rgba(20, 28, 40, 0.04), rgba(20, 28, 40, 0.02));
+  border: 1px solid rgba(20, 28, 40, 0.08);
+}
+
+.jb-el-filters-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px 16px;
+}
+
+.jb-el-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--jb-text-muted, #6b7280);
+}
+
+.jb-el-field select,
+.jb-el-field input {
+  font: inherit;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 15px;
+  color: #141c28;
+  background: #fff;
+  border: 1px solid rgba(20, 28, 40, 0.14);
+  border-radius: 0;
+  padding: 10px 12px;
+  min-height: 44px;
+  color-scheme: light;
+}
+
+.jb-el-field select option {
+  background: #fff;
+  color: #141c28;
+}
+
+.jb-el-field select option:checked,
+.jb-el-field select option:hover {
+  background: #c5d4eb;
+  color: #141c28;
+}
+
+.jb-el-filters-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.jb-el-filter-count {
+  margin: 0;
+  margin-left: auto;
+  font-size: 14px;
+  color: var(--jb-text-muted, #6b7280);
+}
+
+.jb-el-continent-line {
+  margin-top: 4px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--jb-text-muted, #6b7280);
+}
+
+@media (max-width: 900px) {
+  .jb-el-filters-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .jb-el-filters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .jb-el-filter-count {
+    margin-left: 0;
+    width: 100%;
+  }
+}

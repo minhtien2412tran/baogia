@@ -61,7 +61,14 @@ else
   FAIL=$((FAIL+1))
 fi
 
-LOGIN_CODE=$(curl -sk -o /tmp/jb-login.json -w '%{http_code}' \
+# Portable temp dir (Git Bash + Windows Node cannot share /tmp reliably)
+SMOKE_TMP="${SMOKE_TMP:-$(cd "$(dirname "$0")/../../.." && pwd)/.smoke-tmp}"
+mkdir -p "$SMOKE_TMP"
+LOGIN_JSON="$SMOKE_TMP/jb-login.json"
+ADMIN_JSON="$SMOKE_TMP/jb-admin.json"
+QUOTE_JSON="$SMOKE_TMP/jb-quote.json"
+
+LOGIN_CODE=$(curl -sk -o "$LOGIN_JSON" -w '%{http_code}' \
   -X POST "${BASE}/auth/login" \
   -H 'Content-Type: application/json' \
   "${AUTH_H[@]}" \
@@ -69,9 +76,9 @@ LOGIN_CODE=$(curl -sk -o /tmp/jb-login.json -w '%{http_code}' \
 if [ "$LOGIN_CODE" = "200" ] || [ "$LOGIN_CODE" = "201" ]; then
   echo "OK  $LOGIN_CODE auth/login admin"
   PASS=$((PASS+1))
-  TOKEN=$(python3 -c "import json; print(json.load(open('/tmp/jb-login.json')).get('tokens',{}).get('accessToken','') or '')" 2>/dev/null || true)
+  TOKEN=$(node -e "const fs=require('fs'); const j=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); process.stdout.write((j.tokens&&j.tokens.accessToken)||'');" "$LOGIN_JSON" 2>/dev/null || true)
   if [ -n "${TOKEN:-}" ]; then
-    CODE=$(curl -sk -o /tmp/jb-admin.json -w '%{http_code}' \
+    CODE=$(curl -sk -o "$ADMIN_JSON" -w '%{http_code}' \
       -H "Authorization: Bearer ${TOKEN}" \
       "${AUTH_H[@]}" \
       "${BASE}/admin/dashboard/stats" || echo "000")
@@ -91,7 +98,7 @@ else
   FAIL=$((FAIL+1))
 fi
 
-QUOTE_CODE=$(curl -sk -o /tmp/jb-quote.json -w '%{http_code}' \
+QUOTE_CODE=$(curl -sk -o "$QUOTE_JSON" -w '%{http_code}' \
   -X POST "${BASE}/quotes/request" \
   -H 'Content-Type: application/json' \
   "${AUTH_H[@]}" \
@@ -101,7 +108,7 @@ if [ "$QUOTE_CODE" = "200" ] || [ "$QUOTE_CODE" = "201" ]; then
   PASS=$((PASS+1))
 else
   echo "FAIL $QUOTE_CODE quotes/request"
-  head -c 200 /tmp/jb-quote.json; echo
+  head -c 200 "$QUOTE_JSON"; echo
   FAIL=$((FAIL+1))
 fi
 

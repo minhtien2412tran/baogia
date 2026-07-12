@@ -7,9 +7,22 @@ type RouteWithRelations = FixedPriceRoute & {
 };
 
 export function formatAirport(a: Airport, detailed = false) {
-  const base = { iata: a.iata, city: a.city, country: a.country };
+  const base = {
+    iata: a.iata,
+    city: a.city,
+    country: a.country,
+    continentCode: a.continentCode ?? undefined,
+    countryCode: a.countryCode ?? undefined,
+  };
   if (!detailed) return base;
-  return { ...base, icao: a.icao, name: a.name, timezone: a.timezone };
+  return {
+    ...base,
+    icao: a.icao,
+    name: a.name,
+    timezone: a.timezone,
+    latitude: a.latitude != null ? Number(a.latitude) : undefined,
+    longitude: a.longitude != null ? Number(a.longitude) : undefined,
+  };
 }
 
 export function formatFixedPriceRoute(route: RouteWithRelations, detailed = false) {

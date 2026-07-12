@@ -35,6 +35,10 @@ model User {
   partnerAccounts      PartnerAccount[]
   auditLogs            AuditLog[]
   refreshTokens        RefreshToken[]
+  permissionOverrides  UserPermissionOverride[]
+  airportScope         UserAirportScope?
+  contractsCreated     OperatorContract[]      @relation("ContractCreatedBy")
+  contractsApproved    OperatorContract[]      @relation("ContractApprovedBy")
 }
 
 model UserAuthProvider {
@@ -96,6 +100,7 @@ model QuoteRequest {
   legs              QuoteLeg[]
   offers            QuoteOffer[]
   bookings          Booking[]
+  flightLegs        FlightLeg[]
   worldCupItinerary WorldCupItinerary?
 }
 
@@ -133,26 +138,35 @@ model QuoteOffer {
 }
 
 model Booking {
-  id              Int                @id @default(autoincrement())
-  quoteOfferId    Int?
-  quoteRequestId  Int?
-  userId          Int
-  companyId       Int?
-  bookingType     String             @default("CHARTER") // CHARTER, FIXED_PRICE, EMPTY_LEG
-  agreementStatus String             @default("PENDING") // PENDING, SIGNED, BYPASSED
-  bookingStatus   String             @default("PENDING") // PENDING, CONFIRMED, COMPLETED, CANCELLED
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  id                 Int                @id @default(autoincrement())
+  quoteOfferId       Int?
+  quoteRequestId     Int?
+  userId             Int
+  companyId          Int?
+  bookingType        String             @default("CHARTER") // CHARTER, FIXED_PRICE, EMPTY_LEG
+  agreementStatus    String             @default("PENDING") // PENDING, SIGNED, BYPASSED
+  bookingStatus      String             @default("PENDING") // PENDING, CONFIRMED, COMPLETED, CANCELLED
+  estimatedCost      Decimal?           @db.Decimal(12, 2)
+  estimatedPrice     Decimal?           @db.Decimal(12, 2)
+  currency           String?            @default("USD")
+  selectedAircraftId Int?
+  pricingStatus      String?            // ESTIMATED, CONFIRMED, SUPERSEDED
+  contractStatus     String?            // NONE, DRAFT, PENDING_APPROVAL, APPROVED, SENT, COMPLETED
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
   
-  quoteOffer      QuoteOffer?        @relation(fields: [quoteOfferId], references: [id])
-  quoteRequest    QuoteRequest?      @relation(fields: [quoteRequestId], references: [id])
-  user            User               @relation(fields: [userId], references: [id])
-  company         Company?           @relation(fields: [companyId], references: [id])
-  passengers      BookingPassenger[]
-  payments        Payment[]
-  documents       Document[]
-  travelCredits   TravelCreditLedger[]
-  jetCardTxns     JetCardTransaction[]
+  quoteOffer         QuoteOffer?        @relation(fields: [quoteOfferId], references: [id])
+  quoteRequest       QuoteRequest?      @relation(fields: [quoteRequestId], references: [id])
+  user               User               @relation(fields: [userId], references: [id])
+  company            Company?           @relation(fields: [companyId], references: [id])
+  selectedAircraft   Aircraft?          @relation(fields: [selectedAircraftId], references: [id])
+  passengers         BookingPassenger[]
+  payments           Payment[]
+  documents          Document[]
+  travelCredits      TravelCreditLedger[]
+  jetCardTxns        JetCardTransaction[]
+  flightLegs         FlightLeg[]
+  operatorContracts  OperatorContract[]
 }
 
 model BookingPassenger {
@@ -203,8 +217,20 @@ model Airport {
   name                String
   city                String
   country             String
+  countryCode         String?              // ISO 3166-1 alpha-2
+  continentCode       String?              // AS EU NA SA AF OC
   timezone            String
+  latitude            Decimal?             @db.Decimal(10, 7)
+  longitude           Decimal?             @db.Decimal(10, 7)
   status              String               @default("ACTIVE")
+  canParkAircraft     Boolean              @default(true)
+  landingFee          Decimal?             @db.Decimal(12, 2)
+  parkingFee          Decimal?             @db.Decimal(12, 2)
+  overnightFee        Decimal?             @db.Decimal(12, 2)
+  handlingFee         Decimal?             @db.Decimal(12, 2)
+  feeCurrency         String?              @default("USD")
+  feeUpdatedAt        DateTime?
+  opsNotes            String?
   
   legsFrom            QuoteLeg[]           @relation("LegFromAirport")
   legsTo              QuoteLeg[]           @relation("LegToAirport")
@@ -212,6 +238,15 @@ model Airport {
   fixedRoutesTo       FixedPriceRoute[]    @relation("RouteToAirport")
   emptyLegsFrom       EmptyLegOffer[]      @relation("EmptyFromAirport")
   emptyLegsTo         EmptyLegOffer[]      @relation("EmptyToAirport")
+  fleetBasedHere      Aircraft[]           @relation("AircraftBaseAirport")
+  fleetCurrentlyHere  Aircraft[]           @relation("AircraftCurrentAirport")
+  locationHistoryFrom AircraftLocationHistory[] @relation("LocHistFrom")
+  locationHistoryTo   AircraftLocationHistory[] @relation("LocHistTo")
+  flightLegsFrom      FlightLeg[]          @relation("FlightLegFrom")
+  flightLegsTo        FlightLeg[]          @relation("FlightLegTo")
+
+  @@index([continentCode])
+  @@index([countryCode])
 }
 
 model AircraftCategory {
@@ -239,6 +274,85 @@ model AircraftModel {
   category       AircraftCategory @relation(fields: [categoryId], references: [id])
   quoteOffers    QuoteOffer[]
   emptyLegs      EmptyLegOffer[]
+  fleet          Aircraft[]
+}
+
+/// Fleet tail / physical aircraft (CR Wave 1) — distinct from catalog AircraftModel
+model Aircraft {
+  id                   Int                      @id @default(autoincrement())
+  registration         String                   @unique
+  aircraftModelId      Int
+  operatorId           Int?
+  baseAirportId        Int
+  currentAirportId     Int
+  availableFrom        DateTime?
+  availabilityStatus   String                   @default("AVAILABLE") // AVAILABLE ON_HOLD BOOKED IN_FLIGHT MAINTENANCE UNAVAILABLE INACTIVE
+  hourlyRate           Decimal                  @db.Decimal(12, 2)
+  hourlyRateCurrency   String                   @default("USD")
+  minimumBillableHours Decimal                  @default(2) @db.Decimal(4, 1)
+  locationUpdatedAt    DateTime                 @default(now())
+  createdAt            DateTime                 @default(now())
+  updatedAt            DateTime                 @updatedAt
+
+  aircraftModel        AircraftModel            @relation(fields: [aircraftModelId], references: [id])
+  operator             Operator?                @relation(fields: [operatorId], references: [id])
+  baseAirport          Airport                  @relation("AircraftBaseAirport", fields: [baseAirportId], references: [id])
+  currentAirport       Airport                  @relation("AircraftCurrentAirport", fields: [currentAirportId], references: [id])
+  locationHistory      AircraftLocationHistory[]
+  flightLegs           FlightLeg[]
+  bookingsSelected     Booking[]
+  operatorContracts    OperatorContract[]
+
+  @@index([currentAirportId, availabilityStatus])
+  @@index([availabilityStatus])
+}
+
+model AircraftLocationHistory {
+  id            Int       @id @default(autoincrement())
+  aircraftId    Int
+  fromAirportId Int?
+  toAirportId   Int
+  source        String    @default("MANUAL") // MANUAL FLIGHT_COMPLETE
+  note          String?
+  createdBy     Int?
+  createdAt     DateTime  @default(now())
+
+  aircraft      Aircraft  @relation(fields: [aircraftId], references: [id], onDelete: Cascade)
+  fromAirport   Airport?  @relation("LocHistFrom", fields: [fromAirportId], references: [id])
+  toAirport     Airport   @relation("LocHistTo", fields: [toAirportId], references: [id])
+
+  @@index([aircraftId, createdAt])
+}
+
+/// Operational flight legs (positioning / passenger / …) — CR Wave 1–2
+model FlightLeg {
+  id                     Int           @id @default(autoincrement())
+  bookingId              Int?
+  quoteRequestId         Int?
+  aircraftId             Int?
+  fromAirportId          Int
+  toAirportId            Int
+  legType                String        // POSITIONING PASSENGER RETURN REPOSITIONING EMPTY_LEG
+  departureAt            DateTime
+  arrivalAt              DateTime?
+  estimatedFlightMinutes Int
+  distanceKm             Decimal?      @db.Decimal(10, 2)
+  hasPassengers          Boolean       @default(false)
+  passengerCount         Int           @default(0)
+  hourlyRateApplied      Decimal?      @db.Decimal(12, 2)
+  estimatedCost          Decimal?      @db.Decimal(12, 2)
+  status                 String        @default("PLANNED") // PLANNED CONFIRMED COMPLETED CANCELLED
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+
+  booking                Booking?      @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  quoteRequest           QuoteRequest? @relation(fields: [quoteRequestId], references: [id], onDelete: Cascade)
+  aircraft               Aircraft?     @relation(fields: [aircraftId], references: [id])
+  fromAirport            Airport       @relation("FlightLegFrom", fields: [fromAirportId], references: [id])
+  toAirport              Airport       @relation("FlightLegTo", fields: [toAirportId], references: [id])
+
+  @@index([bookingId])
+  @@index([quoteRequestId])
 }
 
 model Operator {
@@ -249,6 +363,109 @@ model Operator {
   status            String       @default("ACTIVE")
   
   quoteOffers       QuoteOffer[]
+  fleet             Aircraft[]
+  contracts         OperatorContract[]
+}
+
+// --- CR Wave 3–5: contracts, DocuSign, RBAC ---
+
+model ContractTemplate {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  name      String
+  bodyHtml  String
+  version   Int      @default(1)
+  status    String   @default("ACTIVE") // ACTIVE INACTIVE
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  contracts OperatorContract[]
+}
+
+model OperatorContract {
+  id           Int       @id @default(autoincrement())
+  aircraftId   Int
+  operatorId   Int
+  bookingId    Int?
+  templateId   Int
+  title        String
+  bodyHtml     String
+  status       String    @default("DRAFT") // DRAFT PENDING_APPROVAL APPROVED REJECTED SENT COMPLETED VOIDED
+  version      Int       @default(1)
+  createdBy    Int
+  approvedBy   Int?
+  approvedAt   DateTime?
+  rejectedReason String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  aircraft     Aircraft         @relation(fields: [aircraftId], references: [id])
+  operator     Operator         @relation(fields: [operatorId], references: [id])
+  booking      Booking?         @relation(fields: [bookingId], references: [id])
+  template     ContractTemplate @relation(fields: [templateId], references: [id])
+  creator      User             @relation("ContractCreatedBy", fields: [createdBy], references: [id])
+  approver     User?            @relation("ContractApprovedBy", fields: [approvedBy], references: [id])
+  envelopes    DocuSignEnvelope[]
+
+  @@index([aircraftId, status])
+  @@index([status])
+}
+
+model DocuSignEnvelope {
+  id                 Int       @id @default(autoincrement())
+  operatorContractId Int
+  externalEnvelopeId String    @unique
+  status             String    @default("CREATED") // CREATED SENT DELIVERED COMPLETED DECLINED VOIDED
+  recipients         Json?
+  sentAt             DateTime?
+  completedAt        DateTime?
+  voidedAt           DateTime?
+  certificateUrl     String?
+  rawLastEvent       Json?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  operatorContract   OperatorContract @relation(fields: [operatorContractId], references: [id], onDelete: Cascade)
+
+  @@index([operatorContractId])
+}
+
+model DocuSignWebhookEvent {
+  id          Int       @id @default(autoincrement())
+  eventId     String    @unique
+  envelopeId  String
+  eventType   String
+  payload     Json
+  processedAt DateTime  @default(now())
+
+  @@index([envelopeId])
+}
+
+model UserPermissionOverride {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  permissionKey String   // CANCEL_BOOKING CANCEL_QUOTE CANCEL_CONTRACT VOID_DOCUSIGN APPROVE_CONTRACT
+  effect        String   // INHERIT ALLOW DENY
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, permissionKey])
+  @@index([userId])
+}
+
+model UserAirportScope {
+  id             Int      @id @default(autoincrement())
+  userId         Int      @unique
+  scopeType      String   @default("ALL") // ALL CONTINENT COUNTRY AIRPORT_LIST NONE
+  continentCodes String[] @default([])
+  countryCodes   String[] @default([])
+  airportIds     Int[]    @default([])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 // --- COMMERCIAL PROGRAMS ---

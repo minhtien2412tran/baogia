@@ -18,6 +18,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
+import { PricingEstimateService } from '../services/pricing-estimate.service';
 
 function clientIp(req: Request): string | undefined {
   return (req.headers['x-forwarded-for'] as string) ?? req.socket?.remoteAddress;
@@ -27,7 +28,10 @@ function clientIp(req: Request): string | undefined {
 @ApiSecurity('X-API-Key')
 @Controller('bookings')
 export class BookingController {
-  constructor(private readonly bookingService: BookingService) {}
+  constructor(
+    private readonly bookingService: BookingService,
+    private readonly pricing: PricingEstimateService,
+  ) {}
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -51,6 +55,17 @@ export class BookingController {
     return this.bookingService.findMyBookings(user.userId);
   }
 
+  @Get(':id/legs')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
+  @ApiOperation({ summary: 'List FlightLeg rows for a booking (CR multi-leg)' })
+  async listLegs(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthUser) {
+    if (user.role !== 'ADMIN') {
+      await this.bookingService.findById(id, user.userId);
+    }
+    return this.pricing.listBookingLegs(id, user.role === 'ADMIN');
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('bearer')
@@ -70,7 +85,7 @@ export class BookingController {
     @CurrentUser() user: AuthUser,
     @Req() req: Request,
   ) {
-    return this.bookingService.cancel(id, user.userId, clientIp(req));
+    return this.bookingService.cancel(id, user, clientIp(req));
   }
 }
 

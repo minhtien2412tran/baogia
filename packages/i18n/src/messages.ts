@@ -132,6 +132,16 @@ export type MessageKey =
   | 'elStepBookBody'
   | 'elStepFlyTitle'
   | 'elStepFlyBody'
+  | 'elFilterFromContinent'
+  | 'elFilterToContinent'
+  | 'elFilterFromAirport'
+  | 'elFilterToAirport'
+  | 'elFilterDateFrom'
+  | 'elFilterPassengers'
+  | 'elFilterSearch'
+  | 'elFilterClear'
+  | 'elFilterAny'
+  | 'elFilterResults'
   | 'blogsHeroDesc'
   | 'newsHeroDesc'
   | 'blogsMetaDesc'
@@ -301,6 +311,16 @@ const en: Catalog = {
   elStepBookBody: 'Confirm your empty leg at a fraction of standard charter cost.',
   elStepFlyTitle: 'Fly private',
   elStepFlyBody: 'Enjoy the same premium experience at a reduced rate.',
+  elFilterFromContinent: 'From continent',
+  elFilterToContinent: 'To continent',
+  elFilterFromAirport: 'From (IATA)',
+  elFilterToAirport: 'To (IATA)',
+  elFilterDateFrom: 'Depart from',
+  elFilterPassengers: 'Passengers',
+  elFilterSearch: 'Search empty legs',
+  elFilterClear: 'Clear filters',
+  elFilterAny: 'Any',
+  elFilterResults: '{n} empty leg(s) found',
   blogsHeroDesc: 'Insights, guides, and stories from the world of private aviation.',
   newsHeroDesc: 'Latest updates and announcements from JetBay.',
   blogsMetaDesc: 'Private aviation insights and travel guides.',
@@ -468,6 +488,16 @@ const vi: Catalog = {
   elStepBookBody: 'Xác nhận empty leg với chi phí thấp hơn nhiều so với charter thông thường.',
   elStepFlyTitle: 'Bay riêng',
   elStepFlyBody: 'Trải nghiệm cao cấp tương tự với mức giá ưu đãi.',
+  elFilterFromContinent: 'Châu lục đi',
+  elFilterToContinent: 'Châu lục đến',
+  elFilterFromAirport: 'Đi (IATA)',
+  elFilterToAirport: 'Đến (IATA)',
+  elFilterDateFrom: 'Ngày đi từ',
+  elFilterPassengers: 'Hành khách',
+  elFilterSearch: 'Tìm empty leg',
+  elFilterClear: 'Xóa bộ lọc',
+  elFilterAny: 'Tất cả',
+  elFilterResults: 'Tìm thấy {n} empty leg',
   blogsHeroDesc: 'Bài viết, hướng dẫn và câu chuyện về hàng không tư nhân.',
   newsHeroDesc: 'Tin tức và thông báo mới nhất từ JetBay.',
   blogsMetaDesc: 'Kiến thức và hướng dẫn du lịch hàng không tư nhân.',
@@ -637,6 +667,16 @@ const zhCn: Catalog = {
   elStepBookBody: '以远低于标准包机的价格确认空腿航班。',
   elStepFlyTitle: '私人飞行',
   elStepFlyBody: '以优惠价格享受同样高端的飞行体验。',
+  elFilterFromContinent: '出发大洲',
+  elFilterToContinent: '到达大洲',
+  elFilterFromAirport: '出发 (IATA)',
+  elFilterToAirport: '到达 (IATA)',
+  elFilterDateFrom: '出发日期起',
+  elFilterPassengers: '乘客',
+  elFilterSearch: '搜索空腿',
+  elFilterClear: '清除筛选',
+  elFilterAny: '全部',
+  elFilterResults: '找到 {n} 个空腿航班',
   blogsHeroDesc: '私人航空领域的见解、指南与故事。',
   newsHeroDesc: 'JetBay 最新动态与公告。',
   blogsMetaDesc: '私人航空见解与旅行指南。',

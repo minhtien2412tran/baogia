@@ -34,12 +34,21 @@
 
 ## Việc tiếp theo (ưu tiên sản phẩm)
 
-1. **Polish clone** (ongoing) — so `scratch/` vs live · Home news/newsletter · FP tier labels  
-2. **G4 keys** — SMTP / OAuth / payment / SMS **chờ KH** → [KH_G4_KEYS_CHECKLIST.md](./KH_G4_KEYS_CHECKLIST.md)  
-3. (Optional) set prod `APP_ENV=production` khi secrets đã đủ mạnh  
-4. **BE modules** — tiếp phase 2+ theo [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md)  
+1. **CR Wave1–5 BE + Empty Leg FE filter (2026-07-12)** — nhánh `feat/api-cr-wave3-contracts-rbac-docusign`: fleet/pricing/HĐ/RBAC/DocuSign mock · web `/empty-leg` lọc continent/IATA/date · smoke `smoke-cr-wave1/3` — live DocuSign/Admin UI chờ phụ lục  
+2. **CR sau họp** — biên bản [JETBAY_CR_2026_01.md](./JETBAY_CR_2026_01.md) · kịch bản [KH_KICH_BAN_SAU_HOP_CR.md](./KH_KICH_BAN_SAU_HOP_CR.md) · báo cáo tiến độ **không** ghi CR = đã hoàn thành GĐ  
+3. **Polish clone** (ongoing) — so `scratch/` vs live  
+4. **G4 keys** — SMTP / OAuth / payment / SMS **chờ KH** → [KH_G4_KEYS_CHECKLIST.md](./KH_G4_KEYS_CHECKLIST.md)  
 
-**Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) · [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)
+**Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) · [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md) · **Họp KH:** [KH_KICH_BAN_HOP_TIENDO.md](./KH_KICH_BAN_HOP_TIENDO.md) · [KH_KICH_BAN_SAU_HOP_CR.md](./KH_KICH_BAN_SAU_HOP_CR.md)
+
+### Retest BE + docs (2026-07-12)
+
+- [x] Local unit Jest **9/9**
+- [x] Local `smoke-prod.sh` **16/16** (fix: parse JWT bằng Node + `.smoke-tmp` — Windows không dùng được `python3` stub / `/tmp`)
+- [x] Local `smoke-auth-booking` **pass** · `smoke-web-api` **pass** · `smoke-admin-crud` **16/16**
+- [x] Prod docs public **10/10** (health/swagger/openapi × docs+api · server URL · integrations)
+- [x] Prod CORS docs→api **204** · ApiKey thiếu → **401**
+- [ ] Prod full `smoke-docs.sh` login (cần `API_KEY` trên VPS — Authorize Swagger bằng key prod, không dùng key local)
 
 ### Đã merge + deploy (2026-07-10)
 

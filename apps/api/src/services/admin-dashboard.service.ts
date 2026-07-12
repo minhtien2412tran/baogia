@@ -3,6 +3,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { StorageService } from './storage.service';
 import { RedisService } from './redis.service';
 import { AuditService } from './audit.service';
+import { PermissionService } from './permission.service';
+import type { AuthUser } from '../auth/auth.types';
 
 @Injectable()
 export class AdminDashboardService {
@@ -11,8 +13,8 @@ export class AdminDashboardService {
     private readonly storage: StorageService,
     private readonly redis: RedisService,
     private readonly audit: AuditService,
+    private readonly permissions: PermissionService,
   ) {}
-
   async getStats() {
     const [users, bookings, quotes, partners, articles] = await Promise.all([
       this.prisma.user.count(),
@@ -50,7 +52,7 @@ export class AdminDashboardService {
     }));
   }
 
-  async updateQuoteStatus(id: number, status: string) {
+  async updateQuoteStatus(id: number, status: string, user?: AuthUser, ip?: string) {
     const allowed = ['PENDING', 'OFFERED', 'EXPIRED', 'CONVERTED', 'CANCELLED'];
     if (!allowed.includes(status)) {
       throw new BadRequestException(`Invalid status. Allowed: ${allowed.join(', ')}`);
@@ -58,11 +60,20 @@ export class AdminDashboardService {
     const existing = await this.prisma.quoteRequest.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException(`Quote #${id} not found`);
 
+    if (status === 'CANCELLED' && user) {
+      await this.permissions.assertAllowed(user.userId, user.role, 'CANCEL_QUOTE', ip);
+    }
+
     const updated = await this.prisma.quoteRequest.update({
       where: { id },
       data: { status },
     });
-    await this.audit.log('QUOTE_STATUS_UPDATED', { quoteId: id, status, previous: existing.status });
+    await this.audit.log(
+      'QUOTE_STATUS_UPDATED',
+      { quoteId: id, status, previous: existing.status },
+      user?.userId,
+      ip,
+    );
     return {
       id: updated.id,
       status: updated.status,

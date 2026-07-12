@@ -1062,10 +1062,65 @@ export class CreateAirportDto {
   @IsNotEmpty()
   country: string;
 
+  @ApiPropertyOptional({ example: 'VN' })
+  @IsOptional()
+  @IsString()
+  countryCode?: string;
+
+  @ApiPropertyOptional({ example: 'AS', description: 'AS EU NA SA AF OC' })
+  @IsOptional()
+  @IsString()
+  continentCode?: string;
+
   @ApiPropertyOptional({ example: 'Asia/Ho_Chi_Minh' })
   @IsOptional()
   @IsString()
   timezone?: string;
+
+  @ApiPropertyOptional({ example: 10.8188 })
+  @IsOptional()
+  @Type(() => Number)
+  latitude?: number;
+
+  @ApiPropertyOptional({ example: 106.6519 })
+  @IsOptional()
+  @Type(() => Number)
+  longitude?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  canParkAircraft?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  landingFee?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  parkingFee?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  overnightFee?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  handlingFee?: number;
+
+  @ApiPropertyOptional({ example: 'USD' })
+  @IsOptional()
+  @IsString()
+  feeCurrency?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  opsNotes?: string;
 
   @ApiPropertyOptional({ example: 'ACTIVE', enum: ['ACTIVE', 'INACTIVE'] })
   @IsOptional()
@@ -1102,12 +1157,155 @@ export class UpdateAirportDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
+  countryCode?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  continentCode?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   timezone?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  latitude?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  longitude?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  canParkAircraft?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  landingFee?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  parkingFee?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  overnightFee?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  handlingFee?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  feeCurrency?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  opsNotes?: string;
 
   @ApiPropertyOptional({ enum: ['ACTIVE', 'INACTIVE'] })
   @IsOptional()
   @IsIn(['ACTIVE', 'INACTIVE'])
   status?: string;
+}
+
+export class PricingEstimateDto {
+  @ApiProperty({ example: 'HAN' })
+  @IsString()
+  @IsNotEmpty()
+  pickupAirport: string;
+
+  @ApiProperty({ example: 'SGN' })
+  @IsString()
+  @IsNotEmpty()
+  dropoffAirport: string;
+
+  @ApiProperty({ example: '2026-08-15T08:00:00Z' })
+  @IsString()
+  @IsNotEmpty()
+  departureAt: string;
+
+  @ApiProperty({ example: 4 })
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  passengers: number;
+
+  @ApiPropertyOptional({ description: 'Fleet Aircraft id; if omitted, pick nearest AVAILABLE' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  aircraftId?: number;
+
+  @ApiPropertyOptional({ description: 'Include internal cost breakdown (admin)' })
+  @IsOptional()
+  @IsBoolean()
+  includeInternalBreakdown?: boolean;
+
+  @ApiPropertyOptional({ description: 'Persist FlightLeg rows on this quote request' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  quoteRequestId?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  bookingId?: number;
+}
+
+export class UpdateFleetLocationDto {
+  @ApiProperty({ example: 'HAN' })
+  @IsString()
+  @IsNotEmpty()
+  currentAirportIata: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  note?: string;
+}
+
+export class UpdateFleetAvailabilityDto {
+  @ApiProperty({ example: 'AVAILABLE', enum: ['AVAILABLE', 'ON_HOLD', 'BOOKED', 'IN_FLIGHT', 'MAINTENANCE', 'UNAVAILABLE', 'INACTIVE'] })
+  @IsString()
+  @IsIn(['AVAILABLE', 'ON_HOLD', 'BOOKED', 'IN_FLIGHT', 'MAINTENANCE', 'UNAVAILABLE', 'INACTIVE'])
+  availabilityStatus: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  availableFrom?: string;
+}
+
+export class UpdateFleetHourlyRateDto {
+  @ApiProperty({ example: 12500 })
+  @Type(() => Number)
+  @Min(1)
+  hourlyRate: number;
+
+  @ApiPropertyOptional({ example: 'USD' })
+  @IsOptional()
+  @IsString()
+  hourlyRateCurrency?: string;
+
+  @ApiPropertyOptional({ example: 2 })
+  @IsOptional()
+  @Type(() => Number)
+  @Min(0)
+  minimumBillableHours?: number;
 }
 
 export class CreateContentPageDto {
@@ -1286,4 +1484,130 @@ export class UpdateDestinationDto {
   @ValidateNested()
   @Type(() => ContentTranslationDto)
   translation?: ContentTranslationDto;
+}
+
+// --- CR Wave 3–5: contracts / RBAC / DocuSign ---
+
+export class UserPermissionItemDto {
+  @ApiProperty({
+    enum: ['CANCEL_BOOKING', 'CANCEL_QUOTE', 'CANCEL_CONTRACT', 'VOID_DOCUSIGN', 'APPROVE_CONTRACT'],
+  })
+  @IsIn(['CANCEL_BOOKING', 'CANCEL_QUOTE', 'CANCEL_CONTRACT', 'VOID_DOCUSIGN', 'APPROVE_CONTRACT'])
+  permissionKey: string;
+
+  @ApiProperty({ enum: ['INHERIT', 'ALLOW', 'DENY'] })
+  @IsIn(['INHERIT', 'ALLOW', 'DENY'])
+  effect: string;
+}
+
+export class PutUserPermissionsDto {
+  @ApiProperty({ type: [UserPermissionItemDto] })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => UserPermissionItemDto)
+  items: UserPermissionItemDto[];
+}
+
+export class PutUserAirportScopeDto {
+  @ApiProperty({ enum: ['ALL', 'CONTINENT', 'COUNTRY', 'AIRPORT_LIST', 'NONE'] })
+  @IsIn(['ALL', 'CONTINENT', 'COUNTRY', 'AIRPORT_LIST', 'NONE'])
+  scopeType: 'ALL' | 'CONTINENT' | 'COUNTRY' | 'AIRPORT_LIST' | 'NONE';
+
+  @ApiPropertyOptional({ type: [String], example: ['AS'] })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  continentCodes?: string[];
+
+  @ApiPropertyOptional({ type: [String], example: ['VN'] })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  countryCodes?: string[];
+
+  @ApiPropertyOptional({ type: [Number] })
+  @IsOptional()
+  @IsArray()
+  @IsInt({ each: true })
+  @Type(() => Number)
+  airportIds?: number[];
+}
+
+export class CreateOperatorContractDto {
+  @ApiProperty({ example: 1 })
+  @Type(() => Number)
+  @IsInt()
+  aircraftId: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  templateId?: number;
+
+  @ApiPropertyOptional({ example: 'OPS_STANDARD_V1' })
+  @IsOptional()
+  @IsString()
+  templateCode?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  bookingId?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  title?: string;
+}
+
+export class UpdateOperatorContractDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  title?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  bodyHtml?: string;
+}
+
+export class RejectOperatorContractDto {
+  @ApiPropertyOptional({ example: 'Missing operator details' })
+  @IsOptional()
+  @IsString()
+  reason?: string;
+}
+
+export class DocuSignRecipientDto {
+  @ApiProperty({ example: 'ops@operator.example' })
+  @IsEmail()
+  email: string;
+
+  @ApiProperty({ example: 'Ops Manager' })
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @ApiPropertyOptional({ example: 'signer' })
+  @IsOptional()
+  @IsString()
+  role?: string;
+}
+
+export class SendDocuSignDto {
+  @ApiProperty({ type: [DocuSignRecipientDto] })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => DocuSignRecipientDto)
+  recipients: DocuSignRecipientDto[];
+}
+
+export class VoidDocuSignDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  reason?: string;
 }

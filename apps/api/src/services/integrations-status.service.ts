@@ -53,11 +53,18 @@ export class IntegrationsStatusService {
           present('TWILIO_ACCOUNT_SID') ||
           present('ESMS_API_KEY') ||
           present('SMS_API_URL'),
+        docusign:
+          (process.env.DOCUSIGN_MODE ?? 'mock') === 'mock' ||
+          (present('DOCUSIGN_INTEGRATION_KEY') &&
+            present('DOCUSIGN_USER_ID') &&
+            present('DOCUSIGN_ACCOUNT_ID')),
       },
       notes: {
         jwt: 'Required for auth. Set JWT_SECRET + REFRESH_TOKEN_SECRET.',
         minio: 'MinIO optional — empty MINIO_ENDPOINT uses local upload path (UPLOAD_PATH).',
         g4: 'SMTP / OAuth / Payment / SMS need customer merchant keys — see docs/JETBAY_G4_INTEGRATIONS.md',
+        docusign:
+          'DOCUSIGN_MODE=mock (default) or live + DOCUSIGN_INTEGRATION_KEY/USER_ID/ACCOUNT_ID/PRIVATE_KEY',
       },
     };
   }

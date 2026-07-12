@@ -1,7 +1,14 @@
 # Backend Test — JetBay API
 
-**Canonical tài liệu test BE.** Cập nhật: **2026-07-10**  
+**Canonical tài liệu test BE.** Cập nhật: **2026-07-12**  
 **Audit domain:** [BE_AUDIT.md](./BE_AUDIT.md) · **Triển khai:** [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)
+
+**Retest 2026-07-12 (local):** unit **9/9** · `smoke-prod` **16/16** · auth-booking **pass** · web-api **pass** · admin-crud **16/16**.  
+**CR Wave1 smoke (2026-07-12):** `node scripts/deploy/jetbay-be/smoke-cr-wave1.mjs` → empty-leg continent + fees + pricing POSITIONING **pass**.
+
+**CR Wave3–5 smoke (2026-07-12):** `node scripts/deploy/jetbay-be/smoke-cr-wave3.mjs` → CANCEL_BOOKING 403 · airport scope · operator contract approve · mock DocuSign send/webhook CoC **11/11 pass**.
+**Docs/prod (public):** health/swagger/openapi/integrations + CORS docs → **OK**; login Swagger prod cần `API_KEY` từ VPS (không dùng key local).  
+`smoke-prod.sh` parse JWT bằng **Node** + thư mục `.smoke-tmp` (tương thích Windows / Git Bash).
 
 ---
 

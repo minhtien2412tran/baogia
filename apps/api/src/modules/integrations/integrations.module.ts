@@ -10,6 +10,17 @@ import { NinepayService } from '../../services/ninepay.service';
 import { RedisService } from '../../services/redis.service';
 import { StorageService } from '../../services/storage.service';
 import { SmsService } from '../../services/sms.service';
+import { PermissionService } from '../../services/permission.service';
+import { AirportScopeService } from '../../services/airport-scope.service';
+import { DOCUSIGN_PROVIDER } from '../../integrations/docusign/docusign.types';
+import { MockDocuSignProvider } from '../../integrations/docusign/mock-docusign.provider';
+import { LiveDocuSignProvider } from '../../integrations/docusign/live-docusign.provider';
+
+function createDocuSignProvider() {
+  const mode = (process.env.DOCUSIGN_MODE ?? 'mock').toLowerCase();
+  if (mode === 'live') return new LiveDocuSignProvider();
+  return new MockDocuSignProvider();
+}
 
 /**
  * Shared infra providers used across feature modules.
@@ -29,6 +40,9 @@ import { SmsService } from '../../services/sms.service';
     RedisService,
     StorageService,
     SmsService,
+    PermissionService,
+    AirportScopeService,
+    { provide: DOCUSIGN_PROVIDER, useFactory: createDocuSignProvider },
   ],
   exports: [
     AuditService,
@@ -42,6 +56,9 @@ import { SmsService } from '../../services/sms.service';
     RedisService,
     StorageService,
     SmsService,
+    PermissionService,
+    AirportScopeService,
+    DOCUSIGN_PROVIDER,
   ],
 })
 export class IntegrationsModule {}

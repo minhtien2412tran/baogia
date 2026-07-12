@@ -109,7 +109,32 @@ export const api = {
   getFixedPriceRoutes: (region?: string) =>
     request<{ routes: Array<Record<string, unknown>> }>(`/fixed-price/routes${region ? `?region=${region}` : ''}`),
   getFixedPriceRoute: (slug: string) => request<Record<string, unknown>>(`/fixed-price/routes/${slug}`),
-  getEmptyLegs: () => request<{ emptyLegs: Array<Record<string, unknown>> }>('/empty-legs'),
+  getEmptyLegs: (filters?: {
+    fromContinent?: string;
+    toContinent?: string;
+    fromCountry?: string;
+    toCountry?: string;
+    fromCity?: string;
+    toCity?: string;
+    fromAirport?: string;
+    toAirport?: string;
+    dateFrom?: string;
+    dateTo?: string;
+    passengers?: number;
+    categoryCode?: string;
+    priceMin?: number;
+    priceMax?: number;
+  }) => {
+    const params = new URLSearchParams();
+    if (filters) {
+      for (const [k, v] of Object.entries(filters)) {
+        if (v == null || v === '') continue;
+        params.set(k, String(v));
+      }
+    }
+    const q = params.toString();
+    return request<{ emptyLegs: Array<Record<string, unknown>> }>(`/empty-legs${q ? `?${q}` : ''}`);
+  },
   getEmptyLeg: (slug: string) => request<Record<string, unknown>>(`/empty-legs/${slug}`),
   getNews: (locale?: string) =>
     request<{ news: Array<Record<string, unknown>> }>(

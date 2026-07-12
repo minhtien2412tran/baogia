@@ -50,8 +50,23 @@ With `APP_ENV=production`, API refuses to start if JWT/refresh/API_KEY/PAYMENT_S
 |------|-------|----------|
 | Admin | `admin@jetbay.local` | `Admin123!` |
 | User | `demo@jetbay.local` | `Demo123!` |
+| Staff (AS scope) | `staff-asia@jetbay.local` | `Staff123!` |
 
 These are **seed passwords**, not env secrets. Rotate user passwords separately before customer handover.
+
+## DocuSign (CR Wave 5)
+
+| Env | Purpose |
+|-----|---------|
+| `DOCUSIGN_MODE` | `mock` (default) or `live` |
+| `DOCUSIGN_INTEGRATION_KEY` | Integration Key (live) |
+| `DOCUSIGN_USER_ID` | Impersonated user GUID |
+| `DOCUSIGN_ACCOUNT_ID` | Account ID |
+| `DOCUSIGN_PRIVATE_KEY` | RSA private key PEM (JWT grant) |
+| `DOCUSIGN_BASE_URL` | e.g. `https://demo.docusign.net` |
+| `DOCUSIGN_WEBHOOK_SECRET` | Optional HMAC for Connect webhook |
+
+Never commit real DocuSign keys. Mock mode is enough for local smoke.
 
 ## Related docs
 

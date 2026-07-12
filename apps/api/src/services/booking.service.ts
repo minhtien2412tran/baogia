@@ -6,8 +6,9 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
 import { CustomerCareService } from './customer-care/customer-care.service';
+import { PermissionService } from './permission.service';
 import { CreateBookingDto, UpdateBookingStatusDto } from '../dto';
-
+import type { AuthUser } from '../auth/auth.types';
 const BOOKING_STATUSES = [
   'draft',
   'pending',
@@ -42,8 +43,8 @@ export class BookingService {
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
     private readonly customerCare: CustomerCareService,
+    private readonly permissions: PermissionService,
   ) {}
-
   private normalizeStatus(status: string): BookingStatus {
     const normalized = status.toLowerCase() as BookingStatus;
     if (!BOOKING_STATUSES.includes(normalized)) {
@@ -254,10 +255,19 @@ export class BookingService {
     return this.formatBooking(booking);
   }
 
-  async cancel(id: number, userId?: number, ipAddress?: string) {
+  async cancel(id: number, user?: AuthUser, ipAddress?: string) {
+    const userId = user?.userId;
     const booking = await this.findBookingOrThrow(id);
-    if (userId && booking.userId !== userId) {
+    if (userId && booking.userId !== userId && user?.role !== 'ADMIN') {
       throw new NotFoundException(`Booking #${id} not found`);
+    }
+    if (user) {
+      await this.permissions.assertAllowed(
+        user.userId,
+        user.role,
+        'CANCEL_BOOKING',
+        ipAddress,
+      );
     }
     if (booking.bookingStatus === 'CANCELLED') {
       throw new BadRequestException('Booking is already cancelled');

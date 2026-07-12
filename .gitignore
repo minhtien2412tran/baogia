@@ -11,6 +11,9 @@ out/
 dist/
 /apps/api/dist
 
+# Local smoke temp (Windows / Git Bash)
+.smoke-tmp/
+
 # IDEs and editors
 .idea/
 .vscode/

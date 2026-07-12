@@ -1,9 +1,18 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiSecurity } from '@nestjs/swagger';
+import type { Request } from 'express';
 import { AdminDashboardService } from '../services/admin-dashboard.service';
 import { UpdateQuoteStatusDto } from '../dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
+import { CurrentUser } from '../auth/current-user.decorator';
+import type { AuthUser } from '../auth/auth.types';
+
+function clientIp(req: Request): string | undefined {
+  const xf = req.headers['x-forwarded-for'];
+  if (typeof xf === 'string') return xf.split(',')[0]?.trim();
+  return req.ip;
+}
 
 @ApiTags('Admin Dashboard')
 @ApiSecurity('X-API-Key')
@@ -31,8 +40,10 @@ export class AdminDashboardController {
   updateQuoteStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateQuoteStatusDto,
+    @CurrentUser() user: AuthUser,
+    @Req() req: Request,
   ) {
-    return this.dashboard.updateQuoteStatus(id, body.status);
+    return this.dashboard.updateQuoteStatus(id, body.status, user, clientIp(req));
   }
 
   @Get('dashboard/recent-bookings')

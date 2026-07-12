@@ -1,5 +1,5 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiQuery, ApiSecurity } from '@nestjs/swagger';
+import { Controller, Get, Query, Param, ParseIntPipe } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiQuery, ApiSecurity, ApiParam } from '@nestjs/swagger';
 import { AirportService } from '../services/airport.service';
 
 @ApiTags('Airports')
@@ -21,5 +21,26 @@ export class AirportController {
   @ApiOperation({ summary: 'List all airports' })
   list(@Query('page') page?: string, @Query('limit') limit?: string) {
     return this.airportService.list(page ? Number(page) : 1, limit ? Number(limit) : 50);
+  }
+
+  @Get(':id/fees')
+  @ApiOperation({ summary: 'Get airport fees (landing/parking/handling)' })
+  @ApiParam({ name: 'id', type: 'number' })
+  getFees(@Param('id', ParseIntPipe) id: number) {
+    return this.airportService.getFees(id);
+  }
+
+  @Get(':id/available-aircraft')
+  @ApiOperation({ summary: 'List AVAILABLE fleet aircraft currently at this airport' })
+  @ApiParam({ name: 'id', type: 'number' })
+  getAvailableAircraft(@Param('id', ParseIntPipe) id: number) {
+    return this.airportService.getAvailableAircraft(id);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get airport by id' })
+  @ApiParam({ name: 'id', type: 'number' })
+  getById(@Param('id', ParseIntPipe) id: number) {
+    return this.airportService.getById(id);
   }
 }

@@ -98,12 +98,12 @@ Throttle: login 10/min · register/OTP/refresh 5/min (tier `auth`).
 
 | | |
 |--|--|
-| **Mục tiêu** | Fixed Price · Empty Leg · Jet Card · Travel Credit |
-| **Routes** | Public list/quote/enquiry · Admin CRUD `/admin/fixed-price/routes`, `/admin/empty-legs`, `/admin/jet-card/plans`, `/admin/travel-credits/*` |
-| **Models** | `FixedPriceRoute/Option`, `EmptyLegOffer`, `JetCardPlan/Account/Transaction`, `TravelCreditPackage`, `TravelCreditLedger` |
-| **Status** | **solid** (DB-backed; DTO validators FP/EL/JetCard ✅ 2026-07-10) |
-| **Gaps** | ~~Admin form FP chưa edit `options[]`~~ → đã có UI tier editor (2026-07-10). |
-| **Smoke** | Admin Save Fixed Price → 200 · `smoke-web-api.mjs` public lists |
+| **Mục tiêu** | Fixed Price · Empty Leg · Jet Card · Travel Credit · **CR Wave1–5 fleet/pricing/HĐ/RBAC/DocuSign** |
+| **Routes** | Public list/quote/enquiry · Admin CRUD · `GET /empty-legs?...continent` (+ JWT airport scope) · `POST /pricing/estimate` · `GET /admin/fleet` · `GET /airports/:id/fees\|available-aircraft` · `admin/operator-contracts` · `admin/users/:id/permissions\|airport-scope` · `POST /webhooks/docusign` |
+| **Models** | `FixedPriceRoute/Option`, `EmptyLegOffer`, `JetCard*`, `TravelCredit*`, **`Aircraft`**, **`FlightLeg`**, **`ContractTemplate`**, **`OperatorContract`**, **`DocuSignEnvelope`**, **`UserPermissionOverride`**, **`UserAirportScope`** |
+| **Status** | **solid** + CR Wave1–5 BE (2026-07-12) — DocuSign **mock** default |
+| **Gaps** | Live DocuSign SDK (cần sandbox KH). RETURN leg chưa auto. FE Admin/Empty Leg continent UI. |
+| **Smoke** | `smoke-web-api.mjs` · `smoke-cr-wave1.mjs` · `smoke-cr-wave3.mjs` |
 
 ---
 

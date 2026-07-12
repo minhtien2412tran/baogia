@@ -11,7 +11,6 @@ import { I18nModule } from './modules/i18n/i18n.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { QuotesModule } from './modules/quotes/quotes.module';
 
-// Remaining domains (phase 2–5) — still registered on AppModule
 import { FixedPriceController } from './controllers/fixed-price.controller';
 import { AdminFixedPriceController } from './controllers/admin-fixed-price.controller';
 import { EmptyLegController } from './controllers/empty-leg.controller';
@@ -30,8 +29,12 @@ import { AirportController } from './controllers/airport.controller';
 import { AdminAirportController } from './controllers/admin-airport.controller';
 import { ApiGatewayController } from './controllers/api-gateway.controller';
 import { AdminAircraftController } from './controllers/admin-aircraft.controller';
+import { AdminFleetController } from './controllers/admin-fleet.controller';
 import { MediaController } from './controllers/media.controller';
 import { EnquiryController } from './controllers/enquiry.controller';
+import { PricingController } from './controllers/pricing.controller';
+import { AdminOperatorContractController } from './controllers/admin-operator-contract.controller';
+import { DocuSignWebhookController } from './controllers/docusign-webhook.controller';
 import { FixedPriceService } from './services/fixed-price.service';
 import { EmptyLegService } from './services/empty-leg.service';
 import { JetCardService } from './services/jet-card.service';
@@ -43,6 +46,11 @@ import { PartnerService } from './services/partner.service';
 import { ApiGatewayService } from './services/api-gateway.service';
 import { AdminUsersService } from './services/admin-users.service';
 import { AircraftService } from './services/aircraft.service';
+import { FleetService } from './services/fleet.service';
+import { PricingEstimateService } from './services/pricing-estimate.service';
+import { OperatorContractService } from './services/operator-contract.service';
+import { DocuSignService } from './integrations/docusign/docusign.service';
+import { PermissionGuard } from './auth/permission.guard';
 import { IntegrationsStatusService } from './services/integrations-status.service';
 import { AccountController } from './controllers/account.controller';
 import { AccountService } from './services/account.service';
@@ -86,16 +94,19 @@ import { AccountService } from './services/account.service';
     AdminDashboardController,
     AdminUsersController,
     AdminAircraftController,
+    AdminFleetController,
     ApiGatewayController,
     MediaController,
     EnquiryController,
     AccountController,
+    PricingController,
+    AdminOperatorContractController,
+    DocuSignWebhookController,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useClass: ApiKeyGuard },
     ApiGatewayService,
-    // BookingService: provided + exported by QuotesModule (shared until BookingsModule phase 3)
     FixedPriceService,
     EmptyLegService,
     JetCardService,
@@ -106,6 +117,11 @@ import { AccountService } from './services/account.service';
     PartnerService,
     AdminUsersService,
     AircraftService,
+    FleetService,
+    PricingEstimateService,
+    OperatorContractService,
+    DocuSignService,
+    PermissionGuard,
     IntegrationsStatusService,
     AccountService,
   ],
