@@ -33,12 +33,43 @@ export type AircraftSearchOption = {
   aircraftModel: string;
   estimatedPrice: number;
   currency: string;
+  operatorId?: number;
+  operatorName?: string;
+  tailNumber?: string;
+  contractCode?: string;
+  baseAirport?: string;
+  pricingBreakdown?: {
+    segments: Array<{
+      type: string;
+      from: string;
+      to: string;
+      km: number;
+      hours: number;
+      cost: number;
+      landingFee: number;
+    }>;
+    flightCost: number;
+    airportFees: number;
+    total: number;
+  };
 };
 
 export type SearchAircraftResponse = {
   searchId: string;
   tripType: string;
+  pricingMode?: string;
   options: AircraftSearchOption[];
+};
+
+export type NearbyAirport = {
+  iata: string;
+  label: string;
+  city: string;
+  country?: string;
+  name?: string;
+  distanceKm: number;
+  canParkAircraft?: boolean;
+  isBaseAirport?: boolean;
 };
 
 export type RequestQuotePayload = {
@@ -155,6 +186,18 @@ export const api = {
     request<{ airports: Array<{ iata: string; label: string; city: string; country?: string; name?: string }>; autoSelect?: string }>(
       `/airports/search?q=${encodeURIComponent(q)}&limit=12${locale ? `&locale=${encodeURIComponent(locale)}` : ''}`,
     ),
+  nearbyAirports: (lat: number, lng: number, opts?: { radiusKm?: number; limit?: number; locale?: string }) => {
+    const params = new URLSearchParams({
+      lat: String(lat),
+      lng: String(lng),
+      radiusKm: String(opts?.radiusKm ?? 150),
+      limit: String(opts?.limit ?? 8),
+    });
+    if (opts?.locale) params.set('locale', opts.locale);
+    return request<{ lat: number; lng: number; radiusKm: number; airports: NearbyAirport[] }>(
+      `/airports/nearby?${params.toString()}`,
+    );
+  },
   searchAircraft: (body: {
     tripType: string;
     legs: QuoteLegPayload[];

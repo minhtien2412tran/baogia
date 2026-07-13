@@ -107,6 +107,12 @@ export type MessageKey =
   | 'airportSearching'
   | 'airportNoResults'
   | 'airportPickHint'
+  | 'nearMe'
+  | 'nearMeLocating'
+  | 'nearMeDenied'
+  | 'nearMeNone'
+  | 'pricedWithOperator'
+  | 'pricingBreakdown'
   | 'processing'
   | 'emptyLegsNearYou'
   | 'emptyLegsSectionDesc'
@@ -276,6 +282,12 @@ const en: Catalog = {
   airportSearching: 'Searching airports…',
   airportNoResults: 'No airports found — try a city, country, or IATA code (e.g. LBG, Paris).',
   airportPickHint: 'Select an airport from the list below.',
+  nearMe: 'Near me',
+  nearMeLocating: 'Finding airports near you…',
+  nearMeDenied: 'Location permission denied — search by city instead.',
+  nearMeNone: 'No airports found nearby. Try a wider search.',
+  pricedWithOperator: '{operator} · {tail} · base {base}',
+  pricingBreakdown: '{summary}',
   processing: 'Processing…',
   emptyLegsNearYou: 'Empty Legs Near You',
   emptyLegsSectionDesc: 'Last-minute private jet deals at reduced rates',
@@ -443,6 +455,12 @@ const vi: Catalog = {
   airportSearching: 'Đang tìm sân bay…',
   airportNoResults: 'Không tìm thấy sân bay — thử tên thành phố, quốc gia hoặc mã IATA (vd. LBG, Paris).',
   airportPickHint: 'Chọn một sân bay trong danh sách gợi ý.',
+  nearMe: 'Gần tôi',
+  nearMeLocating: 'Đang tìm sân bay gần bạn…',
+  nearMeDenied: 'Không có quyền vị trí — hãy tìm theo thành phố.',
+  nearMeNone: 'Không có sân bay gần đây. Thử tìm theo tên.',
+  pricedWithOperator: '{operator} · {tail} · base {base}',
+  pricingBreakdown: '{summary}',
   processing: 'Đang xử lý…',
   emptyLegsNearYou: 'Empty leg gần bạn',
   emptyLegsSectionDesc: 'Ưu đãi máy bay riêng phút chót với giá giảm',
@@ -612,6 +630,12 @@ const zhCn: Catalog = {
   airportSearching: '正在搜索机场…',
   airportNoResults: '未找到机场 — 请尝试城市、国家或 IATA 代码（如 LBG、Paris）。',
   airportPickHint: '请从下方列表中选择机场。',
+  nearMe: '附近机场',
+  nearMeLocating: '正在定位附近机场…',
+  nearMeDenied: '未获位置权限 — 请改用城市搜索。',
+  nearMeNone: '附近没有机场，请扩大搜索范围。',
+  pricedWithOperator: '{operator} · {tail} · 基地 {base}',
+  pricingBreakdown: '{summary}',
   processing: '处理中…',
   emptyLegsNearYou: '附近的空腿航班',
   emptyLegsSectionDesc: '限时私人飞机优惠特价',

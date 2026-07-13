@@ -28,6 +28,7 @@ import { AdminDashboardController } from './controllers/admin-dashboard.controll
 import { AdminUsersController } from './controllers/admin-users.controller';
 import { AirportController } from './controllers/airport.controller';
 import { AdminAirportController } from './controllers/admin-airport.controller';
+import { AdminFleetController } from './controllers/admin-fleet.controller';
 import { ApiGatewayController } from './controllers/api-gateway.controller';
 import { AdminAircraftController } from './controllers/admin-aircraft.controller';
 import { MediaController } from './controllers/media.controller';
@@ -69,6 +70,7 @@ import { AccountService } from './services/account.service';
     AppController,
     AirportController,
     AdminAirportController,
+    AdminFleetController,
     FixedPriceController,
     AdminFixedPriceController,
     EmptyLegController,

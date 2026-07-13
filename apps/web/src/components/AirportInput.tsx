@@ -17,6 +17,7 @@ export function AirportInput({
   onChange,
   placeholder,
   locale = 'en-us',
+  showNearMe = false,
 }: {
   id: string;
   label: string;
@@ -24,6 +25,7 @@ export function AirportInput({
   onChange: (iata: string, label?: string) => void;
   placeholder?: string;
   locale?: string;
+  showNearMe?: boolean;
 }) {
   const [query, setQuery] = useState('');
   const [displayLabel, setDisplayLabel] = useState<string | null>(null);
@@ -31,6 +33,8 @@ export function AirportInput({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [noResults, setNoResults] = useState(false);
+  const [geoBusy, setGeoBusy] = useState(false);
+  const [geoMsg, setGeoMsg] = useState<string | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -137,11 +141,68 @@ export function AirportInput({
     }
   }
 
+  function useNearMe() {
+    setGeoMsg(null);
+    if (!navigator.geolocation) {
+      setGeoMsg(t(locale, 'nearMeDenied'));
+      return;
+    }
+    setGeoBusy(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        api
+          .nearbyAirports(pos.coords.latitude, pos.coords.longitude, {
+            radiusKm: 200,
+            limit: 8,
+            locale,
+          })
+          .then((res) => {
+            if (!res.airports.length) {
+              setGeoMsg(t(locale, 'nearMeNone'));
+              setSuggestions([]);
+              setOpen(false);
+              return;
+            }
+            const mapped = res.airports.map((a) => ({
+              iata: a.iata,
+              label: a.label,
+              city: a.city,
+              country: a.country,
+              name: a.name ?? `${Math.round(a.distanceKm)} km`,
+            }));
+            setSuggestions(mapped);
+            setOpen(true);
+            setNoResults(false);
+            pick(mapped[0]);
+          })
+          .catch(() => setGeoMsg(t(locale, 'nearMeNone')))
+          .finally(() => setGeoBusy(false));
+      },
+      () => {
+        setGeoBusy(false);
+        setGeoMsg(t(locale, 'nearMeDenied'));
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 60_000 },
+    );
+  }
+
   const inputValue = open ? query : (displayLabel ?? query);
 
   return (
     <div className="jb-field jb-airport-wrap" ref={wrapRef}>
-      <label htmlFor={id}>{label}</label>
+      <div className="jb-airport-label-row">
+        <label htmlFor={id}>{label}</label>
+        {showNearMe && (
+          <button
+            type="button"
+            className="jb-airport-near-me"
+            onClick={useNearMe}
+            disabled={geoBusy || loading}
+          >
+            {geoBusy ? t(locale, 'nearMeLocating') : t(locale, 'nearMe')}
+          </button>
+        )}
+      </div>
       <input
         id={id}
         value={inputValue}
@@ -179,6 +240,7 @@ export function AirportInput({
         aria-expanded={open}
       />
       {loading && <span className="jb-airport-hint">{t(locale, 'airportSearching')}</span>}
+      {geoMsg && <p className="jb-airport-hint">{geoMsg}</p>}
       {!loading && noResults && query.length >= 2 && (
         <p className="jb-airport-empty">{t(locale, 'airportNoResults')}</p>
       )}

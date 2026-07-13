@@ -39,6 +39,13 @@
 3. (Optional) set prod `APP_ENV=production` khi secrets đã đủ mạnh  
 4. **BE modules** — tiếp phase 2+ theo [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md)  
 
+### Đang làm — Demo geo + positioning pricing (`feat/api-demo-pricing`, 2026-07-13)
+
+- [x] Airport `lat`/`lng` + fees; fleet `OperatorAircraft` + `AircraftContract`
+- [x] `GET /airports/nearby` + quote search giá positioning (base→pickup→dest→home)
+- [x] Web: Near me + price breakdown trên QuoteSearchWidget
+- [ ] Deploy API + Web prod + seed fleet
+
 **Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) · [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)
 
 ### Đã merge + deploy (2026-07-10)

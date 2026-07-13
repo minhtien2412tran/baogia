@@ -9,6 +9,7 @@ import {
   resolveAirportAlias,
 } from '../constants/airport-search-aliases';
 import { formatAirportDisplay } from '../constants/airport-display-locale';
+import { haversineKm } from '../utils/geo';
 
 @Injectable()
 export class AirportService {
@@ -16,6 +17,61 @@ export class AirportService {
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
   ) {}
+
+  async nearby(opts: {
+    lat: number;
+    lng: number;
+    radiusKm?: number;
+    limit?: number;
+    locale?: string;
+  }) {
+    const lat = opts.lat;
+    const lng = opts.lng;
+    if (!Number.isFinite(lat) || !Number.isFinite(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+      throw new BadRequestException('Valid lat and lng are required');
+    }
+    const radiusKm = Math.min(Math.max(opts.radiusKm ?? 150, 1), 2000);
+    const limit = Math.min(Math.max(opts.limit ?? 8, 1), 25);
+
+    const airports = await this.prisma.airport.findMany({
+      where: { status: 'ACTIVE', lat: { not: null }, lng: { not: null } },
+    });
+
+    const scored = airports
+      .map((a) => ({
+        airport: a,
+        distanceKm: haversineKm(lat, lng, a.lat!, a.lng!),
+      }))
+      .filter((x) => x.distanceKm <= radiusKm)
+      .sort((a, b) => a.distanceKm - b.distanceKm)
+      .slice(0, limit);
+
+    return {
+      lat,
+      lng,
+      radiusKm,
+      airports: scored.map(({ airport: a, distanceKm }) => {
+        const display = formatAirportDisplay(
+          { iata: a.iata, city: a.city, country: a.country, name: a.name },
+          opts.locale,
+        );
+        return {
+          id: a.id,
+          iata: a.iata,
+          icao: a.icao,
+          name: display.name,
+          city: display.city,
+          country: display.country,
+          label: display.label,
+          distanceKm: Math.round(distanceKm * 10) / 10,
+          canParkAircraft: a.canParkAircraft,
+          isBaseAirport: a.isBaseAirport,
+          lat: a.lat,
+          lng: a.lng,
+        };
+      }),
+    };
+  }
 
   async search(q: string, limit = 10, locale?: string) {
     if (!q || q.length < 1) return { airports: [], autoSelect: undefined as string | undefined };

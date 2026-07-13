@@ -12,6 +12,7 @@ import {
   RequestQuoteDto,
   SearchAircraftDto,
 } from '../dto';
+import { PositioningPriceService } from './positioning-price.service';
 
 const BASE_PRICE_BY_CATEGORY: Record<string, number> = {
   LIGHT: 12500,
@@ -29,11 +30,43 @@ export class QuoteService {
     private readonly payments: PaymentService,
     private readonly onepay: OnepayService,
     private readonly ninepay: NinepayService,
+    private readonly positioning: PositioningPriceService,
   ) {}
 
   async searchAircraft(body: SearchAircraftDto) {
     if (!body.legs?.length) throw new BadRequestException('At least one leg is required');
 
+    const currency = body.currency ?? 'USD';
+    const priced = await this.positioning.searchPricedOptions({
+      tripType: body.tripType,
+      legs: body.legs,
+      currency,
+    });
+
+    if (priced.length > 0) {
+      return {
+        searchId: `search-${Date.now()}`,
+        tripType: body.tripType,
+        pricingMode: 'POSITIONING',
+        options: priced.map((opt) => ({
+          categoryId: opt.categoryId,
+          categoryCode: opt.categoryCode,
+          categoryLabel: opt.categoryLabel,
+          maxPassengers: opt.maxPassengers,
+          aircraftModel: opt.aircraftModel,
+          estimatedPrice: opt.estimatedPrice,
+          currency: opt.currency,
+          operatorId: opt.operatorId,
+          operatorName: opt.operatorName,
+          tailNumber: opt.tailNumber,
+          contractCode: opt.contractCode,
+          baseAirport: opt.baseAirport,
+          pricingBreakdown: opt.pricingBreakdown,
+        })),
+      };
+    }
+
+    // Fallback when fleet/contracts not seeded yet
     const maxPassengers = Math.max(...body.legs.map((l) => l.passengers ?? 1));
     let categories = await this.prisma.aircraftCategory.findMany({
       where: { maxPassengers: { gte: maxPassengers } },
@@ -50,7 +83,6 @@ export class QuoteService {
       });
     }
 
-    const currency = body.currency ?? 'USD';
     const options = categories.map((cat) => {
       const model = cat.models[0];
       const base = BASE_PRICE_BY_CATEGORY[cat.code] ?? 15000;
@@ -69,6 +101,7 @@ export class QuoteService {
     return {
       searchId: `search-${Date.now()}`,
       tripType: body.tripType,
+      pricingMode: 'CATEGORY_FLAT',
       options,
     };
   }

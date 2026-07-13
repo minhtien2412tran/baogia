@@ -205,13 +205,24 @@ model Airport {
   country             String
   timezone            String
   status              String               @default("ACTIVE")
-  
+  lat                 Float?
+  lng                 Float?
+  canParkAircraft     Boolean              @default(true)
+  isBaseAirport       Boolean              @default(false)
+  parkingFee          Decimal?             @db.Decimal(12, 2)
+  overnightFee        Decimal?             @db.Decimal(12, 2)
+  landingFee          Decimal?             @db.Decimal(12, 2)
+  feeCurrency         String               @default("USD")
+  operationalNotes    String?
+
   legsFrom            QuoteLeg[]           @relation("LegFromAirport")
   legsTo              QuoteLeg[]           @relation("LegToAirport")
   fixedRoutesFrom     FixedPriceRoute[]    @relation("RouteFromAirport")
   fixedRoutesTo       FixedPriceRoute[]    @relation("RouteToAirport")
   emptyLegsFrom       EmptyLegOffer[]      @relation("EmptyFromAirport")
   emptyLegsTo         EmptyLegOffer[]      @relation("EmptyToAirport")
+  fleetBasedHere      OperatorAircraft[]   @relation("AircraftBaseAirport")
+  fleetCurrentlyHere  OperatorAircraft[]   @relation("AircraftCurrentAirport")
 }
 
 model AircraftCategory {
@@ -239,6 +250,7 @@ model AircraftModel {
   category       AircraftCategory @relation(fields: [categoryId], references: [id])
   quoteOffers    QuoteOffer[]
   emptyLegs      EmptyLegOffer[]
+  fleet          OperatorAircraft[]
 }
 
 model Operator {
@@ -249,6 +261,50 @@ model Operator {
   status            String       @default("ACTIVE")
   
   quoteOffers       QuoteOffer[]
+  fleet             OperatorAircraft[]
+}
+
+/// Physical tail assigned to an operator with a home/current base
+model OperatorAircraft {
+  id               Int       @id @default(autoincrement())
+  operatorId       Int
+  aircraftModelId  Int
+  tailNumber       String    @unique
+  baseAirportId    Int
+  currentAirportId Int
+  status           String    @default("ACTIVE") // ACTIVE, MAINTENANCE
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  operator         Operator      @relation(fields: [operatorId], references: [id])
+  aircraftModel    AircraftModel @relation(fields: [aircraftModelId], references: [id])
+  baseAirport      Airport       @relation("AircraftBaseAirport", fields: [baseAirportId], references: [id])
+  currentAirport   Airport       @relation("AircraftCurrentAirport", fields: [currentAirportId], references: [id])
+  contracts        AircraftContract[]
+
+  @@index([operatorId])
+  @@index([status])
+}
+
+/// Commercial rate contract for a tail (demo charter pricing)
+model AircraftContract {
+  id                 Int       @id @default(autoincrement())
+  operatorAircraftId Int
+  code               String
+  validFrom          DateTime  @default(now())
+  validTo            DateTime?
+  hourlyRate         Decimal   @db.Decimal(12, 2)
+  currency           String    @default("USD")
+  minHours           Decimal?  @db.Decimal(6, 2)
+  notes              String?
+  status             String    @default("ACTIVE") // ACTIVE, EXPIRED
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  operatorAircraft   OperatorAircraft @relation(fields: [operatorAircraftId], references: [id], onDelete: Cascade)
+
+  @@unique([code])
+  @@index([operatorAircraftId, status])
 }
 
 // --- COMMERCIAL PROGRAMS ---

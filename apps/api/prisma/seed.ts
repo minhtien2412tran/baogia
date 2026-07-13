@@ -88,8 +88,28 @@ async function main() {
         country: a.country,
         timezone: a.timezone,
         status: 'ACTIVE',
+        lat: a.lat,
+        lng: a.lng,
+        isBaseAirport: a.isBaseAirport ?? false,
+        canParkAircraft: a.canParkAircraft ?? true,
+        landingFee: a.landingFee ?? null,
+        parkingFee: a.parkingFee ?? null,
       },
-      create: { ...a, status: 'ACTIVE' },
+      create: {
+        iata: a.iata,
+        icao: a.icao,
+        name: a.name,
+        city: a.city,
+        country: a.country,
+        timezone: a.timezone,
+        status: 'ACTIVE',
+        lat: a.lat,
+        lng: a.lng,
+        isBaseAirport: a.isBaseAirport ?? false,
+        canParkAircraft: a.canParkAircraft ?? true,
+        landingFee: a.landingFee ?? null,
+        parkingFee: a.parkingFee ?? null,
+      },
     });
   }
   const sgn = await prisma.airport.findUniqueOrThrow({ where: { iata: 'SGN' } });
@@ -149,6 +169,86 @@ async function main() {
         { name: 'Pacific Charter Group', region: 'APAC', status: 'ACTIVE' },
         { name: 'EuroJet Partners', region: 'EMEA', status: 'ACTIVE' },
       ],
+    });
+  }
+
+  const opAsia =
+    (await prisma.operator.findFirst({ where: { name: 'JetBay Asia Ops' } })) ??
+    (await prisma.operator.create({ data: { name: 'JetBay Asia Ops', region: 'APAC', status: 'ACTIVE' } }));
+  const opPacific =
+    (await prisma.operator.findFirst({ where: { name: 'Pacific Charter Group' } })) ??
+    (await prisma.operator.create({
+      data: { name: 'Pacific Charter Group', region: 'APAC', status: 'ACTIVE' },
+    }));
+  const opEuro =
+    (await prisma.operator.findFirst({ where: { name: 'EuroJet Partners' } })) ??
+    (await prisma.operator.create({
+      data: { name: 'EuroJet Partners', region: 'EMEA', status: 'ACTIVE' },
+    }));
+
+  const sin = await prisma.airport.findUniqueOrThrow({ where: { iata: 'SIN' } });
+  const dad = await prisma.airport.findUniqueOrThrow({ where: { iata: 'DAD' } });
+
+  console.log('Seeding OperatorAircraft + AircraftContract...');
+  const fleetSeeds: Array<{
+    tail: string;
+    operatorId: number;
+    modelId: number;
+    baseId: number;
+    currentId: number;
+    rate: number;
+    code: string;
+    minHours: number;
+  }> = [
+    { tail: 'VN-JBA', operatorId: opAsia.id, modelId: modelCessna.id, baseId: sgn.id, currentId: sgn.id, rate: 4500, code: 'CTR-VN-JBA-2026', minHours: 1 },
+    { tail: 'VN-JBH', operatorId: opAsia.id, modelId: modelLearjet.id, baseId: han.id, currentId: han.id, rate: 7500, code: 'CTR-VN-JBH-2026', minHours: 1 },
+    { tail: 'VN-JBG', operatorId: opAsia.id, modelId: modelG650.id, baseId: sgn.id, currentId: dad.id, rate: 12000, code: 'CTR-VN-JBG-2026', minHours: 1.5 },
+    { tail: '9V-PCB', operatorId: opPacific.id, modelId: modelLearjet.id, baseId: sin.id, currentId: sin.id, rate: 7800, code: 'CTR-9V-PCB-2026', minHours: 1 },
+    { tail: '9V-PCG', operatorId: opPacific.id, modelId: modelG650.id, baseId: sin.id, currentId: sin.id, rate: 12500, code: 'CTR-9V-PCG-2026', minHours: 1.5 },
+    { tail: 'G-EJPL', operatorId: opEuro.id, modelId: modelCessna.id, baseId: ltn.id, currentId: ltn.id, rate: 4800, code: 'CTR-G-EJPL-2026', minHours: 1 },
+    { tail: 'F-EJPH', operatorId: opEuro.id, modelId: modelLearjet.id, baseId: lbg.id, currentId: lbg.id, rate: 8200, code: 'CTR-F-EJPH-2026', minHours: 1 },
+    { tail: 'G-EJPG', operatorId: opEuro.id, modelId: modelG650.id, baseId: ltn.id, currentId: lbg.id, rate: 13000, code: 'CTR-G-EJPG-2026', minHours: 1.5 },
+  ];
+
+  for (const f of fleetSeeds) {
+    const aircraft = await prisma.operatorAircraft.upsert({
+      where: { tailNumber: f.tail },
+      update: {
+        operatorId: f.operatorId,
+        aircraftModelId: f.modelId,
+        baseAirportId: f.baseId,
+        currentAirportId: f.currentId,
+        status: 'ACTIVE',
+      },
+      create: {
+        tailNumber: f.tail,
+        operatorId: f.operatorId,
+        aircraftModelId: f.modelId,
+        baseAirportId: f.baseId,
+        currentAirportId: f.currentId,
+        status: 'ACTIVE',
+      },
+    });
+    await prisma.aircraftContract.upsert({
+      where: { code: f.code },
+      update: {
+        operatorAircraftId: aircraft.id,
+        hourlyRate: f.rate,
+        minHours: f.minHours,
+        currency: 'USD',
+        status: 'ACTIVE',
+        notes: 'Demo charter contract',
+      },
+      create: {
+        code: f.code,
+        operatorAircraftId: aircraft.id,
+        hourlyRate: f.rate,
+        minHours: f.minHours,
+        currency: 'USD',
+        status: 'ACTIVE',
+        notes: 'Demo charter contract',
+        validFrom: new Date('2026-01-01'),
+      },
     });
   }
 

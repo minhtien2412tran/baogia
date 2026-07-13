@@ -4,6 +4,7 @@ import { AdminQuotesController } from '../../controllers/admin-quotes.controller
 import { QuoteService } from '../../services/quote.service';
 import { AdminQuotesService } from '../../services/admin-quotes.service';
 import { BookingService } from '../../services/booking.service';
+import { PositioningPriceService } from '../../services/positioning-price.service';
 
 /**
  * Quotes + admin offers. BookingService is registered here because
@@ -11,7 +12,7 @@ import { BookingService } from '../../services/booking.service';
  */
 @Module({
   controllers: [QuoteController, AdminQuotesController],
-  providers: [QuoteService, AdminQuotesService, BookingService],
-  exports: [QuoteService, BookingService],
+  providers: [QuoteService, AdminQuotesService, BookingService, PositioningPriceService],
+  exports: [QuoteService, BookingService, PositioningPriceService],
 })
 export class QuotesModule {}

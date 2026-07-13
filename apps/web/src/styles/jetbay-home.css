@@ -1047,6 +1047,42 @@
   z-index: 1;
 }
 
+.jb-airport-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.jb-airport-near-me {
+  border: 0;
+  background: transparent;
+  color: var(--jb-gold, #b8954a);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.jb-airport-near-me:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.jb-aircraft-meta--ops {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.jb-aircraft-breakdown {
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--jb-text-muted, #6b7280);
+  max-width: 42ch;
+}
+
 .jb-airport-wrap:focus-within {
   z-index: 40;
 }

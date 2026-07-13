@@ -229,6 +229,7 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
                 onChange={(iata) => updateLeg(idx, { from: iata })}
                 placeholder={t(locale, 'departurePlaceholder')}
                 locale={locale}
+                showNearMe={idx === 0}
               />
               <button type="button" className="jb-swap-btn" onClick={() => swapLeg(idx)} aria-label={t(locale, 'swapAirports')}>
                 <CdnIcon src={JB.icons.swap} alt="Swap" />
@@ -339,6 +340,22 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
                     <div className="jb-aircraft-meta">
                       {o.aircraftModel} · {t(locale, 'upToPax', { n: o.maxPassengers })}
                     </div>
+                    {o.operatorName && o.tailNumber ? (
+                      <div className="jb-aircraft-meta jb-aircraft-meta--ops">
+                        {t(locale, 'pricedWithOperator', {
+                          operator: o.operatorName,
+                          tail: o.tailNumber,
+                          base: o.baseAirport ?? '—',
+                        })}
+                      </div>
+                    ) : null}
+                    {o.pricingBreakdown?.segments?.length ? (
+                      <div className="jb-aircraft-breakdown">
+                        {o.pricingBreakdown.segments
+                          .map((s) => `${s.type === 'POSITIONING' ? 'Pos' : s.type === 'REVENUE' ? 'Fly' : s.type === 'RETURN' ? 'Return' : 'Home'} ${s.from}→${s.to}`)
+                          .join(' · ')}
+                      </div>
+                    ) : null}
                   </div>
                   <div className="jb-aircraft-price">
                     {o.currency} {formatNumber(o.estimatedPrice, locale)}
