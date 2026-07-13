@@ -71,6 +71,8 @@ export const GLOBAL_AIRPORT_SEEDS: AirportSeed[] = [
     continentCode: 'AS',
     continentName: 'Asia',
     timezone: 'Asia/Ho_Chi_Minh',
+    latitude: 11.9982,
+    longitude: 109.2194,
   },
   {
     iata: 'DAD',
@@ -83,6 +85,8 @@ export const GLOBAL_AIRPORT_SEEDS: AirportSeed[] = [
     continentCode: 'AS',
     continentName: 'Asia',
     timezone: 'Asia/Ho_Chi_Minh',
+    latitude: 16.0439,
+    longitude: 108.1993,
   },
   {
     iata: 'HUI',
@@ -95,6 +99,8 @@ export const GLOBAL_AIRPORT_SEEDS: AirportSeed[] = [
     continentCode: 'AS',
     continentName: 'Asia',
     timezone: 'Asia/Ho_Chi_Minh',
+    latitude: 16.4015,
+    longitude: 107.7026,
   },
   // China
   {
@@ -152,6 +158,8 @@ export const GLOBAL_AIRPORT_SEEDS: AirportSeed[] = [
     continentCode: 'EU',
     continentName: 'Europe',
     timezone: 'Europe/London',
+    latitude: 51.8747,
+    longitude: -0.3683,
   },
   {
     iata: 'FAB',
@@ -164,6 +172,8 @@ export const GLOBAL_AIRPORT_SEEDS: AirportSeed[] = [
     continentCode: 'EU',
     continentName: 'Europe',
     timezone: 'Europe/London',
+    latitude: 51.2758,
+    longitude: -0.7764,
   },
   {
     iata: 'LCY',
@@ -542,4 +552,111 @@ export const GLOBAL_AIRPORT_SEEDS: AirportSeed[] = [
     continentName: 'Europe',
     timezone: 'Europe/Madrid',
   },
+
+  // --- Tourism & business hubs (expanded 2026-07) ---
+  // Vietnam leisure
+  { iata: 'PQC', icao: 'VVPQ', name: 'Phu Quoc International Airport', city: 'Phu Quoc', country: 'Vietnam', countryCode: 'VN', countryName: 'Vietnam', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Ho_Chi_Minh', latitude: 10.1698, longitude: 103.9931 },
+  { iata: 'VCA', icao: 'VVCT', name: 'Can Tho International Airport', city: 'Can Tho', country: 'Vietnam', countryCode: 'VN', countryName: 'Vietnam', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Ho_Chi_Minh', latitude: 10.0851, longitude: 105.7117 },
+  { iata: 'DLI', icao: 'VVDL', name: 'Lien Khuong Airport', city: 'Da Lat', country: 'Vietnam', countryCode: 'VN', countryName: 'Vietnam', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Ho_Chi_Minh', latitude: 11.7500, longitude: 108.3667 },
+  { iata: 'UIH', icao: 'VVPC', name: 'Phu Cat Airport', city: 'Quy Nhon', country: 'Vietnam', countryCode: 'VN', countryName: 'Vietnam', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Ho_Chi_Minh', latitude: 13.9550, longitude: 109.0420 },
+  { iata: 'VII', icao: 'VVVH', name: 'Vinh Airport', city: 'Vinh', country: 'Vietnam', countryCode: 'VN', countryName: 'Vietnam', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Ho_Chi_Minh', latitude: 18.7376, longitude: 105.6708 },
+
+  // Thailand
+  { iata: 'DMK', icao: 'VTBD', name: 'Don Mueang International Airport', city: 'Bangkok', country: 'Thailand', countryCode: 'TH', countryName: 'Thailand', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Bangkok', latitude: 13.9126, longitude: 100.6067 },
+  { iata: 'HKT', icao: 'VTSP', name: 'Phuket International Airport', city: 'Phuket', country: 'Thailand', countryCode: 'TH', countryName: 'Thailand', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Bangkok', latitude: 8.1132, longitude: 98.3169 },
+  { iata: 'CNX', icao: 'VTCC', name: 'Chiang Mai International Airport', city: 'Chiang Mai', country: 'Thailand', countryCode: 'TH', countryName: 'Thailand', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Bangkok', latitude: 18.7669, longitude: 98.9626 },
+  { iata: 'USM', icao: 'VTSM', name: 'Samui Airport', city: 'Koh Samui', country: 'Thailand', countryCode: 'TH', countryName: 'Thailand', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Bangkok', latitude: 9.5478, longitude: 100.0623 },
+
+  // Indonesia / Malaysia / Philippines / Cambodia / Laos
+  { iata: 'CGK', icao: 'WIII', name: 'Soekarno-Hatta International Airport', city: 'Jakarta', country: 'Indonesia', countryCode: 'ID', countryName: 'Indonesia', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Jakarta', latitude: -6.1256, longitude: 106.6559 },
+  { iata: 'DPS', icao: 'WADD', name: 'Ngurah Rai International Airport', city: 'Denpasar', country: 'Indonesia', countryCode: 'ID', countryName: 'Indonesia', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Makassar', latitude: -8.7482, longitude: 115.1672 },
+  { iata: 'SUB', icao: 'WARR', name: 'Juanda International Airport', city: 'Surabaya', country: 'Indonesia', countryCode: 'ID', countryName: 'Indonesia', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Jakarta', latitude: -7.3798, longitude: 112.7868 },
+  { iata: 'KUL', icao: 'WMKK', name: 'Kuala Lumpur International Airport', city: 'Kuala Lumpur', country: 'Malaysia', countryCode: 'MY', countryName: 'Malaysia', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Kuala_Lumpur', latitude: 2.7456, longitude: 101.7099 },
+  { iata: 'LGK', icao: 'WMKL', name: 'Langkawi International Airport', city: 'Langkawi', country: 'Malaysia', countryCode: 'MY', countryName: 'Malaysia', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Kuala_Lumpur', latitude: 6.3297, longitude: 99.7287 },
+  { iata: 'PEN', icao: 'WMKP', name: 'Penang International Airport', city: 'Penang', country: 'Malaysia', countryCode: 'MY', countryName: 'Malaysia', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Kuala_Lumpur', latitude: 5.2971, longitude: 100.2769 },
+  { iata: 'MNL', icao: 'RPLL', name: 'Ninoy Aquino International Airport', city: 'Manila', country: 'Philippines', countryCode: 'PH', countryName: 'Philippines', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Manila', latitude: 14.5086, longitude: 121.0196 },
+  { iata: 'CEB', icao: 'RPVM', name: 'Mactan-Cebu International Airport', city: 'Cebu', country: 'Philippines', countryCode: 'PH', countryName: 'Philippines', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Manila', latitude: 10.3075, longitude: 123.9794 },
+  { iata: 'PNH', icao: 'VDPP', name: 'Phnom Penh International Airport', city: 'Phnom Penh', country: 'Cambodia', countryCode: 'KH', countryName: 'Cambodia', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Phnom_Penh', latitude: 11.5465, longitude: 104.8441 },
+  { iata: 'REP', icao: 'VDSR', name: 'Siem Reap-Angkor International Airport', city: 'Siem Reap', country: 'Cambodia', countryCode: 'KH', countryName: 'Cambodia', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Phnom_Penh', latitude: 13.4107, longitude: 103.8131 },
+  { iata: 'VTE', icao: 'VLVT', name: 'Wattay International Airport', city: 'Vientiane', country: 'Laos', countryCode: 'LA', countryName: 'Laos', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Vientiane', latitude: 17.9883, longitude: 102.5633 },
+
+  // Korea / Japan / Taiwan
+  { iata: 'ICN', icao: 'RKSI', name: 'Incheon International Airport', city: 'Seoul', country: 'South Korea', countryCode: 'KR', countryName: 'South Korea', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Seoul', latitude: 37.4602, longitude: 126.4407 },
+  { iata: 'GMP', icao: 'RKSS', name: 'Gimpo International Airport', city: 'Seoul', country: 'South Korea', countryCode: 'KR', countryName: 'South Korea', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Seoul', latitude: 37.5583, longitude: 126.7906 },
+  { iata: 'KIX', icao: 'RJBB', name: 'Kansai International Airport', city: 'Osaka', country: 'Japan', countryCode: 'JP', countryName: 'Japan', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Tokyo', latitude: 34.4347, longitude: 135.2440 },
+  { iata: 'CTS', icao: 'RJCC', name: 'New Chitose Airport', city: 'Sapporo', country: 'Japan', countryCode: 'JP', countryName: 'Japan', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Tokyo', latitude: 42.7752, longitude: 141.6923 },
+  { iata: 'OKA', icao: 'ROAH', name: 'Naha Airport', city: 'Okinawa', country: 'Japan', countryCode: 'JP', countryName: 'Japan', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Tokyo', latitude: 26.1958, longitude: 127.6460 },
+  { iata: 'TPE', icao: 'RCTP', name: 'Taiwan Taoyuan International Airport', city: 'Taipei', country: 'Taiwan', countryCode: 'TW', countryName: 'Taiwan', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Taipei', latitude: 25.0797, longitude: 121.2342 },
+
+  // India / Maldives / Sri Lanka
+  { iata: 'DEL', icao: 'VIDP', name: 'Indira Gandhi International Airport', city: 'New Delhi', country: 'India', countryCode: 'IN', countryName: 'India', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Kolkata', latitude: 28.5562, longitude: 77.1000 },
+  { iata: 'BOM', icao: 'VABB', name: 'Chhatrapati Shivaji Maharaj International Airport', city: 'Mumbai', country: 'India', countryCode: 'IN', countryName: 'India', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Kolkata', latitude: 19.0896, longitude: 72.8656 },
+  { iata: 'BLR', icao: 'VOBL', name: 'Kempegowda International Airport', city: 'Bengaluru', country: 'India', countryCode: 'IN', countryName: 'India', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Kolkata', latitude: 13.1989, longitude: 77.7069 },
+  { iata: 'GOI', icao: 'VOGO', name: 'Goa Manohar International Airport', city: 'Goa', country: 'India', countryCode: 'IN', countryName: 'India', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Kolkata', latitude: 15.3808, longitude: 73.8314 },
+  { iata: 'MLE', icao: 'VRMM', name: 'Velana International Airport', city: 'Male', country: 'Maldives', countryCode: 'MV', countryName: 'Maldives', continentCode: 'AS', continentName: 'Asia', timezone: 'Indian/Maldives', latitude: 4.1918, longitude: 73.5290 },
+  { iata: 'CMB', icao: 'VCBI', name: 'Bandaranaike International Airport', city: 'Colombo', country: 'Sri Lanka', countryCode: 'LK', countryName: 'Sri Lanka', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Colombo', latitude: 7.1808, longitude: 79.8841 },
+
+  // Middle East
+  { iata: 'AUH', icao: 'OMAA', name: 'Abu Dhabi International Airport', city: 'Abu Dhabi', country: 'UAE', countryCode: 'AE', countryName: 'United Arab Emirates', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Dubai', latitude: 24.4330, longitude: 54.6511 },
+  { iata: 'DWC', icao: 'OMDW', name: 'Al Maktoum International Airport', city: 'Dubai', country: 'UAE', countryCode: 'AE', countryName: 'United Arab Emirates', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Dubai', latitude: 24.8964, longitude: 55.1614 },
+  { iata: 'DOH', icao: 'OTHH', name: 'Hamad International Airport', city: 'Doha', country: 'Qatar', countryCode: 'QA', countryName: 'Qatar', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Qatar', latitude: 25.2731, longitude: 51.6081 },
+  { iata: 'RUH', icao: 'OERK', name: 'King Khalid International Airport', city: 'Riyadh', country: 'Saudi Arabia', countryCode: 'SA', countryName: 'Saudi Arabia', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Riyadh', latitude: 24.9576, longitude: 46.6988 },
+  { iata: 'JED', icao: 'OEJN', name: 'King Abdulaziz International Airport', city: 'Jeddah', country: 'Saudi Arabia', countryCode: 'SA', countryName: 'Saudi Arabia', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Riyadh', latitude: 21.6796, longitude: 39.1565 },
+  { iata: 'IST', icao: 'LTFM', name: 'Istanbul Airport', city: 'Istanbul', country: 'Turkey', countryCode: 'TR', countryName: 'Turkey', continentCode: 'AS', continentName: 'Asia', timezone: 'Europe/Istanbul', latitude: 41.2753, longitude: 28.7519 },
+  { iata: 'AYT', icao: 'LTAI', name: 'Antalya Airport', city: 'Antalya', country: 'Turkey', countryCode: 'TR', countryName: 'Turkey', continentCode: 'AS', continentName: 'Asia', timezone: 'Europe/Istanbul', latitude: 36.8987, longitude: 30.8005 },
+  { iata: 'TLV', icao: 'LLBG', name: 'Ben Gurion Airport', city: 'Tel Aviv', country: 'Israel', countryCode: 'IL', countryName: 'Israel', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Jerusalem', latitude: 32.0114, longitude: 34.8867 },
+
+  // Europe leisure / hubs
+  { iata: 'AMS', icao: 'EHAM', name: 'Amsterdam Airport Schiphol', city: 'Amsterdam', country: 'Netherlands', countryCode: 'NL', countryName: 'Netherlands', continentCode: 'EU', continentName: 'Europe', timezone: 'Europe/Amsterdam', latitude: 52.3105, longitude: 4.7683 },
+  { iata: 'VIE', icao: 'LOWW', name: 'Vienna International Airport', city: 'Vienna', country: 'Austria', countryCode: 'AT', countryName: 'Austria', continentCode: 'EU', continentName: 'Europe', timezone: 'Europe/Vienna', latitude: 48.1103, longitude: 16.5697 },
+  { iata: 'PRG', icao: 'LKPR', name: 'Vaclav Havel Airport Prague', city: 'Prague', country: 'Czechia', countryCode: 'CZ', countryName: 'Czechia', continentCode: 'EU', continentName: 'Europe', timezone: 'Europe/Prague', latitude: 50.1008, longitude: 14.2600 },
+  { iata: 'ATH', icao: 'LGAV', name: 'Athens International Airport', city: 'Athens', country: 'Greece', countryCode: 'GR', countryName: 'Greece', continentCode: 'EU', continentName: 'Europe', timezone: 'Europe/Athens', latitude: 37.9364, longitude: 23.9445 },
+  { iata: 'JTR', icao: 'LGSR', name: 'Santorini Airport', city: 'Santorini', country: 'Greece', countryCode: 'GR', countryName: 'Greece', continentCode: 'EU', continentName: 'Europe', timezone: 'Europe/Athens', latitude: 36.3992, longitude: 25.4793 },
+  { iata: 'HER', icao: 'LGIR', name: 'Heraklion Airport', city: 'Heraklion', country: 'Greece', countryCode: 'GR', countryName: 'Greece', continentCode: 'EU', continentName: 'Europe', timezone: 'Europe/Athens', latitude: 35.3397, longitude: 25.1803 },
+  { iata: 'LIS', icao: 'LPPT', name: 'Humberto Delgado Airport', city: 'Lisbon', country: 'Portugal', countryCode: 'PT', countryName: 'Portugal', continentCode: 'EU', continentName: 'Europe', timezone: 'Europe/Lisbon', latitude: 38.7742, longitude: -9.1342 },
+  { iata: 'FAO', icao: 'LPFR', name: 'Faro Airport', city: 'Faro', country: 'Portugal', countryCode: 'PT', countryName: 'Portugal', continentCode: 'EU', continentName: 'Europe', timezone: 'Europe/Lisbon', latitude: 37.0144, longitude: -7.9659 },
+  { iata: 'DUB', icao: 'EIDW', name: 'Dublin Airport', city: 'Dublin', country: 'Ireland', countryCode: 'IE', countryName: 'Ireland', continentCode: 'EU', continentName: 'Europe', timezone: 'Europe/Dublin', latitude: 53.4213, longitude: -6.2701 },
+  { iata: 'CPH', icao: 'EKCH', name: 'Copenhagen Airport', city: 'Copenhagen', country: 'Denmark', countryCode: 'DK', countryName: 'Denmark', continentCode: 'EU', continentName: 'Europe', timezone: 'Europe/Copenhagen', latitude: 55.6180, longitude: 12.6560 },
+  { iata: 'ARN', icao: 'ESSA', name: 'Stockholm Arlanda Airport', city: 'Stockholm', country: 'Sweden', countryCode: 'SE', countryName: 'Sweden', continentCode: 'EU', continentName: 'Europe', timezone: 'Europe/Stockholm', latitude: 59.6519, longitude: 17.9186 },
+  { iata: 'OSL', icao: 'ENGM', name: 'Oslo Airport', city: 'Oslo', country: 'Norway', countryCode: 'NO', countryName: 'Norway', continentCode: 'EU', continentName: 'Europe', timezone: 'Europe/Oslo', latitude: 60.1939, longitude: 11.1004 },
+  { iata: 'BRU', icao: 'EBBR', name: 'Brussels Airport', city: 'Brussels', country: 'Belgium', countryCode: 'BE', countryName: 'Belgium', continentCode: 'EU', continentName: 'Europe', timezone: 'Europe/Brussels', latitude: 50.9014, longitude: 4.4844 },
+
+  // Oceania
+  { iata: 'SYD', icao: 'YSSY', name: 'Sydney Kingsford Smith Airport', city: 'Sydney', country: 'Australia', countryCode: 'AU', countryName: 'Australia', continentCode: 'OC', continentName: 'Oceania', timezone: 'Australia/Sydney', latitude: -33.9399, longitude: 151.1753 },
+  { iata: 'MEL', icao: 'YMML', name: 'Melbourne Airport', city: 'Melbourne', country: 'Australia', countryCode: 'AU', countryName: 'Australia', continentCode: 'OC', continentName: 'Oceania', timezone: 'Australia/Melbourne', latitude: -37.6690, longitude: 144.8410 },
+  { iata: 'BNE', icao: 'YBBN', name: 'Brisbane Airport', city: 'Brisbane', country: 'Australia', countryCode: 'AU', countryName: 'Australia', continentCode: 'OC', continentName: 'Oceania', timezone: 'Australia/Brisbane', latitude: -27.3842, longitude: 153.1175 },
+  { iata: 'PER', icao: 'YPPH', name: 'Perth Airport', city: 'Perth', country: 'Australia', countryCode: 'AU', countryName: 'Australia', continentCode: 'OC', continentName: 'Oceania', timezone: 'Australia/Perth', latitude: -31.9403, longitude: 115.9669 },
+  { iata: 'AKL', icao: 'NZAA', name: 'Auckland Airport', city: 'Auckland', country: 'New Zealand', countryCode: 'NZ', countryName: 'New Zealand', continentCode: 'OC', continentName: 'Oceania', timezone: 'Pacific/Auckland', latitude: -37.0082, longitude: 174.7850 },
+  { iata: 'ZQN', icao: 'NZQN', name: 'Queenstown Airport', city: 'Queenstown', country: 'New Zealand', countryCode: 'NZ', countryName: 'New Zealand', continentCode: 'OC', continentName: 'Oceania', timezone: 'Pacific/Auckland', latitude: -45.0211, longitude: 168.7392 },
+
+  // Africa / Americas leisure
+  { iata: 'CAI', icao: 'HECA', name: 'Cairo International Airport', city: 'Cairo', country: 'Egypt', countryCode: 'EG', countryName: 'Egypt', continentCode: 'AF', continentName: 'Africa', timezone: 'Africa/Cairo', latitude: 30.1219, longitude: 31.4056 },
+  { iata: 'SSH', icao: 'HESH', name: 'Sharm El Sheikh International Airport', city: 'Sharm El Sheikh', country: 'Egypt', countryCode: 'EG', countryName: 'Egypt', continentCode: 'AF', continentName: 'Africa', timezone: 'Africa/Cairo', latitude: 27.9773, longitude: 34.3947 },
+  { iata: 'JNB', icao: 'FAOR', name: 'O. R. Tambo International Airport', city: 'Johannesburg', country: 'South Africa', countryCode: 'ZA', countryName: 'South Africa', continentCode: 'AF', continentName: 'Africa', timezone: 'Africa/Johannesburg', latitude: -26.1392, longitude: 28.2460 },
+  { iata: 'CPT', icao: 'FACT', name: 'Cape Town International Airport', city: 'Cape Town', country: 'South Africa', countryCode: 'ZA', countryName: 'South Africa', continentCode: 'AF', continentName: 'Africa', timezone: 'Africa/Johannesburg', latitude: -33.9648, longitude: 18.6017 },
+  { iata: 'CMN', icao: 'GMMN', name: 'Mohammed V International Airport', city: 'Casablanca', country: 'Morocco', countryCode: 'MA', countryName: 'Morocco', continentCode: 'AF', continentName: 'Africa', timezone: 'Africa/Casablanca', latitude: 33.3675, longitude: -7.5898 },
+  { iata: 'RAK', icao: 'GMMX', name: 'Marrakech Menara Airport', city: 'Marrakech', country: 'Morocco', countryCode: 'MA', countryName: 'Morocco', continentCode: 'AF', continentName: 'Africa', timezone: 'Africa/Casablanca', latitude: 31.6069, longitude: -8.0363 },
+  { iata: 'GRU', icao: 'SBGR', name: 'Sao Paulo Guarulhos International Airport', city: 'Sao Paulo', country: 'Brazil', countryCode: 'BR', countryName: 'Brazil', continentCode: 'SA', continentName: 'South America', timezone: 'America/Sao_Paulo', latitude: -23.4356, longitude: -46.4731 },
+  { iata: 'GIG', icao: 'SBGL', name: 'Rio de Janeiro Galeao International Airport', city: 'Rio de Janeiro', country: 'Brazil', countryCode: 'BR', countryName: 'Brazil', continentCode: 'SA', continentName: 'South America', timezone: 'America/Sao_Paulo', latitude: -22.8090, longitude: -43.2506 },
+  { iata: 'MEX', icao: 'MMMX', name: 'Mexico City International Airport', city: 'Mexico City', country: 'Mexico', countryCode: 'MX', countryName: 'Mexico', continentCode: 'NA', continentName: 'North America', timezone: 'America/Mexico_City', latitude: 19.4363, longitude: -99.0721 },
+  { iata: 'CUN', icao: 'MMUN', name: 'Cancun International Airport', city: 'Cancun', country: 'Mexico', countryCode: 'MX', countryName: 'Mexico', continentCode: 'NA', continentName: 'North America', timezone: 'America/Cancun', latitude: 21.0365, longitude: -86.8771 },
+  { iata: 'SJU', icao: 'TJSJ', name: 'Luis Munoz Marin International Airport', city: 'San Juan', country: 'Puerto Rico', countryCode: 'PR', countryName: 'Puerto Rico', continentCode: 'NA', continentName: 'North America', timezone: 'America/Puerto_Rico', latitude: 18.4394, longitude: -66.0020 },
+  { iata: 'NAS', icao: 'MYNN', name: 'Lynden Pindling International Airport', city: 'Nassau', country: 'Bahamas', countryCode: 'BS', countryName: 'Bahamas', continentCode: 'NA', continentName: 'North America', timezone: 'America/Nassau', latitude: 25.0390, longitude: -77.4662 },
+
+  // China extras
+  { iata: 'SZX', icao: 'ZGSZ', name: 'Shenzhen Baoan International Airport', city: 'Shenzhen', country: 'China', countryCode: 'CN', countryName: 'China', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Shanghai', latitude: 22.6393, longitude: 113.8107 },
+  { iata: 'HGH', icao: 'ZSHC', name: 'Hangzhou Xiaoshan International Airport', city: 'Hangzhou', country: 'China', countryCode: 'CN', countryName: 'China', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Shanghai', latitude: 30.2295, longitude: 120.4344 },
+  { iata: 'MFM', icao: 'VMMC', name: 'Macau International Airport', city: 'Macau', country: 'Macau', countryCode: 'MO', countryName: 'Macau', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Macau', latitude: 22.1496, longitude: 113.5915 },
+
+  // +10 sample hubs (tourism / private-jet demand)
+  { iata: 'CDG', icao: 'LFPG', name: 'Paris Charles de Gaulle Airport', city: 'Paris', country: 'France', countryCode: 'FR', countryName: 'France', continentCode: 'EU', continentName: 'Europe', timezone: 'Europe/Paris', latitude: 49.0097, longitude: 2.5479, landingFee: 900, parkingFee: 400, overnightFee: 550, handlingFee: 700, feeCurrency: 'USD' },
+  { iata: 'ORY', icao: 'LFPO', name: 'Paris Orly Airport', city: 'Paris', country: 'France', countryCode: 'FR', countryName: 'France', continentCode: 'EU', continentName: 'Europe', timezone: 'Europe/Paris', latitude: 48.7233, longitude: 2.3794, landingFee: 750, parkingFee: 320, overnightFee: 480, handlingFee: 620, feeCurrency: 'USD' },
+  { iata: 'KIX', icao: 'RJBB', name: 'Kansai International Airport', city: 'Osaka', country: 'Japan', countryCode: 'JP', countryName: 'Japan', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Tokyo', latitude: 34.4273, longitude: 135.2440 },
+  { iata: 'TPE', icao: 'RCTP', name: 'Taiwan Taoyuan International Airport', city: 'Taipei', country: 'Taiwan', countryCode: 'TW', countryName: 'Taiwan', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Taipei', latitude: 25.0797, longitude: 121.2342 },
+  { iata: 'SFO', icao: 'KSFO', name: 'San Francisco International Airport', city: 'San Francisco', country: 'USA', countryCode: 'US', countryName: 'United States', continentCode: 'NA', continentName: 'North America', timezone: 'America/Los_Angeles', latitude: 37.6213, longitude: -122.3790 },
+  { iata: 'ORD', icao: 'KORD', name: "Chicago O'Hare International Airport", city: 'Chicago', country: 'USA', countryCode: 'US', countryName: 'United States', continentCode: 'NA', continentName: 'North America', timezone: 'America/Chicago', latitude: 41.9742, longitude: -87.9073 },
+  { iata: 'BOS', icao: 'KBOS', name: 'Boston Logan International Airport', city: 'Boston', country: 'USA', countryCode: 'US', countryName: 'United States', continentCode: 'NA', continentName: 'North America', timezone: 'America/New_York', latitude: 42.3656, longitude: -71.0096 },
+  { iata: 'MLE', icao: 'VRMM', name: 'Velana International Airport', city: 'Male', country: 'Maldives', countryCode: 'MV', countryName: 'Maldives', continentCode: 'AS', continentName: 'Asia', timezone: 'Indian/Maldives', latitude: 4.1918, longitude: 73.5290 },
+  { iata: 'SEZ', icao: 'FSIA', name: 'Seychelles International Airport', city: 'Mahe', country: 'Seychelles', countryCode: 'SC', countryName: 'Seychelles', continentCode: 'AF', continentName: 'Africa', timezone: 'Indian/Mahe', latitude: -4.6743, longitude: 55.5218 },
+  { iata: 'HPH', icao: 'VVCI', name: 'Cat Bi International Airport', city: 'Hai Phong', country: 'Vietnam', countryCode: 'VN', countryName: 'Vietnam', continentCode: 'AS', continentName: 'Asia', timezone: 'Asia/Ho_Chi_Minh', latitude: 20.8194, longitude: 106.7250 },
 ];

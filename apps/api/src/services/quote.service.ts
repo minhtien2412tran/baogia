@@ -17,12 +17,42 @@ import {
   SearchAircraftDto,
 } from '../dto';
 import { PricingService } from '../pricing/pricing.service';
+import { haversineKm } from '../pricing/flight-math';
 
 const BASE_PRICE_BY_CATEGORY: Record<string, number> = {
   LIGHT: 12500,
   MIDSIZE: 22000,
   HEAVY: 38000,
   ULTRA_LONG: 55000,
+};
+
+type FleetOption = {
+  categoryId: number;
+  categoryCode: string;
+  categoryLabel: string;
+  maxPassengers: number;
+  aircraftModel: string;
+  estimatedPrice: number;
+  currency: string;
+  operatorId: number;
+  operatorName: string;
+  tailNumber: string;
+  baseAirport: string;
+  baseDistanceKm: number;
+  pricingBreakdown: {
+    segments: Array<{
+      type: string;
+      from: string;
+      to: string;
+      km: number;
+      hours: number;
+      cost: number;
+      landingFee: number;
+    }>;
+    flightCost: number;
+    airportFees: number;
+    total: number;
+  };
 };
 
 @Injectable()
@@ -60,40 +90,45 @@ export class QuoteService {
         include: {
           operator: true,
           aircraftModel: { include: { category: true } },
+          baseAirport: true,
+          currentAirport: true,
         },
-        take: 40,
+        take: 80,
       });
 
-      const priced: Array<{
-        categoryId: number;
-        categoryCode: string;
-        categoryLabel: string;
-        maxPassengers: number;
-        aircraftModel: string;
-        estimatedPrice: number;
-        currency: string;
-        operatorId: number;
-        operatorName: string;
-        tailNumber: string;
-        baseAirport?: string;
-        pricingBreakdown: {
-          segments: Array<{
-            type: string;
-            from: string;
-            to: string;
-            km: number;
-            hours: number;
-            cost: number;
-            landingFee: number;
-          }>;
-          flightCost: number;
-          airportFees: number;
-          total: number;
-        };
-      }> = [];
+      const fromLat = from.latitude != null ? Number(from.latitude) : null;
+      const fromLng = from.longitude != null ? Number(from.longitude) : null;
 
-      for (const ac of fleet) {
-        if (ac.operator.status !== 'ACTIVE') continue;
+      const scored = fleet
+        .filter((ac) => ac.operator.status === 'ACTIVE')
+        .map((ac) => {
+          const home = ac.currentAirport ?? ac.baseAirport;
+          let baseDistanceKm = Number.POSITIVE_INFINITY;
+          if (
+            fromLat != null &&
+            fromLng != null &&
+            home?.latitude != null &&
+            home?.longitude != null
+          ) {
+            baseDistanceKm = haversineKm(
+              fromLat,
+              fromLng,
+              Number(home.latitude),
+              Number(home.longitude),
+            );
+          } else if (ac.baseAirport?.iata === fromIata || ac.currentAirport?.iata === fromIata) {
+            baseDistanceKm = 0;
+          } else if (ac.baseAirportId != null) {
+            baseDistanceKm = 2500;
+          }
+          return { ac, baseDistanceKm };
+        })
+        .sort((a, b) => a.baseDistanceKm - b.baseDistanceKm);
+
+      const priced: FleetOption[] = [];
+
+      for (const { ac, baseDistanceKm } of scored) {
+        const baseIata = ac.baseAirport?.iata ?? ac.currentAirport?.iata ?? '—';
         try {
           const { estimate } = await this.pricing.estimate({
             aircraftId: ac.id,
@@ -113,7 +148,9 @@ export class QuoteService {
             operatorId: ac.operatorId,
             operatorName: ac.operator.name,
             tailNumber: ac.registration,
-            baseAirport: undefined,
+            baseAirport: baseIata,
+            baseDistanceKm:
+              Number.isFinite(baseDistanceKm) ? Math.round(baseDistanceKm) : 99999,
             pricingBreakdown: {
               segments: estimate.legs.map((l) => ({
                 type: l.legType,
@@ -135,13 +172,29 @@ export class QuoteService {
         } catch {
           /* skip aircraft that cannot be priced */
         }
+        if (priced.length >= 12) break;
       }
 
-      const byCategory = new Map<string, (typeof priced)[number]>();
-      for (const opt of priced.sort((a, b) => a.estimatedPrice - b.estimatedPrice)) {
-        if (!byCategory.has(opt.categoryCode)) byCategory.set(opt.categoryCode, opt);
+      // Prefer nearest bases: keep closest per category, then fill more nearest tails
+      const byCategory = new Map<string, FleetOption>();
+      for (const opt of priced) {
+        const prev = byCategory.get(opt.categoryCode);
+        if (!prev || opt.baseDistanceKm < prev.baseDistanceKm) {
+          byCategory.set(opt.categoryCode, opt);
+        }
       }
-      const options = [...byCategory.values()];
+      const categoryBest = [...byCategory.values()];
+      const extras = priced.filter(
+        (o) => !categoryBest.some((c) => c.tailNumber === o.tailNumber),
+      );
+      const options = [...categoryBest, ...extras]
+        .sort(
+          (a, b) =>
+            a.baseDistanceKm - b.baseDistanceKm ||
+            a.estimatedPrice - b.estimatedPrice,
+        )
+        .slice(0, 8);
+
       if (options.length > 0) {
         return {
           searchId: `search-${Date.now()}`,
@@ -152,6 +205,7 @@ export class QuoteService {
       }
     }
 
+    // Fallback: never return empty — category flat rates
     let categories = await this.prisma.aircraftCategory.findMany({
       where: { maxPassengers: { gte: maxPassengers } },
       include: { models: { take: 1 } },
@@ -167,20 +221,50 @@ export class QuoteService {
       });
     }
 
+    // Attach nearest active aircraft sample per category when possible
+    const nearestFleet = await this.prisma.aircraft.findMany({
+      where: {
+        operationalStatus: 'ACTIVE',
+        availabilityStatus: { in: ['AVAILABLE', 'ON_HOLD'] },
+        baseAirportId: { not: null },
+      },
+      include: {
+        operator: true,
+        aircraftModel: { include: { category: true } },
+        baseAirport: true,
+      },
+      take: 40,
+    });
+
     const options = categories.map((cat) => {
       const model = cat.models[0];
       const base = BASE_PRICE_BY_CATEGORY[cat.code] ?? 15000;
       const legMultiplier = body.legs.length > 1 ? 1.8 : 1;
+      const sample = nearestFleet.find(
+        (a) =>
+          a.aircraftModel.categoryId === cat.id && a.operator.status === 'ACTIVE',
+      );
       return {
         categoryId: cat.id,
         categoryCode: cat.code,
         categoryLabel: cat.label,
         maxPassengers: cat.maxPassengers,
-        aircraftModel: model
-          ? `${model.manufacturer} ${model.model}`
-          : cat.label,
+        aircraftModel: sample
+          ? `${sample.aircraftModel.manufacturer} ${sample.aircraftModel.model}`
+          : model
+            ? `${model.manufacturer} ${model.model}`
+            : cat.label,
         estimatedPrice: Math.round(base * legMultiplier),
         currency,
+        ...(sample
+          ? {
+              operatorId: sample.operatorId,
+              operatorName: sample.operator.name,
+              tailNumber: sample.registration,
+              baseAirport: sample.baseAirport?.iata ?? '—',
+              baseDistanceKm: 99999,
+            }
+          : { baseAirport: fromIata }),
       };
     });
 

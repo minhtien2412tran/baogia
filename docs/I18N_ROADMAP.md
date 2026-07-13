@@ -1,8 +1,10 @@
 # JetBay i18n — Kiến trúc, lộ trình & hướng dẫn
 
 > **Ngôn ngữ chuẩn DB (canonical):** `en`  
-> **Web routing:** `en-us`, `en`, `zh-cn`, `zh-hk`, `zh-tw`, `vi`  
+> **Web routing:** `en-us`, `en`, `zh-cn`, `zh-hk`, `zh-tw`, `vi`, `ja`, `ko`, `th`, `id`, `fr`, `de`, `es`, `it`, `ru`, `ar`  
 > **Package dùng chung:** `packages/i18n` (`@jetbay/i18n`)
+>
+> **Tourism locales (2026-07):** JP/KR/TH/ID + FR/DE/ES/IT/RU + AR — shell UI (`t()` / nav) có overlay; CMS body vẫn fallback `en` đến khi có bản dịch nội dung.
 
 ---
 

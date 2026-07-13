@@ -53,7 +53,19 @@ export class CustomerCareService implements OnModuleInit, OnModuleDestroy {
 
   private normalizeLocale(locale?: string): string {
     if (!locale) return 'en';
-    if (locale.startsWith('vi')) return 'vi';
+    const raw = locale.toLowerCase().trim();
+    if (raw.startsWith('vi')) return 'vi';
+    if (raw.startsWith('zh')) return 'zh-cn';
+    if (raw.startsWith('ja')) return 'ja';
+    if (raw.startsWith('ko')) return 'ko';
+    if (raw.startsWith('th')) return 'th';
+    if (raw.startsWith('id') || raw === 'in') return 'id';
+    if (raw.startsWith('fr')) return 'fr';
+    if (raw.startsWith('de')) return 'de';
+    if (raw.startsWith('es')) return 'es';
+    if (raw.startsWith('it')) return 'it';
+    if (raw.startsWith('ru')) return 'ru';
+    if (raw.startsWith('ar')) return 'ar';
     return 'en';
   }
 

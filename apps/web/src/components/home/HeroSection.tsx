@@ -1,6 +1,6 @@
 import { JB } from '../../config/jetbay-cdn';
-import { CdnImage } from '../ui/CdnImage';
 import { QuoteSearchWidget } from '../QuoteSearchWidget';
+import { AviationMotionIcon } from '../ui/AviationMotionIcon';
 import { t } from '../../lib/i18n';
 import { HeroParticles } from './HeroParticles';
 
@@ -49,17 +49,23 @@ export function HeroSection({ locale, currency }: { locale: string; currency?: s
 
         <div className="jb-trust-row">
           <span className="jb-trust-item">
-            <CdnImage src={JB.trust.shield} alt="" width={16} height={16} className="jb-trust-icon-img" />
+            <span className="jb-hero-trust-orb">
+              <AviationMotionIcon name="shield" size="sm" motion="pulse" />
+            </span>
             {t(locale, 'securePayment')}
           </span>
           <span className="jb-trust-divider">|</span>
           <span className="jb-trust-item">
-            <CdnImage src={JB.trust.support} alt="" width={16} height={16} className="jb-trust-icon-img" />
+            <span className="jb-hero-trust-orb" style={{ animationDelay: '0.4s' }}>
+              <AviationMotionIcon name="concierge" size="sm" motion="float" />
+            </span>
             {t(locale, 'concierge24')}
           </span>
           <span className="jb-trust-divider">|</span>
           <span className="jb-trust-item">
-            <CdnImage src={JB.trust.star} alt="" width={16} height={16} className="jb-trust-icon-img" />
+            <span className="jb-hero-trust-orb" style={{ animationDelay: '0.8s' }}>
+              <AviationMotionIcon name="jetStar" size="sm" />
+            </span>
             {t(locale, 'premiumAircraft')}
           </span>
         </div>

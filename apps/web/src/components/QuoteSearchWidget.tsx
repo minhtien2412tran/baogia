@@ -1,14 +1,13 @@
 'use client';
 
-import Image from 'next/image';
 import { useState } from 'react';
 import { api, parseApiErrorMessage, type AircraftSearchOption } from '../lib/api';
 import { formatNumber } from '../config/locales';
 import { t } from '../lib/i18n';
-import { JB, localAsset } from '../config/jetbay-cdn';
 import { AircraftRowSkeleton } from './ui/Skeleton';
 import { AirportInput } from './AirportInput';
 import { FlightScrollRail } from './ui/FlightScrollRail';
+import { AviationMotionIcon } from './ui/AviationMotionIcon';
 
 type TripType = 'ONE_WAY' | 'ROUND_TRIP' | 'MULTI_CITY';
 
@@ -24,12 +23,6 @@ function defaultLeg(): Leg {
     to: '',
     departure: new Date().toISOString().slice(0, 10),
   };
-}
-
-function CdnIcon({ src, alt = '' }: { src: string; alt?: string }) {
-  return (
-    <Image src={localAsset(src)} alt={alt} width={20} height={20} unoptimized className="jb-field-icon" />
-  );
 }
 
 function splitNameFromEmail(email: string): { firstName: string; lastName: string } {
@@ -216,8 +209,8 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
             {tripType === 'MULTI_CITY' && legs.length > 1 && (
               <div className="jb-leg-header">
                 <span>{t(locale, 'leg')} {idx + 1}</span>
-                <button type="button" className="jb-leg-remove" onClick={() => removeLeg(idx)}>
-                  <CdnIcon src={JB.icons.minus} alt="Remove leg" />
+                <button type="button" className="jb-leg-remove" onClick={() => removeLeg(idx)} aria-label="Remove leg">
+                  <AviationMotionIcon name="minus" size="sm" />
                 </button>
               </div>
             )}
@@ -230,9 +223,10 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
                 placeholder={t(locale, 'departurePlaceholder')}
                 locale={locale}
                 showNearMe={idx === 0}
+                variant="from"
               />
               <button type="button" className="jb-swap-btn" onClick={() => swapLeg(idx)} aria-label={t(locale, 'swapAirports')}>
-                <CdnIcon src={JB.icons.swap} alt="Swap" />
+                <AviationMotionIcon name="swapRoute" size="lg" motion="swap" />
               </button>
               <AirportInput
                 id={`to-${idx}`}
@@ -241,11 +235,12 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
                 onChange={(iata) => updateLeg(idx, { to: iata })}
                 placeholder={t(locale, 'destinationPlaceholder')}
                 locale={locale}
+                variant="to"
               />
               <div className="jb-field jb-field-icon-wrap">
                 <label htmlFor={`dep-${idx}`}>{t(locale, 'departure')}</label>
                 <div className="jb-input-with-icon">
-                  <CdnIcon src={JB.icons.calendar} alt="" />
+                  <AviationMotionIcon name="calendar" size="md" motion="float" className="jb-field-icon" />
                   <input
                     id={`dep-${idx}`}
                     type="date"
@@ -260,11 +255,14 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
                   <label>{t(locale, 'passengers')}</label>
                   <div className="jb-pax-control">
                     <button type="button" className="jb-pax-btn" onClick={() => setPassengers((p) => Math.max(1, p - 1))} aria-label={t(locale, 'decreasePax')}>
-                      <CdnIcon src={JB.icons.minus} alt="" />
+                      <AviationMotionIcon name="minus" size="sm" />
                     </button>
-                    <span className="jb-pax-value">{passengers}</span>
+                    <span className="jb-pax-value">
+                      <AviationMotionIcon name="passengers" size="xs" motion="pulse" />
+                      {passengers}
+                    </span>
                     <button type="button" className="jb-pax-btn" onClick={() => setPassengers((p) => Math.min(16, p + 1))} aria-label={t(locale, 'increasePax')}>
-                      <CdnIcon src={JB.icons.plus} alt="" />
+                      <AviationMotionIcon name="plus" size="sm" />
                     </button>
                   </div>
                 </div>
@@ -277,7 +275,7 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
           <div className="jb-field jb-field-icon-wrap" style={{ maxWidth: 260, marginTop: 12 }}>
             <label htmlFor="return">{t(locale, 'returnDate')}</label>
             <div className="jb-input-with-icon">
-              <CdnIcon src={JB.icons.calendar} alt="" />
+              <AviationMotionIcon name="calendar" size="md" motion="float" className="jb-field-icon" />
               <input
                 id="return"
                 type="date"
@@ -292,19 +290,24 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
 
         {tripType === 'MULTI_CITY' && (
           <button type="button" className="jb-add-leg-btn" onClick={addLeg}>
-            <CdnIcon src={JB.icons.addLeg} alt="" />
+            <AviationMotionIcon name="addLeg" size="md" motion="pulse" />
             {t(locale, 'addLeg')}
           </button>
         )}
 
         <button type="submit" className="jb-search-btn" disabled={loading}>
           {searching ? (
-            <span className="jb-search-btn__label">
-              <span className="jb-search-radar" aria-hidden />
+            <span className="jb-search-btn__label jb-search-btn__inner">
+              <AviationMotionIcon name="radar" size="md" motion="radar-sweep" />
               {t(locale, 'searching')}
             </span>
           ) : (
-            t(locale, 'searchAircraft')
+            <span className="jb-search-btn__inner">
+              <span className="jb-search-btn__plane" aria-hidden>
+                <AviationMotionIcon name="plane" size="md" />
+              </span>
+              {t(locale, 'searchAircraft')}
+            </span>
           )}
         </button>
 
@@ -347,6 +350,16 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
                           tail: o.tailNumber,
                           base: o.baseAirport ?? '—',
                         })}
+                        {o.baseDistanceKm != null && o.baseDistanceKm < 99999 ? (
+                          <span className="jb-aircraft-meta--dist">
+                            {' '}
+                            · {o.baseDistanceKm} km
+                          </span>
+                        ) : null}
+                      </div>
+                    ) : o.baseAirport ? (
+                      <div className="jb-aircraft-meta jb-aircraft-meta--ops">
+                        base {o.baseAirport}
                       </div>
                     ) : null}
                     {o.pricingBreakdown?.segments?.length ? (

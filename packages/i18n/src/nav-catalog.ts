@@ -6,6 +6,7 @@ import {
   QUICK_LINKS_DEF,
   type NavLinkDef,
 } from './nav-structure';
+import { TOURISM_NAV_OVERRIDES } from './tourism-locales';
 
 type NavCatalog = Record<string, string>;
 
@@ -354,6 +355,16 @@ const NAV_BY_DB: Record<string, NavCatalog> = {
   'zh-cn': zhCn,
   'zh-hk': zhHk,
   'zh-tw': zhTw,
+  ja: { ...en, ...TOURISM_NAV_OVERRIDES.ja },
+  ko: { ...en, ...TOURISM_NAV_OVERRIDES.ko },
+  th: { ...en, ...TOURISM_NAV_OVERRIDES.th },
+  id: { ...en, ...TOURISM_NAV_OVERRIDES.id },
+  fr: { ...en, ...TOURISM_NAV_OVERRIDES.fr },
+  de: { ...en, ...TOURISM_NAV_OVERRIDES.de },
+  es: { ...en, ...TOURISM_NAV_OVERRIDES.es },
+  it: { ...en, ...TOURISM_NAV_OVERRIDES.it },
+  ru: { ...en, ...TOURISM_NAV_OVERRIDES.ru },
+  ar: { ...en, ...TOURISM_NAV_OVERRIDES.ar },
 };
 
 export function tn(webLocale: string, key: string): string {

@@ -345,9 +345,13 @@
 }
 
 .jb-pax-value {
-  min-width: 24px;
+  min-width: 36px;
   text-align: center;
   font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
 .jb-search-btn {

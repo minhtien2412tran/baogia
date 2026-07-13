@@ -1,0 +1,6 @@
+Contact: mailto:security@minhtien.online
+Contact: https://www.minhtien.online
+Expires: 2027-07-13T00:00:00.000Z
+Preferred-Languages: en, vi
+Canonical: https://www.minhtien.online/.well-known/security.txt
+Policy: https://www.minhtien.online/en-us

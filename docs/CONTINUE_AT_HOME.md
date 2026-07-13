@@ -53,7 +53,19 @@
 - **Swagger polish** (2026-07-13) — enrich OpenAPI (summary+description mọi op) · tag descriptions · rewrite [API.md](./API.md) · deploy docs.minhtien.online
 - **Swagger i18n + responsive UI** (2026-07-13) — `?lang=vi|en|zh-cn` · theme tối JetVina · picker ngôn ngữ · mobile/tablet friendly
 - **Rebrand public JetBay→JetVina** (2026-07-13) — Swagger/docs · API mail/SMS · Admin shell (giữ path kỹ thuật cleanup)
+- **Fix Swagger blank page** (2026-07-13) — bỏ `MutationObserver` trong i18n client (loop DOM → UI trống); retry `setInterval` · redeploy API
+- **Swagger i18n titles** (2026-07-13) — UI fetch `/openapi.json?lang=` (spec nhúng EN không theo `?lang`) · dịch tiêu đề tag + summary (vi/zh)
+- **API security Phase A/B** (2026-07-13) — key-split sync · Helmet/Nginx header dedupe · Swagger Basic opt-in · security.txt · Nginx rate-limit conf · newsletter throttle · [JETBAY_API_SYNC_SECURITY_PLAN.md](./JETBAY_API_SYNC_SECURITY_PLAN.md) status board
+- **Seed airports / fleet / locales** (2026-07-13) — +~70 sân bay du lịch · 8 hãng · 10 model · 15 tail · thêm locale `ja/ko/th/id/fr/de/es/it/ru/ar` (UI shell)
+- **Admin API URL fix** (2026-07-13) — login không còn trỏ `127.0.0.1:4000`; `deploy-admin.sh` luôn bake `api.minhtien.online`
+- **Product i18n tourism** (2026-07-13) — `airportNoResults` + quote/FP/EL keys cho 10 locale · redeploy web
+- **Mail diagnose** (2026-07-13) — scheduler OK; SMTP prod = `localhost:1025` → ECONNREFUSED · chờ SMTP thật
+- **Gap report** — [JETVINA_GAP_REPORT.md](./JETVINA_GAP_REPORT.md)
+- **Aviation motion icons** (2026-07-13) — SVG `AviationMotionIcon` (takeoff/landing/swap/radar/shield…) · hero trust + quote widget · redeploy web
+- **Security Phase B ops** (2026-07-13) — Nginx rate-limit **applied** · Swagger Basic **ON** (401 anonymous) · demo passwords **rotated** · creds: `/root/backups/jetbay-security-ops-20260713-162720/` · [JETBAY_API_SYNC_SECURITY_PLAN.md](./JETBAY_API_SYNC_SECURITY_PLAN.md)
+- **Fleet nearest-base search** (2026-07-13) — +10 airports (CDG/ORY/KIX/TPE/SFO/ORD/BOS/MLE/SEZ/HPH) · +10 aircraft · search ưu tiên base gần điểm đi · luôn hiện `baseAirport` + km · seed prod
 
+**Ops còn lại:** SMTP prod thật · CMS dịch locale · G4 keys KH · pen-test/IDOR
 **Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) · [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)
 
 ### Đã merge + deploy (2026-07-10)

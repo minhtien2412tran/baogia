@@ -3,9 +3,11 @@ import {
   getAuthHintLocalized,
   getSwaggerIntro,
   getSwaggerTagDescription,
+  getSwaggerTagLabel,
   normalizeSwaggerLang,
   type SwaggerLang,
 } from './swagger-locales';
+import { localizeOperationSummary } from './swagger-op-i18n';
 
 export const SWAGGER_TAG_META: Array<{ name: string; description: string }> = [
   {
@@ -449,7 +451,7 @@ function responseText(code: string, lang: SwaggerLang): string {
 
 /**
  * Mutates and returns the OpenAPI document with complete tag + operation docs.
- * Pass `lang` for localized intro/tags/auth hints (operation summaries stay EN technical).
+ * Pass `lang` to localize intro, tag titles/descriptions, summaries, and auth hints.
  */
 export function enrichOpenApiDocument(
   document: OpenAPIObject,
@@ -458,6 +460,7 @@ export function enrichOpenApiDocument(
   const lang = normalizeSwaggerLang(langInput);
   const tagMap = new Map(SWAGGER_TAG_META.map((t) => [t.name, t.description]));
   const existingTags = new Map((document.tags ?? []).map((t) => [t.name, t]));
+  const tagLabel = (enName: string) => getSwaggerTagLabel(lang, enName);
 
   if (document.info) {
     document.info.description = getSwaggerIntro(lang);
@@ -470,7 +473,7 @@ export function enrichOpenApiDocument(
     const prev = existingTags.get(t.name);
     const enDesc = prev?.description || t.description;
     return {
-      name: t.name,
+      name: tagLabel(t.name),
       description: getSwaggerTagDescription(lang, t.name, enDesc),
     };
   });
@@ -478,7 +481,7 @@ export function enrichOpenApiDocument(
   for (const [name, tag] of existingTags) {
     if (!tagMap.has(name)) {
       document.tags.push({
-        name,
+        name: tagLabel(name),
         description:
           getSwaggerTagDescription(lang, name, tag.description || `${name} endpoints`),
       });
@@ -494,18 +497,20 @@ export function enrichOpenApiDocument(
       const key = `${method.toUpperCase()} ${path}`;
       const catalog = OP_DOCS[key];
 
+      if (op.tags && Array.isArray(op.tags)) {
+        op.tags = (op.tags as string[]).map((t) => tagLabel(t));
+      }
+
       if (catalog) {
-        op.summary = catalog.summary;
-        // Keep EN catalog body, append localized auth footer when not EN
+        const summaryEn = catalog.summary;
+        op.summary = localizeOperationSummary(lang, summaryEn);
         op.description =
           lang === 'en'
             ? catalog.description
             : `${catalog.description}\n\n---\n\n${authorizeFooter(lang)}`;
       } else {
-        if (!op.summary || !String(op.summary).trim()) {
-          op.summary = humanizePath(method, path);
-        }
-        // Always rebuild description so lang switch refreshes auth hints
+        const summaryEn = String(op.summary || '').trim() || humanizePath(method, path);
+        op.summary = localizeOperationSummary(lang, summaryEn);
         op.description = buildDescription(
           String(op.summary),
           method,

@@ -175,6 +175,8 @@ pnpm --filter @jetbay/admin dev
 
 **Topology mặc định (2026-07):** Web local (`:3000`) thường trỏ **prod API** (`https://api.minhtien.online`) để UI khớp live. API local (`:4000`) dùng cho BE/admin e2e và phát triển Nest.
 
+`node scripts/sync-frontend-api-key.mjs` **không** ghi đè `NEXT_PUBLIC_API_KEY` của web khi URL đang trỏ prod (tránh S2 — local key = prod key). Admin vẫn sync từ local API. Dùng `--force` chỉ khi cố ý gắn web vào API local.
+
 | Client | API mặc định | Khi nào đổi |
 |--------|--------------|-------------|
 | `apps/web` | prod `api.minhtien.online` | Set `NEXT_PUBLIC_API_URL=http://127.0.0.1:4000` + sync key khi test BE local |

@@ -29,14 +29,25 @@ if ss -tlnp | grep -q ":${PORT} "; then
 fi
 
 cd "${APP_ROOT}"
-if [ ! -f .env.local ]; then
-  cat > .env.local <<EOF
-NEXT_PUBLIC_API_URL=https://api.minhtien.online
-PORT=${PORT}
-HOSTNAME=127.0.0.1
-EOF
-  chmod 600 .env.local
+
+# Always refresh public API URL + key before build (NEXT_PUBLIC_* baked at build time)
+API_KEY_LINE=""
+API_KEY_LEN=0
+if [ -f /var/www/jetbay-be/.env ]; then
+  API_KEY_VAL="$(grep -E '^API_KEY=' /var/www/jetbay-be/.env | head -1 | cut -d= -f2- | tr -d '"' | tr -d "'" | tr -d '\r')"
+  if [ -n "${API_KEY_VAL}" ]; then
+    API_KEY_LINE="NEXT_PUBLIC_API_KEY=${API_KEY_VAL}"
+    API_KEY_LEN="${#API_KEY_VAL}"
+  fi
 fi
+printf '%s\n' \
+  'NEXT_PUBLIC_API_URL=https://api.minhtien.online' \
+  ${API_KEY_LINE} \
+  "PORT=${PORT}" \
+  'HOSTNAME=127.0.0.1' \
+  > .env.local
+chmod 600 .env.local
+echo "[admin] .env.local refreshed API_URL=prod key_len=${API_KEY_LEN}"
 
 echo "[admin] build i18n vendor..."
 cd "${APP_ROOT}/vendor/i18n"

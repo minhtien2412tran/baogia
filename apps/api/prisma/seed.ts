@@ -4,6 +4,11 @@ import { aboutUsCmsJson } from '../src/constants/about-us-cms';
 import { bookingProcessCmsJson } from '../src/constants/booking-process-cms';
 import { DESTINATION_SEEDS } from '../src/constants/destination-seeds';
 import { GLOBAL_AIRPORT_SEEDS } from '../src/constants/airport-seeds';
+import {
+  AIRCRAFT_INSTANCE_SEEDS,
+  AIRCRAFT_MODEL_SEEDS,
+  OPERATOR_SEEDS,
+} from '../src/constants/fleet-seeds';
 
 const prisma = new PrismaClient();
 
@@ -149,142 +154,123 @@ async function main() {
     create: { code: 'MIDSIZE', label: 'Midsize Jet', maxPassengers: 10 },
   });
 
-  const modelG650 = await prisma.aircraftModel.findFirst({ where: { manufacturer: 'Gulfstream', model: 'G650' } })
-    ?? await prisma.aircraftModel.create({
-      data: { manufacturer: 'Gulfstream', model: 'G650', categoryId: heavy.id, rangeKm: 12964, speedKmh: 956, sleepCapacity: 6 },
-    });
+  const categoryByCode = {
+    LIGHT: light,
+    MIDSIZE: midsize,
+    HEAVY: heavy,
+  } as const;
 
-  const modelCessna = await prisma.aircraftModel.findFirst({ where: { manufacturer: 'Cessna', model: 'Citation Latitude' } })
-    ?? await prisma.aircraftModel.create({
-      data: { manufacturer: 'Cessna', model: 'Citation Latitude', categoryId: light.id, rangeKm: 5000, speedKmh: 826, sleepCapacity: 0 },
+  const modelByKey = new Map<string, { id: number }>();
+  for (const m of AIRCRAFT_MODEL_SEEDS) {
+    const key = `${m.manufacturer}|${m.model}`;
+    const category = categoryByCode[m.categoryCode];
+    let row = await prisma.aircraftModel.findFirst({
+      where: { manufacturer: m.manufacturer, model: m.model },
     });
-
-  const modelLearjet = await prisma.aircraftModel.findFirst({ where: { manufacturer: 'Bombardier', model: 'Learjet 60' } })
-    ?? await prisma.aircraftModel.create({
-      data: { manufacturer: 'Bombardier', model: 'Learjet 60', categoryId: midsize.id, rangeKm: 4500, speedKmh: 861, sleepCapacity: 0 },
-    });
-
-  // 3b. Seed Operators (for QuoteOffer admin workflow)
-  console.log('Seeding Operators...');
-  let asiaOps = await prisma.operator.findFirst({ where: { name: 'JetBay Asia Ops' } });
-  if (asiaOps) {
-    asiaOps = await prisma.operator.update({
-      where: { id: asiaOps.id },
-      data: {
-        legalName: 'JetBay Asia Operations Pte Ltd',
-        region: 'APAC',
-        country: 'Singapore',
-        contactEmail: 'ops@jetbay.local',
-        paymentTerms: 'Net 7',
-        cancellationPolicy: '50% within 48h',
-        status: 'ACTIVE',
-      },
-    });
-  } else {
-    asiaOps = await prisma.operator.create({
-      data: {
-        name: 'JetBay Asia Ops',
-        legalName: 'JetBay Asia Operations Pte Ltd',
-        region: 'APAC',
-        country: 'Singapore',
-        contactEmail: 'ops@jetbay.local',
-        paymentTerms: 'Net 7',
-        cancellationPolicy: '50% within 48h',
-        status: 'ACTIVE',
-      },
-    });
-  }
-
-  for (const name of ['Pacific Charter Group', 'EuroJet Partners']) {
-    const region = name.includes('Euro') ? 'EMEA' : 'APAC';
-    const existing = await prisma.operator.findFirst({ where: { name } });
-    if (!existing) {
-      await prisma.operator.create({ data: { name, region, status: 'ACTIVE' } });
+    if (row) {
+      row = await prisma.aircraftModel.update({
+        where: { id: row.id },
+        data: {
+          categoryId: category.id,
+          rangeKm: m.rangeKm,
+          speedKmh: m.speedKmh,
+          sleepCapacity: m.sleepCapacity ?? 0,
+        },
+      });
+    } else {
+      row = await prisma.aircraftModel.create({
+        data: {
+          manufacturer: m.manufacturer,
+          model: m.model,
+          categoryId: category.id,
+          rangeKm: m.rangeKm,
+          speedKmh: m.speedKmh,
+          sleepCapacity: m.sleepCapacity ?? 0,
+        },
+      });
     }
+    modelByKey.set(key, row);
   }
 
-  // 3c. Seed Aircraft instances (ops platform + VN demo)
+  // 3b. Seed Operators
+  console.log('Seeding Operators...');
+  const operatorByName = new Map<string, { id: number }>();
+  for (const op of OPERATOR_SEEDS) {
+    let row = await prisma.operator.findFirst({ where: { name: op.name } });
+    if (row) {
+      row = await prisma.operator.update({
+        where: { id: row.id },
+        data: {
+          legalName: op.legalName,
+          region: op.region,
+          country: op.country,
+          contactEmail: op.contactEmail,
+          paymentTerms: op.paymentTerms,
+          cancellationPolicy: op.cancellationPolicy,
+          status: 'ACTIVE',
+        },
+      });
+    } else {
+      row = await prisma.operator.create({
+        data: {
+          name: op.name,
+          legalName: op.legalName,
+          region: op.region,
+          country: op.country,
+          contactEmail: op.contactEmail,
+          paymentTerms: op.paymentTerms,
+          cancellationPolicy: op.cancellationPolicy,
+          status: 'ACTIVE',
+        },
+      });
+    }
+    operatorByName.set(op.name, row);
+  }
+
+  const asiaOps = operatorByName.get('JetBay Asia Ops');
+  if (!asiaOps) throw new Error('JetBay Asia Ops missing after seed');
+
+  // 3c. Seed Aircraft instances
   console.log('Seeding Aircraft (ops)...');
-  await prisma.aircraft.upsert({
-    where: { registration: 'B-JBAY1' },
-    update: {
-      currentAirportId: can.id,
-      baseAirportId: can.id,
-      availabilityStatus: 'AVAILABLE',
-      hourlyRate: 8500,
-      hourlyRateCurrency: 'USD',
-      minimumBillableHours: 2,
-      locationUpdatedAt: new Date(),
-      operatorId: asiaOps.id,
-      aircraftModelId: modelG650.id,
-    },
-    create: {
-      registration: 'B-JBAY1',
-      aircraftModelId: modelG650.id,
-      operatorId: asiaOps.id,
-      baseAirportId: can.id,
-      currentAirportId: can.id,
-      availabilityStatus: 'AVAILABLE',
-      operationalStatus: 'ACTIVE',
-      availableFrom: new Date(),
-      hourlyRate: 8500,
-      hourlyRateCurrency: 'USD',
-      minimumBillableHours: 2,
-      locationUpdatedAt: new Date(),
-    },
-  });
-
-  const sgnAirport = await prisma.airport.findUnique({ where: { iata: 'SGN' } });
-  const hanAirport = await prisma.airport.findUnique({ where: { iata: 'HAN' } });
-  if (sgnAirport && modelCessna) {
+  for (const ac of AIRCRAFT_INSTANCE_SEEDS) {
+    const model = modelByKey.get(`${ac.manufacturer}|${ac.model}`);
+    const operator = operatorByName.get(ac.operatorName);
+    const base = await prisma.airport.findUnique({ where: { iata: ac.baseIata } });
+    const currentIata = ac.currentIata ?? ac.baseIata;
+    const current = await prisma.airport.findUnique({ where: { iata: currentIata } });
+    if (!model || !operator || !base || !current) {
+      console.warn(
+        `Skip aircraft ${ac.registration}: missing model/operator/airport (${ac.baseIata})`,
+      );
+      continue;
+    }
     await prisma.aircraft.upsert({
-      where: { registration: 'VN-JBA' },
+      where: { registration: ac.registration },
       update: {
-        operatorId: asiaOps.id,
-        aircraftModelId: modelCessna.id,
-        baseAirportId: sgnAirport.id,
-        currentAirportId: sgnAirport.id,
-        hourlyRate: 4500,
+        aircraftModelId: model.id,
+        operatorId: operator.id,
+        baseAirportId: base.id,
+        currentAirportId: current.id,
         availabilityStatus: 'AVAILABLE',
         operationalStatus: 'ACTIVE',
+        hourlyRate: ac.hourlyRate,
+        hourlyRateCurrency: 'USD',
+        minimumBillableHours: ac.minimumBillableHours ?? 1,
+        locationUpdatedAt: new Date(),
       },
       create: {
-        registration: 'VN-JBA',
-        aircraftModelId: modelCessna.id,
-        operatorId: asiaOps.id,
-        baseAirportId: sgnAirport.id,
-        currentAirportId: sgnAirport.id,
+        registration: ac.registration,
+        aircraftModelId: model.id,
+        operatorId: operator.id,
+        baseAirportId: base.id,
+        currentAirportId: current.id,
         availabilityStatus: 'AVAILABLE',
         operationalStatus: 'ACTIVE',
-        hourlyRate: 4500,
+        availableFrom: new Date(),
+        hourlyRate: ac.hourlyRate,
         hourlyRateCurrency: 'USD',
-        minimumBillableHours: 1,
-      },
-    });
-  }
-  if (hanAirport && modelLearjet) {
-    await prisma.aircraft.upsert({
-      where: { registration: 'VN-JBH' },
-      update: {
-        operatorId: asiaOps.id,
-        aircraftModelId: modelLearjet.id,
-        baseAirportId: hanAirport.id,
-        currentAirportId: hanAirport.id,
-        hourlyRate: 7500,
-        availabilityStatus: 'AVAILABLE',
-        operationalStatus: 'ACTIVE',
-      },
-      create: {
-        registration: 'VN-JBH',
-        aircraftModelId: modelLearjet.id,
-        operatorId: asiaOps.id,
-        baseAirportId: hanAirport.id,
-        currentAirportId: hanAirport.id,
-        availabilityStatus: 'AVAILABLE',
-        operationalStatus: 'ACTIVE',
-        hourlyRate: 7500,
-        hourlyRateCurrency: 'USD',
-        minimumBillableHours: 1,
+        minimumBillableHours: ac.minimumBillableHours ?? 1,
+        locationUpdatedAt: new Date(),
       },
     });
   }
@@ -491,34 +477,40 @@ async function main() {
 
   // 6. Seed Empty Leg Offers
   console.log('Seeding Empty Leg Offers...');
-  await prisma.emptyLegOffer.upsert({
-    where: { slug: 'paris-to-geneva-empty-leg' },
-    update: {},
-    create: {
-      slug: 'paris-to-geneva-empty-leg',
-      fromAirportId: lbg.id,
-      toAirportId: gva.id,
-      departAt: new Date('2026-12-05T09:00:00Z'),
-      aircraftModelId: modelCessna.id,
-      price: 4200,
-      discountPct: 60,
-      status: 'ACTIVE',
-    },
-  });
-  await prisma.emptyLegOffer.upsert({
-    where: { slug: 'nice-to-london-empty-leg' },
-    update: {},
-    create: {
-      slug: 'nice-to-london-empty-leg',
-      fromAirportId: nce.id,
-      toAirportId: ltn.id,
-      departAt: new Date('2026-12-07T15:00:00Z'),
-      aircraftModelId: modelLearjet.id,
-      price: 5800,
-      discountPct: 55,
-      status: 'ACTIVE',
-    },
-  });
+  const modelCessna = modelByKey.get('Cessna|Citation Latitude');
+  const modelLearjet = modelByKey.get('Bombardier|Learjet 60');
+  if (modelCessna) {
+    await prisma.emptyLegOffer.upsert({
+      where: { slug: 'paris-to-geneva-empty-leg' },
+      update: {},
+      create: {
+        slug: 'paris-to-geneva-empty-leg',
+        fromAirportId: lbg.id,
+        toAirportId: gva.id,
+        departAt: new Date('2026-12-05T09:00:00Z'),
+        aircraftModelId: modelCessna.id,
+        price: 4200,
+        discountPct: 60,
+        status: 'ACTIVE',
+      },
+    });
+  }
+  if (modelLearjet) {
+    await prisma.emptyLegOffer.upsert({
+      where: { slug: 'nice-to-london-empty-leg' },
+      update: {},
+      create: {
+        slug: 'nice-to-london-empty-leg',
+        fromAirportId: nce.id,
+        toAirportId: ltn.id,
+        departAt: new Date('2026-12-07T15:00:00Z'),
+        aircraftModelId: modelLearjet.id,
+        price: 5800,
+        discountPct: 55,
+        status: 'ACTIVE',
+      },
+    });
+  }
 
   // 7. Seed Travel Credit packages + demo ledger
   console.log('Seeding Travel Credits...');

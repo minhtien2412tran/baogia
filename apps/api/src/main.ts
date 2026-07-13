@@ -13,6 +13,7 @@ import {
 import { normalizeSwaggerLang } from './swagger/swagger-locales';
 import { SWAGGER_THEME_CSS } from './swagger/swagger-theme.css';
 import { buildSwaggerI18nJs } from './swagger/swagger-i18n.client';
+import { installSwaggerBasicAuth } from './swagger/swagger-basic-auth';
 
 function assertProductionSecrets() {
   const env = process.env.APP_ENV ?? process.env.NODE_ENV;
@@ -69,12 +70,26 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule, { rawBody: true });
 
+  // Nginx owns X-Frame-Options / X-Content-Type-Options / Referrer-Policy on prod
+  // (avoids duplicate header values e.g. SAMEORIGIN,DENY — see S4).
+  const nginxOwnsSecurityHeaders =
+    process.env.APP_ENV === 'production' ||
+    process.env.NGINX_SECURITY_HEADERS === '1';
   app.use(
     helmet({
       contentSecurityPolicy: false,
       crossOriginResourcePolicy: { policy: 'cross-origin' },
+      ...(nginxOwnsSecurityHeaders
+        ? {
+            xFrameOptions: false,
+            xContentTypeOptions: false,
+            referrerPolicy: false,
+          }
+        : {}),
     }),
   );
+
+  installSwaggerBasicAuth(app);
 
   const corsOrigins = (
     process.env.CORS_ORIGIN ??

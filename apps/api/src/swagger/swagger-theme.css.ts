@@ -26,6 +26,15 @@ body {
 
 .swagger-ui .topbar { display: none !important; }
 
+/* Ensure main UI is never collapsed by theme */
+#swagger-ui,
+.swagger-ui {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  min-height: 50vh;
+}
+
 /* Floating language + tip bar */
 .jb-docs-bar {
   position: sticky;

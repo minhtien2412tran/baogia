@@ -38,6 +38,7 @@ export type AircraftSearchOption = {
   tailNumber?: string;
   contractCode?: string;
   baseAirport?: string;
+  baseDistanceKm?: number;
   pricingBreakdown?: {
     segments: Array<{
       type: string;

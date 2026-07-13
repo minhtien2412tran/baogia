@@ -1,5 +1,6 @@
 function resolveApiUrl(): string {
-  const url = process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:4000';
+  // Prod admin must never fall back to loopback — browser cannot reach VPS localhost.
+  const url = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.minhtien.online';
   if (typeof window !== 'undefined' && url.includes('localhost')) {
     return url.replace('localhost', '127.0.0.1');
   }

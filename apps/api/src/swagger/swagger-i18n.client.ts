@@ -15,12 +15,25 @@ export function buildSwaggerI18nJs(): string {
   var LANGS = ${langsJson};
   var PACKS = ${packsJson};
   var STORAGE_KEY = 'jb_swagger_lang';
+  var COOKIE_KEY = 'jb_swagger_lang';
+  var applying = false;
+  var specLoadedFor = null;
 
   function normalize(raw) {
     var v = String(raw || '').toLowerCase();
     if (v.indexOf('vi') === 0) return 'vi';
     if (v.indexOf('zh') === 0) return 'zh-cn';
     return 'en';
+  }
+
+  function setCookie(lang) {
+    try {
+      document.cookie =
+        COOKIE_KEY +
+        '=' +
+        encodeURIComponent(lang) +
+        '; Path=/; Max-Age=31536000; SameSite=Lax';
+    } catch (e) {}
   }
 
   function currentLang() {
@@ -39,45 +52,63 @@ export function buildSwaggerI18nJs(): string {
   function setLang(lang) {
     lang = normalize(lang);
     try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) {}
+    setCookie(lang);
     var url = new URL(window.location.href);
     url.searchParams.set('lang', lang);
     window.location.href = url.toString();
   }
 
+  function setText(el, value) {
+    if (!el || el.getAttribute('data-jb-i18n') === value) return;
+    if ((el.textContent || '').trim() === value) {
+      el.setAttribute('data-jb-i18n', value);
+      return;
+    }
+    el.textContent = value;
+    el.setAttribute('data-jb-i18n', value);
+  }
+
   function applyUiText(lang) {
-    var pack = PACKS[lang] || PACKS.en;
+    if (applying) return;
+    applying = true;
+    try {
+      var pack = PACKS[lang] || PACKS.en;
 
-    document.querySelectorAll('.btn.authorize span, .btn.authorize').forEach(function (el) {
-      if (el.childNodes.length === 1 && el.childNodes[0].nodeType === 3) {
-        el.textContent = pack.authorize;
-      } else {
+      document.querySelectorAll('.btn.authorize').forEach(function (el) {
         var span = el.querySelector('span');
-        if (span) span.textContent = pack.authorize;
+        setText(span || el, pack.authorize);
+      });
+
+      document.querySelectorAll('.try-out__btn').forEach(function (el) {
+        var t = (el.textContent || '').trim().toLowerCase();
+        var isCancel =
+          el.classList.contains('cancel') ||
+          t.indexOf('cancel') >= 0 ||
+          t === pack.cancel.toLowerCase();
+        setText(el, isCancel ? pack.cancel : pack.tryItOut);
+      });
+      document.querySelectorAll('.btn.execute').forEach(function (el) {
+        setText(el, pack.execute);
+      });
+      document.querySelectorAll('.btn.clear').forEach(function (el) {
+        setText(el, pack.clear);
+      });
+      document.querySelectorAll('.btn-done').forEach(function (el) {
+        setText(el, pack.close);
+      });
+
+      var filter = document.querySelector('.operation-filter-input');
+      if (filter && filter.getAttribute('placeholder') !== pack.filterPlaceholder) {
+        filter.setAttribute('placeholder', pack.filterPlaceholder);
       }
-    });
 
-    document.querySelectorAll('.try-out__btn').forEach(function (el) {
-      var t = (el.textContent || '').trim().toLowerCase();
-      if (t.indexOf('cancel') >= 0 || t === pack.cancel.toLowerCase()) el.textContent = pack.cancel;
-      else el.textContent = pack.tryItOut;
-    });
-    document.querySelectorAll('.btn.execute').forEach(function (el) {
-      el.textContent = pack.execute;
-    });
-    document.querySelectorAll('.btn.clear').forEach(function (el) {
-      el.textContent = pack.clear;
-    });
-    document.querySelectorAll('.btn-done').forEach(function (el) {
-      el.textContent = pack.close;
-    });
-
-    var filter = document.querySelector('.operation-filter-input');
-    if (filter) filter.setAttribute('placeholder', pack.filterPlaceholder);
-
-    var tip = document.querySelector('.jb-docs-tip');
-    if (tip) tip.textContent = pack.tipMobile;
-    var lab = document.querySelector('.jb-lang label');
-    if (lab) lab.textContent = pack.langLabel;
+      var tip = document.querySelector('.jb-docs-tip');
+      if (tip) setText(tip, pack.tipMobile);
+      var lab = document.querySelector('.jb-lang label');
+      if (lab) setText(lab, pack.langLabel);
+    } finally {
+      applying = false;
+    }
   }
 
   function ensureBar(lang) {
@@ -87,7 +118,12 @@ export function buildSwaggerI18nJs(): string {
     bar.innerHTML =
       '<div class="jb-docs-brand"><strong>JETVINA API DOCS</strong><span class="jb-docs-tip"></span></div>' +
       '<div class="jb-lang"><label for="jb-swagger-lang"></label><select id="jb-swagger-lang" aria-label="Language"></select></div>';
-    document.body.insertBefore(bar, document.body.firstChild);
+    var host = document.getElementById('swagger-ui');
+    if (host && host.parentNode) {
+      host.parentNode.insertBefore(bar, host);
+    } else {
+      document.body.insertBefore(bar, document.body.firstChild);
+    }
     var sel = bar.querySelector('select');
     LANGS.forEach(function (l) {
       var opt = document.createElement('option');
@@ -101,8 +137,52 @@ export function buildSwaggerI18nJs(): string {
     });
   }
 
+  function openApiUrl(lang) {
+    return window.location.origin + '/openapi.json?lang=' + encodeURIComponent(lang);
+  }
+
+  function applyLocalizedSpec(lang) {
+    if (specLoadedFor === lang) return;
+    var tries = 0;
+    var timer = setInterval(function () {
+      tries += 1;
+      var ui = window.ui;
+      if (!ui || !ui.specActions) {
+        if (tries > 80) clearInterval(timer);
+        return;
+      }
+      clearInterval(timer);
+      fetch(openApiUrl(lang), { credentials: 'same-origin' })
+        .then(function (r) {
+          if (!r.ok) throw new Error('openapi ' + r.status);
+          return r.json();
+        })
+        .then(function (spec) {
+          specLoadedFor = lang;
+          if (ui.specActions.updateJsonSpec) {
+            ui.specActions.updateJsonSpec(spec);
+          } else if (ui.specActions.updateSpec) {
+            ui.specActions.updateSpec(JSON.stringify(spec));
+          }
+          if (spec && spec.info && spec.info.title) {
+            document.title = spec.info.title;
+          }
+          setTimeout(function () {
+            applyUiText(lang);
+          }, 100);
+        })
+        .catch(function () {
+          /* keep embedded EN spec */
+        });
+    }, 50);
+  }
+
   function boot() {
     var lang = currentLang();
+    try {
+      localStorage.setItem(STORAGE_KEY, lang);
+    } catch (e) {}
+    setCookie(lang);
     try {
       var url = new URL(window.location.href);
       if (!url.searchParams.get('lang')) {
@@ -113,11 +193,16 @@ export function buildSwaggerI18nJs(): string {
 
     ensureBar(lang);
     applyUiText(lang);
+    applyLocalizedSpec(lang);
 
-    var obs = new MutationObserver(function () {
+    var tries = 0;
+    var timer = setInterval(function () {
+      tries += 1;
       applyUiText(lang);
-    });
-    obs.observe(document.body, { childList: true, subtree: true });
+      if (document.querySelector('.swagger-ui .opblock-tag') || tries > 40) {
+        clearInterval(timer);
+      }
+    }, 250);
   }
 
   if (document.readyState === 'loading') {

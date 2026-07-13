@@ -1,4 +1,6 @@
 import { toDbLocale } from './registry';
+import { TOURISM_MESSAGE_OVERRIDES } from './tourism-locales';
+import { PRODUCT_UI_BY_LANG } from './product-ui-locales';
 
 /** UI shell messages — expand per product need; CMS body stays in API translations */
 
@@ -772,12 +774,33 @@ const zhTw: Catalog = {
   allFixedPriceRoutes: '全部固定價格航線',
 };
 
+function withEn(overrides: Record<string, string>): Catalog {
+  return { ...en, ...overrides } as Catalog;
+}
+
+function tourismCatalog(code: string): Catalog {
+  return withEn({
+    ...(TOURISM_MESSAGE_OVERRIDES[code] ?? {}),
+    ...(PRODUCT_UI_BY_LANG[code] ?? {}),
+  });
+}
+
 const CATALOG_BY_DB: Record<string, Catalog> = {
   en,
   vi,
   'zh-cn': zhCn,
   'zh-hk': zhHk,
   'zh-tw': zhTw,
+  ja: tourismCatalog('ja'),
+  ko: tourismCatalog('ko'),
+  th: tourismCatalog('th'),
+  id: tourismCatalog('id'),
+  fr: tourismCatalog('fr'),
+  de: tourismCatalog('de'),
+  es: tourismCatalog('es'),
+  it: tourismCatalog('it'),
+  ru: tourismCatalog('ru'),
+  ar: tourismCatalog('ar'),
 };
 
 export function t(webLocale: string, key: MessageKey, vars?: Record<string, string | number>): string {

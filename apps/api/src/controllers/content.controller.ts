@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import {
   ApiTags,
   ApiOperation,
@@ -137,6 +138,7 @@ export class ContentController {
   }
 
   @Post('newsletter/subscribe')
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @ApiOperation({ summary: 'Subscribe to newsletter' })
   @ApiResponse({ status: 200, description: 'Successfully subscribed.' })
   subscribeNewsletter(@Body() body: SubscribeNewsletterDto) {

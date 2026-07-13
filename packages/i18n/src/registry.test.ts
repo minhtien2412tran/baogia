@@ -23,8 +23,14 @@ describe('toDbLocale', () => {
   });
 
   it('defaults unknown to en', () => {
-    assert.equal(toDbLocale('fr'), 'en');
+    assert.equal(toDbLocale('xx'), 'en');
     assert.equal(toDbLocale(''), 'en');
+  });
+
+  it('maps tourism locales', () => {
+    assert.equal(toDbLocale('fr'), 'fr');
+    assert.equal(toDbLocale('ja-JP'), 'ja');
+    assert.equal(toDbLocale('ar-AE'), 'ar');
   });
 });
 
@@ -33,11 +39,13 @@ describe('isValidDbLocale', () => {
     assert.equal(isValidDbLocale('en'), true);
     assert.equal(isValidDbLocale('zh-cn'), true);
     assert.equal(isValidDbLocale('vi'), true);
+    assert.equal(isValidDbLocale('fr'), true);
+    assert.equal(isValidDbLocale('ja'), true);
   });
 
   it('rejects web aliases and unknown codes', () => {
     assert.equal(isValidDbLocale('en-us'), false);
-    assert.equal(isValidDbLocale('fr'), false);
+    assert.equal(isValidDbLocale('xx'), false);
     assert.equal(isValidDbLocale(''), false);
   });
 });

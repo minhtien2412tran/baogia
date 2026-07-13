@@ -48,10 +48,10 @@ With `APP_ENV=production`, API refuses to start if JWT/refresh/API_KEY/PAYMENT_S
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | `admin@jetbay.local` | `Admin123!` |
-| User | `demo@jetbay.local` | `Demo123!` |
+| Admin | `admin@jetbay.local` | **rotated 2026-07-13** — see VPS `/root/backups/jetbay-security-ops-*/demo-passwords.txt` |
+| User | `demo@jetbay.local` | **rotated 2026-07-13** — same backup file |
 
-These are **seed passwords**, not env secrets. Rotate user passwords separately before customer handover.
+Seed defaults `Admin123!` / `Demo123!` **no longer valid** on prod after rotation.
 
 ## Related docs
 

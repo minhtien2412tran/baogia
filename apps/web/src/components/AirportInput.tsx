@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../lib/api';
 import { t } from '../lib/i18n';
+import { AviationMotionIcon } from './ui/AviationMotionIcon';
 
 type Airport = { iata: string; label: string; city: string; country?: string; name?: string };
 
@@ -18,6 +19,7 @@ export function AirportInput({
   placeholder,
   locale = 'en-us',
   showNearMe = false,
+  variant = 'from',
 }: {
   id: string;
   label: string;
@@ -26,6 +28,7 @@ export function AirportInput({
   placeholder?: string;
   locale?: string;
   showNearMe?: boolean;
+  variant?: 'from' | 'to';
 }) {
   const [query, setQuery] = useState('');
   const [displayLabel, setDisplayLabel] = useState<string | null>(null);
@@ -199,46 +202,59 @@ export function AirportInput({
             onClick={useNearMe}
             disabled={geoBusy || loading}
           >
+            <AviationMotionIcon
+              name="compass"
+              size="xs"
+              motion={geoBusy ? 'spin-slow' : 'pulse'}
+            />
             {geoBusy ? t(locale, 'nearMeLocating') : t(locale, 'nearMe')}
           </button>
         )}
       </div>
-      <input
-        id={id}
-        value={inputValue}
-        onChange={(e) => {
-          const v = e.target.value;
-          setQuery(v);
-          setDisplayLabel(null);
-          onChange('');
-          runSearch(v);
-        }}
-        onFocus={() => {
-          if (displayLabel) {
-            setQuery(displayLabel);
+      <div className="jb-airport-input-wrap">
+        <AviationMotionIcon
+          name={variant === 'from' ? 'takeoff' : 'landing'}
+          size="md"
+          motion={variant === 'from' ? 'takeoff' : 'landing'}
+          className="jb-field-icon"
+        />
+        <input
+          id={id}
+          value={inputValue}
+          onChange={(e) => {
+            const v = e.target.value;
+            setQuery(v);
             setDisplayLabel(null);
-          }
-          if (suggestions.length > 0) setOpen(true);
-          else if (query.length >= 2) runSearch(query);
-        }}
-        onBlur={() => {
-          window.setTimeout(() => {
-            void tryResolveOnBlur(query);
-          }, 180);
-        }}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && open && suggestions.length > 0) {
-            e.preventDefault();
-            pick(suggestions[0]);
-          }
-        }}
-        placeholder={placeholder}
-        autoComplete="off"
-        required
-        aria-autocomplete="list"
-        aria-controls={`${id}-listbox`}
-        aria-expanded={open}
-      />
+            onChange('');
+            runSearch(v);
+          }}
+          onFocus={() => {
+            if (displayLabel) {
+              setQuery(displayLabel);
+              setDisplayLabel(null);
+            }
+            if (suggestions.length > 0) setOpen(true);
+            else if (query.length >= 2) runSearch(query);
+          }}
+          onBlur={() => {
+            window.setTimeout(() => {
+              void tryResolveOnBlur(query);
+            }, 180);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && open && suggestions.length > 0) {
+              e.preventDefault();
+              pick(suggestions[0]);
+            }
+          }}
+          placeholder={placeholder}
+          autoComplete="off"
+          required
+          aria-autocomplete="list"
+          aria-controls={`${id}-listbox`}
+          aria-expanded={open}
+        />
+      </div>
       {loading && <span className="jb-airport-hint">{t(locale, 'airportSearching')}</span>}
       {geoMsg && <p className="jb-airport-hint">{geoMsg}</p>}
       {!loading && noResults && query.length >= 2 && (

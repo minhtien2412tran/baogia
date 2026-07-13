@@ -147,6 +147,52 @@ export class AirportService {
     const take = Math.min(Math.max(limit, 1), 25);
     const top = scored.slice(0, take);
 
+    // Soft fallback: never leave the typeahead empty for real queries
+    if (top.length === 0 && raw.length >= 2) {
+      const hubs = await this.prisma.airport.findMany({
+        where: {
+          status: 'ACTIVE',
+          iata: {
+            in: [
+              'SGN',
+              'HAN',
+              'DAD',
+              'LBG',
+              'CDG',
+              'LTN',
+              'TEB',
+              'DXB',
+              'SIN',
+              'BKK',
+              'HND',
+              'HKG',
+            ],
+          },
+        },
+        take: Math.min(take, 8),
+        orderBy: { iata: 'asc' },
+      });
+      return {
+        autoSelect: undefined,
+        airports: hubs.map((a) => {
+          const display = formatAirportDisplay(
+            { iata: a.iata, city: a.city, country: a.country, name: a.name },
+            locale,
+          );
+          return {
+            id: a.id,
+            iata: a.iata,
+            icao: a.icao,
+            name: display.name,
+            city: display.city,
+            country: display.country,
+            label: display.label,
+          };
+        }),
+        suggested: true as const,
+      };
+    }
+
     let autoSelect: string | undefined;
     if (alias?.iata) {
       autoSelect = alias.iata.toUpperCase();
@@ -214,17 +260,24 @@ export class AirportService {
     // Prefer major private-jet hubs when searching by country
     const hubIata = new Set([
       'LBG',
+      'CDG',
+      'ORY',
       'NCE',
       'LTN',
       'TEB',
       'VNY',
       'OPF',
+      'SFO',
       'SGN',
       'HAN',
       'HUI',
       'DAD',
       'DXB',
       'SIN',
+      'BKK',
+      'MLE',
+      'HND',
+      'KIX',
     ]);
     if (alias && hubIata.has(a.iata)) score += 15;
 
