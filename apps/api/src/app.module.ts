@@ -10,6 +10,9 @@ import { IntegrationsModule } from './modules/integrations/integrations.module';
 import { I18nModule } from './modules/i18n/i18n.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { QuotesModule } from './modules/quotes/quotes.module';
+import { PricingModule } from './pricing/pricing.module';
+import { PermissionsModule } from './permissions/permissions.module';
+import { ContractsModule } from './contracts/contracts.module';
 
 // Remaining domains (phase 2–5) — still registered on AppModule
 import { FixedPriceController } from './controllers/fixed-price.controller';
@@ -54,6 +57,9 @@ import { AccountService } from './services/account.service';
     IntegrationsModule,
     AuthModule,
     QuotesModule,
+    PricingModule,
+    PermissionsModule,
+    ContractsModule,
     ThrottlerModule.forRoot([
       { name: 'default', ttl: 60_000, limit: 120 },
       { name: 'auth', ttl: 60_000, limit: 20 },

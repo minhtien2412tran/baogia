@@ -257,4 +257,64 @@ export const adminApi = {
     adminRequest<unknown>(`/admin/aircraft/models/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
   deleteAircraftModel: (id: number) =>
     adminRequest<unknown>(`/admin/aircraft/models/${id}`, { method: 'DELETE' }),
+  getAircraftFleet: () => adminRequest<{ aircraft: unknown[] }>('/admin/aircraft/fleet'),
+  getAircraftFleetItem: (id: number) => adminRequest<unknown>(`/admin/aircraft/fleet/${id}`),
+  updateAircraftLocation: (id: number, body: { airportId: number; reason?: string }) =>
+    adminRequest<unknown>(`/admin/aircraft/fleet/${id}/location`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  getContracts: (status?: string) =>
+    adminRequest<{ contracts: unknown[] }>(
+      `/admin/contracts${status ? `?status=${encodeURIComponent(status)}` : ''}`,
+    ),
+  getContract: (id: number) => adminRequest<unknown>(`/admin/contracts/${id}`),
+  createContract: (body: unknown) =>
+    adminRequest<unknown>('/admin/contracts', { method: 'POST', body: JSON.stringify(body) }),
+  submitContract: (id: number) =>
+    adminRequest<unknown>(`/admin/contracts/${id}/submit`, { method: 'POST', body: '{}' }),
+  approveContract: (id: number, note?: string) =>
+    adminRequest<unknown>(`/admin/contracts/${id}/approve`, {
+      method: 'POST',
+      body: JSON.stringify({ note }),
+    }),
+  rejectContract: (id: number, reason?: string) =>
+    adminRequest<unknown>(`/admin/contracts/${id}/reject`, {
+      method: 'POST',
+      body: JSON.stringify({ reason }),
+    }),
+  sendContractDocuSign: (id: number, signers: Array<{ email: string; name: string; role: string }>) =>
+    adminRequest<unknown>(`/admin/contracts/${id}/send-docusign`, {
+      method: 'POST',
+      body: JSON.stringify({ signers }),
+    }),
+  getPermissionCatalog: () =>
+    adminRequest<{ permissions: string[] }>('/admin/permissions/catalog'),
+  getMyPermissions: () =>
+    adminRequest<{ permissions: string[]; role: string }>('/admin/permissions/me'),
+  getUserPermissionDetail: (userId: number) =>
+    adminRequest<{ scopes: unknown[]; overrides: unknown[] }>(`/admin/permissions/users/${userId}`),
+  setUserPermissionOverrides: (
+    userId: number,
+    overrides: Array<{ permission: string; effect: string }>,
+  ) =>
+    adminRequest<unknown>(`/admin/permissions/users/${userId}/overrides`, {
+      method: 'PUT',
+      body: JSON.stringify({ overrides }),
+    }),
+  setUserAirportScopes: (
+    userId: number,
+    scopes: Array<{
+      scopeType: string;
+      continentCode?: string;
+      countryCode?: string;
+      airportId?: number;
+    }>,
+  ) =>
+    adminRequest<unknown>(`/admin/permissions/users/${userId}/airport-scopes`, {
+      method: 'PUT',
+      body: JSON.stringify({ scopes }),
+    }),
+  getBookingBreakdown: (id: number) =>
+    adminRequest<unknown>(`/pricing/bookings/${id}/breakdown`),
 };

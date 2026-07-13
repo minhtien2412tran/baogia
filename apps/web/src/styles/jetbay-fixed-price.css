@@ -401,8 +401,22 @@
 
 .jb-light-band .jb-date-trigger,
 .jb-light-section .jb-date-trigger {
-  background: rgba(154, 123, 60, 0.15);
-  color: #9a7b3c;
+  background: rgba(122, 94, 40, 0.18);
+  color: #7a5e28;
+}
+
+/* Quote widget date fields (dark card) */
+.jb-quote-card .jb-field--date .jb-field-label {
+  display: block;
+  font-size: 12px;
+  color: var(--jb-text-muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.jb-quote-card .jb-date-input {
+  min-height: 46px;
 }
 
 @media (max-width: 960px) {

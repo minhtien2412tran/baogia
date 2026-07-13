@@ -125,12 +125,21 @@ export class AirportService {
     return score;
   }
 
-  async list(page = 1, limit = 50) {
+  async list(
+    page = 1,
+    limit = 50,
+    filters?: { continentCode?: string; countryCode?: string; status?: string },
+  ) {
     const take = Math.min(limit, 200);
     const skip = (page - 1) * take;
+    const where: Prisma.AirportWhereInput = {};
+    if (filters?.continentCode) where.continentCode = filters.continentCode.toUpperCase();
+    if (filters?.countryCode) where.countryCode = filters.countryCode.toUpperCase();
+    if (filters?.status) where.status = filters.status;
+
     const [total, airports] = await Promise.all([
-      this.prisma.airport.count(),
-      this.prisma.airport.findMany({ orderBy: { iata: 'asc' }, skip, take }),
+      this.prisma.airport.count({ where }),
+      this.prisma.airport.findMany({ where, orderBy: { iata: 'asc' }, skip, take }),
     ]);
     return {
       data: airports.map((a) => ({
@@ -140,10 +149,60 @@ export class AirportService {
         name: a.name,
         city: a.city,
         country: a.country,
+        countryCode: a.countryCode,
+        continentCode: a.continentCode,
+        continentName: a.continentName,
         timezone: a.timezone,
+        latitude: a.latitude != null ? Number(a.latitude) : null,
+        longitude: a.longitude != null ? Number(a.longitude) : null,
+        canParkAircraft: a.canParkAircraft,
+        landingFee: a.landingFee != null ? Number(a.landingFee) : null,
+        parkingFee: a.parkingFee != null ? Number(a.parkingFee) : null,
+        overnightFee: a.overnightFee != null ? Number(a.overnightFee) : null,
+        handlingFee: a.handlingFee != null ? Number(a.handlingFee) : null,
+        feeCurrency: a.feeCurrency,
         status: a.status,
       })),
       pagination: { page, limit: take, total, totalPages: Math.ceil(total / take) },
+    };
+  }
+
+  async listContinents() {
+    const rows = await this.prisma.airport.findMany({
+      where: { continentCode: { not: null }, status: 'ACTIVE' },
+      distinct: ['continentCode'],
+      select: { continentCode: true, continentName: true },
+      orderBy: { continentCode: 'asc' },
+    });
+    return {
+      continents: rows
+        .filter((r) => r.continentCode)
+        .map((r) => ({
+          code: r.continentCode as string,
+          name: r.continentName ?? r.continentCode,
+        })),
+    };
+  }
+
+  async listCountries(continentCode?: string) {
+    const rows = await this.prisma.airport.findMany({
+      where: {
+        status: 'ACTIVE',
+        countryCode: { not: null },
+        ...(continentCode ? { continentCode: continentCode.toUpperCase() } : {}),
+      },
+      distinct: ['countryCode'],
+      select: { countryCode: true, countryName: true, country: true, continentCode: true },
+      orderBy: { country: 'asc' },
+    });
+    return {
+      countries: rows
+        .filter((r) => r.countryCode)
+        .map((r) => ({
+          code: r.countryCode as string,
+          name: r.countryName ?? r.country,
+          continentCode: r.continentCode,
+        })),
     };
   }
 

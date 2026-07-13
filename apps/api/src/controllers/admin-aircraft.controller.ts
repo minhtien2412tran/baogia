@@ -95,4 +95,52 @@ export class AdminAircraftController {
   deleteModel(@Param('id', ParseIntPipe) id: number) {
     return this.aircraft.deleteModel(id);
   }
+
+  @Get('fleet')
+  @ApiOperation({ summary: 'List aircraft instances (tail numbers)' })
+  @ApiQuery({ name: 'availabilityStatus', required: false })
+  @ApiQuery({ name: 'currentAirportId', required: false })
+  listFleet(
+    @Query('availabilityStatus') availabilityStatus?: string,
+    @Query('currentAirportId') currentAirportId?: string,
+  ) {
+    return this.aircraft.listFleet({
+      availabilityStatus,
+      currentAirportId: currentAirportId ? Number(currentAirportId) : undefined,
+    });
+  }
+
+  @Get('fleet/:id')
+  @ApiOperation({ summary: 'Aircraft instance detail + location history' })
+  getFleet(@Param('id', ParseIntPipe) id: number) {
+    return this.aircraft.getFleetItem(id);
+  }
+
+  @Post('fleet')
+  @ApiOperation({ summary: 'Create aircraft instance' })
+  createFleet(
+    @Body()
+    body: {
+      registration: string;
+      aircraftModelId: number;
+      operatorId: number;
+      baseAirportId?: number;
+      currentAirportId?: number;
+      hourlyRate?: number;
+      hourlyRateCurrency?: string;
+      minimumBillableHours?: number;
+      availabilityStatus?: string;
+    },
+  ) {
+    return this.aircraft.createFleet(body);
+  }
+
+  @Post('fleet/:id/location')
+  @ApiOperation({ summary: 'Update aircraft current airport + history' })
+  updateLocation(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: { airportId: number; reason?: string },
+  ) {
+    return this.aircraft.updateLocation(id, body);
+  }
 }

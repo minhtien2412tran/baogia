@@ -79,6 +79,7 @@ async function main() {
   // 2. Seed Airports (global private-aviation hubs)
   console.log('Seeding Airports...');
   for (const a of GLOBAL_AIRPORT_SEEDS) {
+    const { landingFee, parkingFee, overnightFee, handlingFee, latitude, longitude, ...rest } = a;
     await prisma.airport.upsert({
       where: { iata: a.iata },
       update: {
@@ -86,14 +87,38 @@ async function main() {
         name: a.name,
         city: a.city,
         country: a.country,
+        countryCode: a.countryCode,
+        countryName: a.countryName ?? a.country,
+        continentCode: a.continentCode,
+        continentName: a.continentName,
         timezone: a.timezone,
         status: 'ACTIVE',
+        ...(latitude != null ? { latitude } : {}),
+        ...(longitude != null ? { longitude } : {}),
+        ...(landingFee != null ? { landingFee, feeUpdatedAt: new Date() } : {}),
+        ...(parkingFee != null ? { parkingFee } : {}),
+        ...(overnightFee != null ? { overnightFee } : {}),
+        ...(handlingFee != null ? { handlingFee } : {}),
+        feeCurrency: a.feeCurrency ?? 'USD',
       },
-      create: { ...a, status: 'ACTIVE' },
+      create: {
+        ...rest,
+        countryName: a.countryName ?? a.country,
+        status: 'ACTIVE',
+        latitude,
+        longitude,
+        landingFee,
+        parkingFee,
+        overnightFee,
+        handlingFee,
+        feeCurrency: a.feeCurrency ?? 'USD',
+        feeUpdatedAt: landingFee != null ? new Date() : undefined,
+      },
     });
   }
   const sgn = await prisma.airport.findUniqueOrThrow({ where: { iata: 'SGN' } });
   const han = await prisma.airport.findUniqueOrThrow({ where: { iata: 'HAN' } });
+  const can = await prisma.airport.findUniqueOrThrow({ where: { iata: 'CAN' } });
   const ltn = await prisma.airport.findUniqueOrThrow({ where: { iata: 'LTN' } });
   const lbg = await prisma.airport.findUniqueOrThrow({ where: { iata: 'LBG' } });
   const nce = await prisma.airport.findUniqueOrThrow({ where: { iata: 'NCE' } });
@@ -141,16 +166,153 @@ async function main() {
 
   // 3b. Seed Operators (for QuoteOffer admin workflow)
   console.log('Seeding Operators...');
-  const operatorCount = await prisma.operator.count();
-  if (operatorCount === 0) {
-    await prisma.operator.createMany({
-      data: [
-        { name: 'JetBay Asia Ops', region: 'APAC', status: 'ACTIVE' },
-        { name: 'Pacific Charter Group', region: 'APAC', status: 'ACTIVE' },
-        { name: 'EuroJet Partners', region: 'EMEA', status: 'ACTIVE' },
-      ],
+  let asiaOps = await prisma.operator.findFirst({ where: { name: 'JetBay Asia Ops' } });
+  if (asiaOps) {
+    asiaOps = await prisma.operator.update({
+      where: { id: asiaOps.id },
+      data: {
+        legalName: 'JetBay Asia Operations Pte Ltd',
+        region: 'APAC',
+        country: 'Singapore',
+        contactEmail: 'ops@jetbay.local',
+        paymentTerms: 'Net 7',
+        cancellationPolicy: '50% within 48h',
+        status: 'ACTIVE',
+      },
+    });
+  } else {
+    asiaOps = await prisma.operator.create({
+      data: {
+        name: 'JetBay Asia Ops',
+        legalName: 'JetBay Asia Operations Pte Ltd',
+        region: 'APAC',
+        country: 'Singapore',
+        contactEmail: 'ops@jetbay.local',
+        paymentTerms: 'Net 7',
+        cancellationPolicy: '50% within 48h',
+        status: 'ACTIVE',
+      },
     });
   }
+
+  for (const name of ['Pacific Charter Group', 'EuroJet Partners']) {
+    const region = name.includes('Euro') ? 'EMEA' : 'APAC';
+    const existing = await prisma.operator.findFirst({ where: { name } });
+    if (!existing) {
+      await prisma.operator.create({ data: { name, region, status: 'ACTIVE' } });
+    }
+  }
+
+  // 3c. Seed Aircraft instance parked at CAN (ops platform)
+  console.log('Seeding Aircraft (ops)...');
+  await prisma.aircraft.upsert({
+    where: { registration: 'B-JBAY1' },
+    update: {
+      currentAirportId: can.id,
+      baseAirportId: can.id,
+      availabilityStatus: 'AVAILABLE',
+      hourlyRate: 8500,
+      hourlyRateCurrency: 'USD',
+      minimumBillableHours: 2,
+      locationUpdatedAt: new Date(),
+      operatorId: asiaOps.id,
+      aircraftModelId: modelG650.id,
+    },
+    create: {
+      registration: 'B-JBAY1',
+      aircraftModelId: modelG650.id,
+      operatorId: asiaOps.id,
+      baseAirportId: can.id,
+      currentAirportId: can.id,
+      availabilityStatus: 'AVAILABLE',
+      operationalStatus: 'ACTIVE',
+      availableFrom: new Date(),
+      hourlyRate: 8500,
+      hourlyRateCurrency: 'USD',
+      minimumBillableHours: 2,
+      locationUpdatedAt: new Date(),
+    },
+  });
+
+  // 3d. Contract template mock
+  const existingTemplate = await prisma.contractTemplate.findFirst({
+    where: { name: 'Standard Operator Charter Agreement' },
+  });
+  if (!existingTemplate) {
+    await prisma.contractTemplate.create({
+      data: {
+        name: 'Standard Operator Charter Agreement',
+        operatorId: asiaOps.id,
+        language: 'en',
+        version: 1,
+        placeholders: {
+          fields: ['bookingCode', 'operator', 'aircraft', 'registration', 'route', 'amount', 'currency'],
+        },
+        status: 'ACTIVE',
+      },
+    });
+  }
+
+  // 3e. Role permissions
+  console.log('Seeding role permissions...');
+  const salesPerms = [
+    'booking.view', 'booking.create', 'booking.update', 'booking.cancel', 'quote.view', 'quote.create',
+    'pricing.estimate', 'pricing.view_cost', 'aircraft.view', 'aircraft.view_location',
+    'airport.view', 'contract.view', 'contract.create', 'contract.submit_approval',
+  ];
+  for (const permission of salesPerms) {
+    await prisma.rolePermission.upsert({
+      where: { role_permission: { role: 'SALES', permission } },
+      update: {},
+      create: { role: 'SALES', permission },
+    });
+  }
+  const approverPerms = [
+    'contract.view', 'contract.approve', 'contract.reject', 'contract.request_changes',
+    'contract.send_docusign', 'booking.view', 'quote.view',
+  ];
+  for (const permission of approverPerms) {
+    await prisma.rolePermission.upsert({
+      where: { role_permission: { role: 'CONTRACT_APPROVER', permission } },
+      update: {},
+      create: { role: 'CONTRACT_APPROVER', permission },
+    });
+  }
+
+  const salesVn = await prisma.user.upsert({
+    where: { email: 'sales.vn@jetbay.local' },
+    update: { role: 'SALES', passwordHash: hashPassword('Sales123!') },
+    create: {
+      email: 'sales.vn@jetbay.local',
+      passwordHash: hashPassword('Sales123!'),
+      firstName: 'Sales',
+      lastName: 'Vietnam',
+      role: 'SALES',
+    },
+  });
+  await prisma.userAirportScope.deleteMany({ where: { userId: salesVn.id } });
+  await prisma.userAirportScope.create({
+    data: { userId: salesVn.id, scopeType: 'COUNTRY', countryCode: 'VN' },
+  });
+
+  const salesNoCancel = await prisma.user.upsert({
+    where: { email: 'sales.nocancel@jetbay.local' },
+    update: { role: 'SALES', passwordHash: hashPassword('Sales123!') },
+    create: {
+      email: 'sales.nocancel@jetbay.local',
+      passwordHash: hashPassword('Sales123!'),
+      firstName: 'Sales',
+      lastName: 'NoCancel',
+      role: 'SALES',
+    },
+  });
+  await prisma.userPermissionOverride.upsert({
+    where: { userId_permission: { userId: salesNoCancel.id, permission: 'booking.cancel' } },
+    update: { effect: 'DENY' },
+    create: { userId: salesNoCancel.id, permission: 'booking.cancel', effect: 'DENY' },
+  });
+  void han;
+  void sgn;
 
   // 4. Seed Jet Card Plans
   console.log('Seeding Jet Card Plans...');

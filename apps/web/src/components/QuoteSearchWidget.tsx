@@ -7,6 +7,7 @@ import { t } from '../lib/i18n';
 import { JB, localAsset } from '../config/jetbay-cdn';
 import { AircraftRowSkeleton } from './ui/Skeleton';
 import { AirportInput } from './AirportInput';
+import { DateField } from './ui/DateField';
 import { FlightScrollRail } from './ui/FlightScrollRail';
 
 type TripType = 'ONE_WAY' | 'ROUND_TRIP' | 'MULTI_CITY';
@@ -240,19 +241,13 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
                 placeholder={t(locale, 'destinationPlaceholder')}
                 locale={locale}
               />
-              <div className="jb-field jb-field-icon-wrap">
-                <label htmlFor={`dep-${idx}`}>{t(locale, 'departure')}</label>
-                <div className="jb-input-with-icon">
-                  <CdnIcon src={JB.icons.calendar} alt="" />
-                  <input
-                    id={`dep-${idx}`}
-                    type="date"
-                    value={leg.departure}
-                    onChange={(e) => updateLeg(idx, { departure: e.target.value })}
-                    required
-                  />
-                </div>
-              </div>
+              <DateField
+                id={`dep-${idx}`}
+                label={t(locale, 'departure')}
+                value={leg.departure}
+                onChange={(v) => updateLeg(idx, { departure: v })}
+                required
+              />
               {idx === 0 && (
                 <div className="jb-field">
                   <label>{t(locale, 'passengers')}</label>
@@ -272,19 +267,15 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
         ))}
 
         {tripType === 'ROUND_TRIP' && (
-          <div className="jb-field jb-field-icon-wrap" style={{ maxWidth: 260, marginTop: 12 }}>
-            <label htmlFor="return">{t(locale, 'returnDate')}</label>
-            <div className="jb-input-with-icon">
-              <CdnIcon src={JB.icons.calendar} alt="" />
-              <input
-                id="return"
-                type="date"
-                value={returnDate}
-                min={legs[0]?.departure}
-                onChange={(e) => setReturnDate(e.target.value)}
-                required
-              />
-            </div>
+          <div style={{ maxWidth: 260, marginTop: 12 }}>
+            <DateField
+              id="return"
+              label={t(locale, 'returnDate')}
+              value={returnDate}
+              onChange={setReturnDate}
+              min={legs[0]?.departure}
+              required
+            />
           </div>
         )}
 

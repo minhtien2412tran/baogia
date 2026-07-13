@@ -12,6 +12,8 @@ const nav = [
   { href: '/dashboard/jet-card', label: 'Jet Card' },
   { href: '/dashboard/travel-credits', label: 'Travel Credits' },
   { href: '/dashboard/aircraft', label: 'Aircraft' },
+  { href: '/dashboard/contracts', label: 'Contracts' },
+  { href: '/dashboard/permissions', label: 'Permissions' },
   { href: '/dashboard/partners', label: 'Partners' },
   { href: '/dashboard/content', label: 'Articles' },
   { href: '/dashboard/content/pages', label: 'CMS Pages' },

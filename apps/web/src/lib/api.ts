@@ -109,7 +109,40 @@ export const api = {
   getFixedPriceRoutes: (region?: string) =>
     request<{ routes: Array<Record<string, unknown>> }>(`/fixed-price/routes${region ? `?region=${region}` : ''}`),
   getFixedPriceRoute: (slug: string) => request<Record<string, unknown>>(`/fixed-price/routes/${slug}`),
-  getEmptyLegs: () => request<{ emptyLegs: Array<Record<string, unknown>> }>('/empty-legs'),
+  getEmptyLegs: (params?: {
+    continentCode?: string;
+    countryCode?: string;
+    fromIata?: string;
+    toIata?: string;
+  }) => {
+    const q = new URLSearchParams();
+    if (params?.continentCode) q.set('continentCode', params.continentCode);
+    if (params?.countryCode) q.set('countryCode', params.countryCode);
+    if (params?.fromIata) q.set('fromIata', params.fromIata);
+    if (params?.toIata) q.set('toIata', params.toIata);
+    const qs = q.toString();
+    return request<{ emptyLegs: Array<Record<string, unknown>> }>(
+      `/empty-legs${qs ? `?${qs}` : ''}`,
+    );
+  },
+  getAirportContinents: () =>
+    request<{ continents: Array<{ code: string; name: string }> }>('/airports/continents'),
+  getAirportCountries: (continentCode?: string) =>
+    request<{ countries: Array<{ code: string; name: string }> }>(
+      `/airports/countries${continentCode ? `?continentCode=${encodeURIComponent(continentCode)}` : ''}`,
+    ),
+  estimatePricing: (body: {
+    aircraftId: number;
+    fromAirportId: number;
+    toAirportId: number;
+    passengerCount?: number;
+    persist?: boolean;
+  }) =>
+    request<{
+      estimate: Record<string, unknown>;
+      label: string;
+      estimateId?: number;
+    }>('/pricing/estimate', { method: 'POST', body: JSON.stringify(body) }),
   getEmptyLeg: (slug: string) => request<Record<string, unknown>>(`/empty-legs/${slug}`),
   getNews: (locale?: string) =>
     request<{ news: Array<Record<string, unknown>> }>(

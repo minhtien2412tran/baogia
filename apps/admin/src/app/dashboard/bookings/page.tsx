@@ -27,6 +27,11 @@ export default function BookingsPage() {
               id: String(id),
               email: String(b.email ?? b.userEmail ?? '—'),
               type: String(b.bookingType ?? '—'),
+              route: String(b.customerRouteSummary ?? '—'),
+              estimate:
+                b.estimatedPriceTotal != null
+                  ? `Giá ước tính ${b.estimatedPriceCurrency ?? 'USD'} ${Number(b.estimatedPriceTotal).toLocaleString()}`
+                  : '—',
               status,
               created: b.createdAt ? String(b.createdAt).slice(0, 10) : '—',
               actions: (

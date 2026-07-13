@@ -1,14 +1,13 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { animateCounter } from '../../lib/motion-utils';
 
 /**
  * Site-wide motion: scroll reveal, parallax, counters, tilt fallback, booking flow.
+ * Mutates only via imperative DOM APIs created outside React (no hydration conflicts).
  */
 export function JetBayMotion() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
   useEffect(() => {
     const root = document.querySelector('.jb-page');
     if (!root) return;
@@ -74,19 +73,22 @@ export function JetBayMotion() {
     }
 
     const header = root.querySelector<HTMLElement>('.jb-header');
+    const heroBg = root.querySelector<HTMLElement>('.jb-hero-bg');
     const onScroll = () => {
       const y = window.scrollY;
       header?.classList.toggle('jb-header--scrolled', y > 24);
-      if (!reduce) {
-        const heroBg = root.querySelector<HTMLElement>('.jb-hero-bg');
-        if (heroBg && y < 800) {
-          heroBg.style.transform = `scale(1.05) translateY(${y * 0.18}px)`;
-        }
+      if (!reduce && heroBg && y > 0 && y < 800) {
+        heroBg.style.transform = `scale(1.05) translateY(${y * 0.18}px)`;
+      } else if (heroBg && y === 0) {
+        heroBg.style.transform = '';
       }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    cleanups.push(() => window.removeEventListener('scroll', onScroll));
+    if (window.scrollY > 0) onScroll();
+    cleanups.push(() => {
+      window.removeEventListener('scroll', onScroll);
+      if (heroBg) heroBg.style.transform = '';
+    });
 
     // ── Stat counters (10K+, 190+, …) ──
     const counters = root.querySelectorAll<HTMLElement>('[data-jb-count-to]');
@@ -188,17 +190,24 @@ export function JetBayMotion() {
       cleanups.push(() => stepIo.disconnect());
     }
 
-    // ── Hero particles ──
-    const canvas = canvasRef.current;
+    // ── Hero particles (imperative canvas — not React-managed) ──
     let raf = 0;
+    let particleCanvas: HTMLCanvasElement | null = null;
 
-    if (canvas && !reduce) {
+    if (!reduce) {
       const hero = root.querySelector('.jb-hero');
       if (hero) {
-        canvas.className = 'jb-hero-particles';
-        hero.insertBefore(canvas, hero.firstChild?.nextSibling ?? null);
+        particleCanvas = document.createElement('canvas');
+        particleCanvas.className = 'jb-hero-particles';
+        particleCanvas.setAttribute('aria-hidden', 'true');
+        const insertAfter = hero.querySelector('.jb-hero-bg');
+        if (insertAfter?.nextSibling) {
+          hero.insertBefore(particleCanvas, insertAfter.nextSibling);
+        } else {
+          hero.appendChild(particleCanvas);
+        }
 
-        const ctx = canvas.getContext('2d');
+        const ctx = particleCanvas.getContext('2d');
         if (ctx) {
           const dpr = Math.min(window.devicePixelRatio || 1, 2);
           const dots: { x: number; y: number; r: number; vx: number; a: number }[] = [];
@@ -206,13 +215,14 @@ export function JetBayMotion() {
           let h = 0;
 
           const resize = () => {
+            if (!particleCanvas) return;
             const rect = hero.getBoundingClientRect();
             w = rect.width;
             h = rect.height;
-            canvas.width = Math.floor(w * dpr);
-            canvas.height = Math.floor(h * dpr);
-            canvas.style.width = `${w}px`;
-            canvas.style.height = `${h}px`;
+            particleCanvas.width = Math.floor(w * dpr);
+            particleCanvas.height = Math.floor(h * dpr);
+            particleCanvas.style.width = `${w}px`;
+            particleCanvas.style.height = `${h}px`;
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
           };
           resize();
@@ -249,11 +259,11 @@ export function JetBayMotion() {
     cleanups.push(() => {
       revealIo?.disconnect();
       cancelAnimationFrame(raf);
-      canvas?.remove();
+      particleCanvas?.remove();
     });
 
     return () => cleanups.forEach((fn) => fn());
   }, []);
 
-  return <canvas ref={canvasRef} aria-hidden style={{ display: 'none' }} />;
+  return null;
 }

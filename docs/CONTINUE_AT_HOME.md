@@ -67,6 +67,7 @@
 - [x] **Airport search locale** (2026-07-11) — `?locale=` trên `/airports/search` · nhãn vi/zh · alias hcm/hue/HUI · autoSelect khi gõ tắt
 - [x] **Deploy prod** (2026-07-11) — API + web + seed HUI · smoke hcm/hue locale vi/en · FP/corporate/home **200**
 - [x] **Media public URLs** (2026-07-11) — `@Public()` GET `/media/*` · fix NestJS wildcard truncate · admin URL textarea · sync-admin + i18n vendor
+- [x] **Local polish bugs** (2026-07-13) — fix hydration (imperative hero canvas) · scroll-behavior attr · DateField in quote widget · pax/date contrast · remove nested pnpm-workspace · turbopack.root
 
 - [x] `feat/api-security-hardening` (+ admin screens / partner-TC) → **`main`** (`9893789`)  
 - [x] VPS API `jetbay-be` + Admin `jetbay-admin` redeployed  

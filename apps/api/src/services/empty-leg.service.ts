@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
 import { CreateEmptyLegDto, EmptyLegRequestDto, EmptyLegAlertSubscribeDto, UpdateEmptyLegDto } from '../dto';
@@ -50,13 +51,59 @@ export class EmptyLegService {
     };
   }
 
-  async getAll(status = 'ACTIVE') {
+  async getAll(
+    status = 'ACTIVE',
+    filters?: {
+      continentCode?: string;
+      countryCode?: string;
+      fromIata?: string;
+      toIata?: string;
+      fromDate?: string;
+      toDate?: string;
+    },
+  ) {
+    const where: Prisma.EmptyLegOfferWhereInput =
+      status === 'all' ? {} : { status };
+
+    if (filters?.fromIata) {
+      where.fromAirport = { iata: filters.fromIata.toUpperCase() };
+    }
+    if (filters?.toIata) {
+      where.toAirport = { iata: filters.toIata.toUpperCase() };
+    }
+    if (filters?.continentCode || filters?.countryCode) {
+      const airportFilter: Prisma.AirportWhereInput = {};
+      if (filters.continentCode) {
+        airportFilter.continentCode = filters.continentCode.toUpperCase();
+      }
+      if (filters.countryCode) {
+        airportFilter.countryCode = filters.countryCode.toUpperCase();
+      }
+      where.OR = [{ fromAirport: airportFilter }, { toAirport: airportFilter }];
+    }
+    if (filters?.fromDate || filters?.toDate) {
+      where.departAt = {};
+      if (filters.fromDate) where.departAt.gte = new Date(filters.fromDate);
+      if (filters.toDate) where.departAt.lte = new Date(filters.toDate);
+    }
+
     const offers = await this.prisma.emptyLegOffer.findMany({
-      where: status === 'all' ? {} : { status },
+      where,
       include: emptyLegInclude,
       orderBy: { departAt: 'asc' },
     });
-    return { emptyLegs: offers.map((o) => this.formatOffer(o)) };
+    return {
+      emptyLegs: offers.map((o) => ({
+        ...this.formatOffer(o),
+        estimatedPriceLabel: 'Giá ước tính',
+        priceDisclaimer:
+          'Giá ước tính — có thể thay đổi theo positioning và phí sân bay thực tế.',
+        fromContinent: o.fromAirport.continentCode,
+        toContinent: o.toAirport.continentCode,
+        fromCountryCode: o.fromAirport.countryCode,
+        toCountryCode: o.toAirport.countryCode,
+      })),
+    };
   }
 
   async getBySlug(slug: string) {

@@ -317,15 +317,21 @@
 }
 
 .jb-pax-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  border: 1px solid var(--jb-border);
-  background: var(--jb-bg-card);
-  color: var(--jb-text);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(201, 164, 92, 0.4);
+  background: rgba(201, 164, 92, 0.12);
+  color: var(--jb-gold-light);
   cursor: pointer;
   font-size: 16px;
   line-height: 1;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.jb-pax-btn:hover {
+  background: rgba(201, 164, 92, 0.22);
+  border-color: var(--jb-gold);
 }
 
 .jb-pax-value {
@@ -2371,6 +2377,7 @@
 .jb-pax-btn .jb-field-icon {
   width: 16px;
   height: 16px;
+  filter: brightness(1.35);
 }
 
 .jb-add-leg-btn {
