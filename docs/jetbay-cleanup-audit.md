@@ -1,5 +1,8 @@
 # JetBay cleanup audit
 
+> **Historical** cleanup plan.
+> **Superseded** for current asset status by [jetvina-media-jetbay-asset-audit.md](./jetvina-media-jetbay-asset-audit.md) and [media-content-sync-status.md](./media-content-sync-status.md).
+
 **Mode:** SAFE_REFERENCE_MODE · Branch: `feat/api-content-sync`
 
 | Vị trí | Route/File/Record | Nội dung hiện tại | Loại | Rủi ro | Hành động |

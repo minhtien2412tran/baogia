@@ -1,11 +1,13 @@
 # Media / content-sync gap audit (retest 2026-07-13)
 
+> Supporting gap list. **Canonical status:** [media-content-sync-status.md](./media-content-sync-status.md).
+
 ## Retest vừa chạy — PASS
 
 | Suite | Result |
 |-------|--------|
 | `pnpm test:media` | 17/17 |
-| API Jest | 41/41 |
+| API Jest | **58/58** (includes publish/rollback/import/permissions) |
 | `audit:asset-references` | PASS |
 | `validate:jetvina-media-manifest` | PASS (42 records, 5 mirrored) |
 | `audit:branding` / `audit:debug` | PASS |
@@ -16,32 +18,26 @@
 | `media.reviewer` list 200 / approve-production **403** | PASS |
 | Web `:3000` / API `:4000` / Admin `:3001` | 200 |
 
-## Còn thiếu — TEST
+## Engineering gaps — updated
 
-| Gap | Mức | Ghi chú |
-|-----|-----|---------|
-| Playwright Admin Media Review (login UI → filter → approve) | DEFERRED | API/HTTP đã cover; chưa có browser E2E |
-| Content sync **publish** E2E | DEFERRED | `CONTENT_SYNC_PUBLISH_ENABLED` mặc định off |
-| Content sync **rollback** E2E | DEFERRED | Doc có quy trình; chưa automation |
-| `pnpm sync:jetvina-media` → ghi `MediaAsset` DB | MISSING | Script chỉ ghi FE mirror/manifest; DB fixtures từ seed |
-| Viewer / sync-operator full permission matrix HTTP | PARTIAL | Seeded reviewer OK; chưa smoke mọi role |
-| Xóa physical `/public/assets/jetbay` | DEFERRED | 0 public refs; binaries còn trên disk |
-| Dedicated DB `jetbay_db` | BLOCKED | User không có CREATE DATABASE; đang `jta_db` |
+| Gap | Status | Notes |
+|-----|--------|-------|
+| Playwright Admin Media Review | **PASS** | `pnpm test:e2e:admin-media` (2/2); AuthGate client-token fix |
+| Content sync publish E2E | DONE | `pnpm test:content-sync-publish` |
+| Content sync rollback E2E | DONE | `pnpm test:content-sync-rollback` |
+| Manifest → MediaAsset DB | DONE | `POST /admin/media-assets/import-manifest` + `pnpm import:jetvina-media` (flag-gated) |
+| Permission matrix | PARTIAL | DB matrix suite PASS; HTTP smoke via reviewer + Admin E2E |
+| Physical `/public/assets/jetbay` | inventory written; remove optional | `docs/evidence/jetbay-public-assets-inventory.json` |
+| Dedicated DB `jetbay_db` | OPTIONAL / PARTIAL | Local `jta_db` isolated for project — not a full blocker |
 
-## Còn thiếu — TÀI LIỆU (đã vá trong pass audit này)
+## Blocker nghiệp vụ
 
-| Doc | Trước | Sau |
-|-----|-------|-----|
-| `content-rights-policy.md` | Không mô tả MediaAsset flags/API | Đã bổ sung staging/production rules |
-| `content-sync-runbook.md` | Chỉ discover; thiếu media commands | Đã bổ sung media + test commands + gaps |
-| `jetvina-media-jetbay-asset-audit.md` | Nói còn reference `/assets/jetbay` | Đã cập nhật: audit PASS, `/media-seed` |
-
-## Blocker nghiệp vụ (không phải thiếu code)
-
-1. Written media/logo authorization  
-2. Client-provided production assets  
-3. Bật `JETVINA_MEDIA_PRODUCTION_ENABLED` / `CONTENT_SYNC_PUBLISH_ENABLED` chỉ sau rights  
+1. Written media/logo authorization
+2. Client-provided production assets
+3. Production flags remain off until rights
 
 ## Kết luận
 
-Kỹ thuật media + DB review **đủ để PARTIAL**. Phần chưa đủ chủ yếu là: Admin Playwright E2E, publish/rollback automation, nối file-sync → MediaAsset DB, và tài liệu đã được đồng bộ lại trong audit này.
+```text
+PARTIAL — media and content-sync technical workflows are verified, while production publication remains blocked pending written authorization and approved production assets.
+```

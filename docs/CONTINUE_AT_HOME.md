@@ -83,23 +83,21 @@
 
 ### Đang làm — Content sync / JetVina SAFE_REFERENCE (`feat/api-content-sync`, 2026-07-13)
 
-- [x] Mode **SAFE_REFERENCE_MODE** (no ownership evidence in repo)
-- [x] Docs: content-source-audit · jetbay-cleanup-audit · jetvina-content-mapping · content-sync-workflow · content-rights-policy · runbook · rollback
-- [x] Prisma: SiteSetting · ContentSource/Record · Provenance · Rights · SyncJob/Item · Version · MediaAsset + migration `20260713120000_content_sync_foundation`
-- [x] API: content-sources · discover dry-run · rights · cleanup report · brand settings · SSRF allowlist tests
-- [x] Admin: Content Sources / Sync / Rights / JetBay Cleanup
-- [x] Brand placeholder JetVina · hide marketing stats · email/document JetVina · demo SVG placeholders
-- [x] **Media pass (PARTIAL)** — resolver + manifest + Playwright staging/prod no-hotlink + `audit:asset-references` + validate manifest · **DB:** migrate+seed on local Postgres · MediaAsset review API/UI · UNVERIFIED prod approve rejected · [jetvina-media-pass-report.md](./jetvina-media-pass-report.md) · gap list [media-gap-audit.md](./media-gap-audit.md)
-- [x] Debug-clean · web/admin eslint max-warnings=0 · `audit:debug` · **API eslint legacy debt**
-- [x] `/baocaotiendo` public title → JetVina Website · [i18n-baocaotiendo-brand-classification.md](./i18n-baocaotiendo-brand-classification.md)
-- [x] Doc audit (2026-07-13): rights policy + runbook + JetBay asset audit synced to current code
-- [ ] Client: written media/logo authorization before `JETVINA_MEDIA_PRODUCTION_ENABLED`
-- [ ] Dedicated local DB name `jetbay_db` (CREATE privilege) — currently using existing `jta_db`
-- [ ] Playwright Admin Media Review browser E2E — DEFERRED (HTTP/API smoke PASS)
-- [ ] Content sync publish/rollback E2E + file-sync→MediaAsset DB wiring — DEFERRED
-- [ ] Package rename `@jetbay/*` — DEFERRED
-- [ ] **No prod deploy**
+**Canonical status:** [media-content-sync-status.md](./media-content-sync-status.md)
 
+- [x] Mode **SAFE_REFERENCE_MODE** (no ownership evidence in repo)
+- [x] Docs foundation + MediaAsset schema / API / Media Review UI
+- [x] Media resolver, manifest, no-hotlink, DB review API — **DONE** (see status file)
+- [x] `/baocaotiendo` public title → JetVina Website
+- [x] Admin Media Review browser E2E — **PASS** (`test:e2e:admin-media`)
+- [x] Content sync publish/rollback automation — **PASS** (Jest integration)
+- [x] Mirror sync → MediaAsset DB import — **PASS** (flag-gated API + CLI)
+- [ ] Written media authorization — **BLOCKED**
+- [ ] Client-provided production media — **BLOCKED**
+- [ ] Package rename `@jetbay/*` — **DEFERRED**
+- [ ] **No prod deploy** / **No push** unless requested
+
+Local DB note: migrate/seed on **`jta_db`** (PARTIAL isolation — not CREATE `jetbay_db`). Not a full PostgreSQL blocker.
 Demo seed (sau migrate+seed): `sales.vn@jetbay.local` / `Sales123!` (scope VN) · `sales.nocancel@jetbay.local` (DENY `booking.cancel`)
 
 - [x] `feat/api-security-hardening` (+ admin screens / partner-TC) → **`main`** (`9893789`)  

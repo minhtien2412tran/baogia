@@ -1,5 +1,9 @@
 # Content source audit
 
+> **Historical** — early Phase 0 inventory.
+> **Superseded** for runtime media status by [media-content-sync-status.md](./media-content-sync-status.md).
+> FE no longer uses `/assets/jetbay` as the active media root (`/media-seed` + resolver).
+
 ## Repository inventory (Phase 0)
 
 | Layer | Tech |

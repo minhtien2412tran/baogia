@@ -4,7 +4,7 @@ Public UI must not serve JetBay photos. Remap via `localAsset` → `sanitizePubl
 
 | JetBay asset / pattern | Trước | Mapping mới | Local JetVina | Placeholder | Có thể xóa binaries |
 |------------------------|-------|-------------|---------------|-------------|---------------------|
-| `/assets/jetbay/**` | `LOCAL_ASSET_ROOT` | `/media-seed/*` seeds only (never emitted to DOM) | `/assets/jetvina/mirror` khi có checksum | `/placeholders/demo/*` | **Chưa xóa** — folder deprecated; `audit:asset-references` PASS (0 public refs) |
+| `/assets/jetbay/**` | deprecated | `/media-seed/*` seeds only | `/assets/jetvina/mirror` khi có checksum | `/placeholders/demo/*` | **Removed from public root** (2026-07-13) — inventory in `docs/evidence/jetbay-public-assets-inventory.json`; binaries archived locally under `_archive/` (gitignored) |
 | `jetbayImg/**` trong seed path | CDN tree | remapped by context | — | demo | Giữ disk cho đến khi QA xóa có chủ đích |
 | Destination API thumbs | `/assets/jetbay/...` | `/media-seed/...` trong `destination-seeds.ts` | — | destination SVG | Giữ |
 | Logo `jetbay-logo.svg` | public brand | `/brand/jetvina/*` | brand | wordmark | Đã xóa |

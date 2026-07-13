@@ -1,5 +1,7 @@
 # JetVina media + DB workflow report (2026-07-13)
 
+> Supporting detail report. **Numbers / overall status:** [media-content-sync-status.md](./media-content-sync-status.md) (SOURCE OF TRUTH).
+
 Branch: `feat/api-content-sync` · **No production deploy** · **No push**
 
 ## 1. Trạng thái tổng thể
