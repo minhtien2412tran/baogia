@@ -168,7 +168,11 @@ export const adminApi = {
         id: number;
         name: string;
         region: string;
+        legalName?: string | null;
+        country?: string | null;
+        contactName?: string | null;
         contactEmail?: string | null;
+        contactPhone?: string | null;
         status?: string;
         users?: unknown[];
       }>;
