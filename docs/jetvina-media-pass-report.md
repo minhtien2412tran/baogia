@@ -117,6 +117,10 @@ See git log after commit. Untracked media scripts/tests included. `tmp/*` ignore
 2. Client production assets
 3. Dedicated `jetbay_db` CREATE privilege (optional hardening)
 4. Full Playwright Admin browser E2E
+5. Content sync publish/rollback automation
+6. File `sync:jetvina-media` → `MediaAsset` DB rows
+
+Gap detail (retest): [media-gap-audit.md](./media-gap-audit.md)
 
 ## 15. Files
 

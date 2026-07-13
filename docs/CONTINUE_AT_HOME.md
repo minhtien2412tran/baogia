@@ -89,12 +89,14 @@
 - [x] API: content-sources · discover dry-run · rights · cleanup report · brand settings · SSRF allowlist tests
 - [x] Admin: Content Sources / Sync / Rights / JetBay Cleanup
 - [x] Brand placeholder JetVina · hide marketing stats · email/document JetVina · demo SVG placeholders
-- [x] **Media pass (PARTIAL)** — resolver + manifest + Playwright staging/prod no-hotlink + `audit:asset-references` + validate manifest · **DB:** migrate+seed on local Postgres · MediaAsset review API/UI · UNVERIFIED prod approve rejected · [jetvina-media-pass-report.md](./jetvina-media-pass-report.md)
+- [x] **Media pass (PARTIAL)** — resolver + manifest + Playwright staging/prod no-hotlink + `audit:asset-references` + validate manifest · **DB:** migrate+seed on local Postgres · MediaAsset review API/UI · UNVERIFIED prod approve rejected · [jetvina-media-pass-report.md](./jetvina-media-pass-report.md) · gap list [media-gap-audit.md](./media-gap-audit.md)
 - [x] Debug-clean · web/admin eslint max-warnings=0 · `audit:debug` · **API eslint legacy debt**
 - [x] `/baocaotiendo` public title → JetVina Website · [i18n-baocaotiendo-brand-classification.md](./i18n-baocaotiendo-brand-classification.md)
+- [x] Doc audit (2026-07-13): rights policy + runbook + JetBay asset audit synced to current code
 - [ ] Client: written media/logo authorization before `JETVINA_MEDIA_PRODUCTION_ENABLED`
 - [ ] Dedicated local DB name `jetbay_db` (CREATE privilege) — currently using existing `jta_db`
 - [ ] Playwright Admin Media Review browser E2E — DEFERRED (HTTP/API smoke PASS)
+- [ ] Content sync publish/rollback E2E + file-sync→MediaAsset DB wiring — DEFERRED
 - [ ] Package rename `@jetbay/*` — DEFERRED
 - [ ] **No prod deploy**
 
