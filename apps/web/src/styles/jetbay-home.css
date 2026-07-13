@@ -66,15 +66,17 @@
   text-decoration: none;
 }
 
-.jb-logo-link {
+.jb-logo-link,
+.brand-logo-link {
   display: flex;
   align-items: center;
   text-decoration: none;
   flex-shrink: 0;
-  width: 120px;
-  max-width: 120px;
-  height: 32px;
-  overflow: hidden;
+  width: auto;
+  max-width: var(--brand-logo-header-width, 170px);
+  height: auto;
+  min-height: var(--brand-logo-header-max-height, 48px);
+  overflow: visible;
   line-height: 0;
   position: relative;
   z-index: 2;
@@ -82,21 +84,29 @@
 
 .jb-logo-link > span {
   display: block !important;
-  width: 120px !important;
-  max-width: 120px !important;
-  height: 32px !important;
-  max-height: 32px !important;
+  width: auto !important;
+  max-width: var(--brand-logo-header-width, 170px) !important;
+  height: auto !important;
+  max-height: var(--brand-logo-header-max-height, 48px) !important;
   line-height: 0 !important;
 }
 
-.jb-logo-img {
+.jb-logo-img,
+.brand-logo {
   display: block;
-  width: 120px !important;
-  max-width: 120px !important;
-  height: 32px !important;
-  max-height: 32px !important;
+  width: var(--brand-logo-header-width, 170px) !important;
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: var(--brand-logo-header-max-height, 48px) !important;
   object-fit: contain;
   object-position: left center;
+  flex-shrink: 0;
+}
+
+.jb-footer .jb-logo-img,
+.jb-footer .brand-logo {
+  width: var(--brand-logo-footer-width, 180px) !important;
+  max-height: var(--brand-logo-footer-max-height, 56px) !important;
 }
 
 .jb-cover-img {

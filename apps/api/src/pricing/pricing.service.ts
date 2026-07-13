@@ -37,6 +37,7 @@ export class PricingService {
     overnightFee: Prisma.Decimal | null;
     handlingFee: Prisma.Decimal | null;
     feeCurrency: string | null;
+    canParkAircraft: boolean;
   }): AirportGeoFees {
     return {
       id: a.id,
@@ -49,6 +50,7 @@ export class PricingService {
       overnightFee: dec(a.overnightFee),
       handlingFee: dec(a.handlingFee),
       feeCurrency: a.feeCurrency ?? 'USD',
+      canParkAircraft: a.canParkAircraft !== false,
     };
   }
 

@@ -6,6 +6,7 @@ import {
   IsIn,
   IsInt,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   Min,
@@ -1071,6 +1072,50 @@ export class CreateAirportDto {
   @IsOptional()
   @IsIn(['ACTIVE', 'INACTIVE'])
   status?: string;
+
+  @ApiPropertyOptional({ example: 'VN' })
+  @IsOptional()
+  @IsString()
+  countryCode?: string;
+
+  @ApiPropertyOptional({ example: 'AS' })
+  @IsOptional()
+  @IsString()
+  continentCode?: string;
+
+  @ApiPropertyOptional({ example: true })
+  @IsOptional()
+  @IsBoolean()
+  canParkAircraft?: boolean;
+
+  @ApiPropertyOptional({ example: 450 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  landingFee?: number;
+
+  @ApiPropertyOptional({ example: 90 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  parkingFee?: number;
+
+  @ApiPropertyOptional({ example: 200 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  overnightFee?: number;
+
+  @ApiPropertyOptional({ example: 180 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  handlingFee?: number;
+
+  @ApiPropertyOptional({ example: 'USD' })
+  @IsOptional()
+  @IsString()
+  feeCurrency?: string;
 }
 
 export class UpdateAirportDto {
@@ -1108,6 +1153,50 @@ export class UpdateAirportDto {
   @IsOptional()
   @IsIn(['ACTIVE', 'INACTIVE'])
   status?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  countryCode?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  continentCode?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  canParkAircraft?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  landingFee?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  parkingFee?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  overnightFee?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  handlingFee?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  feeCurrency?: string;
 }
 
 export class CreateContentPageDto {

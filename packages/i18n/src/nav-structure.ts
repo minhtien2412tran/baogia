@@ -58,7 +58,7 @@ export const MEGA_MENU_DEF: NavGroupDef[] = [
   {
     titleKey: 'navCompany',
     links: [
-      { href: '/about-us', labelKey: 'aboutJetBay', descKey: 'aboutJetBayDesc' },
+      { href: '/about-us', labelKey: 'aboutJetVina', descKey: 'aboutJetVinaDesc' },
       { href: '/global-partnership-program', labelKey: 'globalPartnership', descKey: 'globalPartnershipDesc' },
       { href: '/news', labelKey: 'news', descKey: 'newsDesc' },
       { href: '/blogs', labelKey: 'blogs', descKey: 'blogsDesc' },

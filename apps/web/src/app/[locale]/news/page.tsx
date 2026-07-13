@@ -8,6 +8,7 @@ import { navHref } from '../../../config/navigation';
 import { JB } from '../../../config/jetbay-cdn';
 import { CdnImage } from '../../../components/ui/CdnImage';
 import { EmptyState } from '../../../components/ui/EmptyState';
+import { rebrandText } from '../../../lib/brand';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -42,14 +43,16 @@ export default async function NewsPage({ params }: { params: Promise<{ locale: s
         <div className="jb-news-grid">
           {data.news.map((n: Record<string, unknown>) => {
             const thumb = n.thumbnail ? String(n.thumbnail) : JB.pages.newsDefault;
+            const title = rebrandText(String(n.title));
+            const excerpt = rebrandText(String(n.excerpt ?? ''));
             return (
               <Link key={String(n.slug)} href={navHref(locale, `/news/${n.slug}`)} className="jb-news-card">
                 <div className="jb-news-card-img">
-                  <CdnImage src={thumb} alt={String(n.title)} fill className="jb-cover-img" sizes="(max-width:768px) 100vw, 33vw" />
+                  <CdnImage src={thumb} alt={title} fill className="jb-cover-img" sizes="(max-width:768px) 100vw, 33vw" />
                 </div>
                 <div className="jb-news-card-body">
-                  <h3>{String(n.title)}</h3>
-                  <p>{String(n.excerpt ?? '')}</p>
+                  <h3>{title}</h3>
+                  <p>{excerpt}</p>
                   <small>{String(n.publishedAt ?? '').slice(0, 10)}</small>
                 </div>
               </Link>

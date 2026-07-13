@@ -1,14 +1,14 @@
 'use client';
 
-import Image from 'next/image';
 import { useState } from 'react';
 import { api, parseApiErrorMessage, type AircraftSearchOption } from '../lib/api';
 import { t } from '../lib/i18n';
-import { JB, localAsset } from '../config/jetbay-cdn';
 import { AircraftRowSkeleton } from './ui/Skeleton';
 import { AirportInput } from './AirportInput';
 import { DateField } from './ui/DateField';
 import { FlightScrollRail } from './ui/FlightScrollRail';
+import { AppIcon } from './ui/AppIcon';
+import { IconButton } from './ui/IconButton';
 
 type TripType = 'ONE_WAY' | 'ROUND_TRIP' | 'MULTI_CITY';
 
@@ -24,12 +24,6 @@ function defaultLeg(): Leg {
     to: '',
     departure: new Date().toISOString().slice(0, 10),
   };
-}
-
-function CdnIcon({ src, alt = '' }: { src: string; alt?: string }) {
-  return (
-    <Image src={localAsset(src)} alt={alt} width={20} height={20} unoptimized className="jb-field-icon" />
-  );
 }
 
 function splitNameFromEmail(email: string): { firstName: string; lastName: string } {
@@ -216,9 +210,12 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
             {tripType === 'MULTI_CITY' && legs.length > 1 && (
               <div className="jb-leg-header">
                 <span>{t(locale, 'leg')} {idx + 1}</span>
-                <button type="button" className="jb-leg-remove" onClick={() => removeLeg(idx)}>
-                  <CdnIcon src={JB.icons.minus} alt="Remove leg" />
-                </button>
+                <IconButton
+                  name="minus"
+                  label="Remove leg"
+                  className="jb-leg-remove"
+                  onClick={() => removeLeg(idx)}
+                />
               </div>
             )}
             <div className="jb-quote-grid">
@@ -230,8 +227,8 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
                 placeholder={t(locale, 'departurePlaceholder')}
                 locale={locale}
               />
-              <button type="button" className="jb-swap-btn" onClick={() => swapLeg(idx)} aria-label={t(locale, 'swapAirports')}>
-                <CdnIcon src={JB.icons.swap} alt="Swap" />
+              <button type="button" className="jb-swap-btn icon-btn" onClick={() => swapLeg(idx)} aria-label={t(locale, 'swapAirports')}>
+                <AppIcon name="arrowLeftRight" size="md" aria-hidden />
               </button>
               <AirportInput
                 id={`to-${idx}`}
@@ -252,12 +249,12 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
                 <div className="jb-field">
                   <label>{t(locale, 'passengers')}</label>
                   <div className="jb-pax-control">
-                    <button type="button" className="jb-pax-btn" onClick={() => setPassengers((p) => Math.max(1, p - 1))} aria-label={t(locale, 'decreasePax')}>
-                      <CdnIcon src={JB.icons.minus} alt="" />
+                    <button type="button" className="jb-pax-btn icon-btn" onClick={() => setPassengers((p) => Math.max(1, p - 1))} aria-label={t(locale, 'decreasePax')}>
+                      <AppIcon name="minus" size="sm" aria-hidden />
                     </button>
                     <span className="jb-pax-value">{passengers}</span>
-                    <button type="button" className="jb-pax-btn" onClick={() => setPassengers((p) => Math.min(16, p + 1))} aria-label={t(locale, 'increasePax')}>
-                      <CdnIcon src={JB.icons.plus} alt="" />
+                    <button type="button" className="jb-pax-btn icon-btn" onClick={() => setPassengers((p) => Math.min(16, p + 1))} aria-label={t(locale, 'increasePax')}>
+                      <AppIcon name="plus" size="sm" aria-hidden />
                     </button>
                   </div>
                 </div>
@@ -281,7 +278,7 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
 
         {tripType === 'MULTI_CITY' && (
           <button type="button" className="jb-add-leg-btn" onClick={addLeg}>
-            <CdnIcon src={JB.icons.addLeg} alt="" />
+            <AppIcon name="plus" size="sm" aria-hidden />
             {t(locale, 'addLeg')}
           </button>
         )}

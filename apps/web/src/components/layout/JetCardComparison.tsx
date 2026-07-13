@@ -6,13 +6,13 @@ export function JetCardComparison() {
   return (
     <div className="jb-compare-wrap">
       <h2 className="jb-section-title" style={{ textAlign: 'center', marginBottom: 24 }}>
-        JetBay Jet Card vs On-Demand Charter
+        Private Jet Membership vs On-Demand Charter
       </h2>
       <table className="jb-compare-table">
         <thead>
           <tr>
             <th>Feature</th>
-            <th>JetBay Jet Card</th>
+            <th>Private Jet Membership</th>
             <th>On-Demand Charter</th>
           </tr>
         </thead>

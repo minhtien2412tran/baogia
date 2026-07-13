@@ -259,9 +259,14 @@ export class BookingService {
     return this.formatBooking(booking);
   }
 
-  async cancel(id: number, userId?: number, ipAddress?: string) {
+  async cancel(
+    id: number,
+    userId?: number,
+    ipAddress?: string,
+    opts?: { asStaff?: boolean; reason?: string },
+  ) {
     const booking = await this.findBookingOrThrow(id);
-    if (userId && booking.userId !== userId) {
+    if (userId && !opts?.asStaff && booking.userId !== userId) {
       throw new NotFoundException(`Booking #${id} not found`);
     }
     if (booking.bookingStatus === 'CANCELLED') {
@@ -273,7 +278,12 @@ export class BookingService {
 
     const updated = await this.prisma.booking.update({
       where: { id },
-      data: { bookingStatus: 'CANCELLED' },
+      data: {
+        bookingStatus: 'CANCELLED',
+        cancelReason: opts?.reason,
+        cancelledAt: new Date(),
+        cancelledByUserId: userId,
+      },
       include: {
         user: true,
         passengers: true,
@@ -292,7 +302,12 @@ export class BookingService {
 
     await this.audit.log(
       'BOOKING_CANCELLED',
-      { bookingId: id, previousStatus: booking.bookingStatus },
+      {
+        bookingId: id,
+        previousStatus: booking.bookingStatus,
+        asStaff: Boolean(opts?.asStaff),
+        reason: opts?.reason,
+      },
       userId ?? booking.userId,
       ipAddress,
     );

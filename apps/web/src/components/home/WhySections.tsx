@@ -2,7 +2,7 @@ import { JB } from '../../config/jetbay-cdn';
 import { CdnImage } from '../ui/CdnImage';
 
 const WHY_CHARTER = [
-  'Access 10,000+ aircraft across 1,000+ operators',
+  'Access a global aircraft network across 1,000+ operators',
   '24/7 global concierge support',
   'AI-driven aircraft matching',
   'Transparent end-to-end booking support',
@@ -26,14 +26,14 @@ export function WhySections({ locale }: { locale: string }) {
           <div className="jb-split">
             <div>
               <span className="jb-tag">About Us</span>
-              <h2 className="jb-section-title">Why Charter with JetBay?</h2>
-              <p className="jb-section-desc">JetBay offers bespoke charter solutions, connecting you to a global fleet.</p>
+              <h2 className="jb-section-title">Why Charter with JetVina?</h2>
+              <p className="jb-section-desc">JetVina offers bespoke charter solutions, connecting you to a global fleet.</p>
               <ul style={{ margin: '20px 0', paddingLeft: 20, color: 'var(--jb-text-muted)', lineHeight: 2 }}>
                 {WHY_CHARTER.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
-              <a href={`${p}/about-us`} className="jb-btn-outline">Learn More About JetBay</a>
+              <a href={`${p}/about-us`} className="jb-btn-outline">Learn More About JetVina</a>
             </div>
             <div className="jb-split-visual jb-split-visual-img">
               <CdnImage src={JB.sections.whyCharter} alt="Private jet charter" fill className="jb-cover-img" sizes="(max-width: 768px) 100vw, 50vw" />
@@ -46,7 +46,7 @@ export function WhySections({ locale }: { locale: string }) {
         <div className="jb-container">
           <div style={{ textAlign: 'center', marginBottom: 40 }}>
             <span className="jb-tag">What Sets Us Apart</span>
-            <h2 className="jb-section-title">Why Choose JetBay?</h2>
+            <h2 className="jb-section-title">Why choose JetVina?</h2>
             <p className="jb-section-desc">Excellence in Every Detail</p>
           </div>
           <div className="jb-features-grid">

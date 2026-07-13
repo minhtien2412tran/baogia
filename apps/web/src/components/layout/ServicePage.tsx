@@ -108,7 +108,7 @@ export async function ServicePage({ locale, pageKey }: { locale: string; pageKey
 
               <p className="jb-section-desc">
 
-                JetBay&apos;s private air charter service combines luxury, efficiency, and safety at the best value.
+                JetVina&apos;s private air charter service combines luxury, efficiency, and safety at the best value.
 
               </p>
 
@@ -180,7 +180,7 @@ export async function ServicePage({ locale, pageKey }: { locale: string; pageKey
 
                             ? 'Certified aircraft, experienced pilots, and trusted partners on every flight.'
 
-                            : 'Over 10,000 satisfied clients — Asia\'s leading private jet charter platform.',
+                            : 'Trusted private jet charter with dedicated specialists on every journey.',
 
                   }))}
 
@@ -264,7 +264,7 @@ export async function ServicePage({ locale, pageKey }: { locale: string; pageKey
 
         <>
 
-          <LightSection title="The JetBay Charter Process" subtitle="Your Journey, Effortlessly Arranged.">
+          <LightSection title="The JetVina Charter Process" subtitle="Your Journey, Effortlessly Arranged.">
 
             <StepsTimeline
 
@@ -314,7 +314,7 @@ export async function ServicePage({ locale, pageKey }: { locale: string; pageKey
 
       {pageKey !== 'private-jet-charter' && content.features && content.features.length > 0 && (
 
-        <LightSection title="Why JetBay" subtitle="Trusted standards on every flight.">
+        <LightSection title="Why JetVina" subtitle="Trusted standards on every flight.">
 
           <FeatureGrid items={content.features} />
 

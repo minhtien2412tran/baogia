@@ -9,7 +9,7 @@ export async function PartnerProgramsSection() {
     <section className="jb-sub-section jb-light-band">
       <div className="jb-container">
         <h2 className="jb-section-title">Partnership tiers</h2>
-        <p className="jb-section-desc">Compare commission levels and benefits across JetBay partner programs.</p>
+        <p className="jb-section-desc">Compare commission levels and benefits across JetVina partner programs.</p>
         <div className="jb-jetcard-grid">
           {data.roles.map((role) => (
             <div key={role.code} className="jb-jetcard-item">

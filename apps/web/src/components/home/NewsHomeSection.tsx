@@ -3,6 +3,7 @@ import { api, safeApi } from '../../lib/api';
 import { apiLocale } from '../../config/locales';
 import { navHref } from '../../config/navigation';
 import { JB } from '../../config/jetbay-cdn';
+import { rebrandText } from '../../lib/brand';
 import { CdnImage } from '../ui/CdnImage';
 import { EmptyState } from '../ui/EmptyState';
 import { t } from '../../lib/i18n';
@@ -35,6 +36,8 @@ export async function NewsHomeSection({ locale }: { locale: string }) {
           <div className="jb-news-grid">
             {items.map((article: Record<string, unknown>) => {
               const thumb = article.thumbnail ? String(article.thumbnail) : JB.pages.newsDefault;
+              const title = rebrandText(String(article.title ?? article.slug));
+              const excerpt = article.excerpt ? rebrandText(String(article.excerpt)) : null;
               return (
                 <Link
                   key={String(article.slug)}
@@ -44,15 +47,15 @@ export async function NewsHomeSection({ locale }: { locale: string }) {
                   <div className="jb-news-card-img">
                     <CdnImage
                       src={thumb}
-                      alt={String(article.title ?? article.slug)}
+                      alt={title}
                       fill
                       className="jb-cover-img"
                       sizes="(max-width:768px) 100vw, 360px"
                     />
                   </div>
                   <div className="jb-news-card-body">
-                    <h3>{String(article.title ?? article.slug)}</h3>
-                    {article.excerpt ? <p>{String(article.excerpt)}</p> : null}
+                    <h3>{title}</h3>
+                    {excerpt ? <p>{excerpt}</p> : null}
                     {article.publishedAt ? (
                       <time className="jb-news-date" dateTime={String(article.publishedAt)}>
                         {new Date(String(article.publishedAt)).toLocaleDateString(locale)}

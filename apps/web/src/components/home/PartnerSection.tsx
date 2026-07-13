@@ -14,7 +14,7 @@ export async function PartnerSection({ locale }: { locale: string }) {
           </div>
           <div>
             <span className="jb-tag">Partner Program</span>
-            <h2 className="jb-section-title">Join the JetBay Global Partner Program</h2>
+            <h2 className="jb-section-title">Join the JetVina Global Partner Program</h2>
             <p className="jb-section-desc">
               Refer clients, choose your preferred partnership program, and leverage our global fleet with
               comprehensive support — no prior aviation experience required.

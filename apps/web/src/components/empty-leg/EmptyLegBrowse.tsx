@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { t } from '@jetbay/i18n';
 import { api } from '../../lib/api';
 import { navHref } from '../../config/navigation';
+import { AppIcon } from '../ui/AppIcon';
 
 type Continent = { code: string; name: string };
 type Country = { code: string; name: string };
@@ -61,9 +62,12 @@ export function EmptyLegBrowse({ locale }: { locale: string }) {
   return (
     <section className="jb-sub-section">
       <h2 className="jb-section-title">{t(locale, 'availableEmptyLegs')}</h2>
-      <div className="jb-empty-filters" style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 20 }}>
-        <label>
-          Continent{' '}
+      <div
+        className="jb-empty-filters"
+        style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 20, alignItems: 'center' }}
+      >
+        <label className="jb-empty-filter-label">
+          <AppIcon name="filter" size="sm" aria-hidden /> Continent{' '}
           <select
             value={continentCode}
             onChange={(e) => {
@@ -79,8 +83,8 @@ export function EmptyLegBrowse({ locale }: { locale: string }) {
             ))}
           </select>
         </label>
-        <label>
-          Country{' '}
+        <label className="jb-empty-filter-label">
+          <AppIcon name="mapPin" size="sm" aria-hidden /> Country{' '}
           <select
             value={countryCode}
             onChange={(e) => setCountryCode(e.target.value)}
@@ -107,8 +111,8 @@ export function EmptyLegBrowse({ locale }: { locale: string }) {
 
       <div className="jb-empty-grid">
         {legs.map((el) => {
-          const from = el.fromAirport as { city?: string };
-          const to = el.toAirport as { city?: string };
+          const from = el.fromAirport as { city?: string; iata?: string };
+          const to = el.toAirport as { city?: string; iata?: string };
           return (
             <Link
               key={String(el.slug)}
@@ -118,8 +122,12 @@ export function EmptyLegBrowse({ locale }: { locale: string }) {
               <span className="jb-discount-badge">
                 {t(locale, 'discountOff', { n: String(el.discountPct) })}
               </span>
-              <div className="jb-route-line">
-                {from?.city} → {to?.city}
+              <div className="jb-route-line" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <AppIcon name="planeTakeoff" size="sm" aria-hidden />
+                <span>{from?.city ?? from?.iata}</span>
+                <AppIcon name="arrowRight" size="sm" aria-hidden />
+                <AppIcon name="planeLanding" size="sm" aria-hidden />
+                <span>{to?.city ?? to?.iata}</span>
               </div>
               <div className="jb-price">
                 <span style={{ display: 'block', fontSize: '0.75rem', opacity: 0.8 }}>

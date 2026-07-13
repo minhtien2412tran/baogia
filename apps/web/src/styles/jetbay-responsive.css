@@ -312,18 +312,20 @@
   }
 
   .jb-logo-img,
-  .jb-logo-link {
-    width: 108px !important;
-    max-width: 108px !important;
-    height: 28px !important;
-    max-height: 28px !important;
+  .brand-logo,
+  .jb-logo-link,
+  .brand-logo-link {
+    width: var(--brand-logo-mobile-width, 130px) !important;
+    max-width: var(--brand-logo-mobile-width, 130px) !important;
+    height: auto !important;
+    max-height: var(--brand-logo-mobile-max-height, 40px) !important;
   }
 
   .jb-logo-link > span {
-    width: 108px !important;
-    max-width: 108px !important;
-    height: 28px !important;
-    max-height: 28px !important;
+    width: auto !important;
+    max-width: var(--brand-logo-mobile-width, 130px) !important;
+    height: auto !important;
+    max-height: var(--brand-logo-mobile-max-height, 40px) !important;
   }
 
   .jb-hero h1,

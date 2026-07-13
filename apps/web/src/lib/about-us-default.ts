@@ -55,15 +55,15 @@ export type AboutUsPageData = {
 export const DEFAULT_ABOUT_US: AboutUsPageData = {
   heroTitle: 'Your Global Air Charter Partner',
   heroSubtitle:
-    'JetBay is a global private jet booking platform headquartered in Singapore with 6 other offices worldwide, providing exceptional service globally.',
+    'JetVina is a global private jet booking platform headquartered in Singapore with 6 other offices worldwide, providing exceptional service globally.',
   introTitle: 'Powering Global Journeys',
   introBody:
-    'We provide fast, competitive, and seamless booking experiences, connecting customers to a fleet of over 10,000 business jets and aircraft worldwide.',
+    'We provide fast, competitive, and seamless booking experiences across a curated global fleet.',
   pillarsTitle: 'Redefining Private Aviation',
   pillars: [
     {
       title: 'Global Charter Platform',
-      subtitle: '10,000+ Jets, Seamless Bookings',
+      subtitle: 'Global fleet access, Seamless Bookings',
       body: 'Our AI team maintains a global jet database, providing cost-effective charter solutions by matching optimal flight resources.',
       image: JB.pages.about.pillars.globalPlatform,
     },
@@ -78,15 +78,15 @@ export const DEFAULT_ABOUT_US: AboutUsPageData = {
       image: JB.pages.about.pillars.seamless,
     },
   ],
-  flyAnywhereTitle: 'Fly Anywhere with JetBay',
+  flyAnywhereTitle: 'Fly Anywhere with JetVina',
   flyAnywhereBody:
-    'JetBay optimises charter flight solutions through our global jet database — reducing empty legs and delivering sustainable, efficient travel.',
+    'JetVina optimises charter flight solutions through our global jet database — reducing empty legs and delivering sustainable, efficient travel.',
   flyAnywhereImage: JB.pages.about.flyAnywhere,
   teamTitle: 'Industry Leading Team',
   teamCards: [
     {
       title: 'AI & Technology',
-      body: "JetBay's team developed an AI platform integrated with our database, using big data to optimize charter resources for efficient, convenient flights.",
+      body: "JetVina's team developed an AI platform integrated with our database, using big data to optimize charter resources for efficient, convenient flights.",
       image: JB.pages.about.team.ai,
     },
     {
@@ -103,8 +103,8 @@ export const DEFAULT_ABOUT_US: AboutUsPageData = {
   awardsTitle: 'Awards & Recognition',
   awardsSubtitle: 'Celebrating Excellence in Jet Charter',
   awards: JB.pages.about.awards,
-  whyTitle: 'Why Charter with JetBay?',
-  whyIntro: 'JetBay offers bespoke charter solutions, connecting you to a global fleet.',
+  whyTitle: 'Why Charter with JetVina?',
+  whyIntro: 'JetVina offers bespoke charter solutions, connecting you to a global fleet.',
   whyItems: [
     { title: 'Comprehensive and Competitive Solutions', body: 'Transparent pricing across light, midsize, and long-range aircraft.' },
     { title: '24/7 Fast Quotations', body: 'Receive tailored quotes within hours, any time zone.' },

@@ -1,8 +1,13 @@
 import type { Metadata, Viewport } from 'next';
 import { Cormorant_Garamond, Geist, Geist_Mono, Playfair_Display } from 'next/font/google';
-import { BRAND_NAME, BRAND_TAGLINE } from '../lib/brand';
+import { BRAND_NAME, BRAND_TAGLINE, JETVINA_OFFICIAL_LOGO_ENABLED } from '../lib/brand';
+import { BRAND_APPLE_ICON, BRAND_FAVICON, BRAND_LOGO_FALLBACK, BRAND_OG_DEFAULT } from '../lib/brand-assets';
 import { DEFAULT_OG_IMAGE, siteMetadataBase } from '../lib/metadata';
 import './globals.css';
+
+const favicon = JETVINA_OFFICIAL_LOGO_ENABLED ? BRAND_FAVICON : BRAND_LOGO_FALLBACK;
+const appleIcon = JETVINA_OFFICIAL_LOGO_ENABLED ? BRAND_APPLE_ICON : BRAND_LOGO_FALLBACK;
+const ogImage = JETVINA_OFFICIAL_LOGO_ENABLED ? BRAND_OG_DEFAULT : DEFAULT_OG_IMAGE;
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
@@ -26,15 +31,15 @@ export const metadata: Metadata = {
   },
   description: 'Private air charter booking platform — request quotes, empty legs, and managed itineraries.',
   icons: {
-    icon: [{ url: '/assets/brand/logo-placeholder.svg', type: 'image/svg+xml' }],
-    apple: '/assets/brand/logo-placeholder.svg',
+    icon: [{ url: favicon }],
+    apple: appleIcon,
   },
   openGraph: {
     type: 'website',
     siteName: `${BRAND_NAME} Private Air Charter`,
     title: `${BRAND_NAME} | ${BRAND_TAGLINE}`,
     description: 'Private air charter booking platform — request quotes, empty legs, and managed itineraries.',
-    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: BRAND_NAME }],
+    images: [{ url: ogImage, width: 1200, height: 630, alt: BRAND_NAME }],
   },
   twitter: {
     card: 'summary_large_image',

@@ -1,7 +1,10 @@
+import { SHOW_UNVERIFIED_PARTNER_LOGOS } from '../../lib/brand';
 import { JB } from '../../config/jetbay-cdn';
 import { CdnImage } from '../ui/CdnImage';
 
 export function MediaLogos() {
+  if (!SHOW_UNVERIFIED_PARTNER_LOGOS) return null;
+
   return (
     <section className="jb-section" style={{ padding: '24px 0' }}>
       <div className="jb-container">

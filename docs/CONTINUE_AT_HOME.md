@@ -77,6 +77,7 @@
 - [x] Phase 4 — Permission DENY>ALLOW>ROLE · `PermissionGuard` · airport scope APIs · admin `/dashboard/permissions`
 - [x] Phase 5–6 — OperatorContract workflow · mock DocuSign · idempotent `POST /webhooks/docusign` · `.env.example` DocuSign keys
 - [x] Phase 7 — admin fleet/contracts/permissions · booking «Giá ước tính» columns · API `nest build` PASS · unit 11/11 PASS
+- [x] Siết (2026-07-13): cancel `booking.cancel` cho staff · airport list theo UserAirportScope · `canParkAircraft` trong pricing · admin permission ticks · [OPS_CHARTER_FLOW.md](./OPS_CHARTER_FLOW.md)
 - [ ] **Blocked local:** no Docker → chưa `migrate deploy` / seed trên máy này — chạy migrate+seed khi có Postgres (local hoặc VPS staging)
 - [ ] **Không deploy prod** cho đến khi được yêu cầu
 
@@ -88,8 +89,11 @@
 - [x] API: content-sources · discover dry-run · rights · cleanup report · brand settings · SSRF allowlist tests
 - [x] Admin: Content Sources / Sync / Rights / JetBay Cleanup
 - [x] Brand placeholder JetVina · hide unverified stats · email rebrand · footer social removed
-- [ ] i18n/page-content JetBay strings (partial) · package rename `@jetbay/*` deferred
-- [ ] Client: logo, legal, contact, authorization letter
+- [x] **JetVina official logo (UNVERIFIED)** — local `/brand/jetvina/*` · `BrandLogo` · brand-tokens · AppIcon · `JETVINA_OFFICIAL_LOGO_ENABLED` · MediaSection blocked · deleted `jetbay-logo.svg` · [brand-logo-icon-image-audit.md](./brand-logo-icon-image-audit.md)
+- [x] **Public branding cleanup pass** — hide marketing sections · media placeholders · AppIcon wire · document/email JetVina · `audit:branding` · Playwright smoke · [public-branding-cleanup-final.md](./public-branding-cleanup-final.md)
+- [x] Fix web TS via rebuild `@jetbay/i18n` (MessageKey dist stale)
+- [ ] i18n residual / baocaotiendo report title · package rename `@jetbay/*` deferred
+- [ ] Client: logo rights letter / CLIENT_PROVIDED confirmation before prod logo flag
 - [ ] **No prod deploy**
 
 Demo seed (sau migrate+seed): `sales.vn@jetbay.local` / `Sales123!` (scope VN) · `sales.nocancel@jetbay.local` (DENY `booking.cancel`)

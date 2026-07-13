@@ -21,6 +21,8 @@ export interface AirportGeoFees {
   overnightFee: number;
   handlingFee: number;
   feeCurrency: string;
+  /** If false, overnight/parking overnight is not charged (cannot park). */
+  canParkAircraft: boolean;
 }
 
 export interface AircraftRateInput {
@@ -109,10 +111,13 @@ function destinationFees(to: AirportGeoFees): {
   handlingFees: number;
   parkingFees: number;
 } {
+  const parking = to.canParkAircraft
+    ? feeNum(to.parkingFee) + feeNum(to.overnightFee)
+    : 0;
   return {
     airportFees: feeNum(to.landingFee),
     handlingFees: feeNum(to.handlingFee),
-    parkingFees: feeNum(to.parkingFee) + feeNum(to.overnightFee),
+    parkingFees: parking,
   };
 }
 

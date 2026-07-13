@@ -1,22 +1,23 @@
-import { BRAND_LOGO, BRAND_NAME } from '../../lib/brand';
+import { BrandLogo } from '../brand/BrandLogo';
+import { JETVINA_OFFICIAL_LOGO_ENABLED } from '../../lib/brand';
+import type { BrandLogoContext, BrandLogoVariant } from '../../lib/brand-assets';
 
 type Props = {
   className?: string;
   priority?: boolean;
+  variant?: BrandLogoVariant;
+  context?: BrandLogoContext;
 };
 
-/** Brand wordmark — internal placeholder until CLIENT_PROVIDED logo is approved. */
-export function JetBayLogo({ className = 'jb-logo-img', priority }: Props) {
+/** @deprecated Prefer BrandLogo — kept so existing Header/Footer imports keep working. */
+export function JetBayLogo({ className, priority, variant, context = 'header' }: Props) {
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={BRAND_LOGO}
-      alt={BRAND_NAME}
+    <BrandLogo
+      variant={variant}
+      context={context}
+      priority={priority}
       className={className}
-      width={120}
-      height={32}
-      decoding="async"
-      fetchPriority={priority ? 'high' : 'auto'}
+      officialLogoEnabled={JETVINA_OFFICIAL_LOGO_ENABLED}
     />
   );
 }

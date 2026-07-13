@@ -128,7 +128,12 @@ export class AirportService {
   async list(
     page = 1,
     limit = 50,
-    filters?: { continentCode?: string; countryCode?: string; status?: string },
+    filters?: {
+      continentCode?: string;
+      countryCode?: string;
+      status?: string;
+      scopeWhere?: Prisma.AirportWhereInput | null;
+    },
   ) {
     const take = Math.min(limit, 200);
     const skip = (page - 1) * take;
@@ -136,6 +141,9 @@ export class AirportService {
     if (filters?.continentCode) where.continentCode = filters.continentCode.toUpperCase();
     if (filters?.countryCode) where.countryCode = filters.countryCode.toUpperCase();
     if (filters?.status) where.status = filters.status;
+    if (filters?.scopeWhere) {
+      Object.assign(where, { AND: [filters.scopeWhere] });
+    }
 
     const [total, airports] = await Promise.all([
       this.prisma.airport.count({ where }),
@@ -218,8 +226,17 @@ export class AirportService {
         name: body.name.trim(),
         city: body.city.trim(),
         country: body.country.trim(),
+        countryCode: body.countryCode?.trim().toUpperCase(),
+        continentCode: body.continentCode?.trim().toUpperCase(),
         timezone: body.timezone?.trim() || 'UTC',
         status: body.status ?? 'ACTIVE',
+        canParkAircraft: body.canParkAircraft ?? true,
+        landingFee: body.landingFee,
+        parkingFee: body.parkingFee,
+        overnightFee: body.overnightFee,
+        handlingFee: body.handlingFee,
+        feeCurrency: body.feeCurrency ?? 'USD',
+        feeUpdatedAt: new Date(),
       },
     });
     await this.audit.log('AIRPORT_CREATED', { airportId: airport.id, iata: airport.iata });
@@ -248,6 +265,20 @@ export class AirportService {
         ...(body.country != null ? { country: body.country.trim() } : {}),
         ...(body.timezone != null ? { timezone: body.timezone.trim() } : {}),
         ...(body.status != null ? { status: body.status } : {}),
+        ...(body.countryCode != null ? { countryCode: body.countryCode.trim().toUpperCase() } : {}),
+        ...(body.continentCode != null
+          ? { continentCode: body.continentCode.trim().toUpperCase() }
+          : {}),
+        ...(body.canParkAircraft != null ? { canParkAircraft: body.canParkAircraft } : {}),
+        ...(body.landingFee != null ? { landingFee: body.landingFee } : {}),
+        ...(body.parkingFee != null ? { parkingFee: body.parkingFee } : {}),
+        ...(body.overnightFee != null ? { overnightFee: body.overnightFee } : {}),
+        ...(body.handlingFee != null ? { handlingFee: body.handlingFee } : {}),
+        ...(body.feeCurrency != null ? { feeCurrency: body.feeCurrency } : {}),
+        ...((body.landingFee != null ||
+          body.parkingFee != null ||
+          body.overnightFee != null ||
+          body.handlingFee != null) && { feeUpdatedAt: new Date() }),
       },
     });
     await this.audit.log('AIRPORT_UPDATED', { airportId: id });

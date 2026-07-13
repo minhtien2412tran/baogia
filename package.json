@@ -10,6 +10,8 @@
     "test": "pnpm --filter \"*\" test",
     "test:api": "pnpm --filter @jetbay/api test",
     "test:e2e": "playwright test",
+    "audit:branding": "node scripts/audit-public-branding.mjs",
+    "test:brand": "node scripts/audit-public-branding.mjs && pnpm --filter @jetbay/api exec jest --testPathPatterns=brand-public && cd apps/web && npx tsx --test src/lib/brand-assets.test.ts",
     "qa:ci": "pnpm --filter @jetbay/api prisma:generate && pnpm --filter @jetbay/api build && pnpm --filter @jetbay/api test && pnpm --filter @jetbay/admin build && pnpm --filter @jetbay/web build",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",

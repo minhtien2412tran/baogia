@@ -14,6 +14,7 @@ import {
   canStoreCopyrightedHtml,
   contentHash,
 } from './url-safety';
+import { resolvePublicBrandLogos, assertNoJetBayPublicBrand } from './brand-public';
 
 type WpPageMeta = {
   id: number;
@@ -37,6 +38,7 @@ export class ContentSyncService {
       JETBAY_CONTENT_CLEANUP_ENABLED: process.env.JETBAY_CONTENT_CLEANUP_ENABLED !== 'false',
       NEW_BRAND_CONTENT_ENABLED: process.env.NEW_BRAND_CONTENT_ENABLED === 'true',
       EXTERNAL_MEDIA_IMPORT_ENABLED: process.env.EXTERNAL_MEDIA_IMPORT_ENABLED === 'true',
+      JETVINA_OFFICIAL_LOGO_ENABLED: process.env.JETVINA_OFFICIAL_LOGO_ENABLED === 'true',
       syncModeDefault: 'SAFE_REFERENCE_MODE',
     };
   }
@@ -579,39 +581,113 @@ export class ContentSyncService {
   }
 
   async getBrandSettings() {
-    const row = await this.prisma.siteSetting.findUnique({ where: { key: 'brand' } });
+    const flags = this.featureFlags();
     const defaults = {
       brandName: 'JetVina',
       legalName: 'JetVina',
       tagline: 'Private Air Charter',
-      logoPath: '/assets/brand/logo-placeholder.svg',
-      showUnverifiedStats: false,
-      contactEmail: null as string | null,
+      logoPrimary: '/brand/jetvina/logo-primary.png',
+      logoLight: '/brand/jetvina/logo-light.png',
+      logoDark: '/brand/jetvina/logo-dark.png',
+      logoMark: '/brand/jetvina/logo-mark.png',
+      favicon: '/brand/jetvina/favicon-32x32.png',
+      ogImage: '/brand/jetvina/og-default.png',
+      logoFallback: '/brand/jetvina/logo-fallback.svg',
+      primaryColor: '#c9a45c',
+      secondaryColor: '#0a0c0f',
       contactPhone: null as string | null,
+      contactEmail: null as string | null,
+      whatsapp: null as string | null,
       socialLinks: [] as Array<{ label: string; href: string }>,
-      rightsNote: 'SAFE_REFERENCE_MODE — brand name provisional until client confirmation',
+      rightsStatus: 'UNVERIFIED' as string,
+      rightsEvidence:
+        'Local copy of jetvina.com logo for staging — awaiting CLIENT_PROVIDED / ownership confirmation',
+      approvedBy: null as string | null,
+      approvedAt: null as string | null,
+      showUnverifiedStats: false,
+      showUnverifiedPartnerLogos: false,
+      rightsNote: 'SAFE_REFERENCE_MODE — official logo UNVERIFIED; production publish blocked',
     };
-    if (!row) return defaults;
-    return { ...defaults, ...(row.value as object) };
+
+    const row = await this.prisma.siteSetting.findUnique({ where: { key: 'brand' } });
+    const merged = row ? { ...defaults, ...(row.value as object) } : defaults;
+    const rightsStatus = String(merged.rightsStatus ?? 'UNVERIFIED');
+    const canPublish = canPublishRights(rightsStatus);
+    const stagingPreview = flags.JETVINA_OFFICIAL_LOGO_ENABLED;
+    const isProduction = process.env.APP_ENV === 'production';
+    const publicLogos = resolvePublicBrandLogos({
+      logoPrimary: merged.logoPrimary,
+      logoLight: merged.logoLight,
+      logoDark: merged.logoDark,
+      logoMark: merged.logoMark,
+      favicon: merged.favicon,
+      ogImage: merged.ogImage,
+      logoFallback: merged.logoFallback,
+      rightsStatus,
+      officialLogoEnabled: stagingPreview,
+      isProduction,
+    });
+
+    const response = {
+      ...merged,
+      rightsStatus,
+      officialLogoEnabled: stagingPreview && !isProduction,
+      ...publicLogos,
+      flags: {
+        NEW_BRAND_CONTENT_ENABLED: flags.NEW_BRAND_CONTENT_ENABLED,
+        EXTERNAL_MEDIA_IMPORT_ENABLED: flags.EXTERNAL_MEDIA_IMPORT_ENABLED,
+        JETVINA_OFFICIAL_LOGO_ENABLED: flags.JETVINA_OFFICIAL_LOGO_ENABLED,
+      },
+    };
+
+    // Never expose JetBay in public brand payload
+    const jetbayHits = assertNoJetBayPublicBrand(response as Record<string, unknown>);
+    if (jetbayHits.length) {
+      return {
+        ...response,
+        brandName: 'JetVina',
+        legalName: 'JetVina',
+        socialLinks: [],
+        contactEmail: null,
+        contactPhone: null,
+        whatsapp: null,
+        rightsNote: 'Sanitized — JetBay strings stripped from public brand response',
+        _sanitizedKeys: jetbayHits.length,
+      };
+    }
+
+    return response;
   }
 
   async setBrandSettings(value: Record<string, unknown>, userId?: number) {
+    const rightsStatus = String(value.rightsStatus ?? 'UNVERIFIED');
+    if (value.approvedForPublish === true && !canPublishRights(rightsStatus)) {
+      throw new BadRequestException(
+        'Cannot approve logo publish while rightsStatus is not OWNED/LICENSED/CLIENT_PROVIDED/PUBLIC_DOMAIN',
+      );
+    }
+    const payload = {
+      ...value,
+      rightsStatus,
+      approvedBy: canPublishRights(rightsStatus) ? (value.approvedBy ?? userId ?? null) : null,
+      approvedAt: canPublishRights(rightsStatus) ? (value.approvedAt ?? new Date().toISOString()) : null,
+    };
     const row = await this.prisma.siteSetting.upsert({
       where: { key: 'brand' },
-      create: { key: 'brand', value: value as Prisma.InputJsonValue, updatedBy: userId },
-      update: { value: value as Prisma.InputJsonValue, updatedBy: userId },
+      create: { key: 'brand', value: payload as Prisma.InputJsonValue, updatedBy: userId },
+      update: { value: payload as Prisma.InputJsonValue, updatedBy: userId },
     });
     await this.prisma.contentVersion.create({
       data: {
         entityType: 'SiteSetting',
         entityId: 'brand',
         version: Date.now(),
-        data: value as Prisma.InputJsonValue,
+        data: payload as Prisma.InputJsonValue,
         createdBy: userId,
         reason: 'Brand settings update',
       },
     });
-    return row;
+    return this.getBrandSettings();
   }
 
   async seedDefaultJetvinaSource(userId?: number) {

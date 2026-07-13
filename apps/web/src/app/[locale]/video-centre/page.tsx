@@ -81,7 +81,7 @@ export default async function VideoCentrePage({ params }: { params: Promise<{ lo
                   </span>
                 </div>
                 <div className="jb-video-body">
-                  <h3>JetBay Highlights {i + 1}</h3>
+                  <h3>JetVina Highlights {i + 1}</h3>
                 </div>
               </article>
             ))}

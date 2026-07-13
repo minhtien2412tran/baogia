@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { tn } from '@jetbay/i18n';
+import { SHOW_UNVERIFIED_PARTNER_LOGOS } from '../../lib/brand';
 import { JB } from '../../config/jetbay-cdn';
 import { CdnImage } from '../ui/CdnImage';
 import { FlightScrollRail } from '../ui/FlightScrollRail';
@@ -19,6 +20,11 @@ export function MediaSection({ locale }: { locale: string }) {
     [locale],
   );
   const [tab, setTab] = useState<TabId>('media');
+
+  // JetBay / unverified association logos blocked until CLIENT_PROVIDED rights.
+  if (!SHOW_UNVERIFIED_PARTNER_LOGOS) {
+    return null;
+  }
 
   return (
     <section className="jb-section jb-media-section">

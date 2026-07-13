@@ -18,9 +18,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'pnpm dev',
+    command: 'pnpm --filter @jetbay/web dev',
     url: 'http://localhost:3000',
-    reuseExistingServer: true,
-    timeout: 120000,
+    reuseExistingServer: !process.env.CI,
+    timeout: 180000,
   },
 });

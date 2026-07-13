@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getMegaMenu, tn } from '@jetbay/i18n';
 import { navHref, navLinkIcon } from '../../config/navigation';
-import { JB } from '../../config/jetbay-cdn';
 import { CdnImage } from '../ui/CdnImage';
-import { JetBayLogo } from '../ui/JetBayLogo';
+import { BrandLogo } from '../brand/BrandLogo';
+import { JETVINA_OFFICIAL_LOGO_ENABLED } from '../../lib/brand';
+import { AppIcon } from '../ui/AppIcon';
+import { IconButton } from '../ui/IconButton';
 import { LanguagePicker, LocaleCurrencySelector } from './LocaleCurrencySelector';
 import { HeaderUserMenu, MegaMenuAuthLinks } from './HeaderUserMenu';
 import { t } from '../../lib/i18n';
@@ -31,14 +33,14 @@ export function JetBayHeader({ locale, currency = 'USD' }: { locale: string; cur
     <>
       <header className="jb-header">
         <div className="jb-header-inner">
-          <button type="button" className="jb-menu-btn" aria-label="Open menu" onClick={() => setMenuOpen(true)}>
+          <button type="button" className="jb-menu-btn icon-btn" aria-label="Open menu" onClick={() => setMenuOpen(true)}>
             <span className="jb-menu-icon" aria-hidden>
-              <CdnImage src={JB.globalIcon} alt="" width={20} height={20} className="jb-header-icon" />
+              <AppIcon name="menu" size="md" />
             </span>
             <span className="jb-menu-label jb-hide-mobile">{t(locale, 'menu')}</span>
           </button>
-          <Link href={navHref(locale, '')} className="jb-logo-link">
-            <JetBayLogo priority />
+          <Link href={navHref(locale, '')} className="jb-logo-link brand-logo-link">
+            <BrandLogo context="header" priority officialLogoEnabled={JETVINA_OFFICIAL_LOGO_ENABLED} />
           </Link>
           <nav className="jb-desktop-nav jb-hide-mobile" aria-label="Main">
             {menu.slice(0, 4).map((group) => (
@@ -72,7 +74,7 @@ export function JetBayHeader({ locale, currency = 'USD' }: { locale: string; cur
             <LocaleCurrencySelector locale={locale} currency={currency} />
             <HeaderUserMenu locale={locale} />
             <Link href={navHref(locale, '/private-jet-charter')} className="jb-btn-contact">
-              <CdnImage src={JB.callIcon} alt="" width={16} height={16} className="jb-header-icon-sm" />
+              <AppIcon name="phone" size="sm" aria-hidden />
               {t(locale, 'contactUs')}
             </Link>
           </div>
@@ -83,8 +85,8 @@ export function JetBayHeader({ locale, currency = 'USD' }: { locale: string; cur
         <div className="jb-mega-backdrop" onClick={closeMenu} />
         <div className="jb-mega-panel jb-mega-vertical-panel">
           <div className="jb-mega-header">
-            <JetBayLogo />
-            <button type="button" className="jb-menu-btn" onClick={closeMenu} aria-label="Close menu">✕</button>
+            <BrandLogo context="mobile" officialLogoEnabled={JETVINA_OFFICIAL_LOGO_ENABLED} />
+            <IconButton name="close" label="Close menu" onClick={closeMenu} />
           </div>
 
           <div className="jb-mega-lang">

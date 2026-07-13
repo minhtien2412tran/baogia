@@ -1,0 +1,159 @@
+/* Brand + icon tokens — JetVina identification layer (does not clone JetVina layout CSS) */
+:root {
+  --brand-primary: #c9a45c;
+  --brand-primary-hover: #d4b46e;
+  --brand-primary-soft: rgba(201, 164, 92, 0.14);
+  --brand-accent: #c9a45c;
+  --brand-text: #ffffff;
+  --brand-text-muted: #9aa3b2;
+  --brand-foreground: #ffffff;
+  --brand-muted: #9aa3b2;
+  --brand-surface: #0a0c0f;
+  --brand-surface-raised: #12161c;
+  --brand-border: rgba(255, 255, 255, 0.12);
+  --brand-focus-ring: 0 0 0 2px var(--brand-surface), 0 0 0 4px var(--brand-primary);
+
+  --brand-logo-header-width: 170px;
+  --brand-logo-tablet-width: 150px;
+  --brand-logo-mobile-width: 130px;
+  --brand-logo-footer-width: 180px;
+  --brand-logo-header-max-height: 48px;
+  --brand-logo-mobile-max-height: 40px;
+  --brand-logo-footer-max-height: 56px;
+
+  --icon-xs: 14px;
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+  --icon-xl: 32px;
+  --icon-size-sm: var(--icon-sm);
+  --icon-size-md: var(--icon-md);
+  --icon-size-lg: var(--icon-lg);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --shadow-card: 0 8px 28px rgba(0, 0, 0, 0.28);
+  --shadow-dropdown: 0 12px 32px rgba(0, 0, 0, 0.4);
+
+  /* Bridge legacy JetBay CSS vars */
+  --jb-gold: var(--brand-primary);
+  --jb-text-muted: var(--brand-text-muted);
+}
+
+.brand-logo {
+  display: block;
+  width: var(--brand-logo-header-width);
+  max-width: 100%;
+  height: auto;
+  max-height: var(--brand-logo-header-max-height);
+  object-fit: contain;
+  object-position: left center;
+  flex-shrink: 0;
+}
+
+.brand-logo--header {
+  width: var(--brand-logo-header-width);
+  max-height: var(--brand-logo-header-max-height);
+}
+
+.brand-logo--mobile {
+  width: var(--brand-logo-mobile-width);
+  max-height: var(--brand-logo-mobile-max-height);
+}
+
+.brand-logo--footer {
+  width: var(--brand-logo-footer-width);
+  max-height: var(--brand-logo-footer-max-height);
+}
+
+.brand-logo--mark {
+  width: 40px;
+  height: 40px;
+  max-height: 40px;
+}
+
+.brand-logo-link {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  line-height: 0;
+  text-decoration: none;
+  width: auto;
+  max-width: var(--brand-logo-header-width);
+  height: auto;
+  min-height: var(--brand-logo-header-max-height);
+  overflow: visible;
+}
+
+.app-icon {
+  display: inline-block;
+  color: currentColor;
+  flex-shrink: 0;
+  vertical-align: middle;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 8px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: currentColor;
+  cursor: pointer;
+}
+
+.icon-btn:hover:not(:disabled) {
+  background: var(--brand-primary-soft);
+}
+
+.icon-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--brand-focus-ring);
+}
+
+.icon-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.icon-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--brand-primary-soft);
+  color: var(--brand-primary);
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --brand-logo-header-width: var(--brand-logo-tablet-width);
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --brand-logo-header-width: var(--brand-logo-mobile-width);
+  }
+
+  .brand-logo-link {
+    max-width: var(--brand-logo-mobile-width);
+    min-height: var(--brand-logo-mobile-max-height);
+  }
+
+  .icon-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}

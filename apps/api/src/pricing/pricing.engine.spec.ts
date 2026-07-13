@@ -22,6 +22,7 @@ function airport(
     overnightFee: 0,
     handlingFee: 0,
     feeCurrency: 'USD',
+    canParkAircraft: true,
     ...partial,
   };
 }
@@ -125,6 +126,38 @@ describe('pricing engine CAN→HAN→SGN', () => {
     expect(estimate.positioningRequired).toBe(false);
     expect(estimate.legs).toHaveLength(1);
     expect(estimate.legs[0].legType).toBe('PASSENGER');
+  });
+
+  it('skips overnight parking fees when airport cannot park aircraft', () => {
+    const noParkSgn = airport({
+      id: 3,
+      iata: 'SGN',
+      city: 'Ho Chi Minh City',
+      latitude: 10.8188,
+      longitude: 106.652,
+      landingFee: 450,
+      handlingFee: 180,
+      parkingFee: 90,
+      overnightFee: 200,
+      canParkAircraft: false,
+    });
+    const map2 = new Map<number, AirportGeoFees>([
+      [can.id, can],
+      [han.id, han],
+      [noParkSgn.id, noParkSgn],
+    ]);
+    const withPark = buildPricingEstimate({
+      aircraft: { ...aircraftAtCan, currentAirportId: han.id },
+      airportsById: map,
+      passengerRoute: { fromAirportId: han.id, toAirportId: sgn.id },
+    });
+    const withoutPark = buildPricingEstimate({
+      aircraft: { ...aircraftAtCan, currentAirportId: han.id },
+      airportsById: map2,
+      passengerRoute: { fromAirportId: han.id, toAirportId: noParkSgn.id },
+    });
+    expect(withoutPark.parkingFeesTotal).toBe(0);
+    expect(withPark.parkingFeesTotal).toBeGreaterThan(0);
   });
 
   it('freezes snapshot immutably (deep clone)', () => {

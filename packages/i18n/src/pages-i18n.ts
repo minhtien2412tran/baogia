@@ -18,7 +18,7 @@ const privateJetCharter: PageOverlayMap = {
   vi: {
     title: 'Máy bay riêng cho mọi nhu cầu',
     description: 'Thuê máy bay riêng theo yêu cầu với hơn 10.000 máy bay và hỗ trợ 24/7.',
-    hero: 'Dịch vụ thuê máy bay riêng của JetBay kết hợp sang trọng, hiệu quả và an toàn với giá trị tốt nhất.',
+    hero: 'Dịch vụ thuê máy bay riêng của JetVina kết hợp sang trọng, hiệu quả và an toàn với giá trị tốt nhất.',
     tag: 'Thuê chuyến',
     cta: { label: 'Tìm máy bay khả dụng' },
     sections: [
@@ -41,8 +41,8 @@ const privateJetCharter: PageOverlayMap = {
   },
   'zh-cn': {
     title: '满足各种需求的私人飞机',
-    description: '按需私人飞机包机，10,000+飞机资源，24/7礼宾服务。',
-    hero: 'JetBay私人包机服务以最优价值融合奢华、效率与安全。',
+    description: '按需私人飞机包机，飞机资源，24/7礼宾服务。',
+    hero: 'JetVina私人包机服务以最优价值融合奢华、效率与安全。',
     tag: '包机',
     cta: { label: '搜索可用飞机' },
     sections: [
@@ -60,8 +60,8 @@ const privateJetCharter: PageOverlayMap = {
   },
   'zh-hk': {
     title: '滿足各種需求的私人飛機',
-    description: '按需私人飛機包機，10,000+飛機資源，24/7禮賓服務。',
-    hero: 'JetBay私人包機服務以最優價值融合奢華、效率與安全。',
+    description: '按需私人飛機包機，飛機資源，24/7禮賓服務。',
+    hero: 'JetVina私人包機服務以最優價值融合奢華、效率與安全。',
     tag: '包機',
     cta: { label: '搜尋可用飛機' },
     sections: [
@@ -79,8 +79,8 @@ const privateJetCharter: PageOverlayMap = {
   },
   'zh-tw': {
     title: '滿足各種需求的私人飛機',
-    description: '按需私人飛機包機，10,000+飛機資源，24/7禮賓服務。',
-    hero: 'JetBay私人包機服務以最優價值融合奢華、效率與安全。',
+    description: '按需私人飛機包機，飛機資源，24/7禮賓服務。',
+    hero: 'JetVina私人包機服務以最優價值融合奢華、效率與安全。',
     tag: '包機',
     cta: { label: '搜尋可用飛機' },
     sections: [
@@ -175,24 +175,24 @@ const PAGE_OVERLAYS: Record<string, PageOverlayMap> = {
   ),
   'air-ambulance': simpleOverlay(
     {
-      title: 'JetBay SOS — Hỗ trợ y tế hàng không',
+      title: 'Air Ambulance — Hỗ trợ y tế hàng không',
       description: 'Sơ tán y tế và cấp cứu hàng không phản ứng 24/7.',
       hero: 'Khi từng phút quan trọng, đội SOS điều phối chuyển viện toàn cầu.',
       tag: 'Khẩn cấp',
-      cta: { label: 'Yêu cầu JetBay SOS' },
+      cta: { label: 'Yêu cầu Air Ambulance' },
     },
     {
-      title: 'JetBay SOS — 医疗空运',
+      title: 'Air Ambulance — 医疗空运',
       description: '24/7快速响应医疗转运与空中救护。',
       hero: '分秒必争，SOS团队协调全球床对床医疗转运。',
       tag: '紧急',
-      cta: { label: '请求JetBay SOS' },
+      cta: { label: '请求Air Ambulance' },
     },
   ),
   'booking-process': simpleOverlay(
     {
       title: 'Quy trình đặt chuyến',
-      description: 'Hướng dẫn thuê máy bay riêng với JetBay.',
+      description: 'Hướng dẫn thuê máy bay riêng với JetVina.',
       hero: 'Từ tìm kiếm đến cất cánh chỉ với bốn bước đơn giản.',
       tag: 'Hướng dẫn',
       cta: { label: 'Bắt đầu tìm kiếm' },
@@ -205,7 +205,7 @@ const PAGE_OVERLAYS: Record<string, PageOverlayMap> = {
     },
     {
       title: '预订流程',
-      description: 'JetBay私人飞机包机指南。',
+      description: 'JetVina私人飞机包机指南。',
       hero: '四步简单流程，从搜索到起飞。',
       tag: '指南',
       cta: { label: '开始搜索' },
@@ -220,14 +220,14 @@ const PAGE_OVERLAYS: Record<string, PageOverlayMap> = {
   'global-partnership-program': simpleOverlay(
     {
       title: 'Chương trình đối tác toàn cầu',
-      description: 'Tham gia mạng giới thiệu JetBay — không cần kinh nghiệm hàng không.',
+      description: 'Tham gia mạng giới thiệu JetVina — không cần kinh nghiệm hàng không.',
       hero: 'Giới thiệu khách hàng, nhận hoa hồng và tận dụng đội bay & hỗ trợ toàn cầu.',
       tag: 'Đối tác',
       cta: { label: 'Trở thành đối tác' },
     },
     {
       title: '全球合作伙伴计划',
-      description: '加入JetBay推荐网络——无需航空经验。',
+      description: '加入JetVina推荐网络——无需航空经验。',
       hero: '推荐客户、赚取佣金，利用全球机队与支持基础设施。',
       tag: '合作伙伴',
       cta: { label: '成为合作伙伴' },
@@ -235,14 +235,14 @@ const PAGE_OVERLAYS: Record<string, PageOverlayMap> = {
   ),
   'jetbay-private-jet-app': simpleOverlay(
     {
-      title: 'Ứng dụng JetBay Private Jet',
+      title: 'Ứng dụng Private Jet',
       description: 'Đặt và quản lý chuyến bay riêng trên di động.',
       hero: 'Tìm tuyến, theo dõi báo giá và quản lý chuyến đi — mọi nơi trên thế giới.',
       tag: 'Ứng dụng',
       cta: { label: 'Tải trên App Store' },
     },
     {
-      title: 'JetBay私人飞机应用',
+      title: 'JetVina私人飞机应用',
       description: '在移动设备上预订和管理私人飞机旅行。',
       hero: '搜索航线、跟踪报价、管理行程——随时随地。',
       tag: '应用',
@@ -290,15 +290,15 @@ const HOME_OVERLAYS: PageOverlayMap = {
     hero: 'Truy cập liền mạch, đáng tin cậy vào hàng không tư nhân trên toàn thế giới.',
   },
   'zh-cn': {
-    title: '全球私人飞机包机：接入10,000+飞机',
+    title: '全球私人飞机包机：全球私人航空服务',
     hero: '无缝、可信赖的全球私人航空接入。',
   },
   'zh-hk': {
-    title: '全球私人飛機包機：接入10,000+飛機',
+    title: '全球私人飛機包機：全球私人航空服務',
     hero: '無縫、可信賴的全球私人航空接入。',
   },
   'zh-tw': {
-    title: '全球私人飛機包機：接入10,000+飛機',
+    title: '全球私人飛機包機：全球私人航空服務',
     hero: '無縫、可信賴的全球私人航空接入。',
   },
 };

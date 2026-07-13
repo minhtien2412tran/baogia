@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { localAsset } from '../../config/jetbay-cdn';
+import { sanitizePublicMediaSrc } from '../../lib/media-policy';
 
 type Props = {
   src: string;
@@ -14,7 +15,7 @@ type Props = {
 };
 
 export function CdnImage({ src, alt, width, height, fill, className, style, priority, sizes }: Props) {
-  const url = localAsset(src);
+  const url = sanitizePublicMediaSrc(localAsset(src));
   if (fill) {
     return (
       <Image
@@ -45,7 +46,7 @@ export function CdnImage({ src, alt, width, height, fill, className, style, prio
 
 export function cdnBg(src: string): React.CSSProperties {
   return {
-    backgroundImage: `url(${localAsset(src)})`,
+    backgroundImage: `url(${sanitizePublicMediaSrc(localAsset(src))})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
