@@ -169,6 +169,7 @@ export const adminApi = {
         name: string;
         region: string;
         contactEmail?: string | null;
+        status?: string;
         users?: unknown[];
       }>;
     }>('/admin/operators'),
