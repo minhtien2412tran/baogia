@@ -66,6 +66,7 @@
 - **Fleet nearest-base search** (2026-07-13) — +10 airports (CDG/ORY/KIX/TPE/SFO/ORD/BOS/MLE/SEZ/HPH) · +10 aircraft · search ưu tiên base gần điểm đi · luôn hiện `baseAirport` + km · seed prod
 - **JetVina media + loader + samples** (2026-07-13) — hotlink `jetvina.com` ON · page loader · +6 hãng mẫu · email templates en/vi · [JETVINA_SAMPLE_CONTENT.md](./JETVINA_SAMPLE_CONTENT.md)
 - **Báo cáo tiến độ v3.0** (2026-07-13) — `/baocaotiendo` cập nhật % GĐ1/WEB/ADM · demo + Swagger Basic passwords (đã rotate) · không còn `Admin123!`/`Demo123!`
+- **JetVina images shared** (2026-07-13) — `jv()` helper · private-jet-charter + heroes/fleet/destinations dùng catalog [jetvina.com](https://jetvina.com/) · không còn SVG demo fleet
 
 **Ops còn lại:** SMTP prod thật · CMS dịch locale · G4 keys KH · pen-test/IDOR
 **Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) · [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)

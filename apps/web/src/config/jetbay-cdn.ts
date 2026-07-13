@@ -1,6 +1,6 @@
 /** Historical media seeds — remapped by sanitize; never emit /assets/jetbay to the DOM. */
-import { sanitizePublicMediaSrc } from '../lib/media-policy';
-import { JETVINA_MEDIA } from '../lib/jetvina-media-catalog';
+import { sanitizePublicMediaSrc, type PlaceholderKind } from '../lib/media-policy';
+import { JETVINA_MEDIA, type JetvinaMediaKind } from '../lib/jetvina-media-catalog';
 import { ALLOW_JETVINA_REMOTE } from '../lib/media-env';
 
 export const LOCAL_ASSET_ROOT = '/media-seed';
@@ -49,12 +49,32 @@ export function cdnUrl(path: string, _width?: 750 | 1200 | 1920): string {
 
 const L = localAsset;
 
+const KIND_AS_PLACEHOLDER: Record<JetvinaMediaKind, PlaceholderKind> = {
+  aircraft: 'aircraft',
+  cabin: 'cabin',
+  destination: 'destination',
+  hero: 'hero',
+  news: 'news',
+  service: 'service',
+  membership: 'membership',
+  map: 'map',
+};
+
+/**
+ * Shared JetVina media (https://jetvina.com WP uploads).
+ * Prefer explicit catalog picks over hash-remapped JetBay seeds.
+ */
+export function jv(kind: JetvinaMediaKind, index = 0): string {
+  const pool = JETVINA_MEDIA[kind];
+  const url = pool[Math.abs(index) % pool.length]!;
+  if (ALLOW_JETVINA_REMOTE) return url;
+  return sanitizePublicMediaSrc(url, KIND_AS_PLACEHOLDER[kind]);
+}
+
 export const JB = {
   logo: JETBAY_LOGO,
   logoDefault: JETBAY_LOGO,
-  homeBg: ALLOW_JETVINA_REMOTE
-    ? JETVINA_MEDIA.hero[0]
-    : L('/v4/default/homeBg-904817913171628032.webp'),
+  homeBg: jv('hero', 0),
   callIcon: L('/v4/default/call-910545791444205568.webp'),
   globalIcon: L('/jetbayImg/common/global_b.png'),
   subscribeIcon: L('/v4/default/subscribe-icon-910621258612318208.webp'),
@@ -70,22 +90,22 @@ export const JB = {
   },
 
   menu: {
-    privateJet: L('/jetbayImg/menu/privet jet2.png'),
-    groupCharter: L('/jetbayImg/menu/group charter2.png'),
-    medevac: L('/jetbayImg/menu/medevac2.png'),
-    pet: L('/jetbayImg/menu/pet2.png'),
-    event: L('/jetbayImg/menu/event charter.png'),
+    privateJet: jv('aircraft', 0),
+    groupCharter: jv('aircraft', 10),
+    medevac: jv('service', 0),
+    pet: jv('cabin', 3),
+    event: jv('news', 0),
   },
 
   videoThumbs: [
-    L('/videoImg/EBACE.jpg'),
-    L('/videoImg/5th_anniversary.jpg'),
-    L('/videoImg/Jetbay_VIP_networking.jpg'),
-    L('/videoImg/Bombardier_tour.jpg'),
-    L('/videoImg/Bombardier_interview.jpg'),
-    L('/videoImg/Bali_highlight.jpg'),
-    L('/videoImg/company_profile.jpg'),
-    L('/videoImg/CNY_Greetings.jpg'),
+    jv('news', 0),
+    jv('news', 1),
+    jv('aircraft', 1),
+    jv('aircraft', 0),
+    jv('cabin', 0),
+    jv('destination', 0),
+    jv('service', 1),
+    jv('news', 2),
   ],
 
   trust: {
@@ -96,36 +116,36 @@ export const JB = {
 
   promo: {
     worldCup: {
-      desktop: L('/v4/home/banner/fifa2/jetbay-connexus-world-cup-2026-full-schedule-private-jet-travel-banner.webp'),
-      mobile: L('/v4/home/banner/fifa2/jetbay-connexus-world-cup-2026-full-schedule-private-jet-travel-banner-mobile.webp'),
+      desktop: jv('news', 0),
+      mobile: jv('news', 1),
     },
     fixedPrice: {
-      desktop: L('/v4/alt/banner/home/fixed-price-private-jet-charter-banner-en-pc.webp'),
-      mobile: L('/v4/alt/banner/home/fixed-price-private-jet-charter-banner-en-m.webp'),
+      desktop: jv('aircraft', 1),
+      mobile: jv('aircraft', 2),
     },
     cabin: {
-      desktop: L('/v4/alt/banner/home/private-jet-cabin-banner-en-pc.webp'),
-      mobile: L('/v4/alt/banner/home/private-jet-cabin-banner-en-m.webp'),
+      desktop: jv('cabin', 0),
+      mobile: jv('cabin', 1),
     },
   },
 
   sections: {
-    aboutJet: L('/v4/default/privateBg-917782047634976768.webp'),
-    whyCharter: L('/jetbayImg/home/knowledges/know1.png'),
-    sos: L('/v4/default/sos-904477163624214528.webp'),
-    app: L('/jetbayImg/app/app_download_new.png'),
-    partner: L('/jetbayImg/partner/service_partner.png'),
-    partnerMobile: L('/jetbayImg/partner/service_partner_m.png'),
-    islandBg: L('/v4/alt/scenario/type/island-turquoise-coastline-bg.webp'),
+    aboutJet: jv('hero', 1),
+    whyCharter: jv('cabin', 2),
+    sos: jv('service', 0),
+    app: jv('membership', 0),
+    partner: jv('service', 1),
+    partnerMobile: jv('service', 2),
+    islandBg: jv('destination', 0),
   },
 
   destinations: {
-    nassau: L('/v4/alt/scenario/destination/nassau-beach-home.webp'),
-    providenciales: L('/v4/alt/scenario/destination/providenciales-beach-home.webp'),
-    stBarts: L('/v4/alt/scenario/destination/st-barts-harbor-home.webp'),
-    grandCayman: L('/v4/alt/scenario/destination/grand-cayman-beach-home.webp'),
-    anguilla: L('/v4/alt/scenario/destination/anguilla-beach-home.webp'),
-    sanJuan: L('/v4/alt/scenario/destination/san-juan-beach-home.webp'),
+    nassau: jv('destination', 0),
+    providenciales: jv('destination', 1),
+    stBarts: jv('destination', 2),
+    grandCayman: jv('destination', 3),
+    anguilla: jv('destination', 4),
+    sanJuan: jv('destination', 5),
   },
 
   jetCard: {
@@ -196,58 +216,53 @@ export const JB = {
 
   pages: {
     privateJetCharter: {
-      hero: L('/v4/default/privateBg-917782047634976768.webp'),
-      banner: L('/v4/default/banner-917829613705719808.webp'),
-      jetCardPromo: L('/v4/batch/jetCardBg-917835541003857920.webp'),
-      creditPromo: L('/v4/batch/creditCardBg-917835537140903936.webp'),
-      service1: L('/v4/default/Private-Jet-Services1-930164880043810816.webp'),
-      services: [
-        L('/jetbayImg/service/privatejetcharter/privatejetservices/PrivateJetServiceWeOffer_2.png'),
-        L('/jetbayImg/service/privatejetcharter/privatejetservices/PrivateJetServiceWeOffer_4.png'),
-        L('/jetbayImg/service/privatejetcharter/privatejetservices/PrivateJetServiceWeOffer_5.png'),
-        L('/jetbayImg/service/privatejetcharter/privatejetservices/PrivateJetServiceWeOffer_6.png'),
-      ],
+      hero: jv('hero', 0),
+      banner: jv('hero', 1),
+      jetCardPromo: jv('cabin', 0),
+      creditPromo: jv('membership', 0),
+      service1: jv('aircraft', 0),
+      services: [jv('aircraft', 1), jv('destination', 0), jv('service', 0), jv('news', 0)],
       highlights: [
-        { icon: L('/v4/batch/Global-Coverage-918237629413027840.webp'), title: 'Global Coverage' },
-        { icon: L('/v4/batch/AI-Powered-Efficiency-918237626535735296.webp'), title: 'AI-Powered Efficiency' },
-        { icon: L('/v4/batch/Uncompromised-Safety-918237635805147136.webp'), title: 'Uncompromised Safety' },
-        { icon: L('/v4/batch/Industry-Leader-918237632806219776.webp'), title: 'Industry Leader' },
+        { icon: '/placeholders/demo/service-01.svg', title: 'Global Coverage' },
+        { icon: '/placeholders/demo/service-02.svg', title: 'AI-Powered Efficiency' },
+        { icon: '/placeholders/demo/aircraft-01.svg', title: 'Uncompromised Safety' },
+        { icon: '/placeholders/demo/aircraft-02.svg', title: 'Industry Leader' },
       ],
-      aircraft: L('/v4/alt/aircraft/phenom-300-light-jet.webp'),
+      aircraft: jv('aircraft', 2),
       aircraftFleet: [
-        L('/v4/alt/aircraft/phenom-300-light-jet.webp'),
-        L('/v4/alt/aircraft/citation-xls-midsize-business-jet.webp'),
-        L('/v4/alt/aircraft/challenger-350-midsize-business-jet.webp'),
-        L('/v4/alt/aircraft/citation-latitude-midsize-business-jet.webp'),
-        L('/v4/alt/aircraft/gulfstream-g650er-luxury-jet.webp'),
-        L('/v4/alt/aircraft/global-6000-luxury-jet.webp'),
-        L('/v4/alt/aircraft/praetor-600-midsize-business-jet.webp'),
+        jv('aircraft', 2),
+        jv('aircraft', 6),
+        jv('aircraft', 7),
+        jv('aircraft', 3),
+        jv('aircraft', 8),
+        jv('aircraft', 0),
+        jv('aircraft', 4),
       ],
       serviceBlocks: [
         {
           title: 'Private Jet Charter for Business Travel',
           body: 'Optimise your business travel with our efficient and flexible private air charter services. We offer tailored solutions for executives and corporate teams, ensuring seamless and productive journeys.',
-          image: L('/jetbayImg/service/privatejetcharter/privatejetservices/PrivateJetServiceWeOffer_2.png'),
+          image: jv('aircraft', 1),
         },
         {
           title: 'Private Jet Charter for Leisure Travel',
           body: 'Embark on unforgettable adventures with our private aircraft charters for leisure travel. Explore exotic destinations, escape to secluded retreats, or enjoy a luxurious getaway with family and friends.',
-          image: L('/jetbayImg/service/privatejetcharter/privatejetservices/PrivateJetServiceWeOffer_4.png'),
+          image: jv('destination', 0),
         },
         {
           title: 'Private Jet Charter for Medical Transport',
           body: 'In times of medical urgency, our private jets provide swift and secure transportation for patients requiring critical care with experienced medical professionals onboard.',
-          image: L('/jetbayImg/service/privatejetcharter/privatejetservices/PrivateJetServiceWeOffer_5.png'),
+          image: jv('service', 0),
         },
         {
           title: 'Private Jet Charter for Pet Travel',
           body: 'Bring your beloved companions along on your journeys with our pet-friendly private jets. We prioritise the comfort and safety of your pets throughout their journey.',
-          image: L('/v4/default/Private-Jet-Services1-930164880043810816.webp'),
+          image: jv('cabin', 3),
         },
         {
           title: 'Private Jet Charter for Events',
           body: 'Elevate your next event with specialised private jet charters for corporate gatherings, weddings, music festivals, and VIP groups of all sizes.',
-          image: L('/jetbayImg/service/privatejetcharter/privatejetservices/PrivateJetServiceWeOffer_6.png'),
+          image: jv('news', 0),
         },
       ],
       processSteps: [
@@ -281,14 +296,14 @@ export const JB = {
       ],
     },
     jetCard: {
-      hero: L('/jetbayImg/jetcard/header/bg.webp'),
-      heroMobile: L('/jetbayImg/jetcard/header/bgM.webp'),
-      evaluateBg: L('/jetbayImg/jetcard/evaluateBg.webp'),
+      hero: jv('cabin', 0),
+      heroMobile: jv('cabin', 1),
+      evaluateBg: jv('cabin', 2),
       benefits: [
-        { icon: L('/jetbayImg/jetcard/Noblackoutdates.webp'), title: 'No Blackout Dates' },
-        { icon: L('/jetbayImg/jetcard/Priorityaccess.webp'), title: 'Priority Access' },
-        { icon: L('/jetbayImg/jetcard/Seamlessbooking.webp'), title: 'Seamless Booking' },
-        { icon: L('/jetbayImg/jetcard/Luxuryexperience.webp'), title: 'Luxury Experience' },
+        { icon: '/placeholders/demo/service-01.svg', title: 'No Blackout Dates' },
+        { icon: '/placeholders/demo/service-02.svg', title: 'Priority Access' },
+        { icon: '/placeholders/demo/aircraft-01.svg', title: 'Seamless Booking' },
+        { icon: '/placeholders/demo/aircraft-02.svg', title: 'Luxury Experience' },
       ],
       comparison: {
         rows: [
@@ -316,108 +331,98 @@ export const JB = {
       ],
     },
     emptyLeg: {
-      hero: L('/v4/default/emptyLegBg-916809761448710144.webp'),
-      steps: [
-        L('/v4/batch/1-917495760386514944.webp'),
-        L('/v4/batch/2-917495762458501120.webp'),
-        L('/v4/batch/3-917495763976839168.webp'),
-        L('/v4/batch/4-917495765616812032.webp'),
-      ],
+      hero: jv('aircraft', 5),
+      steps: [jv('aircraft', 0), jv('aircraft', 2), jv('aircraft', 4), jv('aircraft', 6)],
     },
     fixedPrice: {
-      hero: L('/v4/batch/PC_副本-906558134271881216.webp'),
-      heroMobile: L('/v4/batch/H5-906558131340062720.webp'),
-      routeIcon: L('/v4/default/road-911707614550241280.webp'),
+      hero: jv('hero', 2),
+      heroMobile: jv('hero', 3),
+      routeIcon: '/placeholders/demo/map-01.svg',
       hotRoutes: [
-        L('/v4/alt/hot-route/list/new-york-miami-miami-waterfront-list.webp'),
-        L('/v4/alt/hot-route/list/london-paris-woman-red-list.webp'),
-        L('/v4/alt/hot-route/list/los-angeles-las-vegas-gondolier-striped-list.webp'),
-        L('/v4/alt/hot-route/list/new-york-washington-snowcapped-mountain-list.webp'),
+        jv('destination', 0),
+        jv('destination', 1),
+        jv('destination', 2),
+        jv('destination', 3),
       ],
     },
     airAmbulance: {
-      hero: L('/jetbayImg/service/airambulance/bgM.png'),
-      medevac: L('/jetbayImg/service/airambulance/medevac_info.png'),
+      hero: jv('service', 0),
+      medevac: jv('service', 1),
       equipment: [
-        L('/jetbayImg/service/airambulance/equipped/pilots.png'),
-        L('/jetbayImg/service/airambulance/equipped/doctors.png'),
-        L('/jetbayImg/service/airambulance/equipped/paramedics.png'),
-        L('/jetbayImg/service/airambulance/equipped/medical.png'),
+        jv('service', 2),
+        jv('cabin', 4),
+        jv('aircraft', 9),
+        jv('service', 3),
       ],
     },
     travelCredit: {
-      hero: L('/jetbayImg/travelcredit/picture_1.png'),
-      picture2: L('/jetbayImg/travelcredit/picture_1.png'),
+      hero: jv('membership', 0),
+      picture2: jv('cabin', 5),
     },
     partner: {
-      service: L('/jetbayImg/partner/service_partner.png'),
-      referral: L('/jetbayImg/partner/referral_partner.png'),
-      official: L('/jetbayImg/partner/official_partner.png'),
+      service: jv('service', 1),
+      referral: jv('service', 2),
+      official: jv('service', 3),
       icons: {
-        service: L('/jetbayImg/partner/service_partner.png'),
-        referral: L('/jetbayImg/partner/referral_partner.png'),
-        official: L('/jetbayImg/partner/official_partner.png'),
+        service: jv('service', 1),
+        referral: jv('service', 2),
+        official: jv('service', 3),
       },
     },
     bookingProcess: {
-      hero: L('/v4/default/52bc72c4add2f8bf497e801e26ba4a568a48a10f-918214737245728768.webp'),
-      heroMobile: L('/v4/default/52bc72c4add2f8bf497e801e26ba4a568a48a10f-918214737245728768.webp'),
-      steps: [
-        L('/jetbayImg/charter/booking/process/process_step_1.png'),
-        L('/jetbayImg/charter/booking/process/process_step_2.png'),
-        L('/jetbayImg/charter/booking/process/process_step_3.png'),
-        L('/jetbayImg/charter/booking/process/process_step_4.png'),
-      ],
+      hero: jv('hero', 1),
+      heroMobile: jv('hero', 2),
+      steps: [jv('aircraft', 0), jv('cabin', 0), jv('map', 0), jv('aircraft', 1)],
     },
     about: {
-      hero: L('/jetbayImg/about/bg_about.png'),
-      heroMobile: L('/jetbayImg/about/bg_aboutM.png'),
-      flyAnywhere: L('/jetbayImg/about/fly_anywhere_jetbay.png'),
+      hero: jv('hero', 3),
+      heroMobile: jv('aircraft', 0),
+      flyAnywhere: jv('aircraft', 10),
       pillars: {
-        globalPlatform: L('/jetbayImg/about/GlobalCharterPlatform.png'),
-        seamless: L('/jetbayImg/about/Seamless.png'),
-        owning: L('/jetbayImg/about/owning.png'),
+        globalPlatform: jv('map', 0),
+        seamless: jv('cabin', 0),
+        owning: jv('aircraft', 1),
       },
       team: {
-        ai: L('/jetbayImg/about/team_ai.png'),
-        dev: L('/jetbayImg/about/dev_team.png'),
-        expert: L('/jetbayImg/about/expert.png'),
-        support: L('/jetbayImg/about/support_team.png'),
+        ai: jv('service', 2),
+        dev: jv('service', 3),
+        expert: jv('cabin', 6),
+        support: jv('service', 4),
       },
       awards: [
-        { alt: 'CFS 2023', image: L('/jetbayImg/about/awards/2023_cfs.png') },
-        { alt: 'PF 2023', image: L('/jetbayImg/about/awards/2023_pf.png') },
-        { alt: 'IIMP 2023', image: L('/jetbayImg/about/awards/2023_iimp.png') },
-        { alt: 'Hurun 2025', image: L('/jetbayImg/about/awards/2025_hurun.png') },
-        { alt: 'ESG 2024', image: L('/jetbayImg/about/awards/2024_esg.png') },
-        { alt: 'Hurun 2024', image: L('/jetbayImg/about/awards/2024_hurun.png') },
-        { alt: 'STIF 2024', image: L('/jetbayImg/about/awards/2024_stif.png') },
-        { alt: 'ESG 2023', image: L('/jetbayImg/about/awards/2023_esg.png') },
+        { alt: 'CFS 2023', image: jv('news', 0) },
+        { alt: 'PF 2023', image: jv('news', 1) },
+        { alt: 'IIMP 2023', image: jv('news', 2) },
+        { alt: 'Hurun 2025', image: jv('news', 3) },
+        { alt: 'ESG 2024', image: jv('news', 4) },
+        { alt: 'Hurun 2024', image: jv('destination', 0) },
+        { alt: 'STIF 2024', image: jv('destination', 1) },
+        { alt: 'ESG 2023', image: jv('destination', 2) },
       ],
       offices: [
-        { city: 'Singapore', label: 'SINGAPORE', mapImage: L('/jetbayImg/about/map/sg.png') },
-        { city: 'Hong Kong', label: 'HONG KONG', mapImage: L('/jetbayImg/about/map/hk.png') },
-        { city: 'Jakarta', label: 'JAKARTA', mapImage: L('/jetbayImg/about/map/jakarta.png') },
-        { city: 'New York', label: 'NEW YORK', mapImage: L('/jetbayImg/about/map/newyork.png') },
-        { city: 'London', label: 'LONDON', mapImage: L('/jetbayImg/about/map/london.png') },
-        { city: 'Dubai', label: 'DUBAI', mapImage: L('/jetbayImg/about/map/dubai.png') },
-        { city: 'Shanghai', label: 'SHANGHAI', mapImage: L('/jetbayImg/about/map/cn.png') },
+        { city: 'Singapore', label: 'SINGAPORE', mapImage: jv('map', 0) },
+        { city: 'Hong Kong', label: 'HONG KONG', mapImage: jv('map', 1) },
+        { city: 'Jakarta', label: 'JAKARTA', mapImage: jv('map', 2) },
+        { city: 'New York', label: 'NEW YORK', mapImage: jv('destination', 4) },
+        { city: 'London', label: 'LONDON', mapImage: jv('destination', 5) },
+        { city: 'Dubai', label: 'DUBAI', mapImage: jv('destination', 6) },
+        { city: 'Shanghai', label: 'SHANGHAI', mapImage: jv('destination', 7) },
       ],
     },
     corporate: {
-      hero: L('/v4/default/homeBg-904817913171628032.webp'),
+      hero: jv('hero', 1),
     },
     app: {
-      hero: L('/jetbayImg/app/app_download_new.png'),
-      float: L('/jetbayImg/app/app_float_bg.png'),
+      hero: jv('membership', 0),
+      float: jv('aircraft', 0),
     },
     island: {
-      hero: L('/v4/alt/scenario/type/island-turquoise-coastline-bg.webp'),
+      hero: jv('destination', 0),
     },
     worldCup: {
-      hero: L('/v4/home/banner/fifa2/jetbay-connexus-world-cup-2026-full-schedule-private-jet-travel-banner.webp'),
+      hero: jv('news', 0),
     },
-    newsDefault: L('/v4/default/banner-917829613705719808.webp'),
+    newsDefault: jv('news', 3),
   },
 } as const;
 
