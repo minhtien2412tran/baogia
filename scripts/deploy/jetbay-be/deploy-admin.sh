@@ -1,11 +1,11 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 # Deploy Jet-Bay Admin to /var/www/jetbay-admin on 127.0.0.1:3011
 # Requires: admin Next.js standalone/build already synced to APP_ROOT
 set -euo pipefail
 
 DEPLOY_CONFIRM="${DEPLOY_CONFIRM:-}"
-if [ "${DEPLOY_CONFIRM}" != "ĐỒNG Ý TRIỂN KHAI" ]; then
-  echo "ABORT: Set DEPLOY_CONFIRM='ĐỒNG Ý TRIỂN KHAI'"
+if [ "${DEPLOY_CONFIRM}" != "Äá»’NG Ã TRIá»‚N KHAI" ]; then
+  echo "ABORT: Set DEPLOY_CONFIRM='Äá»’NG Ã TRIá»‚N KHAI'"
   exit 1
 fi
 
@@ -20,12 +20,12 @@ cp -a /etc/nginx/sites-available "${BACKUP_DIR}/" || true
 cp -a /etc/nginx/sites-enabled "${BACKUP_DIR}/" || true
 
 if [ ! -f "${APP_ROOT}/package.json" ]; then
-  echo "ABORT: ${APP_ROOT}/package.json missing — sync apps/admin first"
+  echo "ABORT: ${APP_ROOT}/package.json missing â€” sync apps/admin first"
   exit 1
 fi
 
 if ss -tlnp | grep -q ":${PORT} "; then
-  echo "[admin] port ${PORT} already in use — will restart PM2 jetbay-admin"
+  echo "[admin] port ${PORT} already in use â€” will restart PM2 jetbay-admin"
 fi
 
 cd "${APP_ROOT}"

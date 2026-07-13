@@ -45,9 +45,11 @@
 - [x] Operator CRUD + `OperatorUser` + contact email
 - [x] `EmailTemplate` editable + flight notify (operator + admin inbox)
 - [x] Admin UI: `/dashboard/operators`, `/dashboard/email-templates`, airports polish
-- [ ] Deploy API + Admin prod (SMTP giữ config VPS hiện có)
+- [x] Deploy API + Admin prod (2026-07-13) — migrate `ops_mail_airports` applied; seed run; smoke health + admin pages 200
+- SMTP: giữ `SMTP_*` trên VPS (không đổi Gmail trừ khi có App Password)
 
 Local DB note: migrate/seed on **`jta_db`**.
+Branch: `feat/api-ops-mail` (pushed).
 
 **Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) · [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)
 
