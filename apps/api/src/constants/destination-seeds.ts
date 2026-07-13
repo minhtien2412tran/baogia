@@ -1,5 +1,5 @@
-/** Curated destination catalog — thumbnails map to apps/web/public/assets/jetbay */
-const JB = '/assets/jetbay';
+/** Curated destination catalog — thumbnail seeds remapped by web media resolver (`/media-seed`). */
+const JB = '/media-seed';
 
 export type DestinationSeed = {
   slug: string;

@@ -49,7 +49,7 @@ export const SHOW_UNVERIFIED_PARTNER_LOGOS = false;
 export const SHOW_UNVERIFIED_MARKETING_SECTIONS =
   process.env.NEXT_PUBLIC_SHOW_UNVERIFIED_MARKETING === 'true';
 
-/** Remap /assets/jetbay/* images until CLIENT_ASSET_REQUIRED — see media-env / resolve-media-asset. */
+/** Remap /media-seed/* (legacy JetBay path seeds) — see media-env / resolve-media-asset. */
 export { BLOCK_JETBAY_MEDIA_ASSETS, PREFER_JETVINA_MEDIA } from './media-env';
 export {
   JETVINA_MEDIA_LOCAL_MIRROR_ENABLED,

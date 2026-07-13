@@ -1,18 +1,27 @@
-/** Local mirror of historical JetVina assets — do not use for brand logo UI. */
-export const LOCAL_ASSET_ROOT = '/assets/jetbay';
+/** Historical media seeds — remapped by sanitize; never emit /assets/jetbay to the DOM. */
+import { sanitizePublicMediaSrc } from '../lib/media-policy';
+
+export const LOCAL_ASSET_ROOT = '/media-seed';
 /** @deprecated Use BrandLogo /brand/jetvina — JetVina SVG removed from public brand path */
 export const JTA_LOGO = '/brand/jetvina/logo-fallback.svg';
 /** @deprecated Prefer BrandLogo */
 export const JETBAY_LOGO = JTA_LOGO;
 
 export function localAsset(path: string): string {
-  if (path.startsWith('/assets/')) return path;
+  if (path.startsWith('/placeholders/') || path.startsWith('/brand/')) return path;
+  if (path.startsWith('/assets/jetvina/')) return path;
+  if (path.startsWith('/media-seed/') || path.startsWith('/assets/jetbay/')) {
+    return sanitizePublicMediaSrc(path);
+  }
+  if (path.startsWith('/assets/')) {
+    return sanitizePublicMediaSrc(path);
+  }
   if (path.startsWith('http')) {
     try {
       const u = new URL(path.split('?')[0]);
       return localAsset(decodeURIComponent(u.pathname));
     } catch {
-      return path;
+      return sanitizePublicMediaSrc(path);
     }
   }
   const normalized = path.startsWith('/') ? path : `/${path}`;
@@ -21,7 +30,7 @@ export function localAsset(path: string): string {
     .filter(Boolean)
     .map((seg) => encodeURIComponent(seg))
     .join('/');
-  return `${LOCAL_ASSET_ROOT}/${encoded}`;
+  return sanitizePublicMediaSrc(`${LOCAL_ASSET_ROOT}/${encoded}`);
 }
 
 /** @deprecated Alias — width resize not used for local files */

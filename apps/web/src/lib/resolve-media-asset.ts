@@ -233,6 +233,7 @@ export function isJetBayMediaPath(src: string): boolean {
   const lower = src.toLowerCase();
   return (
     lower.includes('/assets/jetbay/') ||
+    lower.includes('/media-seed/') ||
     lower.includes('jetbayimg') ||
     lower.includes('jet-bay.com') ||
     lower.includes('asserts.jet-bay')

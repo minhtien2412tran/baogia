@@ -74,5 +74,5 @@ docs/DKIM_*.txt
 # Dev server PID file
 .jetbay-web-dev.pid
 
-# Media sync reports
-/tmp/media-sync-report.json
+/tmp/
+!/tmp/.gitkeep

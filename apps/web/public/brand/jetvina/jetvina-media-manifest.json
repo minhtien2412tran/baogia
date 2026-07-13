@@ -20,7 +20,11 @@
       "rightsStatus": "UNVERIFIED",
       "approvedForStaging": true,
       "approvedForProduction": false,
-      "syncedAt": "2026-07-13T04:41:06.637Z"
+      "syncedAt": "2026-07-13T04:41:06.637Z",
+      "objectPositionDesktop": "center 40%",
+      "objectPositionMobile": "center 35%",
+      "focalPointX": 0.5,
+      "focalPointY": 0.4
     },
     {
       "id": "jv-7c399d03553a",
@@ -39,7 +43,11 @@
       "rightsStatus": "UNVERIFIED",
       "approvedForStaging": true,
       "approvedForProduction": false,
-      "syncedAt": "2026-07-13T04:41:06.638Z"
+      "syncedAt": "2026-07-13T04:41:06.638Z",
+      "objectPositionDesktop": "center 40%",
+      "objectPositionMobile": "center 35%",
+      "focalPointX": 0.5,
+      "focalPointY": 0.4
     },
     {
       "id": "jv-c055e1502e28",
@@ -58,7 +66,11 @@
       "rightsStatus": "UNVERIFIED",
       "approvedForStaging": true,
       "approvedForProduction": false,
-      "syncedAt": "2026-07-13T04:41:06.639Z"
+      "syncedAt": "2026-07-13T04:41:06.639Z",
+      "objectPositionDesktop": "center 40%",
+      "objectPositionMobile": "center 35%",
+      "focalPointX": 0.5,
+      "focalPointY": 0.4
     },
     {
       "id": "jv-fe3618bb36a2",
@@ -77,7 +89,11 @@
       "rightsStatus": "UNVERIFIED",
       "approvedForStaging": true,
       "approvedForProduction": false,
-      "syncedAt": "2026-07-13T04:41:06.640Z"
+      "syncedAt": "2026-07-13T04:41:06.640Z",
+      "objectPositionDesktop": "center 40%",
+      "objectPositionMobile": "center 35%",
+      "focalPointX": 0.5,
+      "focalPointY": 0.4
     },
     {
       "id": "jv-cd9aa13b805c",
@@ -96,7 +112,11 @@
       "rightsStatus": "UNVERIFIED",
       "approvedForStaging": true,
       "approvedForProduction": false,
-      "syncedAt": "2026-07-13T04:41:06.641Z"
+      "syncedAt": "2026-07-13T04:41:06.641Z",
+      "objectPositionDesktop": "center 40%",
+      "objectPositionMobile": "center 35%",
+      "focalPointX": 0.5,
+      "focalPointY": 0.4
     },
     {
       "id": "jv-cat-6",
