@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { scheduleUi } from '../../../lib/browser';
 import { SectionTitle, Muted, Button, DataTable } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
 import { adminApi } from '../../../lib/api';
@@ -21,7 +22,9 @@ export default function ContentSourcesPage() {
   }, []);
 
   useEffect(() => {
-    load();
+    scheduleUi(() => {
+      void load();
+    });
   }, [load]);
 
   async function seed() {

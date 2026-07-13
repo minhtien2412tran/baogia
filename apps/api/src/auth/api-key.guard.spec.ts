@@ -29,23 +29,33 @@ describe('ApiKeyGuard', () => {
   it('accepts matching X-API-Key', () => {
     process.env.API_KEY = 'secret-key-value-here';
     process.env.APP_ENV = 'production';
-    const reflector = { getAllAndOverride: () => false } as unknown as Reflector;
+    const reflector = {
+      getAllAndOverride: () => false,
+    } as unknown as Reflector;
     const guard = new ApiKeyGuard(reflector);
-    expect(guard.canActivate(mockContext({ 'x-api-key': 'secret-key-value-here' }))).toBe(true);
+    expect(
+      guard.canActivate(mockContext({ 'x-api-key': 'secret-key-value-here' })),
+    ).toBe(true);
   });
 
   it('rejects missing key in production', () => {
     process.env.API_KEY = 'secret-key-value-here';
     process.env.APP_ENV = 'production';
-    const reflector = { getAllAndOverride: () => false } as unknown as Reflector;
+    const reflector = {
+      getAllAndOverride: () => false,
+    } as unknown as Reflector;
     const guard = new ApiKeyGuard(reflector);
-    expect(() => guard.canActivate(mockContext())).toThrow(UnauthorizedException);
+    expect(() => guard.canActivate(mockContext())).toThrow(
+      UnauthorizedException,
+    );
   });
 
   it('allows missing API_KEY config in development', () => {
     delete process.env.API_KEY;
     process.env.APP_ENV = 'development';
-    const reflector = { getAllAndOverride: () => false } as unknown as Reflector;
+    const reflector = {
+      getAllAndOverride: () => false,
+    } as unknown as Reflector;
     const guard = new ApiKeyGuard(reflector);
     expect(guard.canActivate(mockContext())).toBe(true);
   });

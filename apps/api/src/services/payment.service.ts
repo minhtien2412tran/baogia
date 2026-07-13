@@ -50,22 +50,31 @@ export class PaymentService {
     if (!stripe) return false;
 
     try {
-      const intent = await stripe.paymentIntents.retrieve(stripePaymentIntentId);
+      const intent = await stripe.paymentIntents.retrieve(
+        stripePaymentIntentId,
+      );
       return intent.status === 'succeeded';
     } catch (err) {
-      this.logger.error(`Stripe confirm failed: ${err instanceof Error ? err.message : err}`);
+      this.logger.error(
+        `Stripe confirm failed: ${err instanceof Error ? err.message : err}`,
+      );
       return false;
     }
   }
 
-  constructStripeEvent(payload: Buffer, signature: string): Stripe.Event | null {
+  constructStripeEvent(
+    payload: Buffer,
+    signature: string,
+  ): Stripe.Event | null {
     const stripe = this.getStripe();
     const secret = process.env.STRIPE_WEBHOOK_SECRET;
     if (!stripe || !secret) return null;
     try {
       return stripe.webhooks.constructEvent(payload, signature, secret);
     } catch (err) {
-      this.logger.error(`Stripe webhook verify failed: ${err instanceof Error ? err.message : err}`);
+      this.logger.error(
+        `Stripe webhook verify failed: ${err instanceof Error ? err.message : err}`,
+      );
       return null;
     }
   }

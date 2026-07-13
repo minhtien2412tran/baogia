@@ -1,8 +1,17 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
-import { CreateEmptyLegDto, EmptyLegRequestDto, EmptyLegAlertSubscribeDto, UpdateEmptyLegDto } from '../dto';
+import {
+  CreateEmptyLegDto,
+  EmptyLegRequestDto,
+  EmptyLegAlertSubscribeDto,
+  UpdateEmptyLegDto,
+} from '../dto';
 import { formatAirport } from '../utils/commercial.formatters';
 
 const emptyLegInclude = {
@@ -18,7 +27,10 @@ export class EmptyLegService {
     private readonly audit: AuditService,
   ) {}
 
-  private formatOffer(offer: Awaited<ReturnType<typeof this.findOfferOrThrow>>, detailed = false) {
+  private formatOffer(
+    offer: Awaited<ReturnType<typeof this.findOfferOrThrow>>,
+    detailed = false,
+  ) {
     return {
       id: offer.id,
       slug: offer.slug,
@@ -134,7 +146,8 @@ export class EmptyLegService {
 
     return {
       status: 'SUBSCRIBED',
-      message: 'You will receive alerts when matching empty legs become available.',
+      message:
+        'You will receive alerts when matching empty legs become available.',
     };
   }
 
@@ -170,7 +183,8 @@ export class EmptyLegService {
       emptyLegId: id,
       slug: offer.slug,
       status: 'PENDING',
-      message: 'Your empty leg request has been received. Our team will contact you shortly.',
+      message:
+        'Your empty leg request has been received. Our team will contact you shortly.',
     };
   }
 
@@ -193,7 +207,10 @@ export class EmptyLegService {
       include: emptyLegInclude,
     });
 
-    await this.audit.log('EMPTY_LEG_CREATED', { emptyLegId: offer.id, slug: offer.slug });
+    await this.audit.log('EMPTY_LEG_CREATED', {
+      emptyLegId: offer.id,
+      slug: offer.slug,
+    });
     return this.formatOffer(offer, true);
   }
 
@@ -244,13 +261,16 @@ export class EmptyLegService {
   }
 
   private async resolveAirport(iata: string) {
-    const airport = await this.prisma.airport.findUnique({ where: { iata: iata.toUpperCase() } });
+    const airport = await this.prisma.airport.findUnique({
+      where: { iata: iata.toUpperCase() },
+    });
     if (!airport) throw new BadRequestException(`Airport "${iata}" not found`);
     return airport;
   }
 
   private async ensureModelExists(id: number) {
     const model = await this.prisma.aircraftModel.findUnique({ where: { id } });
-    if (!model) throw new BadRequestException(`Aircraft model #${id} not found`);
+    if (!model)
+      throw new BadRequestException(`Aircraft model #${id} not found`);
   }
 }

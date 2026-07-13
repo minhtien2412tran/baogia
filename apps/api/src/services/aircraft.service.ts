@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
 
@@ -26,7 +30,11 @@ export class AircraftService {
     return { models };
   }
 
-  async createCategory(body: { code: string; label: string; maxPassengers?: number }) {
+  async createCategory(body: {
+    code: string;
+    label: string;
+    maxPassengers?: number;
+  }) {
     const category = await this.prisma.aircraftCategory.create({
       data: {
         code: body.code.toUpperCase(),
@@ -34,7 +42,9 @@ export class AircraftService {
         maxPassengers: body.maxPassengers ?? 8,
       },
     });
-    await this.audit.log('AIRCRAFT_CATEGORY_CREATED', { categoryId: category.id });
+    await this.audit.log('AIRCRAFT_CATEGORY_CREATED', {
+      categoryId: category.id,
+    });
     return category;
   }
 
@@ -55,9 +65,13 @@ export class AircraftService {
 
   async deleteCategory(id: number) {
     await this.findCategoryOrThrow(id);
-    const modelCount = await this.prisma.aircraftModel.count({ where: { categoryId: id } });
+    const modelCount = await this.prisma.aircraftModel.count({
+      where: { categoryId: id },
+    });
     if (modelCount > 0) {
-      throw new BadRequestException('Remove aircraft models before deleting category');
+      throw new BadRequestException(
+        'Remove aircraft models before deleting category',
+      );
     }
     await this.prisma.aircraftCategory.delete({ where: { id } });
     return { message: 'Category deleted' };
@@ -102,17 +116,28 @@ export class AircraftService {
 
   async deleteModel(id: number) {
     await this.findModelOrThrow(id);
-    const inUse = await this.prisma.emptyLegOffer.count({ where: { aircraftModelId: id } });
-    if (inUse > 0) throw new BadRequestException('Model is referenced by empty leg offers');
-    const fleet = await this.prisma.aircraft.count({ where: { aircraftModelId: id } });
-    if (fleet > 0) throw new BadRequestException('Model is referenced by aircraft instances');
+    const inUse = await this.prisma.emptyLegOffer.count({
+      where: { aircraftModelId: id },
+    });
+    if (inUse > 0)
+      throw new BadRequestException('Model is referenced by empty leg offers');
+    const fleet = await this.prisma.aircraft.count({
+      where: { aircraftModelId: id },
+    });
+    if (fleet > 0)
+      throw new BadRequestException(
+        'Model is referenced by aircraft instances',
+      );
     await this.prisma.aircraftModel.delete({ where: { id } });
     return { message: 'Model deleted' };
   }
 
   // --- Aircraft instances (tail numbers) ---
 
-  async listFleet(filters?: { availabilityStatus?: string; currentAirportId?: number }) {
+  async listFleet(filters?: {
+    availabilityStatus?: string;
+    currentAirportId?: number;
+  }) {
     const aircraft = await this.prisma.aircraft.findMany({
       where: {
         ...(filters?.availabilityStatus
@@ -144,7 +169,11 @@ export class AircraftService {
         category: a.aircraftModel.category.code,
         operator: a.operator.name,
         currentAirport: a.currentAirport
-          ? { id: a.currentAirport.id, iata: a.currentAirport.iata, city: a.currentAirport.city }
+          ? {
+              id: a.currentAirport.id,
+              iata: a.currentAirport.iata,
+              city: a.currentAirport.city,
+            }
           : null,
         baseAirport: a.baseAirport
           ? { id: a.baseAirport.id, iata: a.baseAirport.iata }
@@ -214,8 +243,11 @@ export class AircraftService {
   ) {
     const aircraft = await this.prisma.aircraft.findUnique({ where: { id } });
     if (!aircraft) throw new NotFoundException(`Aircraft ${id} not found`);
-    const airport = await this.prisma.airport.findUnique({ where: { id: body.airportId } });
-    if (!airport) throw new NotFoundException(`Airport ${body.airportId} not found`);
+    const airport = await this.prisma.airport.findUnique({
+      where: { id: body.airportId },
+    });
+    if (!airport)
+      throw new NotFoundException(`Airport ${body.airportId} not found`);
 
     const updated = await this.prisma.$transaction(async (tx) => {
       await tx.aircraftLocationHistory.create({

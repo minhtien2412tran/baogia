@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { SectionTitle, Muted } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
 import { adminApi } from '../../../lib/api';
+import { PLATFORM } from '../../../lib/platform';
 
 type HealthPayload = {
   status?: string;
@@ -61,6 +62,32 @@ export default function SettingsAdminPage() {
             </span>
           </div>
           <code className="jb-settings__endpoint">{apiUrl}</code>
+          <ul style={{ marginTop: 12, paddingLeft: 18, lineHeight: 1.7, fontSize: 14 }}>
+            <li>
+              Admin prod:{' '}
+              <a href={PLATFORM.admin} target="_blank" rel="noreferrer">
+                {PLATFORM.admin}
+              </a>
+            </li>
+            <li>
+              Web prod:{' '}
+              <a href={PLATFORM.web} target="_blank" rel="noreferrer">
+                {PLATFORM.web}
+              </a>
+            </li>
+            <li>
+              Swagger:{' '}
+              <a href={PLATFORM.docs} target="_blank" rel="noreferrer">
+                {PLATFORM.docs}
+              </a>
+            </li>
+            <li>
+              Web local:{' '}
+              <a href={PLATFORM.localWeb} target="_blank" rel="noreferrer">
+                {PLATFORM.localWeb}
+              </a>
+            </li>
+          </ul>
         </section>
 
         {loading ? (

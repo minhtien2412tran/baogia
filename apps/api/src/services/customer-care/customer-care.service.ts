@@ -1,4 +1,9 @@
-import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  OnModuleDestroy,
+  OnModuleInit,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { EmailService } from '../email.service';
@@ -27,7 +32,9 @@ export class CustomerCareService implements OnModuleInit, OnModuleDestroy {
 
   onModuleInit() {
     if (process.env.CUSTOMER_CARE_ENABLED === 'false') {
-      this.logger.warn('Customer care email automation disabled (CUSTOMER_CARE_ENABLED=false)');
+      this.logger.warn(
+        'Customer care email automation disabled (CUSTOMER_CARE_ENABLED=false)',
+      );
       return;
     }
     const ms = Number(process.env.CUSTOMER_CARE_POLL_MS ?? 120_000);
@@ -85,7 +92,9 @@ export class CustomerCareService implements OnModuleInit, OnModuleDestroy {
         await this.sendLog(log.id);
       }
     } catch (err) {
-      this.logger.error(`scheduleCampaign failed: ${err instanceof Error ? err.message : err}`);
+      this.logger.error(
+        `scheduleCampaign failed: ${err instanceof Error ? err.message : err}`,
+      );
     }
   }
 
@@ -141,7 +150,11 @@ export class CustomerCareService implements OnModuleInit, OnModuleDestroy {
     const normalized = email.toLowerCase();
     await this.prisma.emailSubscriber.upsert({
       where: { email: normalized },
-      create: { email: normalized, locale: this.normalizeLocale(locale), source: 'NEWSLETTER' },
+      create: {
+        email: normalized,
+        locale: this.normalizeLocale(locale),
+        source: 'NEWSLETTER',
+      },
       update: { status: 'ACTIVE', locale: this.normalizeLocale(locale) },
     });
 
@@ -167,7 +180,10 @@ export class CustomerCareService implements OnModuleInit, OnModuleDestroy {
       userId: opts.userId,
       locale: opts.locale,
       referenceId: String(opts.bookingId),
-      meta: { bookingId: opts.bookingId, firstName: opts.firstName ?? undefined },
+      meta: {
+        bookingId: opts.bookingId,
+        firstName: opts.firstName ?? undefined,
+      },
       immediate: true,
     });
   }
@@ -210,12 +226,16 @@ export class CustomerCareService implements OnModuleInit, OnModuleDestroy {
         await this.sendLog(row.id);
       }
     } catch (err) {
-      this.logger.error(`processQueue error: ${err instanceof Error ? err.message : err}`);
+      this.logger.error(
+        `processQueue error: ${err instanceof Error ? err.message : err}`,
+      );
     }
   }
 
   private async sendLog(logId: number): Promise<void> {
-    const log = await this.prisma.emailCampaignLog.findUnique({ where: { id: logId } });
+    const log = await this.prisma.emailCampaignLog.findUnique({
+      where: { id: logId },
+    });
     if (!log || log.status !== 'PENDING') return;
     if (!this.isDeliverable(log.email)) {
       await this.prisma.emailCampaignLog.update({
@@ -226,7 +246,11 @@ export class CustomerCareService implements OnModuleInit, OnModuleDestroy {
     }
 
     const meta = (log.meta as Record<string, unknown> | null) ?? {};
-    const template = renderEmailTemplate(log.campaignKey as CampaignKey, log.locale, meta);
+    const template = renderEmailTemplate(
+      log.campaignKey as CampaignKey,
+      log.locale,
+      meta,
+    );
     const result = await this.email.sendMail({
       to: log.email,
       subject: template.subject,

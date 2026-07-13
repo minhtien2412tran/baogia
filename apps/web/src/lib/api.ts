@@ -99,7 +99,6 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   });
   if (!res.ok) {
     const text = await res.text().catch(() => res.statusText);
-    console.warn(`[API] ${path} failed: ${res.status}`, text);
     throw new ApiError(res.status, text);
   }
   return res.json() as Promise<T>;
@@ -379,8 +378,7 @@ export const api = {
 export async function safeApi<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
   try {
     return await fn();
-  } catch (e) {
-    console.warn('[API] fallback used:', e);
+  } catch {
     return fallback;
   }
 }

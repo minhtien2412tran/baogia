@@ -9,7 +9,12 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiSecurity } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiSecurity,
+} from '@nestjs/swagger';
 import { CreateEmptyLegDto, UpdateEmptyLegDto } from '../dto';
 import { EmptyLegService } from '../services/empty-leg.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -40,7 +45,10 @@ export class AdminEmptyLegController {
   @Patch(':id')
   @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update empty leg offer (admin)' })
-  update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateEmptyLegDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateEmptyLegDto,
+  ) {
     return this.emptyLegService.update(id, body);
   }
 

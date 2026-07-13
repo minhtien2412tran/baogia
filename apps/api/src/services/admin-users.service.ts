@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
 
@@ -38,13 +42,23 @@ export class AdminUsersService {
         ...u,
         createdAt: u.createdAt.toISOString(),
       })),
-      pagination: { page, limit: take, total, totalPages: Math.ceil(total / take) },
+      pagination: {
+        page,
+        limit: take,
+        total,
+        totalPages: Math.ceil(total / take),
+      },
     };
   }
 
   async updateUser(
     id: number,
-    body: { role?: string; status?: string; firstName?: string; lastName?: string },
+    body: {
+      role?: string;
+      status?: string;
+      firstName?: string;
+      lastName?: string;
+    },
     adminId: number,
   ) {
     const user = await this.prisma.user.findUnique({ where: { id } });
@@ -67,7 +81,11 @@ export class AdminUsersService {
       },
     });
 
-    await this.audit.log('ADMIN_USER_UPDATED', { userId: id, changes: body }, adminId);
+    await this.audit.log(
+      'ADMIN_USER_UPDATED',
+      { userId: id, changes: body },
+      adminId,
+    );
     return {
       id: updated.id,
       email: updated.email,

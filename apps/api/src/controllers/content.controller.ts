@@ -1,5 +1,12 @@
 import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery, ApiSecurity } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiQuery,
+  ApiSecurity,
+} from '@nestjs/swagger';
 import { SubscribeNewsletterDto } from '../dto';
 import { ContentService } from '../services/content.service';
 
@@ -113,7 +120,10 @@ export class ContentController {
   @ApiOperation({ summary: 'Get destination by slug' })
   @ApiParam({ name: 'slug', type: 'string', example: 'nassau' })
   @ApiQuery({ name: 'locale', required: false })
-  getDestination(@Param('slug') slug: string, @Query('locale') locale?: string) {
+  getDestination(
+    @Param('slug') slug: string,
+    @Query('locale') locale?: string,
+  ) {
     return this.contentService.getDestinationBySlug(slug, locale ?? 'en');
   }
 

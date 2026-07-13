@@ -34,9 +34,13 @@ export class EnquiryMailService {
     return kind === 'travel_credit' ? 'Travel Credits' : 'Jet Card';
   }
 
-  async notifyEnquiry(payload: EnquiryPayload): Promise<{ customerSent: boolean; salesSent: boolean }> {
+  async notifyEnquiry(
+    payload: EnquiryPayload,
+  ): Promise<{ customerSent: boolean; salesSent: boolean }> {
     const label = this.kindLabel(payload.kind);
-    const name = [payload.firstName, payload.lastName].filter(Boolean).join(' ');
+    const name = [payload.firstName, payload.lastName]
+      .filter(Boolean)
+      .join(' ');
     const attachmentBlock =
       payload.attachmentUrls && payload.attachmentUrls.length > 0
         ? `\n\nAttachments:\n${payload.attachmentUrls.map((u) => `- ${u}`).join('\n')}`
@@ -86,7 +90,9 @@ export class EnquiryMailService {
       });
       salesSent = sales.sent;
     } else {
-      this.logger.warn(`Sales inbox not configured — skipped staff notification for enquiry #${payload.enquiryId}`);
+      this.logger.warn(
+        `Sales inbox not configured — skipped staff notification for enquiry #${payload.enquiryId}`,
+      );
     }
 
     return { customerSent: customer.sent, salesSent };

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { scheduleUi } from '../../../lib/browser';
 import { SectionTitle, Muted, Button } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
 import { AdminField, AdminPanel, ActionBtn } from '../../../components/AdminFormFields';
@@ -49,7 +50,9 @@ export default function DestinationsAdminPage() {
   }, [filter]);
 
   useEffect(() => {
-    load();
+    scheduleUi(() => {
+      void load();
+    });
   }, [load]);
 
   async function save() {

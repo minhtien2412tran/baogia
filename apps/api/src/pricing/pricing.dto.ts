@@ -9,13 +9,19 @@ export class PricingEstimateDto {
   @Min(1)
   aircraftId!: number;
 
-  @ApiProperty({ example: 2, description: 'Passenger departure airport id (e.g. HAN)' })
+  @ApiProperty({
+    example: 2,
+    description: 'Passenger departure airport id (e.g. HAN)',
+  })
   @Type(() => Number)
   @IsInt()
   @Min(1)
   fromAirportId!: number;
 
-  @ApiProperty({ example: 3, description: 'Passenger arrival airport id (e.g. SGN)' })
+  @ApiProperty({
+    example: 3,
+    description: 'Passenger arrival airport id (e.g. SGN)',
+  })
   @Type(() => Number)
   @IsInt()
   @Min(1)

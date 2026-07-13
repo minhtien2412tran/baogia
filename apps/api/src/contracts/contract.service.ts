@@ -17,7 +17,13 @@ const APPROVAL_FLOW = {
   CHANGES_REQUESTED: ['PENDING_APPROVAL', 'CANCELLED'],
   APPROVED: ['SENT_FOR_SIGNATURE', 'SUPERSEDED', 'CANCELLED'],
   REJECTED: ['DRAFT', 'CANCELLED'],
-  SENT_FOR_SIGNATURE: ['PARTIALLY_SIGNED', 'COMPLETED', 'DECLINED', 'VOIDED', 'EXPIRED'],
+  SENT_FOR_SIGNATURE: [
+    'PARTIALLY_SIGNED',
+    'COMPLETED',
+    'DECLINED',
+    'VOIDED',
+    'EXPIRED',
+  ],
   PARTIALLY_SIGNED: ['COMPLETED', 'DECLINED', 'VOIDED', 'EXPIRED'],
   COMPLETED: [],
   DECLINED: ['DRAFT'],
@@ -34,13 +40,17 @@ export class ContractService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
-    @Inject(SIGNATURE_PROVIDER) private readonly signatures: ElectronicSignatureProvider,
+    @Inject(SIGNATURE_PROVIDER)
+    private readonly signatures: ElectronicSignatureProvider,
   ) {}
 
   private assertTransition(from: string, to: string) {
-    const allowed = APPROVAL_FLOW[from as ContractStatus] as readonly string[] | undefined;
+    const allowed = APPROVAL_FLOW[from as ContractStatus] as
+      readonly string[] | undefined;
     if (!allowed || !allowed.includes(to)) {
-      throw new BadRequestException(`Cannot transition contract from ${from} to ${to}`);
+      throw new BadRequestException(
+        `Cannot transition contract from ${from} to ${to}`,
+      );
     }
   }
 
@@ -104,16 +114,24 @@ export class ContractService {
     currency?: string;
     userId?: number;
   }) {
-    const booking = await this.prisma.booking.findUnique({ where: { id: input.bookingId } });
-    if (!booking) throw new NotFoundException(`Booking ${input.bookingId} not found`);
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: input.bookingId },
+    });
+    if (!booking)
+      throw new NotFoundException(`Booking ${input.bookingId} not found`);
 
-    const aircraft = await this.prisma.aircraft.findUnique({ where: { id: input.aircraftId } });
-    if (!aircraft) throw new NotFoundException(`Aircraft ${input.aircraftId} not found`);
+    const aircraft = await this.prisma.aircraft.findUnique({
+      where: { id: input.aircraftId },
+    });
+    if (!aircraft)
+      throw new NotFoundException(`Aircraft ${input.aircraftId} not found`);
 
     const operatorId = input.operatorId ?? aircraft.operatorId;
     const amount =
       input.amount ??
-      (booking.estimatedPriceTotal != null ? Number(booking.estimatedPriceTotal) : undefined);
+      (booking.estimatedPriceTotal != null
+        ? Number(booking.estimatedPriceTotal)
+        : undefined);
 
     const contract = await this.prisma.operatorContract.create({
       data: {
@@ -129,7 +147,13 @@ export class ContractService {
       },
     });
 
-    await this.appendHistory(contract.id, null, 'DRAFT', 'CREATED', input.userId);
+    await this.appendHistory(
+      contract.id,
+      null,
+      'DRAFT',
+      'CREATED',
+      input.userId,
+    );
     await this.audit.logEntity({
       action: 'CONTRACT_CREATED',
       entityType: 'OperatorContract',
@@ -148,7 +172,13 @@ export class ContractService {
       where: { id },
       data: { status: 'PENDING_APPROVAL', submittedByUserId: userId },
     });
-    await this.appendHistory(id, contract.status, 'PENDING_APPROVAL', 'SUBMIT', userId);
+    await this.appendHistory(
+      id,
+      contract.status,
+      'PENDING_APPROVAL',
+      'SUBMIT',
+      userId,
+    );
     return updated;
   }
 
@@ -163,7 +193,14 @@ export class ContractService {
         approvedAt: new Date(),
       },
     });
-    await this.appendHistory(id, contract.status, 'APPROVED', 'APPROVE', userId, note);
+    await this.appendHistory(
+      id,
+      contract.status,
+      'APPROVED',
+      'APPROVE',
+      userId,
+      note,
+    );
     await this.audit.logEntity({
       action: 'CONTRACT_APPROVED',
       entityType: 'OperatorContract',
@@ -185,7 +222,14 @@ export class ContractService {
         rejectionReason: reason,
       },
     });
-    await this.appendHistory(id, contract.status, 'REJECTED', 'REJECT', userId, reason);
+    await this.appendHistory(
+      id,
+      contract.status,
+      'REJECTED',
+      'REJECT',
+      userId,
+      reason,
+    );
     return updated;
   }
 
@@ -196,7 +240,14 @@ export class ContractService {
       where: { id },
       data: { status: 'CHANGES_REQUESTED' },
     });
-    await this.appendHistory(id, contract.status, 'CHANGES_REQUESTED', 'REQUEST_CHANGES', userId, note);
+    await this.appendHistory(
+      id,
+      contract.status,
+      'CHANGES_REQUESTED',
+      'REQUEST_CHANGES',
+      userId,
+      note,
+    );
     return updated;
   }
 
@@ -207,7 +258,9 @@ export class ContractService {
   ) {
     const contract = await this.getById(id);
     if (contract.status !== 'APPROVED') {
-      throw new ForbiddenException('Contract must be APPROVED before DocuSign send');
+      throw new ForbiddenException(
+        'Contract must be APPROVED before DocuSign send',
+      );
     }
     this.assertTransition(contract.status, 'SENT_FOR_SIGNATURE');
 
@@ -228,7 +281,13 @@ export class ContractService {
         sentAt: new Date(),
       },
     });
-    await this.appendHistory(id, contract.status, 'SENT_FOR_SIGNATURE', 'SEND_DOCUSIGN', userId);
+    await this.appendHistory(
+      id,
+      contract.status,
+      'SENT_FOR_SIGNATURE',
+      'SEND_DOCUSIGN',
+      userId,
+    );
     await this.audit.logEntity({
       action: 'CONTRACT_SENT_DOCUSIGN',
       entityType: 'OperatorContract',
@@ -275,7 +334,8 @@ export class ContractService {
     if (contract) {
       const type = payload.eventType.toLowerCase();
       let next: string | null = null;
-      if (type.includes('completed') || type === 'envelope-completed') next = 'COMPLETED';
+      if (type.includes('completed') || type === 'envelope-completed')
+        next = 'COMPLETED';
       else if (type.includes('declined')) next = 'DECLINED';
       else if (type.includes('voided')) next = 'VOIDED';
       else if (type.includes('delivered') || type.includes('sent')) next = null;
@@ -292,7 +352,12 @@ export class ContractService {
               voidedAt: next === 'VOIDED' ? new Date() : undefined,
             },
           });
-          await this.appendHistory(contract.id, contract.status, next, `WEBHOOK_${payload.eventType}`);
+          await this.appendHistory(
+            contract.id,
+            contract.status,
+            next,
+            `WEBHOOK_${payload.eventType}`,
+          );
         } catch {
           // ignore invalid transitions from noisy webhook events
         }

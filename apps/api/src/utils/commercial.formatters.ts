@@ -1,4 +1,9 @@
-import { Airport, AircraftCategory, FixedPriceRoute, FixedPriceOption } from '@prisma/client';
+import {
+  Airport,
+  AircraftCategory,
+  FixedPriceRoute,
+  FixedPriceOption,
+} from '@prisma/client';
 
 type RouteWithRelations = FixedPriceRoute & {
   fromAirport: Airport;
@@ -12,7 +17,10 @@ export function formatAirport(a: Airport, detailed = false) {
   return { ...base, icao: a.icao, name: a.name, timezone: a.timezone };
 }
 
-export function formatFixedPriceRoute(route: RouteWithRelations, detailed = false) {
+export function formatFixedPriceRoute(
+  route: RouteWithRelations,
+  detailed = false,
+) {
   return {
     id: route.id,
     slug: route.slug,

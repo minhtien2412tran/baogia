@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { StorageService } from './storage.service';
 import { RedisService } from './redis.service';
@@ -18,7 +22,9 @@ export class AdminDashboardService {
       this.prisma.user.count(),
       this.prisma.booking.count(),
       this.prisma.quoteRequest.count(),
-      this.prisma.partnerApplication.count({ where: { reviewStatus: 'PENDING' } }),
+      this.prisma.partnerApplication.count({
+        where: { reviewStatus: 'PENDING' },
+      }),
       this.prisma.contentArticle.count({ where: { isPublished: true } }),
     ]);
     return {
@@ -35,7 +41,9 @@ export class AdminDashboardService {
     const quotes = await this.prisma.quoteRequest.findMany({
       orderBy: { createdAt: 'desc' },
       take: limit,
-      include: { legs: { include: { fromAirport: true, toAirport: true }, take: 1 } },
+      include: {
+        legs: { include: { fromAirport: true, toAirport: true }, take: 1 },
+      },
     });
     return quotes.map((q) => ({
       id: q.id,
@@ -53,16 +61,24 @@ export class AdminDashboardService {
   async updateQuoteStatus(id: number, status: string) {
     const allowed = ['PENDING', 'OFFERED', 'EXPIRED', 'CONVERTED', 'CANCELLED'];
     if (!allowed.includes(status)) {
-      throw new BadRequestException(`Invalid status. Allowed: ${allowed.join(', ')}`);
+      throw new BadRequestException(
+        `Invalid status. Allowed: ${allowed.join(', ')}`,
+      );
     }
-    const existing = await this.prisma.quoteRequest.findUnique({ where: { id } });
+    const existing = await this.prisma.quoteRequest.findUnique({
+      where: { id },
+    });
     if (!existing) throw new NotFoundException(`Quote #${id} not found`);
 
     const updated = await this.prisma.quoteRequest.update({
       where: { id },
       data: { status },
     });
-    await this.audit.log('QUOTE_STATUS_UPDATED', { quoteId: id, status, previous: existing.status });
+    await this.audit.log('QUOTE_STATUS_UPDATED', {
+      quoteId: id,
+      status,
+      previous: existing.status,
+    });
     return {
       id: updated.id,
       status: updated.status,
@@ -98,11 +114,20 @@ export class AdminDashboardService {
       currency: 'USD',
       totalRevenue: total * demoMultiplier,
       paidTransactions: payments.length,
-      note: payments.length === 0 ? 'Demo calculation — no real payments yet' : 'From paid transactions',
+      note:
+        payments.length === 0
+          ? 'Demo calculation — no real payments yet'
+          : 'From paid transactions',
       monthlyBreakdown: [
         { month: '2026-04', revenue: Math.round(total * 0.2 * demoMultiplier) },
-        { month: '2026-05', revenue: Math.round(total * 0.35 * demoMultiplier) },
-        { month: '2026-06', revenue: Math.round(total * 0.45 * demoMultiplier) },
+        {
+          month: '2026-05',
+          revenue: Math.round(total * 0.35 * demoMultiplier),
+        },
+        {
+          month: '2026-06',
+          revenue: Math.round(total * 0.45 * demoMultiplier),
+        },
       ],
     };
   }
@@ -129,7 +154,12 @@ export class AdminDashboardService {
         ipAddress: l.ipAddress,
         createdAt: l.createdAt.toISOString(),
       })),
-      pagination: { page, limit: take, total, totalPages: Math.ceil(total / take) },
+      pagination: {
+        page,
+        limit: take,
+        total,
+        totalPages: Math.ceil(total / take),
+      },
     };
   }
 

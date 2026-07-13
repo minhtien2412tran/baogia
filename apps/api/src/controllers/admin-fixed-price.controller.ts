@@ -9,7 +9,13 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiSecurity } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiSecurity,
+} from '@nestjs/swagger';
 import { CreateFixedPriceRouteDto, UpdateFixedPriceRouteDto } from '../dto';
 import { FixedPriceService } from '../services/fixed-price.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -41,7 +47,10 @@ export class AdminFixedPriceController {
   @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update a fixed-price route (admin)' })
   @ApiResponse({ status: 200, description: 'Route updated.' })
-  update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateFixedPriceRouteDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateFixedPriceRouteDto,
+  ) {
     return this.fixedPriceService.updateRoute(id, body);
   }
 

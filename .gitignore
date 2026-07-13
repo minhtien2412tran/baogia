@@ -65,3 +65,14 @@ docs/DKIM_*.txt
 
 # IDE
 .cursor/
+
+# Local JetVina media mirrors (UNVERIFIED — regenerate via pnpm sync:jetvina-media)
+/apps/web/public/assets/jetvina/mirror/**
+!/apps/web/public/assets/jetvina/mirror/.gitkeep
+!/apps/web/public/assets/jetvina/RIGHTS.md
+
+# Dev server PID file
+.jetbay-web-dev.pid
+
+# Media sync reports
+/tmp/media-sync-report.json

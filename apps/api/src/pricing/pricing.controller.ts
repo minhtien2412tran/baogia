@@ -1,5 +1,18 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
@@ -43,20 +56,31 @@ export class PricingController {
   @Post('bookings/:id/recalculate')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('bearer')
-  @ApiOperation({ summary: 'Recalculate booking estimate and replace planned legs' })
-  recalculate(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthUser) {
+  @ApiOperation({
+    summary: 'Recalculate booking estimate and replace planned legs',
+  })
+  recalculate(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthUser,
+  ) {
     return this.pricing.recalculateBooking(id, user.userId);
   }
 
   @Post('bookings/:bookingId/attach/:estimateId')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('bearer')
-  @ApiOperation({ summary: 'Attach a persisted estimate snapshot to a booking' })
+  @ApiOperation({
+    summary: 'Attach a persisted estimate snapshot to a booking',
+  })
   attach(
     @Param('bookingId', ParseIntPipe) bookingId: number,
     @Param('estimateId', ParseIntPipe) estimateId: number,
     @CurrentUser() user: AuthUser,
   ) {
-    return this.pricing.attachEstimateToBooking(bookingId, estimateId, user.userId);
+    return this.pricing.attachEstimateToBooking(
+      bookingId,
+      estimateId,
+      user.userId,
+    );
   }
 }

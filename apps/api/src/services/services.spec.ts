@@ -19,7 +19,9 @@ describe('Auth token hashing', () => {
 
 describe('StorageService URL builder', () => {
   function buildPublicUrl(base: string, key: string) {
-    const objectKey = key.startsWith('media/') ? key.slice('media/'.length) : key;
+    const objectKey = key.startsWith('media/')
+      ? key.slice('media/'.length)
+      : key;
     const encoded = objectKey.split('/').map(encodeURIComponent).join('/');
     return `${base.replace(/\/$/, '')}/media/${encoded}`;
   }
@@ -32,8 +34,13 @@ describe('StorageService URL builder', () => {
 
   it('preserves nested object keys in public URLs', () => {
     expect(
-      buildPublicUrl('https://api.minhtien.online', 'media/enquiries/1783744994129-file.webp'),
-    ).toBe('https://api.minhtien.online/media/enquiries/1783744994129-file.webp');
+      buildPublicUrl(
+        'https://api.minhtien.online',
+        'media/enquiries/1783744994129-file.webp',
+      ),
+    ).toBe(
+      'https://api.minhtien.online/media/enquiries/1783744994129-file.webp',
+    );
   });
 });
 

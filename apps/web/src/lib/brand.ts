@@ -49,9 +49,14 @@ export const SHOW_UNVERIFIED_PARTNER_LOGOS = false;
 export const SHOW_UNVERIFIED_MARKETING_SECTIONS =
   process.env.NEXT_PUBLIC_SHOW_UNVERIFIED_MARKETING === 'true';
 
-/** Remap /assets/jetbay/* images to neutral placeholders until CLIENT_ASSET_REQUIRED. */
-export const BLOCK_JETBAY_MEDIA_ASSETS =
-  process.env.NEXT_PUBLIC_ALLOW_JETBAY_MEDIA !== 'true';
+/** Remap /assets/jetbay/* images until CLIENT_ASSET_REQUIRED — see media-env / resolve-media-asset. */
+export { BLOCK_JETBAY_MEDIA_ASSETS, PREFER_JETVINA_MEDIA } from './media-env';
+export {
+  JETVINA_MEDIA_LOCAL_MIRROR_ENABLED,
+  JETVINA_MEDIA_PRODUCTION_ENABLED,
+  JETVINA_MEDIA_REMOTE_REVIEW_ENABLED,
+  IS_MEDIA_PRODUCTION,
+} from './media-env';
 
 export const BRAND_CONFIG = {
   ...STATIC_BRAND_FALLBACK,

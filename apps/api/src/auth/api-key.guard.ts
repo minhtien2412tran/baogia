@@ -56,7 +56,9 @@ export class ApiKeyGuard implements CanActivate {
     const env = process.env.APP_ENV ?? process.env.NODE_ENV ?? 'development';
     if (!validApiKey) {
       if (env === 'production') {
-        throw new UnauthorizedException('Server misconfigured: API_KEY missing');
+        throw new UnauthorizedException(
+          'Server misconfigured: API_KEY missing',
+        );
       }
       return true;
     }

@@ -1,5 +1,20 @@
-import { Controller, Get, Post, Body, Param, ParseIntPipe, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiSecurity, ApiQuery } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  ParseIntPipe,
+  Query,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiSecurity,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { EmptyLegRequestDto, EmptyLegAlertSubscribeDto } from '../dto';
 import { EmptyLegService } from '../services/empty-leg.service';
 
@@ -10,7 +25,10 @@ export class EmptyLegController {
   constructor(private readonly emptyLegService: EmptyLegService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get available empty-leg offers (filter by continent/country/route/date)' })
+  @ApiOperation({
+    summary:
+      'Get available empty-leg offers (filter by continent/country/route/date)',
+  })
   @ApiQuery({ name: 'continentCode', required: false, example: 'AS' })
   @ApiQuery({ name: 'countryCode', required: false, example: 'VN' })
   @ApiQuery({ name: 'fromIata', required: false })
@@ -45,7 +63,11 @@ export class EmptyLegController {
 
   @Get(':slug')
   @ApiOperation({ summary: 'Get empty-leg offer by slug' })
-  @ApiParam({ name: 'slug', type: 'string', example: 'paris-to-geneva-empty-leg' })
+  @ApiParam({
+    name: 'slug',
+    type: 'string',
+    example: 'paris-to-geneva-empty-leg',
+  })
   @ApiResponse({ status: 200, description: 'Empty-leg details.' })
   getEmptyLegBySlug(@Param('slug') slug: string) {
     return this.emptyLegService.getBySlug(slug);

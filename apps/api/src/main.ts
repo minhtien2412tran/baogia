@@ -18,16 +18,25 @@ function assertProductionSecrets() {
     v === 'dev-refresh-secret-change-in-production';
 
   if (weak(process.env.JWT_SECRET)) {
-    throw new Error('JWT_SECRET must be set to a strong random value in production');
+    throw new Error(
+      'JWT_SECRET must be set to a strong random value in production',
+    );
   }
   if (weak(process.env.REFRESH_TOKEN_SECRET)) {
-    throw new Error('REFRESH_TOKEN_SECRET must be set to a strong random value in production');
+    throw new Error(
+      'REFRESH_TOKEN_SECRET must be set to a strong random value in production',
+    );
   }
-  if (!process.env.DATABASE_URL?.trim() || process.env.DATABASE_URL.includes('CHANGE_ME')) {
+  if (
+    !process.env.DATABASE_URL?.trim() ||
+    process.env.DATABASE_URL.includes('CHANGE_ME')
+  ) {
     throw new Error('DATABASE_URL must be set in production');
   }
   if (weak(process.env.API_KEY) || weak(process.env.PAYMENT_SECRET)) {
-    throw new Error('API_KEY and PAYMENT_SECRET must be strong random values in production');
+    throw new Error(
+      'API_KEY and PAYMENT_SECRET must be strong random values in production',
+    );
   }
 }
 
@@ -44,8 +53,10 @@ async function bootstrap() {
     }),
   );
 
-  const corsOrigins = (process.env.CORS_ORIGIN ??
-    'http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001')
+  const corsOrigins = (
+    process.env.CORS_ORIGIN ??
+    'http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001'
+  )
     .split(',')
     .map((s) => s.trim().replace(/^["']|["']$/g, ''))
     .filter(Boolean);
@@ -71,7 +82,8 @@ async function bootstrap() {
   );
 
   const isProd =
-    process.env.APP_ENV === 'production' || process.env.NODE_ENV === 'production';
+    process.env.APP_ENV === 'production' ||
+    process.env.NODE_ENV === 'production';
   const apiPublic =
     process.env.API_PUBLIC_URL?.replace(/\/$/, '') ||
     (isProd ? 'https://api.minhtien.online' : 'http://127.0.0.1:4000');
@@ -84,7 +96,10 @@ async function bootstrap() {
     }
   } else {
     servers.set(apiPublic, 'Current');
-    servers.set('https://api.minhtien.online', 'Production (api.minhtien.online)');
+    servers.set(
+      'https://api.minhtien.online',
+      'Production (api.minhtien.online)',
+    );
     servers.set('http://127.0.0.1:4000', 'Local development');
   }
   let builder = new DocumentBuilder()
@@ -111,7 +126,8 @@ async function bootstrap() {
         type: 'http',
         scheme: 'bearer',
         bearerFormat: 'JWT',
-        description: 'JWT accessToken from POST /auth/login (without Bearer prefix in Swagger field)',
+        description:
+          'JWT accessToken from POST /auth/login (without Bearer prefix in Swagger field)',
       },
       'bearer',
     )
@@ -120,7 +136,8 @@ async function bootstrap() {
         type: 'apiKey',
         name: 'X-API-Key',
         in: 'header',
-        description: 'App identification key (same pattern as api.homefix.asia)',
+        description:
+          'App identification key (same pattern as api.homefix.asia)',
       },
       'X-API-Key',
     )

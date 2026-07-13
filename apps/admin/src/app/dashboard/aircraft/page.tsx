@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { scheduleUi } from '../../../lib/browser';
 import { SectionTitle, Muted, DataTable } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
 import { adminApi } from '../../../lib/api';
@@ -34,7 +35,9 @@ export default function AircraftAdminPage() {
   }, []);
 
   useEffect(() => {
-    load();
+    scheduleUi(() => {
+      void load();
+    });
   }, [load]);
 
   const rows = fleet.map((a) => ({

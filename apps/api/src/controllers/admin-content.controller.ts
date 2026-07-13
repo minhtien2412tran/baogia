@@ -10,7 +10,13 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiSecurity } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiQuery,
+  ApiSecurity,
+} from '@nestjs/swagger';
 import {
   CreateContentArticleDto,
   CreateContentPageDto,
@@ -63,14 +69,20 @@ export class AdminContentController {
   @Get('pages/:id')
   @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Get content page by id (admin)' })
-  getPage(@Param('id', ParseIntPipe) id: number, @Query('locale') locale?: string) {
+  getPage(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('locale') locale?: string,
+  ) {
     return this.contentService.adminGetPage(id, locale ?? 'en');
   }
 
   @Patch('pages/:id')
   @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update content page (admin)' })
-  updatePage(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateContentPageDto) {
+  updatePage(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateContentPageDto,
+  ) {
     return this.contentService.adminUpdatePage(id, body);
   }
 
@@ -112,14 +124,20 @@ export class AdminContentController {
 
   @Get('articles/:id')
   @ApiOperation({ summary: 'Get article by ID (admin)' })
-  getArticle(@Param('id', ParseIntPipe) id: number, @Query('locale') locale?: string) {
+  getArticle(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('locale') locale?: string,
+  ) {
     return this.contentService.adminGetArticle(id, locale ?? 'en');
   }
 
   @Patch('articles/:id')
   @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update article (admin)' })
-  updateArticle(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateContentArticleDto) {
+  updateArticle(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateContentArticleDto,
+  ) {
     return this.contentService.adminUpdateArticle(id, body);
   }
 
@@ -153,7 +171,10 @@ export class AdminContentController {
   @Patch('videos/:id')
   @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update video (admin)' })
-  updateVideo(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateVideoDto) {
+  updateVideo(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateVideoDto,
+  ) {
     return this.contentService.adminUpdateVideo(id, body);
   }
 
@@ -170,7 +191,11 @@ export class AdminContentController {
   @ApiBearerAuth('bearer')
   @ApiQuery({ name: 'category', required: false })
   @ApiOperation({ summary: 'List destinations (admin)' })
-  listDestinations(@Query('category') category?: string, @Query('page') page?: string, @Query('limit') limit?: string) {
+  listDestinations(
+    @Query('category') category?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
     return this.contentService.adminListDestinations({
       category,
       page: page ? Number(page) : 1,
@@ -188,7 +213,10 @@ export class AdminContentController {
   @Patch('destinations/:id')
   @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update destination (admin)' })
-  updateDestination(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateDestinationDto) {
+  updateDestination(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateDestinationDto,
+  ) {
     return this.contentService.adminUpdateDestination(id, body);
   }
 

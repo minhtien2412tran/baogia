@@ -10,7 +10,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET ?? 'dev-jetbay-secret-change-in-production',
+      secretOrKey:
+        process.env.JWT_SECRET ?? 'dev-jetbay-secret-change-in-production',
     });
   }
 
@@ -18,7 +19,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (payload.type === 'refresh') {
       throw new UnauthorizedException('Invalid token type');
     }
-    const user = await this.prisma.user.findUnique({ where: { id: payload.sub } });
+    const user = await this.prisma.user.findUnique({
+      where: { id: payload.sub },
+    });
     if (!user || user.status !== 'ACTIVE') {
       throw new UnauthorizedException('User not found or inactive');
     }

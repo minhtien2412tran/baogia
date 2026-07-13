@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
 import { PartnerApplicationDto } from '../dto';
@@ -11,10 +15,16 @@ export class PartnerService {
   ) {}
 
   async getPrograms() {
-    const programs = await this.prisma.partnerProgram.findMany({ orderBy: { code: 'asc' } });
+    const programs = await this.prisma.partnerProgram.findMany({
+      orderBy: { code: 'asc' },
+    });
     return {
       roles: programs.map((p) => {
-        const benefits = (p.benefits as { commissionRate?: number; dashboardAccess?: string }) ?? {};
+        const benefits =
+          (p.benefits as {
+            commissionRate?: number;
+            dashboardAccess?: string;
+          }) ?? {};
         const commission = benefits.commissionRate
           ? `${Math.round(benefits.commissionRate * 100)}%`
           : '—';
@@ -23,7 +33,9 @@ export class PartnerService {
           name: p.name,
           commission,
           features: [
-            benefits.dashboardAccess ? `${benefits.dashboardAccess} dashboard` : 'Partner portal',
+            benefits.dashboardAccess
+              ? `${benefits.dashboardAccess} dashboard`
+              : 'Partner portal',
             'Asset library',
             'Dedicated support',
           ],
@@ -36,9 +48,14 @@ export class PartnerService {
     const program = await this.prisma.partnerProgram.findUnique({
       where: { code: body.partnerType.toUpperCase() },
     });
-    if (!program) throw new BadRequestException(`Invalid partner type: ${body.partnerType}`);
+    if (!program)
+      throw new BadRequestException(
+        `Invalid partner type: ${body.partnerType}`,
+      );
 
-    let user = await this.prisma.user.findUnique({ where: { email: body.email } });
+    let user = await this.prisma.user.findUnique({
+      where: { email: body.email },
+    });
     if (!user) {
       user = await this.prisma.user.create({
         data: {
@@ -69,7 +86,8 @@ export class PartnerService {
     return {
       applicationId: application.id,
       status: application.reviewStatus,
-      message: 'Application submitted successfully. Review SLA is 3 working days.',
+      message:
+        'Application submitted successfully. Review SLA is 3 working days.',
     };
   }
 
@@ -99,9 +117,12 @@ export class PartnerService {
       where: { id },
       include: { program: true },
     });
-    if (!application) throw new NotFoundException(`Application #${id} not found`);
+    if (!application)
+      throw new NotFoundException(`Application #${id} not found`);
     if (application.reviewStatus !== 'PENDING') {
-      throw new BadRequestException(`Application already ${application.reviewStatus}`);
+      throw new BadRequestException(
+        `Application already ${application.reviewStatus}`,
+      );
     }
 
     const updated = await this.prisma.$transaction(async (tx) => {
@@ -154,7 +175,9 @@ export class PartnerService {
       throw new NotFoundException('No partner account found for this user');
     }
 
-    const applications = await this.prisma.partnerApplication.count({ where: { userId } });
+    const applications = await this.prisma.partnerApplication.count({
+      where: { userId },
+    });
     const bookings = await this.prisma.booking.count({ where: { userId } });
 
     return {

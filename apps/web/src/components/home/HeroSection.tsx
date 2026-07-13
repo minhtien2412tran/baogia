@@ -2,6 +2,7 @@ import { JB } from '../../config/jetbay-cdn';
 import { CdnImage } from '../ui/CdnImage';
 import { QuoteSearchWidget } from '../QuoteSearchWidget';
 import { t } from '../../lib/i18n';
+import { HeroParticles } from './HeroParticles';
 
 export function HeroSection({ locale, currency }: { locale: string; currency?: string }) {
   return (
@@ -11,6 +12,7 @@ export function HeroSection({ locale, currency }: { locale: string; currency?: s
         aria-hidden
         style={{ backgroundImage: `linear-gradient(105deg, rgba(10, 12, 15, 0.92) 0%, rgba(10, 12, 15, 0.55) 45%, rgba(10, 12, 15, 0.75) 100%), url(${JB.homeBg})` }}
       />
+      <HeroParticles />
       <div className="jb-hero-flight" aria-hidden>
         <svg className="jb-hero-flight__svg" viewBox="0 0 1200 160" preserveAspectRatio="none">
           <path

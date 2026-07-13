@@ -1,0 +1,785 @@
+{
+  "version": 1,
+  "generatedAt": "2026-07-13T04:41:06.642Z",
+  "rightsNote": "UNVERIFIED — CLIENT_DIRECTED staging review only. Not OWNED/LICENSED/CLIENT_PROVIDED. approvedForProduction=false.",
+  "records": [
+    {
+      "id": "jv-c06de16a420d",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2024/08/flyprivatejet-flugzeuge-global60001.jpg",
+      "localPath": "/assets/jetvina/mirror/flyprivatejet-flugzeuge-global60001.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 101573,
+      "checksum": "c06de16a420d27371e05f6c0d3de32234c0d6434ea6fcc16372c3fa2eced3058",
+      "altText": "JetVina media (UNVERIFIED)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.637Z"
+    },
+    {
+      "id": "jv-7c399d03553a",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2025/11/Bombardier-Global-7500.jpg",
+      "localPath": "/assets/jetvina/mirror/Bombardier-Global-7500.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 292168,
+      "checksum": "7c399d03553a6f0f5722665e82bec854f9859c1cf6a5f240e1b006f4f5db376d",
+      "altText": "JetVina media (UNVERIFIED)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.638Z"
+    },
+    {
+      "id": "jv-c055e1502e28",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2025/10/Phenom-300-Ext-JS.jpg",
+      "localPath": "/assets/jetvina/mirror/Phenom-300-Ext-JS.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 600252,
+      "checksum": "c055e1502e28af7131ec8b813a2d9e3478172432c4d6a191ba7e1ebc31c96447",
+      "altText": "JetVina media (UNVERIFIED)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.639Z"
+    },
+    {
+      "id": "jv-fe3618bb36a2",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2025/09/embraer-legacy-450web.jpg",
+      "localPath": "/assets/jetvina/mirror/embraer-legacy-450web.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 244969,
+      "checksum": "fe3618bb36a23157ae5f385ec8b7a215e30983396d67d6c951e848b44e8cbe98",
+      "altText": "JetVina media (UNVERIFIED)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.640Z"
+    },
+    {
+      "id": "jv-cd9aa13b805c",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2025/07/praetor-300.jpg",
+      "localPath": "/assets/jetvina/mirror/praetor-300.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 179180,
+      "checksum": "cd9aa13b805cd98097da8d8756ac19a87184b19836cab73cc53d6a97ea588cb4",
+      "altText": "JetVina media (UNVERIFIED)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-6",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2024/09/Embraer_Legacy_650_exterior2.jpg",
+      "localPath": "/assets/jetvina/mirror/Embraer_Legacy_650_exterior2.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-7",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2024/10/single-charter-main-image-11.jpg",
+      "localPath": "/assets/jetvina/mirror/single-charter-main-image-11.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-8",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2026/05/Challenger-300-2021-exterior.jpeg",
+      "localPath": "/assets/jetvina/mirror/Challenger-300-2021-exterior.jpeg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-9",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2024/10/gulfstream-v-7.jpg",
+      "localPath": "/assets/jetvina/mirror/gulfstream-v-7.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-10",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2025/01/Global-5000-Phu-Quoc-1.jpg",
+      "localPath": "/assets/jetvina/mirror/Global-5000-Phu-Quoc-1.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "DESTINATION"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-11",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2025/08/Boeing-Business-Jet-Charter.jpg",
+      "localPath": "/assets/jetvina/mirror/Boeing-Business-Jet-Charter.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-12",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2024/08/challenger-650-oh-wiw-plane-heroimage-jetflite-1920x1067-1.jpg",
+      "localPath": "/assets/jetvina/mirror/challenger-650-oh-wiw-plane-heroimage-jetflite-1920x1067-1.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "HERO"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-13",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2024/08/Global-6000-Interior-1024x576-1.jpeg",
+      "localPath": "/assets/jetvina/mirror/Global-6000-Interior-1024x576-1.jpeg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_CABIN"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-14",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2024/08/02-BOMBARDIER-GLOBAL-6000.jpg",
+      "localPath": "/assets/jetvina/mirror/02-BOMBARDIER-GLOBAL-6000.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-15",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2024/08/9_799.jpg",
+      "localPath": "/assets/jetvina/mirror/9_799.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-16",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2026/05/cabin-rear-view-of-challenger-300.webp",
+      "localPath": "/assets/jetvina/mirror/cabin-rear-view-of-challenger-300.webp",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_CABIN"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-17",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2025/05/Embraer-Lineage-1000-Cabin-2.jpg",
+      "localPath": "/assets/jetvina/mirror/Embraer-Lineage-1000-Cabin-2.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_CABIN"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-18",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2024/10/c605interior2.jpg",
+      "localPath": "/assets/jetvina/mirror/c605interior2.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_CABIN"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-19",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2024/08/N3MR-Global-5000-5.jpg",
+      "localPath": "/assets/jetvina/mirror/N3MR-Global-5000-5.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-20",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2024/09/interior-one.jpg",
+      "localPath": "/assets/jetvina/mirror/interior-one.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_CABIN"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-21",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2026/02/Phu-quoc-1.jpg",
+      "localPath": "/assets/jetvina/mirror/Phu-quoc-1.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "DESTINATION"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-22",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2026/03/Park-Hyatt-Phu-Quoc.jpg",
+      "localPath": "/assets/jetvina/mirror/Park-Hyatt-Phu-Quoc.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "DESTINATION"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-23",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2026/05/thi-tran-hoang-hon-sunset-town-08-1734320364.jpg",
+      "localPath": "/assets/jetvina/mirror/thi-tran-hoang-hon-sunset-town-08-1734320364.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-24",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2026/06/royal-muang-samui-villas.jpg",
+      "localPath": "/assets/jetvina/mirror/royal-muang-samui-villas.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "DESTINATION"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-25",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2026/02/Thuong-Hai.jpg",
+      "localPath": "/assets/jetvina/mirror/Thuong-Hai.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "DESTINATION"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-26",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2026/07/du-lich-dai-bac-4.jpg",
+      "localPath": "/assets/jetvina/mirror/du-lich-dai-bac-4.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-27",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2025/05/san-bay-phu-quoc.webp",
+      "localPath": "/assets/jetvina/mirror/san-bay-phu-quoc.webp",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "DESTINATION"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-28",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2026/06/yllas-chatles2-1-1422x800-1.jpg",
+      "localPath": "/assets/jetvina/mirror/yllas-chatles2-1-1422x800-1.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "DESTINATION"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-29",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2024/08/DDBA1287_Factsheets2024_7500_S6A0583_V1-web-new-hero-banner-2700x1203-1.jpg",
+      "localPath": "/assets/jetvina/mirror/DDBA1287_Factsheets2024_7500_S6A0583_V1-web-new-hero-banner-2700x1203-1.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "HERO"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-30",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2024/08/N3MR-Global-5000-6.jpg",
+      "localPath": "/assets/jetvina/mirror/N3MR-Global-5000-6.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-31",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2025/05/Wajer-Yachts-Private-JEt.jpg",
+      "localPath": "/assets/jetvina/mirror/Wajer-Yachts-Private-JEt.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "NEWS"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-32",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2026/06/maxresdefault.jpg",
+      "localPath": "/assets/jetvina/mirror/maxresdefault.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "NEWS"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-33",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2025/11/hq720.jpg",
+      "localPath": "/assets/jetvina/mirror/hq720.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-34",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2025/07/vistajet-x-wimbledon-2025.jpg",
+      "localPath": "/assets/jetvina/mirror/vistajet-x-wimbledon-2025.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "NEWS"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-35",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2025/11/aircargo-16486959481991179773647.jpg",
+      "localPath": "/assets/jetvina/mirror/aircargo-16486959481991179773647.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "SERVICE",
+        "CARGO"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-36",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2025/11/khai-thac-hang-khong-1.jpg",
+      "localPath": "/assets/jetvina/mirror/khai-thac-hang-khong-1.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-37",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2025/06/Thien-Xuan-Airport-Fast-Track-Services-2024-03-scaled-1.jpg",
+      "localPath": "/assets/jetvina/mirror/Thien-Xuan-Airport-Fast-Track-Services-2024-03-scaled-1.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "SERVICE",
+        "CARGO"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-38",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2025/06/Dich-vu-Don-khach-tai-Ga-Quoc-te-San-bay-Quoc-te-Tan-Son-Nhat-hoac-Noi-Bai-Goi-thuong-gia-7_17052024101834.jpg",
+      "localPath": "/assets/jetvina/mirror/Dich-vu-Don-khach-tai-Ga-Quoc-te-San-bay-Quoc-te-Tan-Son-Nhat-hoac-Noi-Bai-Goi-thuong-gia-7_17052024101834.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "DESTINATION"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-39",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2024/08/Global6000_Time_specious.jpg",
+      "localPath": "/assets/jetvina/mirror/Global6000_Time_specious.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "AIRCRAFT_EXTERIOR",
+        "EMPTY_LEG"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-40",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2024/08/1.png",
+      "localPath": "/assets/jetvina/mirror/1.png",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "MEMBERSHIP"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-41",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2026/03/sanh-di-nha-ga-t2-cang-hkqt-phu-quoc.jpg",
+      "localPath": "/assets/jetvina/mirror/sanh-di-nha-ga-t2-cang-hkqt-phu-quoc.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "DESTINATION"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    },
+    {
+      "id": "jv-cat-42",
+      "sourceUrl": "https://jetvina.com/wp-content/uploads/2026/05/Mount-Airy-Airport-2.jpg",
+      "localPath": "/assets/jetvina/mirror/Mount-Airy-Airport-2.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1600,
+      "height": 900,
+      "fileSize": 0,
+      "checksum": "",
+      "altText": "JetVina media (UNVERIFIED staging review)",
+      "usageContexts": [
+        "SERVICE",
+        "CARGO"
+      ],
+      "rightsStatus": "UNVERIFIED",
+      "approvedForStaging": true,
+      "approvedForProduction": false,
+      "syncedAt": "2026-07-13T04:41:06.641Z"
+    }
+  ]
+}

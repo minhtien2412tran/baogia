@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
 import { EnquiryMailService } from './enquiry-mail.service';
@@ -62,22 +66,31 @@ export class TravelCreditService {
         active: body.active ?? true,
       },
     });
-    await this.audit.log('TRAVEL_CREDIT_PACKAGE_CREATED', { id: created.id, name: created.name });
+    await this.audit.log('TRAVEL_CREDIT_PACKAGE_CREATED', {
+      id: created.id,
+      name: created.name,
+    });
     return this.mapPackage(created);
   }
 
   async updatePackage(id: number, body: UpdateTravelCreditPackageDto) {
-    const existing = await this.prisma.travelCreditPackage.findUnique({ where: { id } });
+    const existing = await this.prisma.travelCreditPackage.findUnique({
+      where: { id },
+    });
     if (!existing) throw new NotFoundException(`Package #${id} not found`);
 
     const updated = await this.prisma.travelCreditPackage.update({
       where: { id },
       data: {
         ...(body.name != null ? { name: body.name } : {}),
-        ...(body.creditAmount != null ? { creditAmount: body.creditAmount } : {}),
+        ...(body.creditAmount != null
+          ? { creditAmount: body.creditAmount }
+          : {}),
         ...(body.priceUsd != null ? { priceUsd: body.priceUsd } : {}),
         ...(body.bonusPct !== undefined ? { bonusPct: body.bonusPct } : {}),
-        ...(body.validityMonths != null ? { validityMonths: body.validityMonths } : {}),
+        ...(body.validityMonths != null
+          ? { validityMonths: body.validityMonths }
+          : {}),
         ...(body.currency != null ? { currency: body.currency } : {}),
         ...(body.active != null ? { active: body.active } : {}),
       },
@@ -87,10 +100,15 @@ export class TravelCreditService {
   }
 
   async deletePackage(id: number) {
-    const existing = await this.prisma.travelCreditPackage.findUnique({ where: { id } });
+    const existing = await this.prisma.travelCreditPackage.findUnique({
+      where: { id },
+    });
     if (!existing) throw new NotFoundException(`Package #${id} not found`);
     await this.prisma.travelCreditPackage.delete({ where: { id } });
-    await this.audit.log('TRAVEL_CREDIT_PACKAGE_DELETED', { id, name: existing.name });
+    await this.audit.log('TRAVEL_CREDIT_PACKAGE_DELETED', {
+      id,
+      name: existing.name,
+    });
     return { ok: true, id };
   }
 
@@ -101,7 +119,8 @@ export class TravelCreditService {
     const pkg = await this.prisma.travelCreditPackage.findFirst({
       where: { id: body.packageId, active: true },
     });
-    if (!pkg) throw new BadRequestException(`Package #${body.packageId} not found`);
+    if (!pkg)
+      throw new BadRequestException(`Package #${body.packageId} not found`);
 
     const record = await this.prisma.auditLog.create({
       data: {
@@ -169,8 +188,11 @@ export class TravelCreditService {
       throw new BadRequestException('Insufficient travel credits');
     }
 
-    const booking = await this.prisma.booking.findUnique({ where: { id: body.bookingId } });
-    if (!booking) throw new BadRequestException(`Booking #${body.bookingId} not found`);
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: body.bookingId },
+    });
+    if (!booking)
+      throw new BadRequestException(`Booking #${body.bookingId} not found`);
 
     const payment = await this.prisma.payment.findFirst({
       where: { bookingId: body.bookingId },
@@ -231,7 +253,12 @@ export class TravelCreditService {
         expiresAt: t.expiresAt.toISOString(),
         createdAt: t.createdAt.toISOString(),
       })),
-      pagination: { page, limit: take, total, totalPages: Math.ceil(total / take) },
+      pagination: {
+        page,
+        limit: take,
+        total,
+        totalPages: Math.ceil(total / take),
+      },
     };
   }
 }

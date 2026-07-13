@@ -15,11 +15,12 @@ export type BookingProcessCmsPayload = {
 
 export const BOOKING_PROCESS_CMS_DEFAULT: BookingProcessCmsPayload = {
   heroTitle: 'How to Charter a Flight',
-  heroSubtitle: 'Simple, efficient, reliable — follow four steps to book your private jet charter.',
+  heroSubtitle:
+    'Simple, efficient, reliable — follow four steps to book your private jet charter.',
   introTitle: 'Your Journey, Effortlessly Arranged',
   introBody:
-    'JetBay offers a seamless private jet booking experience available 24/7 across 190+ countries. Our AI-powered matching and dedicated charter specialists guide you from enquiry to wheels-up.',
-  processTitle: 'The JetBay Booking Process',
+    'JetVina offers a seamless private jet booking experience available 24/7 across multiple countries. Our AI-powered matching and dedicated charter specialists guide you from enquiry to wheels-up.',
+  processTitle: 'The JetVina Booking Process',
   processSubtitle: 'Simple, Efficient, Reliable',
   steps: [
     {
@@ -39,11 +40,11 @@ export const BOOKING_PROCESS_CMS_DEFAULT: BookingProcessCmsPayload = {
       body: 'From pre-flight arrangements to arrival, our team manages every detail of your journey. Enjoy a seamless experience with personalised service, allowing you to relax and focus on what matters most.',
     },
   ],
-  whyTitle: 'Why Choose Private Jet Charters by JetBay',
+  whyTitle: 'Why Choose Private Jet Charters by JetVina',
   whyItems: [
     {
       title: 'Global Coverage',
-      body: 'Available 24/7, our private jet network spans 190+ countries with seamless connectivity worldwide.',
+      body: 'Available 24/7, our private jet network spans multiple countries with seamless connectivity worldwide.',
     },
     {
       title: 'AI-Powered Efficiency',
@@ -51,11 +52,11 @@ export const BOOKING_PROCESS_CMS_DEFAULT: BookingProcessCmsPayload = {
     },
     {
       title: 'Uncompromised Safety',
-      body: 'JetBay works with trusted operators and maintains strict safety review standards on every charter journey.',
+      body: 'JetVina works with trusted operators and maintains strict safety review standards on every charter journey.',
     },
     {
       title: 'Industry Leader',
-      body: 'With over 10,000 satisfied clients, JetBay is a leading provider of premium private jet charter services.',
+      body: 'With many satisfied clients, JetVina is a leading provider of premium private jet charter services.',
     },
   ],
   paymentTitle: 'Payment Methods',

@@ -23,7 +23,8 @@ export type BrandLogoBundle = {
  */
 export function resolvePublicBrandLogos(input: BrandLogoBundle) {
   const canPublish = canPublishRights(input.rightsStatus);
-  const stagingPreview = Boolean(input.officialLogoEnabled) && !input.isProduction;
+  const stagingPreview =
+    Boolean(input.officialLogoEnabled) && !input.isProduction;
   const expose = canPublish || stagingPreview;
   const fb = input.logoFallback;
   return {
@@ -41,10 +42,13 @@ export function resolvePublicBrandLogos(input: BrandLogoBundle) {
 const JETBAY_PUBLIC_RE = /jetbay|jet-bay|jet bay/i;
 
 /** Fail-soft sanitizer for public brand JSON (never leak JetBay strings). */
-export function assertNoJetBayPublicBrand(payload: Record<string, unknown>): string[] {
+export function assertNoJetBayPublicBrand(
+  payload: Record<string, unknown>,
+): string[] {
   const hits: string[] = [];
   const walk = (v: unknown, path: string) => {
-    if (typeof v === 'string' && JETBAY_PUBLIC_RE.test(v)) hits.push(`${path}=${v}`);
+    if (typeof v === 'string' && JETBAY_PUBLIC_RE.test(v))
+      hits.push(`${path}=${v}`);
     else if (Array.isArray(v)) v.forEach((x, i) => walk(x, `${path}[${i}]`));
     else if (v && typeof v === 'object') {
       for (const [k, val] of Object.entries(v as Record<string, unknown>)) {

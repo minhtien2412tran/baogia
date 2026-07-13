@@ -10,7 +10,13 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiSecurity } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiQuery,
+  ApiSecurity,
+} from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { AirportService } from '../services/airport.service';
 import { CreateAirportDto, UpdateAirportDto } from '../dto';
@@ -54,16 +60,22 @@ export class AdminAirportController {
       user.userId,
       user.role,
     )) as Prisma.AirportWhereInput | null;
-    return this.airportService.list(page ? Number(page) : 1, limit ? Number(limit) : 100, {
-      continentCode,
-      countryCode,
-      scopeWhere,
-    });
+    return this.airportService.list(
+      page ? Number(page) : 1,
+      limit ? Number(limit) : 100,
+      {
+        continentCode,
+        countryCode,
+        scopeWhere,
+      },
+    );
   }
 
   @Post()
   @RequirePermissions('airport.manage')
-  @ApiOperation({ summary: 'Create airport (incl. parking fees / canParkAircraft)' })
+  @ApiOperation({
+    summary: 'Create airport (incl. parking fees / canParkAircraft)',
+  })
   create(@Body() body: CreateAirportDto) {
     return this.airportService.create(body);
   }
@@ -71,7 +83,10 @@ export class AdminAirportController {
   @Patch(':id')
   @RequirePermissions('airport.manage')
   @ApiOperation({ summary: 'Update airport' })
-  update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateAirportDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateAirportDto,
+  ) {
     return this.airportService.update(id, body);
   }
 

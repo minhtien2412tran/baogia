@@ -1,5 +1,24 @@
-import { Controller, Post, Get, Body, Query, Param, ParseIntPipe, Res, Req, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery, ApiSecurity } from '@nestjs/swagger';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Query,
+  Param,
+  ParseIntPipe,
+  Res,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiParam,
+  ApiQuery,
+  ApiSecurity,
+} from '@nestjs/swagger';
 import type { Response, Request } from 'express';
 import {
   SearchAircraftDto,
@@ -28,7 +47,10 @@ export class QuoteController {
   ) {}
   @Post('quotes/search-aircraft')
   @ApiOperation({ summary: 'Search available aircraft options' })
-  @ApiResponse({ status: 200, description: 'List of matching aircraft categories with pricing.' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of matching aircraft categories with pricing.',
+  })
   searchAircraft(@Body() body: SearchAircraftDto) {
     return this.quoteService.searchAircraft(body);
   }
@@ -36,9 +58,14 @@ export class QuoteController {
   @Post('quotes/request')
   @UseGuards(OptionalJwtAuthGuard)
   @ApiBearerAuth('bearer')
-  @ApiOperation({ summary: 'Submit a formal quote request (links userId when JWT present)' })
+  @ApiOperation({
+    summary: 'Submit a formal quote request (links userId when JWT present)',
+  })
   @ApiResponse({ status: 201, description: 'Quote request submitted.' })
-  requestQuote(@Body() body: RequestQuoteDto, @CurrentUser() user?: AuthUser | null) {
+  requestQuote(
+    @Body() body: RequestQuoteDto,
+    @CurrentUser() user?: AuthUser | null,
+  ) {
     return this.quoteService.requestQuote(body, { userId: user?.userId });
   }
 
@@ -69,14 +96,20 @@ export class QuoteController {
     if (format === 'pdf') {
       const buffer = await this.documentService.generateCharterAgreementPdf(id);
       res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `attachment; filename="charter-agreement-${id}.pdf"`);
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="charter-agreement-${id}.pdf"`,
+      );
       return res.send(buffer);
     }
 
     const html = await this.documentService.getCharterAgreementHtml(id);
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     if (format === 'html') {
-      res.setHeader('Content-Disposition', `attachment; filename="charter-agreement-${id}.html"`);
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="charter-agreement-${id}.html"`,
+      );
     }
     return res.send(html);
   }
@@ -92,7 +125,10 @@ export class QuoteController {
   @Public()
   @Post('payments/stripe/webhook')
   @ApiOperation({ summary: 'Stripe webhook handler' })
-  async stripeWebhook(@Req() req: Request & { rawBody?: Buffer }, @Res() res: Response) {
+  async stripeWebhook(
+    @Req() req: Request & { rawBody?: Buffer },
+    @Res() res: Response,
+  ) {
     const signature = req.headers['stripe-signature'];
     if (!signature || !req.rawBody) {
       return res.status(400).send('Missing signature or body');
@@ -134,28 +170,47 @@ export class QuoteController {
   @Public()
   @Get('payments/onepay/return')
   @ApiOperation({ summary: 'OnePay return URL handler' })
-  async onepayReturn(@Query() query: Record<string, string>, @Res() res: Response) {
+  async onepayReturn(
+    @Query() query: Record<string, string>,
+    @Res() res: Response,
+  ) {
     const result = await this.quoteService.handleOnepayReturn(query);
-    const redirect = process.env.PAYMENT_RETURN_URL ?? 'http://localhost:3000/en-us/account';
-    res.redirect(`${redirect}?payment=${result.status}&ref=${result.orderRef ?? ''}`);
+    const redirect =
+      process.env.PAYMENT_RETURN_URL ?? 'http://localhost:3000/en-us/account';
+    res.redirect(
+      `${redirect}?payment=${result.status}&ref=${result.orderRef ?? ''}`,
+    );
   }
 
   @Public()
   @Get('payments/onepay/ipn')
   @Post('payments/onepay/ipn')
   @ApiOperation({ summary: 'OnePay IPN callback' })
-  async onepayIpn(@Query() query: Record<string, string>, @Res() res: Response) {
+  async onepayIpn(
+    @Query() query: Record<string, string>,
+    @Res() res: Response,
+  ) {
     const ok = await this.quoteService.handleOnepayIpn(query);
-    res.send(ok ? 'responsecode=1&desc=confirm-success' : 'responsecode=0&desc=confirm-fail');
+    res.send(
+      ok
+        ? 'responsecode=1&desc=confirm-success'
+        : 'responsecode=0&desc=confirm-fail',
+    );
   }
 
   @Public()
   @Get('payments/9pay/return')
   @ApiOperation({ summary: '9Pay return URL handler' })
-  async ninepayReturn(@Query() query: Record<string, string>, @Res() res: Response) {
+  async ninepayReturn(
+    @Query() query: Record<string, string>,
+    @Res() res: Response,
+  ) {
     const result = await this.quoteService.handleNinepayReturn(query);
-    const redirect = process.env.PAYMENT_RETURN_URL ?? 'http://localhost:3000/en-us/account';
-    res.redirect(`${redirect}?payment=${result.status}&ref=${result.orderRef ?? ''}`);
+    const redirect =
+      process.env.PAYMENT_RETURN_URL ?? 'http://localhost:3000/en-us/account';
+    res.redirect(
+      `${redirect}?payment=${result.status}&ref=${result.orderRef ?? ''}`,
+    );
   }
 
   @Public()
@@ -176,7 +231,10 @@ export class QuoteController {
   @UseGuards(OptionalJwtAuthGuard)
   @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Submit World Cup charter quote' })
-  requestWorldCupQuote(@Body() body: RequestQuoteDto, @CurrentUser() user?: AuthUser | null) {
+  requestWorldCupQuote(
+    @Body() body: RequestQuoteDto,
+    @CurrentUser() user?: AuthUser | null,
+  ) {
     return this.quoteService.requestQuote(
       {
         ...body,

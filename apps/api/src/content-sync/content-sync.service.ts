@@ -14,7 +14,10 @@ import {
   canStoreCopyrightedHtml,
   contentHash,
 } from './url-safety';
-import { resolvePublicBrandLogos, assertNoJetBayPublicBrand } from './brand-public';
+import {
+  resolvePublicBrandLogos,
+  assertNoJetBayPublicBrand,
+} from './brand-public';
 
 type WpPageMeta = {
   id: number;
@@ -34,11 +37,16 @@ export class ContentSyncService {
   featureFlags() {
     return {
       CONTENT_SYNC_ENABLED: process.env.CONTENT_SYNC_ENABLED !== 'false',
-      CONTENT_SYNC_PUBLISH_ENABLED: process.env.CONTENT_SYNC_PUBLISH_ENABLED === 'true',
-      JETBAY_CONTENT_CLEANUP_ENABLED: process.env.JETBAY_CONTENT_CLEANUP_ENABLED !== 'false',
-      NEW_BRAND_CONTENT_ENABLED: process.env.NEW_BRAND_CONTENT_ENABLED === 'true',
-      EXTERNAL_MEDIA_IMPORT_ENABLED: process.env.EXTERNAL_MEDIA_IMPORT_ENABLED === 'true',
-      JETVINA_OFFICIAL_LOGO_ENABLED: process.env.JETVINA_OFFICIAL_LOGO_ENABLED === 'true',
+      CONTENT_SYNC_PUBLISH_ENABLED:
+        process.env.CONTENT_SYNC_PUBLISH_ENABLED === 'true',
+      JETBAY_CONTENT_CLEANUP_ENABLED:
+        process.env.JETBAY_CONTENT_CLEANUP_ENABLED !== 'false',
+      NEW_BRAND_CONTENT_ENABLED:
+        process.env.NEW_BRAND_CONTENT_ENABLED === 'true',
+      EXTERNAL_MEDIA_IMPORT_ENABLED:
+        process.env.EXTERNAL_MEDIA_IMPORT_ENABLED === 'true',
+      JETVINA_OFFICIAL_LOGO_ENABLED:
+        process.env.JETVINA_OFFICIAL_LOGO_ENABLED === 'true',
       syncModeDefault: 'SAFE_REFERENCE_MODE',
     };
   }
@@ -50,7 +58,9 @@ export class ContentSyncService {
   }
 
   async listSources() {
-    const sources = await this.prisma.contentSource.findMany({ orderBy: { id: 'asc' } });
+    const sources = await this.prisma.contentSource.findMany({
+      orderBy: { id: 'asc' },
+    });
     return { sources, flags: this.featureFlags() };
   }
 
@@ -94,7 +104,9 @@ export class ContentSyncService {
   }
 
   async getSource(id: number) {
-    const source = await this.prisma.contentSource.findUnique({ where: { id } });
+    const source = await this.prisma.contentSource.findUnique({
+      where: { id },
+    });
     if (!source) throw new NotFoundException(`ContentSource ${id} not found`);
     return source;
   }
@@ -112,7 +124,10 @@ export class ContentSyncService {
     userId?: number,
   ) {
     const existing = await this.getSource(id);
-    if (body.syncMode === 'AUTHORIZED_DIRECT_SYNC' && !body.rightsEvidenceNote) {
+    if (
+      body.syncMode === 'AUTHORIZED_DIRECT_SYNC' &&
+      !body.rightsEvidenceNote
+    ) {
       throw new BadRequestException(
         'Provide rightsEvidenceNote to enable AUTHORIZED_DIRECT_SYNC',
       );
@@ -132,7 +147,10 @@ export class ContentSyncService {
       entityType: 'ContentSource',
       entityId: id,
       beforeData: { syncMode: existing.syncMode },
-      afterData: { syncMode: updated.syncMode, rightsEvidenceNote: body.rightsEvidenceNote },
+      afterData: {
+        syncMode: updated.syncMode,
+        rightsEvidenceNote: body.rightsEvidenceNote,
+      },
       userId,
     });
     return updated;
@@ -152,13 +170,16 @@ export class ContentSyncService {
         method: 'GET',
         signal: controller.signal,
         headers: {
-          'User-Agent': 'JetBayContentSync/1.0 (+tech@minhtien.online; SAFE_REFERENCE_MODE)',
+          'User-Agent':
+            'JetBayContentSync/1.0 (+tech@minhtien.online; SAFE_REFERENCE_MODE)',
           Accept: 'application/json',
         },
         redirect: 'manual',
       });
       if (res.status >= 300 && res.status < 400) {
-        throw new BadRequestException('Redirects are not followed for SSRF safety');
+        throw new BadRequestException(
+          'Redirects are not followed for SSRF safety',
+        );
       }
       const ok = res.ok;
       await this.prisma.contentSource.update({
@@ -211,7 +232,8 @@ export class ContentSyncService {
 
       const res = await fetch(listUrl.toString(), {
         headers: {
-          'User-Agent': 'JetBayContentSync/1.0 (+tech@minhtien.online; SAFE_REFERENCE_MODE)',
+          'User-Agent':
+            'JetBayContentSync/1.0 (+tech@minhtien.online; SAFE_REFERENCE_MODE)',
           Accept: 'application/json',
         },
         redirect: 'error',
@@ -237,7 +259,10 @@ export class ContentSyncService {
         const hash = contentHash(meta);
 
         // Never store marketing HTML in SAFE mode
-        if (!canStoreCopyrightedHtml(source.syncMode) && meta.contentType === 'LEGAL') {
+        if (
+          !canStoreCopyrightedHtml(source.syncMode) &&
+          meta.contentType === 'LEGAL'
+        ) {
           blockedCount++;
           items.push({
             jobId: job.id,
@@ -261,7 +286,11 @@ export class ContentSyncService {
           },
         });
 
-        const action = !existing ? 'CREATE' : existing.contentHash !== hash ? 'UPDATE' : 'SKIP';
+        const action = !existing
+          ? 'CREATE'
+          : existing.contentHash !== hash
+            ? 'UPDATE'
+            : 'SKIP';
         if (action === 'CREATE') newCount++;
         if (action === 'UPDATE') changedCount++;
 
@@ -270,13 +299,16 @@ export class ContentSyncService {
           externalId: meta.externalId,
           action,
           beforeData: existing
-            ? ({ title: existing.title, hash: existing.contentHash } as Prisma.InputJsonValue)
+            ? {
+                title: existing.title,
+                hash: existing.contentHash,
+              }
             : undefined,
           proposedData: {
             ...meta,
             transformationMode: 'FACTS_ONLY',
             note: 'SAFE_REFERENCE_MODE: metadata only, no HTML/media import',
-          } as Prisma.InputJsonValue,
+          },
           rightsStatus: 'UNVERIFIED',
           reviewStatus: 'PENDING',
         });
@@ -298,17 +330,21 @@ export class ContentSyncService {
               contentType: meta.contentType,
               locale: source.defaultLocale,
               title: meta.title,
-              rawMetadata: meta as Prisma.InputJsonValue,
-              modifiedAt: meta.modifiedAt ? new Date(meta.modifiedAt) : undefined,
+              rawMetadata: meta,
+              modifiedAt: meta.modifiedAt
+                ? new Date(meta.modifiedAt)
+                : undefined,
               contentHash: hash,
               status: 'NORMALIZED',
             },
             update: {
               title: meta.title,
               sourceUrl: meta.sourceUrl,
-              rawMetadata: meta as Prisma.InputJsonValue,
+              rawMetadata: meta,
               contentHash: hash,
-              modifiedAt: meta.modifiedAt ? new Date(meta.modifiedAt) : undefined,
+              modifiedAt: meta.modifiedAt
+                ? new Date(meta.modifiedAt)
+                : undefined,
               status: 'NORMALIZED',
               fetchedAt: new Date(),
             },
@@ -338,14 +374,20 @@ export class ContentSyncService {
       const msg = e instanceof Error ? e.message : 'Discover failed';
       await this.prisma.contentSyncJob.update({
         where: { id: job.id },
-        data: { status: 'FAILED', completedAt: new Date(), errorSummary: msg, failedCount: 1 },
+        data: {
+          status: 'FAILED',
+          completedAt: new Date(),
+          errorSummary: msg,
+          failedCount: 1,
+        },
       });
       throw new BadRequestException(msg);
     }
   }
 
   private classifyPage(slug: string): string {
-    if (/privacy|terms|cookie|legal|conditions|notice/.test(slug)) return 'LEGAL';
+    if (/privacy|terms|cookie|legal|conditions|notice/.test(slug))
+      return 'LEGAL';
     if (/empty/.test(slug)) return 'EMPTY_LEG';
     if (/service|charter|cargo|medevac|specialist/.test(slug)) return 'SERVICE';
     if (/private-jet|fleet/.test(slug)) return 'FLEET';
@@ -381,9 +423,14 @@ export class ContentSyncService {
   }
 
   async approveItem(itemId: number, userId?: number) {
-    const item = await this.prisma.contentSyncItem.findUnique({ where: { id: itemId } });
+    const item = await this.prisma.contentSyncItem.findUnique({
+      where: { id: itemId },
+    });
     if (!item) throw new NotFoundException(`Item ${itemId} not found`);
-    if (item.rightsStatus === 'PROHIBITED' || item.rightsStatus === 'UNVERIFIED') {
+    if (
+      item.rightsStatus === 'PROHIBITED' ||
+      item.rightsStatus === 'UNVERIFIED'
+    ) {
       throw new ForbiddenException(
         'Cannot approve item while rightsStatus is UNVERIFIED or PROHIBITED — complete rights review first',
       );
@@ -393,14 +440,22 @@ export class ContentSyncService {
     }
     return this.prisma.contentSyncItem.update({
       where: { id: itemId },
-      data: { reviewStatus: 'APPROVED', approvedBy: userId, approvedAt: new Date() },
+      data: {
+        reviewStatus: 'APPROVED',
+        approvedBy: userId,
+        approvedAt: new Date(),
+      },
     });
   }
 
   async rejectItem(itemId: number, userId?: number) {
     return this.prisma.contentSyncItem.update({
       where: { id: itemId },
-      data: { reviewStatus: 'REJECTED', approvedBy: userId, approvedAt: new Date() },
+      data: {
+        reviewStatus: 'REJECTED',
+        approvedBy: userId,
+        approvedAt: new Date(),
+      },
     });
   }
 
@@ -413,10 +468,14 @@ export class ContentSyncService {
 
   async publishJob(jobId: number, userId?: number) {
     if (process.env.CONTENT_SYNC_PUBLISH_ENABLED !== 'true') {
-      throw new ForbiddenException('CONTENT_SYNC_PUBLISH_ENABLED is off (default)');
+      throw new ForbiddenException(
+        'CONTENT_SYNC_PUBLISH_ENABLED is off (default)',
+      );
     }
     const job = await this.getJob(jobId);
-    const items = await this.prisma.contentSyncItem.findMany({ where: { jobId } });
+    const items = await this.prisma.contentSyncItem.findMany({
+      where: { jobId },
+    });
     const blocked = items.filter(
       (i) =>
         i.reviewStatus !== 'APPROVED' ||
@@ -435,7 +494,10 @@ export class ContentSyncService {
         entityType: 'ContentSyncJob',
         entityId: String(jobId),
         version: Date.now(),
-        data: { publishedItemIds: items.map((i) => i.id), mode: 'STAGING_MARKER' },
+        data: {
+          publishedItemIds: items.map((i) => i.id),
+          mode: 'STAGING_MARKER',
+        },
         createdBy: userId,
         reason: 'Manual publish gate passed',
         sourceJobId: jobId,
@@ -448,11 +510,19 @@ export class ContentSyncService {
       userId,
       afterData: { itemCount: items.length },
     });
-    return { ok: true, jobId: job.id, publishedItems: items.length, target: 'staging-marker' };
+    return {
+      ok: true,
+      jobId: job.id,
+      publishedItems: items.length,
+      target: 'staging-marker',
+    };
   }
 
   async listRights() {
-    const rights = await this.prisma.contentRights.findMany({ orderBy: { id: 'desc' }, take: 100 });
+    const rights = await this.prisma.contentRights.findMany({
+      orderBy: { id: 'desc' },
+      take: 100,
+    });
     return { rights };
   }
 
@@ -492,7 +562,9 @@ export class ContentSyncService {
         notes: body.notes,
         approvedForPublish: canPublishRights(body.rightsStatus),
         approvedBy: canPublishRights(body.rightsStatus) ? userId : undefined,
-        approvedAt: canPublishRights(body.rightsStatus) ? new Date() : undefined,
+        approvedAt: canPublishRights(body.rightsStatus)
+          ? new Date()
+          : undefined,
         updatedAt: new Date(),
       },
     });
@@ -501,9 +573,14 @@ export class ContentSyncService {
   async approveRights(id: number, userId?: number) {
     const row = await this.prisma.contentRights.findUnique({ where: { id } });
     if (!row) throw new NotFoundException(`Rights ${id} not found`);
-    if (!canPublishRights(row.rightsStatus) && row.rightsStatus === 'UNVERIFIED') {
+    if (
+      !canPublishRights(row.rightsStatus) &&
+      row.rightsStatus === 'UNVERIFIED'
+    ) {
       // promote only with explicit OWNED/LICENSED/etc set first
-      throw new BadRequestException('Set rightsStatus to OWNED/LICENSED/CLIENT_PROVIDED/PUBLIC_DOMAIN before approve');
+      throw new BadRequestException(
+        'Set rightsStatus to OWNED/LICENSED/CLIENT_PROVIDED/PUBLIC_DOMAIN before approve',
+      );
     }
     return this.prisma.contentRights.update({
       where: { id },
@@ -542,7 +619,8 @@ export class ContentSyncService {
           replaced: 0,
           removed: 0,
           pendingReview: 4,
-          notes: 'StatsSection hidden behind feature flag until client-approved numbers',
+          notes:
+            'StatsSection hidden behind feature flag until client-approved numbers',
         },
         {
           group: 'JetBay logo / CDN assets',
@@ -550,7 +628,8 @@ export class ContentSyncService {
           replaced: 0,
           removed: 0,
           pendingReview: 1,
-          notes: 'Use internal placeholder; JetVina logo blocked until CLIENT_PROVIDED',
+          notes:
+            'Use internal placeholder; JetVina logo blocked until CLIENT_PROVIDED',
         },
         {
           group: 'Email templates',
@@ -606,10 +685,13 @@ export class ContentSyncService {
       approvedAt: null as string | null,
       showUnverifiedStats: false,
       showUnverifiedPartnerLogos: false,
-      rightsNote: 'SAFE_REFERENCE_MODE — official logo UNVERIFIED; production publish blocked',
+      rightsNote:
+        'SAFE_REFERENCE_MODE — official logo UNVERIFIED; production publish blocked',
     };
 
-    const row = await this.prisma.siteSetting.findUnique({ where: { key: 'brand' } });
+    const row = await this.prisma.siteSetting.findUnique({
+      where: { key: 'brand' },
+    });
     const merged = row ? { ...defaults, ...(row.value as object) } : defaults;
     const rightsStatus = String(merged.rightsStatus ?? 'UNVERIFIED');
     const canPublish = canPublishRights(rightsStatus);
@@ -641,7 +723,7 @@ export class ContentSyncService {
     };
 
     // Never expose JetBay in public brand payload
-    const jetbayHits = assertNoJetBayPublicBrand(response as Record<string, unknown>);
+    const jetbayHits = assertNoJetBayPublicBrand(response);
     if (jetbayHits.length) {
       return {
         ...response,
@@ -651,7 +733,8 @@ export class ContentSyncService {
         contactEmail: null,
         contactPhone: null,
         whatsapp: null,
-        rightsNote: 'Sanitized — JetBay strings stripped from public brand response',
+        rightsNote:
+          'Sanitized — JetBay strings stripped from public brand response',
         _sanitizedKeys: jetbayHits.length,
       };
     }
@@ -669,20 +752,28 @@ export class ContentSyncService {
     const payload = {
       ...value,
       rightsStatus,
-      approvedBy: canPublishRights(rightsStatus) ? (value.approvedBy ?? userId ?? null) : null,
-      approvedAt: canPublishRights(rightsStatus) ? (value.approvedAt ?? new Date().toISOString()) : null,
+      approvedBy: canPublishRights(rightsStatus)
+        ? (value.approvedBy ?? userId ?? null)
+        : null,
+      approvedAt: canPublishRights(rightsStatus)
+        ? (value.approvedAt ?? new Date().toISOString())
+        : null,
     };
     const row = await this.prisma.siteSetting.upsert({
       where: { key: 'brand' },
-      create: { key: 'brand', value: payload as Prisma.InputJsonValue, updatedBy: userId },
-      update: { value: payload as Prisma.InputJsonValue, updatedBy: userId },
+      create: {
+        key: 'brand',
+        value: payload,
+        updatedBy: userId,
+      },
+      update: { value: payload, updatedBy: userId },
     });
     await this.prisma.contentVersion.create({
       data: {
         entityType: 'SiteSetting',
         entityId: 'brand',
         version: Date.now(),
-        data: payload as Prisma.InputJsonValue,
+        data: payload,
         createdBy: userId,
         reason: 'Brand settings update',
       },

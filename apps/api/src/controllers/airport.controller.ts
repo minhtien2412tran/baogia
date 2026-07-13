@@ -13,7 +13,11 @@ export class AirportController {
   @ApiQuery({ name: 'q', required: true, example: 'London' })
   @ApiQuery({ name: 'limit', required: false })
   @ApiQuery({ name: 'locale', required: false, example: 'vi' })
-  search(@Query('q') q: string, @Query('limit') limit?: string, @Query('locale') locale?: string) {
+  search(
+    @Query('q') q: string,
+    @Query('limit') limit?: string,
+    @Query('locale') locale?: string,
+  ) {
     return this.airportService.search(q, limit ? Number(limit) : 10, locale);
   }
 
@@ -40,9 +44,13 @@ export class AirportController {
     @Query('continentCode') continentCode?: string,
     @Query('countryCode') countryCode?: string,
   ) {
-    return this.airportService.list(page ? Number(page) : 1, limit ? Number(limit) : 50, {
-      continentCode,
-      countryCode,
-    });
+    return this.airportService.list(
+      page ? Number(page) : 1,
+      limit ? Number(limit) : 50,
+      {
+        continentCode,
+        countryCode,
+      },
+    );
   }
 }

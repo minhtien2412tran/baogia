@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { scheduleUi } from '../../../lib/browser';
 import { SectionTitle, Muted, Button } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
 import { AdminField, AdminPanel } from '../../../components/AdminFormFields';
@@ -35,7 +36,9 @@ export default function PermissionsPage() {
   }, []);
 
   useEffect(() => {
-    load();
+    scheduleUi(() => {
+      void load();
+    });
   }, [load]);
 
   async function loadUser() {

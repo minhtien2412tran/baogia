@@ -1,9 +1,10 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { scheduleUi } from '../../../lib/browser';
 import { SectionTitle, DataTable, Muted, Button } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
-import { AdminField, AdminPanel, ActionBtn } from '../../../components/AdminFormFields';
+import { AdminField, AdminPanel, ActionBtn, ConfirmDialog } from '../../../components/AdminFormFields';
 import { adminApi } from '../../../lib/api';
 
 type PlanRow = {
@@ -31,6 +32,7 @@ export default function JetCardAdminPage() {
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState<PlanRow | null>(null);
   const [msg, setMsg] = useState('');
+  const [pendingDelete, setPendingDelete] = useState<number | string | null>(null);
   const [saving, setSaving] = useState(false);
 
   const load = useCallback(() => {
@@ -63,7 +65,7 @@ export default function JetCardAdminPage() {
                   Edit
                 </ActionBtn>
                 {' · '}
-                <ActionBtn variant="danger" onClick={() => remove(Number(p.id))}>Delete</ActionBtn>
+                <ActionBtn variant="danger" onClick={() => setPendingDelete(Number(p.id))}>Delete</ActionBtn>
               </span>
             ),
           })),
@@ -74,7 +76,9 @@ export default function JetCardAdminPage() {
   }, []);
 
   useEffect(() => {
-    load();
+    scheduleUi(() => {
+      void load();
+    });
   }, [load]);
 
   async function save() {
@@ -107,7 +111,6 @@ export default function JetCardAdminPage() {
   }
 
   async function remove(id: number) {
-    if (!confirm('Delete this plan?')) return;
     try {
       await adminApi.deleteJetCardPlan(id);
       setMsg('Plan deleted.');
@@ -150,6 +153,18 @@ export default function JetCardAdminPage() {
         />
       )}
       {msg && <p style={{ marginTop: 12, color: '#4ade80' }}>{msg}</p>}
+          <ConfirmDialog
+        open={pendingDelete != null}
+        title="Confirm delete"
+        message="Delete this item? This cannot be undone."
+        confirmLabel="Delete"
+        onCancel={() => setPendingDelete(null)}
+        onConfirm={() => {
+          const id = pendingDelete;
+          setPendingDelete(null);
+          if (id != null) void remove(id as never);
+        }}
+      />
     </AdminShell>
   );
 }

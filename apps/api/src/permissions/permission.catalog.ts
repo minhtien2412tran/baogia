@@ -34,7 +34,13 @@ export const PERMISSIONS = [
   'content_sync.rollback',
   'content_rights.view',
   'content_rights.approve',
+  'content_media.view',
+  'content_media.sync',
+  'content_media.review',
   'content_media.approve',
+  'content_media.approve_staging',
+  'content_media.approve_production',
+  'content_media.block',
   'content_rewrite.approve',
 ] as const;
 

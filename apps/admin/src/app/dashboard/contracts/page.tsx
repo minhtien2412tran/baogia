@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { scheduleUi } from '../../../lib/browser';
 import { SectionTitle, Muted, DataTable, Button } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
 import { ActionBtn } from '../../../components/AdminFormFields';
@@ -33,7 +34,9 @@ export default function ContractsPage() {
   }, []);
 
   useEffect(() => {
-    load();
+    scheduleUi(() => {
+      void load();
+    });
   }, [load]);
 
   async function act(id: number, action: 'submit' | 'approve' | 'reject' | 'send') {

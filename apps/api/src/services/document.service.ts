@@ -21,7 +21,8 @@ export class DocumentService {
     if (!doc) throw new NotFoundException(`Document ${id} not found`);
 
     const user = doc.booking.user;
-    const signer = [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email;
+    const signer =
+      [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email;
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -66,7 +67,8 @@ export class DocumentService {
     if (!doc) throw new NotFoundException(`Document ${id} not found`);
 
     const user = doc.booking.user;
-    const signer = [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email;
+    const signer =
+      [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email;
 
     return new Promise((resolve, reject) => {
       const pdf = new PDFDocument({ margin: 50 });
@@ -75,10 +77,14 @@ export class DocumentService {
       pdf.on('end', () => resolve(Buffer.concat(chunks)));
       pdf.on('error', reject);
 
-      pdf.fontSize(20).text('Private Jet Charter Agreement', { underline: true });
+      pdf
+        .fontSize(20)
+        .text('Private Jet Charter Agreement', { underline: true });
       pdf.moveDown();
       pdf.fontSize(11).fillColor('#444');
-      pdf.text(`Document #${doc.id} · Booking #${doc.bookingId} · Policy ${doc.policyVersion}`);
+      pdf.text(
+        `Document #${doc.id} · Booking #${doc.bookingId} · Policy ${doc.policyVersion}`,
+      );
       pdf.moveDown();
       pdf.fillColor('#000').fontSize(12);
       pdf.text(
@@ -97,7 +103,12 @@ export class DocumentService {
       ];
       terms.forEach((t, i) => pdf.text(`${i + 1}. ${t}`));
       pdf.moveDown(2);
-      pdf.fontSize(10).fillColor('#666').text(`Generated ${new Date().toISOString().slice(0, 10)} · JetVina Platform`);
+      pdf
+        .fontSize(10)
+        .fillColor('#666')
+        .text(
+          `Generated ${new Date().toISOString().slice(0, 10)} · JetVina Platform`,
+        );
       pdf.end();
     });
   }

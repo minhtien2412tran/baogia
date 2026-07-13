@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { scheduleUi } from '../../../../lib/browser';
 import Link from 'next/link';
 import { SectionTitle, Muted, Button, DataTable } from '@jetbay/ui';
 import { AdminShell } from '../../../../components/AdminShell';
@@ -59,7 +60,9 @@ export default function ContentPagesList() {
   }
 
   useEffect(() => {
-    load();
+    scheduleUi(() => {
+      void load();
+    });
   }, []);
 
   return (

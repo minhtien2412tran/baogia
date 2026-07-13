@@ -1,12 +1,25 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { scheduleUi } from '../../../lib/browser';
 import { SectionTitle, DataTable, Muted, Button } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
-import { AdminField, AdminPanel, ActionBtn } from '../../../components/AdminFormFields';
+import { AdminField, AdminPanel, ConfirmDialog } from '../../../components/AdminFormFields';
+import { IconButton } from '../../../components/ui/IconButton';
 import { adminApi } from '../../../lib/api';
 
 type AirportForm = {
+  id: number;
+  iata: string;
+  icao: string;
+  name: string;
+  city: string;
+  country: string;
+  timezone: string;
+  status: string;
+};
+
+type AirportRow = {
   id: number;
   iata: string;
   icao: string;
@@ -29,11 +42,12 @@ const emptyForm = (): AirportForm => ({
 });
 
 export default function AirportsAdminPage() {
-  const [rows, setRows] = useState<Record<string, React.ReactNode>[]>([]);
+  const [items, setItems] = useState<AirportRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState<AirportForm | null>(null);
   const [msg, setMsg] = useState('');
   const [saving, setSaving] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<number | null>(null);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -41,38 +55,16 @@ export default function AirportsAdminPage() {
       .getAirports()
       .then((res) => {
         const list = (res as { data?: unknown[] }).data ?? [];
-        setRows(
+        setItems(
           (list as Record<string, unknown>[]).map((a) => ({
-            id: String(a.id),
+            id: Number(a.id),
             iata: String(a.iata),
-            city: String(a.city),
-            country: String(a.country),
-            name: String(a.name ?? '—'),
+            icao: String(a.icao ?? ''),
+            name: String(a.name ?? ''),
+            city: String(a.city ?? ''),
+            country: String(a.country ?? ''),
+            timezone: String(a.timezone ?? 'UTC'),
             status: String(a.status ?? 'ACTIVE'),
-            actions: (
-              <span>
-                <ActionBtn
-                  onClick={() =>
-                    setForm({
-                      id: Number(a.id),
-                      iata: String(a.iata),
-                      icao: String(a.icao ?? ''),
-                      name: String(a.name ?? ''),
-                      city: String(a.city ?? ''),
-                      country: String(a.country ?? ''),
-                      timezone: String(a.timezone ?? 'UTC'),
-                      status: String(a.status ?? 'ACTIVE'),
-                    })
-                  }
-                >
-                  Edit
-                </ActionBtn>
-                {' · '}
-                <ActionBtn variant="danger" onClick={() => remove(Number(a.id))}>
-                  Delete
-                </ActionBtn>
-              </span>
-            ),
           })),
         );
       })
@@ -81,7 +73,9 @@ export default function AirportsAdminPage() {
   }, []);
 
   useEffect(() => {
-    load();
+    scheduleUi(() => {
+      void load();
+    });
   }, [load]);
 
   async function save() {
@@ -114,8 +108,10 @@ export default function AirportsAdminPage() {
     }
   }
 
-  async function remove(id: number) {
-    if (!confirm('Delete this airport?')) return;
+  async function confirmRemove() {
+    if (pendingDelete == null) return;
+    const id = pendingDelete;
+    setPendingDelete(null);
     try {
       await adminApi.deleteAirport(id);
       setMsg('Airport deleted.');
@@ -124,6 +120,36 @@ export default function AirportsAdminPage() {
       setMsg(e instanceof Error ? e.message : 'Delete failed');
     }
   }
+
+  const rows = items.map((a) => ({
+    id: String(a.id),
+    iata: a.iata,
+    city: a.city,
+    country: a.country,
+    name: a.name || '—',
+    status: a.status,
+    actions: (
+      <span style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+        <IconButton
+          name="edit"
+          label={`Edit airport ${a.iata}`}
+          onClick={() =>
+            setForm({
+              id: a.id,
+              iata: a.iata,
+              icao: a.icao,
+              name: a.name,
+              city: a.city,
+              country: a.country,
+              timezone: a.timezone,
+              status: a.status,
+            })
+          }
+        />
+        <IconButton name="trash" label={`Delete airport ${a.iata}`} onClick={() => setPendingDelete(a.id)} />
+      </span>
+    ),
+  }));
 
   return (
     <AdminShell active="/dashboard/airports">
@@ -143,7 +169,7 @@ export default function AirportsAdminPage() {
           <AdminField label="Country" value={form.country} onChange={(v) => setForm({ ...form, country: v })} required />
           <AdminField label="Timezone" value={form.timezone} onChange={(v) => setForm({ ...form, timezone: v })} />
           <AdminField label="Status (ACTIVE / INACTIVE)" value={form.status} onChange={(v) => setForm({ ...form, status: v })} />
-          <Button type="button" onClick={save} disabled={saving}>
+          <Button type="button" onClick={() => void save()} disabled={saving}>
             {saving ? 'Saving…' : 'Save'}
           </Button>
         </AdminPanel>
@@ -166,6 +192,14 @@ export default function AirportsAdminPage() {
         />
       )}
       {msg && <p style={{ marginTop: 12, color: '#4ade80' }}>{msg}</p>}
+      <ConfirmDialog
+        open={pendingDelete != null}
+        title="Delete airport"
+        message="Delete this airport? This cannot be undone."
+        confirmLabel="Delete"
+        onCancel={() => setPendingDelete(null)}
+        onConfirm={() => void confirmRemove()}
+      />
     </AdminShell>
   );
 }

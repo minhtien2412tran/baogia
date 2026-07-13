@@ -43,10 +43,13 @@ const WEB_CLIENT_METHODS = new Set([
 @Injectable()
 export class ApiGatewayService {
   getCatalog() {
-    const byTag = API_UI_REGISTRY.reduce<Record<string, ApiEndpointDef[]>>((acc, ep) => {
-      (acc[ep.tag] ??= []).push(ep);
-      return acc;
-    }, {});
+    const byTag = API_UI_REGISTRY.reduce<Record<string, ApiEndpointDef[]>>(
+      (acc, ep) => {
+        (acc[ep.tag] ??= []).push(ep);
+        return acc;
+      },
+      {},
+    );
 
     return {
       name: 'JetBay API Gateway',
@@ -105,23 +108,37 @@ export class ApiGatewayService {
         : false,
     }));
 
-    const dynamicPages = pageAudits.filter((p) => p.kind !== 'static' || p.requiredEndpoints.length > 0);
-    const fullCoverage = dynamicPages.filter((p) => p.status === 'full' || p.status === 'static').length;
-    const endpointsWithClient = endpointAudits.filter((e) => e.webClientReady).length;
+    const dynamicPages = pageAudits.filter(
+      (p) => p.kind !== 'static' || p.requiredEndpoints.length > 0,
+    );
+    const fullCoverage = dynamicPages.filter(
+      (p) => p.status === 'full' || p.status === 'static',
+    ).length;
+    const endpointsWithClient = endpointAudits.filter(
+      (e) => e.webClientReady,
+    ).length;
 
     return {
       generatedAt: new Date().toISOString(),
       summary: {
         webPagesTotal: WEB_UI_PAGES.length,
         webPagesFullCoverage: fullCoverage,
-        webPagesPartial: pageAudits.filter((p) => p.status === 'partial').length,
+        webPagesPartial: pageAudits.filter((p) => p.status === 'partial')
+          .length,
         webPagesStatic: pageAudits.filter((p) => p.status === 'static').length,
         apiEndpointsTotal: API_UI_REGISTRY.length,
-        apiEndpointsImplemented: API_UI_REGISTRY.filter((e) => e.implemented).length,
-        webClientMethodsTotal: endpointAudits.filter((e) => e.webClientMethod).length,
+        apiEndpointsImplemented: API_UI_REGISTRY.filter((e) => e.implemented)
+          .length,
+        webClientMethodsTotal: endpointAudits.filter((e) => e.webClientMethod)
+          .length,
         webClientMethodsReady: endpointsWithClient,
         coveragePercent: Math.round(
-          (endpointsWithClient / Math.max(endpointAudits.filter((e) => e.webClientMethod).length, 1)) * 100,
+          (endpointsWithClient /
+            Math.max(
+              endpointAudits.filter((e) => e.webClientMethod).length,
+              1,
+            )) *
+            100,
         ),
       },
       pages: pageAudits,

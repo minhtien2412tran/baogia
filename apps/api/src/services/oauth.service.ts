@@ -34,7 +34,8 @@ export class OAuthService {
     const client = this.getGoogleClient();
     if (!client) {
       throw new BadRequestException({
-        message: 'Google OAuth is not configured. Set GOOGLE_CLIENT_ID in environment.',
+        message:
+          'Google OAuth is not configured. Set GOOGLE_CLIENT_ID in environment.',
         status: 'NOT_CONFIGURED',
       });
     }
@@ -61,7 +62,8 @@ export class OAuthService {
     const clientId = process.env.APPLE_CLIENT_ID;
     if (!clientId) {
       throw new BadRequestException({
-        message: 'Apple OAuth is not configured. Set APPLE_CLIENT_ID in environment.',
+        message:
+          'Apple OAuth is not configured. Set APPLE_CLIENT_ID in environment.',
         status: 'NOT_CONFIGURED',
       });
     }
@@ -83,7 +85,9 @@ export class OAuthService {
 
     const email = payload.email as string | undefined;
     if (!email) {
-      throw new BadRequestException('Apple account email not shared. Enable email scope.');
+      throw new BadRequestException(
+        'Apple account email not shared. Enable email scope.',
+      );
     }
 
     return {

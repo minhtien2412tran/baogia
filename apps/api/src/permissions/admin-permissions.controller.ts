@@ -7,7 +7,12 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
@@ -33,11 +38,13 @@ export class AdminPermissionsController {
   @Get('me')
   @ApiOperation({ summary: 'Effective permissions for current user' })
   me(@CurrentUser() user: AuthUser) {
-    return this.permissions.listEffectivePermissions(user.userId, user.role).then((list) => ({
-      userId: user.userId,
-      role: user.role,
-      permissions: list,
-    }));
+    return this.permissions
+      .listEffectivePermissions(user.userId, user.role)
+      .then((list) => ({
+        userId: user.userId,
+        role: user.role,
+        permissions: list,
+      }));
   }
 
   @Get('users/:userId')
@@ -53,17 +60,29 @@ export class AdminPermissionsController {
 
   @Put('users/:userId/overrides')
   @RequirePermissions('permission.manage')
-  @ApiOperation({ summary: 'Set user permission overrides (DENY/ALLOW/INHERIT)' })
+  @ApiOperation({
+    summary: 'Set user permission overrides (DENY/ALLOW/INHERIT)',
+  })
   async setOverrides(
     @Param('userId', ParseIntPipe) userId: number,
     @Body()
-    body: { overrides: Array<{ permission: string; effect: 'INHERIT' | 'ALLOW' | 'DENY' }> },
+    body: {
+      overrides: Array<{
+        permission: string;
+        effect: 'INHERIT' | 'ALLOW' | 'DENY';
+      }>;
+    },
     @CurrentUser() actor: AuthUser,
   ) {
     const results: Awaited<ReturnType<PermissionService['setOverride']>>[] = [];
     for (const o of body.overrides ?? []) {
       results.push(
-        await this.permissions.setOverride(userId, o.permission, o.effect, actor.userId),
+        await this.permissions.setOverride(
+          userId,
+          o.permission,
+          o.effect,
+          actor.userId,
+        ),
       );
     }
     return { userId, overrides: results };
@@ -85,7 +104,11 @@ export class AdminPermissionsController {
     },
     @CurrentUser() actor: AuthUser,
   ) {
-    return this.permissions.replaceUserScopes(userId, body.scopes ?? [], actor.userId);
+    return this.permissions.replaceUserScopes(
+      userId,
+      body.scopes ?? [],
+      actor.userId,
+    );
   }
 
   @Put('roles/:role')

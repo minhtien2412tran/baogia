@@ -1,10 +1,15 @@
-# Placeholder images — replace with your assets
+# Placeholders & JetVina media
 
-Drop images here and update paths in `src/styles/jetbay-home.css` and home components:
+## Priority (public UI)
 
-- `hero-jet.jpg` — hero background (1920×1080 recommended)
-- `banner-worldcup.jpg`, `banner-fixed-price.jpg`, `banner-cabin.jpg` — promo carousel
-- `dest-*.jpg` — destination cards
-- `sos-medical.jpg`, `partner.jpg`, `app-mockup.jpg`, `about-jet.jpg`
+1. **JetVina** — curated URLs from [jetvina.com](https://jetvina.com/) (`NEXT_PUBLIC_PREFER_JETVINA_MEDIA`, default on)
+2. **SVG demos** — `/placeholders/demo/*` when prefer flag is `false`
+3. JetBay `/assets/jetbay/*` — blocked unless `NEXT_PUBLIC_ALLOW_JETBAY_MEDIA=true`
 
-Current UI uses CSS gradients + `[Image: ...]` text placeholders until assets are added.
+Catalog: `src/lib/jetvina-media-catalog.ts`  
+Rights: `../assets/jetvina/RIGHTS.md`  
+Optional mirror: `pnpm sync:jetvina-media`
+
+## SVG demo regenerate
+
+`pnpm generate:demo-placeholders`

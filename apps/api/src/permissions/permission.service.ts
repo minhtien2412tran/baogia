@@ -16,7 +16,11 @@ export class PermissionService {
    * Resolve effective permission: DENY > ALLOW > ROLE inherit.
    * ADMIN always allowed.
    */
-  async hasPermission(userId: number, role: string, permission: Permission): Promise<boolean> {
+  async hasPermission(
+    userId: number,
+    role: string,
+    permission: Permission,
+  ): Promise<boolean> {
     if (role === ADMIN_ROLE) return true;
 
     const override = await this.prisma.userPermissionOverride.findUnique({
@@ -35,7 +39,10 @@ export class PermissionService {
     return Boolean(rolePerm);
   }
 
-  async listEffectivePermissions(userId: number, role: string): Promise<string[]> {
+  async listEffectivePermissions(
+    userId: number,
+    role: string,
+  ): Promise<string[]> {
     if (role === ADMIN_ROLE) return [...PERMISSIONS];
 
     const [rolePerms, overrides] = await Promise.all([
@@ -120,10 +127,15 @@ export class PermissionService {
    * Empty scopes or ALL → no restriction (null).
    * NONE → impossible filter.
    */
-  async airportWhereForUser(userId: number, role: string): Promise<object | null> {
+  async airportWhereForUser(
+    userId: number,
+    role: string,
+  ): Promise<object | null> {
     if (role === ADMIN_ROLE) return null;
 
-    const scopes = await this.prisma.userAirportScope.findMany({ where: { userId } });
+    const scopes = await this.prisma.userAirportScope.findMany({
+      where: { userId },
+    });
     if (scopes.length === 0) return null;
     if (scopes.some((s) => s.scopeType === 'ALL')) return null;
     if (scopes.every((s) => s.scopeType === 'NONE')) {

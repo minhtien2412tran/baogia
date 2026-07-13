@@ -122,7 +122,10 @@ export const WEB_UI_PAGES: WebPageDef[] = [
     route: '/{locale}/travel-credit',
     name: 'Travel credits',
     kind: 'dynamic',
-    endpoints: ['GET /travel-credits/packages', 'POST /travel-credits/enquiries'],
+    endpoints: [
+      'GET /travel-credits/packages',
+      'POST /travel-credits/enquiries',
+    ],
   },
   {
     route: '/{locale}/article/{slug}',
@@ -158,19 +161,29 @@ export const WEB_UI_PAGES: WebPageDef[] = [
     route: '/{locale}/world-cup-2026-private-jet-booking',
     name: 'World Cup booking',
     kind: 'dynamic',
-    endpoints: ['GET /campaigns/world-cup/matches', 'POST /campaigns/world-cup/quotes'],
+    endpoints: [
+      'GET /campaigns/world-cup/matches',
+      'POST /campaigns/world-cup/quotes',
+    ],
   },
   {
     route: '/{locale}/world-cup-final-2026-private-jet-charter',
     name: 'World Cup final charter',
     kind: 'dynamic',
-    endpoints: ['GET /campaigns/world-cup/matches', 'POST /campaigns/world-cup/quotes'],
+    endpoints: [
+      'GET /campaigns/world-cup/matches',
+      'POST /campaigns/world-cup/quotes',
+    ],
   },
   {
     route: '/{locale}/private-jet-charter',
     name: 'Private jet charter',
     kind: 'static',
-    endpoints: ['POST /quotes/search-aircraft', 'POST /quotes/request', 'GET /airports/search'],
+    endpoints: [
+      'POST /quotes/search-aircraft',
+      'POST /quotes/request',
+      'GET /airports/search',
+    ],
     notes: 'Static copy; quote widget calls quote APIs',
   },
   {
@@ -348,7 +361,11 @@ export const API_UI_REGISTRY: ApiEndpointDef[] = [
     summary: 'Destination guides by category',
     implemented: true,
     webClientMethod: 'getDestinations',
-    webRoutes: ['/{locale}', '/{locale}/destination', '/{locale}/island-destinations'],
+    webRoutes: [
+      '/{locale}',
+      '/{locale}/destination',
+      '/{locale}/island-destinations',
+    ],
   },
   {
     method: 'GET',

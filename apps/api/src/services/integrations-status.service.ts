@@ -5,7 +5,11 @@ import { PrismaService } from '../prisma/prisma.service';
 
 function present(key: string): boolean {
   const v = process.env[key]?.trim();
-  return Boolean(v && !v.startsWith('CHANGE_ME') && v !== 'dev-jetbay-secret-change-in-production');
+  return Boolean(
+    v &&
+    !v.startsWith('CHANGE_ME') &&
+    v !== 'dev-jetbay-secret-change-in-production',
+  );
 }
 
 @Injectable()
@@ -47,8 +51,10 @@ export class IntegrationsStatusService {
         googleOAuth: present('GOOGLE_CLIENT_ID'),
         appleOAuth: present('APPLE_CLIENT_ID'),
         stripe: present('STRIPE_SECRET_KEY'),
-        onepay: present('ONEPAY_MERCHANT_ID') && present('ONEPAY_SECURE_SECRET'),
-        ninepay: present('NINEPAY_MERCHANT_KEY') && present('NINEPAY_SECRET_KEY'),
+        onepay:
+          present('ONEPAY_MERCHANT_ID') && present('ONEPAY_SECURE_SECRET'),
+        ninepay:
+          present('NINEPAY_MERCHANT_KEY') && present('NINEPAY_SECRET_KEY'),
         sms:
           present('TWILIO_ACCOUNT_SID') ||
           present('ESMS_API_KEY') ||
@@ -56,7 +62,8 @@ export class IntegrationsStatusService {
       },
       notes: {
         jwt: 'Required for auth. Set JWT_SECRET + REFRESH_TOKEN_SECRET.',
-        minio: 'MinIO optional — empty MINIO_ENDPOINT uses local upload path (UPLOAD_PATH).',
+        minio:
+          'MinIO optional — empty MINIO_ENDPOINT uses local upload path (UPLOAD_PATH).',
         g4: 'SMTP / OAuth / Payment / SMS need customer merchant keys — see docs/JETBAY_G4_INTEGRATIONS.md',
       },
     };

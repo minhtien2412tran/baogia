@@ -9,14 +9,15 @@ export type CampaignKey =
 
 export type EmailTemplate = { subject: string; text: string; html: string };
 
-const SITE =
-  (process.env.WEB_PUBLIC_URL ?? process.env.NEXT_PUBLIC_WEB_URL ?? 'https://www.minhtien.online').replace(
-    /\/$/,
-    '',
-  );
+const SITE = (
+  process.env.WEB_PUBLIC_URL ??
+  process.env.NEXT_PUBLIC_WEB_URL ??
+  'https://www.minhtien.online'
+).replace(/\/$/, '');
 
 function greeting(firstName: string | undefined, locale: string): string {
-  const name = firstName?.trim() || (locale.startsWith('vi') ? 'Quý khách' : 'there');
+  const name =
+    firstName?.trim() || (locale.startsWith('vi') ? 'Quý khách' : 'there');
   return locale.startsWith('vi') ? `Kính gửi ${name},` : `Dear ${name},`;
 }
 
@@ -52,14 +53,16 @@ export function renderEmailTemplate(
   meta: Record<string, unknown> = {},
 ): EmailTemplate {
   const loc = locale.startsWith('vi') ? 'vi' : 'en';
-  const firstName = typeof meta.firstName === 'string' ? meta.firstName : undefined;
+  const firstName =
+    typeof meta.firstName === 'string' ? meta.firstName : undefined;
   const greet = greeting(firstName, loc);
   const accountUrl = `${SITE}/${loc === 'vi' ? 'vi-vn' : 'en-us'}/account`;
   const quoteUrl = `${SITE}/${loc === 'vi' ? 'vi-vn' : 'en-us'}/account/quotes`;
 
   switch (campaignKey) {
     case 'welcome_register': {
-      const subject = loc === 'vi' ? 'Chào mừng đến với JETVINA' : 'Welcome to JetVina';
+      const subject =
+        loc === 'vi' ? 'Chào mừng đến với JETVINA' : 'Welcome to JetVina';
       const text =
         loc === 'vi'
           ? `${greet}\n\nCảm ơn bạn đã tạo tài khoản JETVINA. Quản lý báo giá, booking và tài liệu charter tại: ${accountUrl}\n\n— JETVINA`
@@ -74,7 +77,9 @@ export function renderEmailTemplate(
     case 'quote_received': {
       const requestId = meta.requestId ?? '';
       const subject =
-        loc === 'vi' ? `JETVINA đã nhận yêu cầu báo giá #${requestId}` : `JETVINA Quote Request #${requestId} Received`;
+        loc === 'vi'
+          ? `JETVINA đã nhận yêu cầu báo giá #${requestId}`
+          : `JETVINA Quote Request #${requestId} Received`;
       const text =
         loc === 'vi'
           ? `${greet}\n\nChúng tôi đã nhận yêu cầu charter (#${requestId}). Chuyên viên sẽ liên hệ trong vòng 3 giờ.\n\n— JETVINA`
@@ -104,7 +109,10 @@ export function renderEmailTemplate(
     }
 
     case 'newsletter_welcome': {
-      const subject = loc === 'vi' ? 'Cảm ơn bạn đã đăng ký JETVINA Newsletter' : 'Thanks for subscribing to JETVINA';
+      const subject =
+        loc === 'vi'
+          ? 'Cảm ơn bạn đã đăng ký JETVINA Newsletter'
+          : 'Thanks for subscribing to JETVINA';
       const text =
         loc === 'vi'
           ? `${greet}\n\nBạn sẽ nhận tin ưu đãi charter, empty leg và điểm đến mới từ JETVINA.\n\n— JETVINA`
@@ -118,7 +126,10 @@ export function renderEmailTemplate(
 
     case 'booking_created': {
       const bookingId = meta.bookingId ?? '';
-      const subject = loc === 'vi' ? `Booking #${bookingId} đã tạo — JETVINA` : `Booking #${bookingId} created — JETVINA`;
+      const subject =
+        loc === 'vi'
+          ? `Booking #${bookingId} đã tạo — JETVINA`
+          : `Booking #${bookingId} created — JETVINA`;
       const text =
         loc === 'vi'
           ? `${greet}\n\nBooking #${bookingId} đã được tạo. Hoàn tất thanh toán và ký tài liệu charter tại: ${accountUrl}\n\n— JETVINA`
@@ -134,7 +145,10 @@ export function renderEmailTemplate(
       const amount = meta.amount ?? '';
       const currency = meta.currency ?? 'USD';
       const bookingId = meta.bookingId ?? '';
-      const subject = loc === 'vi' ? 'Thanh toán JETVINA đã xác nhận' : 'JETVINA payment confirmed';
+      const subject =
+        loc === 'vi'
+          ? 'Thanh toán JETVINA đã xác nhận'
+          : 'JETVINA payment confirmed';
       const text =
         loc === 'vi'
           ? `${greet}\n\nThanh toán ${amount} ${currency} cho booking #${bookingId} đã được xác nhận.\n\n— JETVINA`
@@ -148,7 +162,9 @@ export function renderEmailTemplate(
 
     case 'nurture_day3': {
       const subject =
-        loc === 'vi' ? 'Sẵn sàng cho chuyến bay riêng tiếp theo?' : 'Ready for your next private flight?';
+        loc === 'vi'
+          ? 'Sẵn sàng cho chuyến bay riêng tiếp theo?'
+          : 'Ready for your next private flight?';
       const searchUrl = `${SITE}/${loc === 'vi' ? 'vi-vn' : 'en-us'}`;
       const text =
         loc === 'vi'

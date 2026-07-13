@@ -23,19 +23,27 @@ describe('assertAllowedUrl', () => {
   });
 
   it('blocks localhost', () => {
-    expect(() => assertAllowedUrl('https://localhost/x', allow)).toThrow(/Localhost/);
+    expect(() => assertAllowedUrl('https://localhost/x', allow)).toThrow(
+      /Localhost/,
+    );
   });
 
   it('blocks private IP', () => {
-    expect(() => assertAllowedUrl('https://127.0.0.1/x', allow)).toThrow(/Private/);
+    expect(() => assertAllowedUrl('https://127.0.0.1/x', allow)).toThrow(
+      /Private/,
+    );
   });
 
   it('blocks off-allowlist host', () => {
-    expect(() => assertAllowedUrl('https://evil.example/x', allow)).toThrow(/allowlist/);
+    expect(() => assertAllowedUrl('https://evil.example/x', allow)).toThrow(
+      /allowlist/,
+    );
   });
 
   it('blocks http by default', () => {
-    expect(() => assertAllowedUrl('http://jetvina.com/x', allow)).toThrow(/HTTPS/);
+    expect(() => assertAllowedUrl('http://jetvina.com/x', allow)).toThrow(
+      /HTTPS/,
+    );
   });
 });
 

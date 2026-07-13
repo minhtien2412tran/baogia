@@ -152,7 +152,9 @@ export default function LoginPage({ params }: { params: Promise<{ locale: string
                     required
                   />
                 </div>
-                {devCode && <p className="jb-account-meta">Dev code: {devCode}</p>}
+                {process.env.NODE_ENV !== 'production' && devCode ? (
+                  <p className="jb-account-meta">Dev code: {devCode}</p>
+                ) : null}
                 <button type="submit" className="jb-btn-primary" disabled={loading}>
                   Verify &amp; Sign in
                 </button>

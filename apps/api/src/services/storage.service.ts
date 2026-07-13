@@ -23,7 +23,9 @@ export class StorageService {
   constructor() {
     const endpoint = process.env.MINIO_ENDPOINT?.trim();
     this.bucket = process.env.MINIO_BUCKET ?? 'jetbay-uploads';
-    this.publicBase = (process.env.API_PUBLIC_URL ?? 'http://127.0.0.1:4000').replace(/\/$/, '');
+    this.publicBase = (
+      process.env.API_PUBLIC_URL ?? 'http://127.0.0.1:4000'
+    ).replace(/\/$/, '');
     this.localRoot = process.env.UPLOAD_PATH?.trim() || null;
 
     if (endpoint) {
@@ -53,7 +55,9 @@ export class StorageService {
         await this.client.bucketExists(this.bucket);
         return 'ok';
       } catch (e) {
-        this.logger.warn(`MinIO ping failed: ${e instanceof Error ? e.message : e}`);
+        this.logger.warn(
+          `MinIO ping failed: ${e instanceof Error ? e.message : e}`,
+        );
         return 'error';
       }
     }
@@ -69,7 +73,9 @@ export class StorageService {
   }
 
   buildPublicUrl(key: string): string {
-    const objectKey = key.startsWith('media/') ? key.slice('media/'.length) : key;
+    const objectKey = key.startsWith('media/')
+      ? key.slice('media/'.length)
+      : key;
     const encoded = objectKey.split('/').map(encodeURIComponent).join('/');
     return `${this.publicBase}/media/${encoded}`;
   }
@@ -80,7 +86,9 @@ export class StorageService {
 
   private buildKey(folder: string, originalName: string): string {
     const safeName = this.sanitizeName(originalName);
-    const prefix = folder.replace(/[^a-zA-Z0-9/_-]/g, '').replace(/^\/+|\/+$/g, '');
+    const prefix = folder
+      .replace(/[^a-zA-Z0-9/_-]/g, '')
+      .replace(/^\/+|\/+$/g, '');
     return `media/${prefix}/${Date.now()}-${randomUUID().slice(0, 8)}-${safeName}`;
   }
 
@@ -124,7 +132,9 @@ export class StorageService {
       };
     }
 
-    throw new Error('No storage configured. Set MINIO_ENDPOINT or UPLOAD_PATH.');
+    throw new Error(
+      'No storage configured. Set MINIO_ENDPOINT or UPLOAD_PATH.',
+    );
   }
 
   async list(prefix = 'media/'): Promise<StoredObject[]> {
@@ -141,7 +151,8 @@ export class StorageService {
             url: this.buildPublicUrl(obj.name),
             size: obj.size,
             contentType: 'application/octet-stream',
-            lastModified: obj.lastModified?.toISOString() ?? new Date().toISOString(),
+            lastModified:
+              obj.lastModified?.toISOString() ?? new Date().toISOString(),
           });
         });
         stream.on('error', reject);
@@ -165,8 +176,12 @@ export class StorageService {
     return [];
   }
 
-  private async walkLocal(dir: string, keyPrefix: string, items: StoredObject[]): Promise<void> {
-    let entries;
+  private async walkLocal(
+    dir: string,
+    keyPrefix: string,
+    items: StoredObject[],
+  ): Promise<void> {
+    let entries: import('node:fs').Dirent[];
     try {
       entries = await fs.readdir(dir, { withFileTypes: true });
     } catch {
@@ -190,14 +205,21 @@ export class StorageService {
     }
   }
 
-  async getObject(key: string): Promise<{ stream: NodeJS.ReadableStream; contentType: string; size: number }> {
+  async getObject(key: string): Promise<{
+    stream: NodeJS.ReadableStream;
+    contentType: string;
+    size: number;
+  }> {
     if (this.client) {
       const stat = await this.client.statObject(this.bucket, key);
       const stream = await this.client.getObject(this.bucket, key);
       return {
         stream,
-        contentType: stat.metaData?.['content-type'] ?? 'application/octet-stream',
-        size: stat.size,
+        contentType: String(
+          (stat.metaData as Record<string, string> | undefined)?.['content-type'] ??
+            'application/octet-stream',
+        ),
+        size: Number(stat.size),
       };
     }
 

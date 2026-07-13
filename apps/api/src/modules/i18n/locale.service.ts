@@ -42,7 +42,9 @@ export class LocaleService {
   }
 
   /** Normalize translation payload before DB write */
-  normalizeTranslationDto<T extends { locale?: string }>(dto: T): T & { locale: string } {
+  normalizeTranslationDto<T extends { locale?: string }>(
+    dto: T,
+  ): T & { locale: string } {
     const locale = this.normalize(dto.locale ?? CANONICAL_LOCALE);
     return { ...dto, locale };
   }

@@ -19,10 +19,10 @@ export class PermissionGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const required = this.reflector.getAllAndOverride<Permission[]>(PERMISSIONS_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+    const required = this.reflector.getAllAndOverride<Permission[]>(
+      PERMISSIONS_KEY,
+      [context.getHandler(), context.getClass()],
+    );
     if (!required?.length) return true;
 
     const request = context.switchToHttp().getRequest<{ user?: AuthUser }>();
@@ -31,7 +31,11 @@ export class PermissionGuard implements CanActivate {
     if (user.role === ADMIN_ROLE) return true;
 
     for (const perm of required) {
-      const ok = await this.permissions.hasPermission(user.userId, user.role, perm);
+      const ok = await this.permissions.hasPermission(
+        user.userId,
+        user.role,
+        perm,
+      );
       if (ok) return true;
     }
 

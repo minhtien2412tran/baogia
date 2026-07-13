@@ -11,7 +11,9 @@ export class I18nController {
 
   @Get('config')
   @Public()
-  @ApiOperation({ summary: 'Supported locales — web ↔ DB mapping (reverse i18n)' })
+  @ApiOperation({
+    summary: 'Supported locales — web ↔ DB mapping (reverse i18n)',
+  })
   @ApiResponse({ status: 200, description: 'Locale registry for FE/Admin' })
   getConfig() {
     return {
@@ -30,9 +32,15 @@ export class I18nController {
 
   @Get('resolve')
   @Public()
-  @ApiOperation({ summary: 'Resolve web/accept-language to DB locale + fallback chain' })
+  @ApiOperation({
+    summary: 'Resolve web/accept-language to DB locale + fallback chain',
+  })
   @ApiQuery({ name: 'locale', required: false, example: 'en-us' })
-  @ApiQuery({ name: 'cookieLocale', required: false, description: 'Simulate jb_locale cookie value' })
+  @ApiQuery({
+    name: 'cookieLocale',
+    required: false,
+    description: 'Simulate jb_locale cookie value',
+  })
   resolve(
     @Query('locale') locale?: string,
     @Query('cookieLocale') cookieLocale?: string,

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { scheduleUi } from '../../../lib/browser';
 import { SectionTitle, Muted, Button, DataTable } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
 import { AdminField } from '../../../components/AdminFormFields';
@@ -20,7 +21,9 @@ export default function ContentSyncPage() {
   }, []);
 
   useEffect(() => {
-    loadJobs();
+    scheduleUi(() => {
+      void loadJobs();
+    });
   }, [loadJobs]);
 
   async function discover() {

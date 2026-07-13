@@ -1,5 +1,20 @@
-import { Controller, Get, Post, Body, Param, ParseIntPipe, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth, ApiSecurity } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  ParseIntPipe,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBearerAuth,
+  ApiSecurity,
+} from '@nestjs/swagger';
 import { JetCardEnquiryDto } from '../dto';
 import { JetCardService } from '../services/jet-card.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -14,7 +29,10 @@ export class JetCardController {
 
   @Get('plans')
   @ApiOperation({ summary: 'Get Jet Card membership plans' })
-  @ApiResponse({ status: 200, description: 'List of available Jet Card membership plans.' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of available Jet Card membership plans.',
+  })
   getPlans() {
     return this.jetCardService.getPlans();
   }

@@ -22,12 +22,18 @@ import { EmptyLegController } from './controllers/empty-leg.controller';
 import { AdminEmptyLegController } from './controllers/admin-empty-leg.controller';
 import { JetCardController } from './controllers/jet-card.controller';
 import { AdminJetCardController } from './controllers/admin-jet-card.controller';
-import { TravelCreditController, AdminTravelCreditController } from './controllers/travel-credit.controller';
+import {
+  TravelCreditController,
+  AdminTravelCreditController,
+} from './controllers/travel-credit.controller';
 import { AdminContentController } from './controllers/admin-content.controller';
 import { PartnerController } from './controllers/partner.controller';
 import { AdminPartnerController } from './controllers/admin-partner.controller';
 import { ContentController } from './controllers/content.controller';
-import { BookingController, AdminBookingController } from './controllers/booking.controller';
+import {
+  BookingController,
+  AdminBookingController,
+} from './controllers/booking.controller';
 import { AdminDashboardController } from './controllers/admin-dashboard.controller';
 import { AdminUsersController } from './controllers/admin-users.controller';
 import { AirportController } from './controllers/airport.controller';
@@ -69,7 +75,8 @@ import { AccountService } from './services/account.service';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       global: true,
-      secret: process.env.JWT_SECRET ?? 'dev-jetbay-secret-change-in-production',
+      secret:
+        process.env.JWT_SECRET ?? 'dev-jetbay-secret-change-in-production',
       signOptions: { expiresIn: '7d' },
     }),
   ],

@@ -8,8 +8,8 @@ export class OnepayService {
   isConfigured(): boolean {
     return Boolean(
       process.env.ONEPAY_MERCHANT_ID &&
-        process.env.ONEPAY_ACCESS_CODE &&
-        process.env.ONEPAY_SECURE_SECRET,
+      process.env.ONEPAY_ACCESS_CODE &&
+      process.env.ONEPAY_SECURE_SECRET,
     );
   }
 
@@ -35,8 +35,7 @@ export class OnepayService {
     if (!this.isConfigured()) return null;
 
     const baseUrl =
-      process.env.ONEPAY_URL ??
-      'https://mtf.onepay.vn/paygate/vpcpay.op';
+      process.env.ONEPAY_URL ?? 'https://mtf.onepay.vn/paygate/vpcpay.op';
 
     const params: Record<string, string> = {
       vpc_Version: '2',

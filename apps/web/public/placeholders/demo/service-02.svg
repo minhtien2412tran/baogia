@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-label="Demo placeholder">
+  <rect width="1200" height="900" fill="#10141a"/>
+  <path d="M200 650 Q400 200 600 450 T1000 280" fill="none" stroke="#3a4454" stroke-width="3"/>
+  <circle cx="200" cy="650" r="10" fill="#c9a45c" opacity="0.5"/>
+  <circle cx="600" cy="450" r="10" fill="#c9a45c" opacity="0.5"/>
+  <circle cx="1000" cy="280" r="10" fill="#c9a45c" opacity="0.5"/>
+  <rect x="140" y="720" width="200" height="14" rx="7" fill="#2a3340"/>
+  <rect x="500" y="720" width="200" height="14" rx="7" fill="#2a3340"/>
+  <rect x="860" y="720" width="200" height="14" rx="7" fill="#2a3340"/>
+  <text x="48" y="860" fill="#6b7382" font-family="Georgia, serif" font-size="22" opacity="0.5">DEMO workflow</text>
+</svg>

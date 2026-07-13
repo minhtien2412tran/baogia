@@ -12,7 +12,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiConsumes, ApiBody, ApiSecurity } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiBody,
+  ApiSecurity,
+} from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 import { StorageService } from '../services/storage.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -30,14 +37,18 @@ const ALLOWED_TYPES = new Set([
 
 function toStorageKey(relativePath: string): string {
   const decoded = decodeURIComponent(relativePath);
-  if (decoded.includes('..')) throw new BadRequestException('Invalid object key');
+  if (decoded.includes('..'))
+    throw new BadRequestException('Invalid object key');
   const clean = decoded.replace(/^\/+/, '').replace(/\/+$/, '');
   if (!clean) throw new BadRequestException('Invalid object key');
   return clean.startsWith('media/') ? clean : `media/${clean}`;
 }
 
 /** NestJS 11 / path-to-regexp — wildcard param may be truncated; prefer full URL path. */
-function objectKeyFromRequest(req: Request, routePrefix: '/media/' | '/admin/media/'): string {
+function objectKeyFromRequest(
+  req: Request,
+  routePrefix: '/media/' | '/admin/media/',
+): string {
   const pathname = (req.originalUrl ?? req.url ?? '').split('?')[0];
   if (pathname.startsWith(routePrefix)) {
     return toStorageKey(decodeURIComponent(pathname.slice(routePrefix.length)));
@@ -79,13 +90,19 @@ export class MediaController {
     },
   })
   @ApiOperation({ summary: 'Upload a media file to MinIO' })
-  @UseInterceptors(FileInterceptor('file', { limits: { fileSize: 10 * 1024 * 1024 } }))
+  @UseInterceptors(
+    FileInterceptor('file', { limits: { fileSize: 10 * 1024 * 1024 } }),
+  )
   async upload(@UploadedFile() file?: Express.Multer.File) {
     if (!file) throw new BadRequestException('file is required');
     if (!ALLOWED_TYPES.has(file.mimetype)) {
       throw new BadRequestException(`Unsupported file type: ${file.mimetype}`);
     }
-    const stored = await this.storage.upload(file.buffer, file.originalname, file.mimetype);
+    const stored = await this.storage.upload(
+      file.buffer,
+      file.originalname,
+      file.mimetype,
+    );
     return { message: 'Uploaded', ...stored };
   }
 
@@ -103,7 +120,8 @@ export class MediaController {
   @Get('media/*')
   @ApiOperation({ summary: 'Serve a media file (MinIO or local UPLOAD_PATH)' })
   async serveMedia(@Req() req: Request, @Res() res: Response) {
-    if (!this.storage.isConfigured()) throw new NotFoundException('Media storage not configured');
+    if (!this.storage.isConfigured())
+      throw new NotFoundException('Media storage not configured');
     const key = objectKeyFromRequest(req, '/media/');
     try {
       const { stream, contentType, size } = await this.storage.getObject(key);

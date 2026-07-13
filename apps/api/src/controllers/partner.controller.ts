@@ -1,5 +1,11 @@
 import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiSecurity } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiSecurity,
+} from '@nestjs/swagger';
 import { PartnerApplicationDto } from '../dto';
 import { PartnerService } from '../services/partner.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -14,7 +20,10 @@ export class PartnerController {
 
   @Get('programs')
   @ApiOperation({ summary: 'Get details of global partner program roles' })
-  @ApiResponse({ status: 200, description: 'Comparison matrix of partner tiers.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Comparison matrix of partner tiers.',
+  })
   getPrograms() {
     return this.partnerService.getPrograms();
   }

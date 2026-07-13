@@ -1,4 +1,9 @@
-import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  OnModuleDestroy,
+  OnModuleInit,
+} from '@nestjs/common';
 import Redis from 'ioredis';
 
 @Injectable()
@@ -14,10 +19,17 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   onModuleInit() {
     const url = process.env.REDIS_URL?.trim();
     if (!url) return;
-    this.client = new Redis(url, { maxRetriesPerRequest: 1, lazyConnect: true });
-    this.client.on('error', (err) => this.logger.warn(`Redis error: ${err.message}`));
+    this.client = new Redis(url, {
+      maxRetriesPerRequest: 1,
+      lazyConnect: true,
+    });
+    this.client.on('error', (err) =>
+      this.logger.warn(`Redis error: ${err.message}`),
+    );
     this.connectPromise = this.client.connect().catch((err) => {
-      this.logger.warn(`Redis connect failed: ${err instanceof Error ? err.message : err}`);
+      this.logger.warn(
+        `Redis connect failed: ${err instanceof Error ? err.message : err}`,
+      );
     });
   }
 
@@ -34,7 +46,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       const pong = await redis.ping();
       return pong === 'PONG' ? 'ok' : 'error';
     } catch (e) {
-      this.logger.warn(`Redis ping failed: ${e instanceof Error ? e.message : e}`);
+      this.logger.warn(
+        `Redis ping failed: ${e instanceof Error ? e.message : e}`,
+      );
       return 'error';
     }
   }
@@ -56,7 +70,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       if (ttlSeconds) await redis.set(key, value, 'EX', ttlSeconds);
       else await redis.set(key, value);
     } catch (e) {
-      this.logger.warn(`Redis set failed: ${e instanceof Error ? e.message : e}`);
+      this.logger.warn(
+        `Redis set failed: ${e instanceof Error ? e.message : e}`,
+      );
     }
   }
 

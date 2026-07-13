@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-label="Demo placeholder">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4a7fb5"/><stop offset="50%" stop-color="#87b8d8"/><stop offset="100%" stop-color="#d4e8f0"/></linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a8f9e"/><stop offset="100%" stop-color="#1a5f6a"/></linearGradient>
+    <linearGradient id="sand" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e8d4a8"/><stop offset="100%" stop-color="#c9a45c"/></linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#sky)"/>
+  <circle cx="980" cy="140" r="56" fill="#ffe6a8" opacity="0.85"/>
+  <path d="M0 420 Q300 380 600 430 T1200 400 V560 H0Z" fill="url(#sea)"/>
+  <path d="M0 540 Q400 500 800 560 T1200 520 V800 H0Z" fill="url(#sand)"/>
+  <ellipse cx="220" cy="520" rx="90" ry="28" fill="#1a6b5c" opacity="0.55"/>
+  <path d="M220 520 L210 420 L230 420 Z" fill="#5a4030"/>
+  <path d="M220 430 Q160 400 150 440 Q190 450 220 430 Q280 400 290 440 Q250 450 220 430Z" fill="#2d7a4f"/>
+  <text x="48" y="760" fill="#5a4030" font-family="Georgia, serif" font-size="22" opacity="0.55">DEMO destination</text>
+</svg>

@@ -8,7 +8,8 @@ import {
 
 export const PRICING_FORMULA_VERSION = 'v1';
 
-export type LegType = 'POSITIONING' | 'PASSENGER' | 'RETURN' | 'REPOSITIONING' | 'EMPTY_LEG';
+export type LegType =
+  'POSITIONING' | 'PASSENGER' | 'RETURN' | 'REPOSITIONING' | 'EMPTY_LEG';
 
 export interface AirportGeoFees {
   id: number;
@@ -131,7 +132,10 @@ function buildLeg(params: {
   passengerCount: number;
 }): PlannedLeg {
   const distanceKm = roundMoney(distanceBetween(params.from, params.to));
-  const minutes = estimateFlightMinutes(distanceKm, params.aircraft.cruiseSpeedKmh);
+  const minutes = estimateFlightMinutes(
+    distanceKm,
+    params.aircraft.cruiseSpeedKmh,
+  );
   const rawHours = minutesToHours(minutes);
   const billableHours = applyMinimumBillableHours(
     rawHours,
@@ -222,17 +226,29 @@ export function buildPricingEstimate(input: {
     }),
   );
 
-  const billableHours = roundMoney(legs.reduce((s, l) => s + l.billableHours, 0));
-  const flightHourCost = roundMoney(legs.reduce((s, l) => s + l.estimatedBaseCost, 0));
-  const airportFeesTotal = roundMoney(legs.reduce((s, l) => s + l.airportFees, 0));
-  const handlingFeesTotal = roundMoney(legs.reduce((s, l) => s + l.handlingFees, 0));
-  const parkingFeesTotal = roundMoney(legs.reduce((s, l) => s + l.parkingFees, 0));
+  const billableHours = roundMoney(
+    legs.reduce((s, l) => s + l.billableHours, 0),
+  );
+  const flightHourCost = roundMoney(
+    legs.reduce((s, l) => s + l.estimatedBaseCost, 0),
+  );
+  const airportFeesTotal = roundMoney(
+    legs.reduce((s, l) => s + l.airportFees, 0),
+  );
+  const handlingFeesTotal = roundMoney(
+    legs.reduce((s, l) => s + l.handlingFees, 0),
+  );
+  const parkingFeesTotal = roundMoney(
+    legs.reduce((s, l) => s + l.parkingFees, 0),
+  );
   const estimatedTotal = roundMoney(
     flightHourCost + airportFeesTotal + handlingFeesTotal + parkingFeesTotal,
   );
 
   const customerRouteSummary = `${from.iata} → ${to.iata}`;
-  const operationalRouteSummary = legs.map((l) => `${l.fromIata}→${l.toIata}`).join(' · ');
+  const operationalRouteSummary = legs
+    .map((l) => `${l.fromIata}→${l.toIata}`)
+    .join(' · ');
 
   return {
     formulaVersion: PRICING_FORMULA_VERSION,
@@ -260,6 +276,8 @@ export function buildPricingEstimate(input: {
 }
 
 /** Freeze snapshot for DB — JSON-serializable deep copy. */
-export function freezePricingSnapshot(breakdown: PricingBreakdown): PricingBreakdown {
+export function freezePricingSnapshot(
+  breakdown: PricingBreakdown,
+): PricingBreakdown {
   return JSON.parse(JSON.stringify(breakdown)) as PricingBreakdown;
 }

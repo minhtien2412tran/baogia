@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
 import {
@@ -25,7 +29,9 @@ export class FixedPriceService {
     const routes = await this.prisma.fixedPriceRoute.findMany({
       where: {
         status: 'ACTIVE',
-        ...(region ? { region: { equals: region, mode: 'insensitive' as const } } : {}),
+        ...(region
+          ? { region: { equals: region, mode: 'insensitive' as const } }
+          : {}),
       },
       include: routeInclude,
       orderBy: { id: 'asc' },
@@ -62,7 +68,9 @@ export class FixedPriceService {
 
     const option = route.options.find((o) => o.category.code === body.category);
     if (!option) {
-      throw new BadRequestException(`Category "${body.category}" not available for this route`);
+      throw new BadRequestException(
+        `Category "${body.category}" not available for this route`,
+      );
     }
 
     return {
@@ -105,7 +113,10 @@ export class FixedPriceService {
       include: routeInclude,
     });
 
-    await this.audit.log('FIXED_PRICE_ROUTE_CREATED', { routeId: route.id, slug: route.slug });
+    await this.audit.log('FIXED_PRICE_ROUTE_CREATED', {
+      routeId: route.id,
+      slug: route.slug,
+    });
     return formatFixedPriceRoute(route, true);
   }
 
@@ -161,13 +172,17 @@ export class FixedPriceService {
   }
 
   private async findRouteOrThrow(id: number) {
-    const route = await this.prisma.fixedPriceRoute.findUnique({ where: { id } });
+    const route = await this.prisma.fixedPriceRoute.findUnique({
+      where: { id },
+    });
     if (!route) throw new NotFoundException(`Route #${id} not found`);
     return route;
   }
 
   private async resolveAirport(iata: string) {
-    const airport = await this.prisma.airport.findUnique({ where: { iata: iata.toUpperCase() } });
+    const airport = await this.prisma.airport.findUnique({
+      where: { iata: iata.toUpperCase() },
+    });
     if (!airport) throw new BadRequestException(`Airport "${iata}" not found`);
     return airport;
   }
@@ -176,7 +191,8 @@ export class FixedPriceService {
     const category = await this.prisma.aircraftCategory.findUnique({
       where: { code: code.toUpperCase() },
     });
-    if (!category) throw new BadRequestException(`Aircraft category "${code}" not found`);
+    if (!category)
+      throw new BadRequestException(`Aircraft category "${code}" not found`);
     return category.id;
   }
 }

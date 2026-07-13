@@ -101,15 +101,21 @@ export class PricingService {
       where: { id: params.aircraftId },
       include: { aircraftModel: true },
     });
-    if (!aircraft) throw new NotFoundException(`Aircraft ${params.aircraftId} not found`);
+    if (!aircraft)
+      throw new NotFoundException(`Aircraft ${params.aircraftId} not found`);
 
-    const airportIds = new Set<number>([params.fromAirportId, params.toAirportId]);
+    const airportIds = new Set<number>([
+      params.fromAirportId,
+      params.toAirportId,
+    ]);
     if (aircraft.currentAirportId) airportIds.add(aircraft.currentAirportId);
 
     const airports = await this.prisma.airport.findMany({
       where: { id: { in: [...airportIds] } },
     });
-    const airportsById = new Map(airports.map((a) => [a.id, this.toAirportFees(a)]));
+    const airportsById = new Map(
+      airports.map((a) => [a.id, this.toAirportFees(a)]),
+    );
 
     const breakdown = buildPricingEstimate({
       aircraft: this.toAircraftRate(aircraft),
@@ -153,7 +159,10 @@ export class PricingService {
         action: 'PRICING_ESTIMATE_CREATED',
         entityType: 'PricingEstimate',
         entityId: String(created.id),
-        afterData: { estimatedTotal: snapshot.estimatedTotal, route: snapshot.customerRouteSummary },
+        afterData: {
+          estimatedTotal: snapshot.estimatedTotal,
+          route: snapshot.customerRouteSummary,
+        },
         userId: params.userId,
       });
     }
@@ -165,11 +174,20 @@ export class PricingService {
     };
   }
 
-  async attachEstimateToBooking(bookingId: number, estimateId: number, userId?: number) {
-    const booking = await this.prisma.booking.findUnique({ where: { id: bookingId } });
+  async attachEstimateToBooking(
+    bookingId: number,
+    estimateId: number,
+    userId?: number,
+  ) {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+    });
     if (!booking) throw new NotFoundException(`Booking ${bookingId} not found`);
-    const estimate = await this.prisma.pricingEstimate.findUnique({ where: { id: estimateId } });
-    if (!estimate) throw new NotFoundException(`Estimate ${estimateId} not found`);
+    const estimate = await this.prisma.pricingEstimate.findUnique({
+      where: { id: estimateId },
+    });
+    if (!estimate)
+      throw new NotFoundException(`Estimate ${estimateId} not found`);
 
     const snapshot = estimate.snapshot as unknown as PricingBreakdown;
 
@@ -231,7 +249,11 @@ export class PricingService {
     const booking = await this.prisma.booking.findUnique({
       where: { id: bookingId },
       include: {
-        flightLegs: { where: { legType: 'PASSENGER' }, orderBy: { sequence: 'asc' }, take: 1 },
+        flightLegs: {
+          where: { legType: 'PASSENGER' },
+          orderBy: { sequence: 'asc' },
+          take: 1,
+        },
       },
     });
     if (!booking) throw new NotFoundException(`Booking ${bookingId} not found`);
@@ -240,7 +262,9 @@ export class PricingService {
     }
     const passengerLeg = booking.flightLegs[0];
     if (!passengerLeg) {
-      throw new BadRequestException('Booking has no passenger leg to recalculate');
+      throw new BadRequestException(
+        'Booking has no passenger leg to recalculate',
+      );
     }
 
     const { estimate, estimateId } = await this.estimate({
@@ -275,13 +299,17 @@ export class PricingService {
     if (!booking) throw new NotFoundException(`Booking ${bookingId} not found`);
 
     const latest = booking.pricingEstimates[0];
-    const snapshot = latest?.snapshot as unknown as PricingBreakdown | undefined;
+    const snapshot = latest?.snapshot as unknown as
+      PricingBreakdown | undefined;
 
     return {
       bookingId: booking.id,
       bookingCode: booking.bookingCode,
       customerRouteSummary: booking.customerRouteSummary,
-      estimatedPriceTotal: booking.estimatedPriceTotal != null ? Number(booking.estimatedPriceTotal) : null,
+      estimatedPriceTotal:
+        booking.estimatedPriceTotal != null
+          ? Number(booking.estimatedPriceTotal)
+          : null,
       estimatedPriceCurrency: booking.estimatedPriceCurrency,
       label: 'Giá ước tính',
       disclaimer:
@@ -295,7 +323,10 @@ export class PricingService {
         from: leg.fromAirport.iata,
         to: leg.toAirport.iata,
         hasPassengers: leg.hasPassengers,
-        estimatedTotalCost: leg.estimatedTotalCost != null ? Number(leg.estimatedTotalCost) : null,
+        estimatedTotalCost:
+          leg.estimatedTotalCost != null
+            ? Number(leg.estimatedTotalCost)
+            : null,
         status: leg.status,
       })),
       aircraft: booking.aircraft

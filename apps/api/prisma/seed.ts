@@ -515,9 +515,9 @@ async function main() {
   });
   await seedTranslation('ARTICLE', privacyPage.id, {
     title: 'Privacy Policy',
-    body: 'This is the clean-room reconstructed privacy policy for JetBay platform.',
-    seoTitle: 'Privacy Policy - JetBay',
-    seoDescription: 'How JetBay handles your personal data.',
+    body: 'This privacy policy describes how JetVina processes personal data.',
+    seoTitle: 'Privacy Policy - JetVina',
+    seoDescription: 'How JetVina handles your personal data.',
   });
 
   const newsArticle = await prisma.contentArticle.upsert({
@@ -533,11 +533,11 @@ async function main() {
     },
   });
   await seedTranslation('ARTICLE', newsArticle.id, {
-    title: 'JetBay Expands Private Jet Fleet',
+    title: 'JetVina Expands Private Jet Fleet',
     excerpt: 'New aircraft added to serve growing demand across Asia and Europe.',
-    body: 'JetBay announces fleet expansion with additional light and heavy jets available for charter.',
-    seoTitle: 'Fleet Expansion News - JetBay',
-    seoDescription: 'JetBay expands private jet fleet for global charter.',
+    body: 'JetVina announces fleet expansion with additional light and heavy jets available for charter.',
+    seoTitle: 'Fleet Expansion News - JetVina',
+    seoDescription: 'JetVina expands private jet fleet for global charter.',
   });
 
   const blogArticle = await prisma.contentArticle.upsert({
@@ -556,7 +556,7 @@ async function main() {
     title: 'Tips for Flying with Pets on a Private Jet',
     excerpt: 'Everything you need to know about pet-friendly private aviation.',
     body: 'Private jets offer a stress-free way to travel with pets. Here are our top tips...',
-    seoTitle: 'Pet Travel Tips - JetBay Blog',
+    seoTitle: 'Pet Travel Tips - JetVina Blog',
     seoDescription: 'Guide to flying with pets on private jets.',
   });
 
@@ -605,8 +605,8 @@ async function main() {
       title: d.title,
       excerpt: d.tagline,
       body: d.body,
-      seoTitle: `${d.title} Private Jet Charter - JetBay`,
-      seoDescription: `Fly to ${d.city} by private jet with JetBay.`,
+      seoTitle: `${d.title} Private Jet Charter - JetVina`,
+      seoDescription: `Fly to ${d.city} by private jet with JetVina.`,
     });
   }
 
@@ -656,8 +656,8 @@ async function main() {
   });
   await seedTranslation('ARTICLE', termsPage.id, {
     title: 'Terms of Service',
-    body: 'These terms govern use of the JetBay private jet booking platform.',
-    seoTitle: 'Terms of Service - JetBay',
+    body: 'These terms govern use of the JetVina private jet booking platform.',
+    seoTitle: 'Terms of Service - JetVina',
     seoDescription: 'Platform terms and conditions.',
   });
 
@@ -669,17 +669,17 @@ async function main() {
       slug: 'about-us',
       isPublished: true,
       publishedAt: new Date('2026-01-01'),
-      author: 'JetBay Team',
+      author: 'JetVina Team',
     },
   });
   const aboutCmsBody = aboutUsCmsJson();
   await seedTranslation('ARTICLE', aboutPage.id, {
-    title: 'About JetBay',
+    title: 'About JetVina',
     excerpt:
-      'JetBay is a global private jet booking platform headquartered in Singapore with 6 other offices worldwide.',
+      'JetVina is a Vietnam-based private jet charter company with offices across Asia Pacific.',
     body: aboutCmsBody,
-    seoTitle: 'About Us - JetBay',
-    seoDescription: 'Learn about JetBay private jet charter — global offices, awards, and 10,000+ aircraft.',
+    seoTitle: 'About Us - JetVina',
+    seoDescription: 'Learn about JetVina private jet charter across Vietnam and Asia Pacific.',
   });
 
   const bookingPage = await prisma.contentArticle.upsert({
@@ -697,8 +697,8 @@ async function main() {
     title: 'How to Charter a Flight',
     excerpt: 'Simple, efficient, reliable — follow four steps to book your private jet charter.',
     body: bookingProcessCmsJson(),
-    seoTitle: 'How Booking Works - JetBay',
-    seoDescription: 'Step-by-step private jet booking guide with JetBay.',
+    seoTitle: 'How Booking Works - JetVina',
+    seoDescription: 'Step-by-step private jet booking guide with JetVina.',
   });
 
   console.log('Seed execution completed successfully.');

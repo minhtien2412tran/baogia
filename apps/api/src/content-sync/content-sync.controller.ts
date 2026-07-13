@@ -9,7 +9,12 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionGuard } from '../permissions/permission.guard';
 import { RequirePermissions } from '../permissions/require-permissions.decorator';
@@ -26,7 +31,9 @@ export class ContentSyncController {
 
   @Get('content/brand')
   @Public()
-  @ApiOperation({ summary: 'Public brand settings (safe placeholders until client confirm)' })
+  @ApiOperation({
+    summary: 'Public brand settings (safe placeholders until client confirm)',
+  })
   getBrand() {
     return this.sync.getBrandSettings();
   }
@@ -82,7 +89,7 @@ export class ContentSyncController {
     @Body() body: Record<string, unknown>,
     @CurrentUser() user: AuthUser,
   ) {
-    return this.sync.updateSource(id, body as never, user.userId);
+    return this.sync.updateSource(id, body, user.userId);
   }
 
   @Post('admin/content-sources/:id/test-connection')
@@ -101,7 +108,11 @@ export class ContentSyncController {
     @Body() body: { sourceId: number; dryRun?: boolean },
     @CurrentUser() user: AuthUser,
   ) {
-    return this.sync.discover(body.sourceId, user.userId, body.dryRun !== false);
+    return this.sync.discover(
+      body.sourceId,
+      user.userId,
+      body.dryRun !== false,
+    );
   }
 
   @Get('admin/content-sync/jobs')
@@ -140,7 +151,10 @@ export class ContentSyncController {
   @UseGuards(JwtAuthGuard, PermissionGuard)
   @RequirePermissions('content_sync.review')
   @ApiBearerAuth('bearer')
-  approveItem(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthUser) {
+  approveItem(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthUser,
+  ) {
     return this.sync.approveItem(id, user.userId);
   }
 
@@ -148,7 +162,10 @@ export class ContentSyncController {
   @UseGuards(JwtAuthGuard, PermissionGuard)
   @RequirePermissions('content_sync.review')
   @ApiBearerAuth('bearer')
-  rejectItem(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthUser) {
+  rejectItem(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthUser,
+  ) {
     return this.sync.rejectItem(id, user.userId);
   }
 
@@ -164,7 +181,10 @@ export class ContentSyncController {
   @UseGuards(JwtAuthGuard, PermissionGuard)
   @RequirePermissions('content_sync.publish')
   @ApiBearerAuth('bearer')
-  publish(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthUser) {
+  publish(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthUser,
+  ) {
     return this.sync.publishJob(id, user.userId);
   }
 
@@ -180,7 +200,10 @@ export class ContentSyncController {
   @UseGuards(JwtAuthGuard, PermissionGuard)
   @RequirePermissions('content_rights.approve')
   @ApiBearerAuth('bearer')
-  upsertRights(@Body() body: Record<string, unknown>, @CurrentUser() user: AuthUser) {
+  upsertRights(
+    @Body() body: Record<string, unknown>,
+    @CurrentUser() user: AuthUser,
+  ) {
     return this.sync.upsertRights(body as never, user.userId);
   }
 
@@ -188,7 +211,10 @@ export class ContentSyncController {
   @UseGuards(JwtAuthGuard, PermissionGuard)
   @RequirePermissions('content_rights.approve')
   @ApiBearerAuth('bearer')
-  approveRights(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthUser) {
+  approveRights(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthUser,
+  ) {
     return this.sync.approveRights(id, user.userId);
   }
 
@@ -220,7 +246,10 @@ export class ContentSyncController {
   @UseGuards(JwtAuthGuard, PermissionGuard)
   @RequirePermissions('content_source.manage')
   @ApiBearerAuth('bearer')
-  patchBrand(@Body() body: Record<string, unknown>, @CurrentUser() user: AuthUser) {
+  patchBrand(
+    @Body() body: Record<string, unknown>,
+    @CurrentUser() user: AuthUser,
+  ) {
     return this.sync.setBrandSettings(body, user.userId);
   }
 

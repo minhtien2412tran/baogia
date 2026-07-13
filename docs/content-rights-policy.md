@@ -15,8 +15,9 @@ Blocked: `UNVERIFIED` | `PROHIBITED`
 ## Current evidence
 
 - No ownership letter, CMS credentials, or export confirmation found in repository.
-- JetVina exposes public WordPress REST (`/wp-json/`) and Yoast sitemap — usable for **structure discovery only**.
-- JetVina logo URL observed in OG metadata is **PROHIBITED** for download/hotlink until CLIENT_PROVIDED.
+- JetVina exposes public WordPress REST (`/wp-json/`) and Yoast sitemap — usable for **structure discovery**.
+- **2026-07-13 CLIENT_DIRECTED:** product owner asked to prefer images from https://jetvina.com/ for staging UI (catalog in `apps/web/src/lib/jetvina-media-catalog.ts`). This is **not** a signed blanket license for every WP media item (some may be third-party stock on their CMS).
+- JetVina logo URL observed in OG metadata remains gated by `JETVINA_OFFICIAL_LOGO_ENABLED` until CLIENT_PROVIDED letter.
 
 ## Claims banned until client approval
 

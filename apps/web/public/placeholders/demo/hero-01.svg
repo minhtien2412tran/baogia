@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-label="Demo placeholder">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0%" stop-color="#0b1a2e"/><stop offset="45%" stop-color="#152438"/><stop offset="100%" stop-color="#0a0c10"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#c9a45c" stop-opacity="0"/><stop offset="50%" stop-color="#c9a45c" stop-opacity="0.35"/><stop offset="100%" stop-color="#c9a45c" stop-opacity="0"/></linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+  <circle cx="1500" cy="220" r="90" fill="#f5e6c0" opacity="0.12"/>
+  <path d="M0 780 Q480 680 960 740 T1920 700 V1080 H0Z" fill="#06080c"/>
+  <path d="M200 620 C600 480 1000 520 1600 400" fill="none" stroke="url(#gold)" stroke-width="2"/>
+  <g transform="translate(720,440) scale(1.35)">
+    <path d="M0 60 L380 30 L560 42 L540 70 L370 90 L0 75Z" fill="#c8ced8" opacity="0.85"/>
+    <path d="M120 35 L200 -20 L230 -10 L160 50Z" fill="#9aa3b2" opacity="0.9"/>
+    <path d="M130 80 L220 140 L250 125 L170 75Z" fill="#9aa3b2" opacity="0.9"/>
+  </g>
+  <text x="80" y="1020" fill="#c9a45c" font-family="Georgia, serif" font-size="32" opacity="0.4">DEMO hero · original illustration · no third-party photo</text>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-label="Demo placeholder">
+  <defs>
+    <radialGradient id="r" cx="50%" cy="40%" r="70%"><stop offset="0%" stop-color="#243044"/><stop offset="100%" stop-color="#0b0e14"/></radialGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#r)"/>
+  <path d="M200 420 L980 300" fill="none" stroke="#c9a45c" stroke-width="1.5" opacity="0.35"/>
+  <circle cx="200" cy="420" r="6" fill="#c9a45c" opacity="0.6"/>
+  <circle cx="980" cy="300" r="6" fill="#c9a45c" opacity="0.6"/>
+  <g transform="translate(280,280)">
+    <path d="M0 90 L480 50 L620 62 L600 95 L470 120 L0 110Z" fill="#d0d5de"/>
+    <path d="M140 55 L220 0 L250 10 L180 70Z" fill="#a8b0be"/>
+    <path d="M150 115 L250 175 L280 160 L190 110Z" fill="#a8b0be"/>
+  </g>
+  <text x="48" y="760" fill="#6b7382" font-family="Georgia, serif" font-size="22">DEMO · not a real aircraft photo</text>
+</svg>

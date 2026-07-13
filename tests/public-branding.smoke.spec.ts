@@ -49,7 +49,15 @@ test.describe('public branding smoke', () => {
         expect(box?.height ?? 0).toBeGreaterThan(12);
       }
 
-      expect(errors.filter((e) => !e.includes('favicon')).slice(0, 5)).toEqual([]);
+      expect(
+        errors
+          .filter((e) => !e.includes('favicon'))
+          .filter((e) => !/hydration|Hydration/i.test(e))
+          .slice(0, 5),
+      ).toEqual([]);
+      // Hydration must also be clean — assert separately with full message
+      const hydration = errors.filter((e) => /hydration|Hydration/i.test(e));
+      expect(hydration, hydration[0] ?? '').toEqual([]);
     });
   }
 

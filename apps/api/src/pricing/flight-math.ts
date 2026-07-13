@@ -16,7 +16,10 @@ export function haversineKm(
 }
 
 /** Flight minutes from distance and cruise speed (km/h). Floor 30 min. */
-export function estimateFlightMinutes(distanceKm: number, speedKmh: number): number {
+export function estimateFlightMinutes(
+  distanceKm: number,
+  speedKmh: number,
+): number {
   const speed = Math.max(speedKmh || 750, 200);
   return Math.max(30, Math.round((distanceKm / speed) * 60));
 }

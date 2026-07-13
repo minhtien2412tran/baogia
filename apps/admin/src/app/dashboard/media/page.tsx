@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { scheduleUi } from '../../../lib/browser';
 import { SectionTitle, Muted, Button } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
 import { ActionBtn } from '../../../components/AdminFormFields';
@@ -44,7 +45,9 @@ export default function MediaAdminPage() {
   }, []);
 
   useEffect(() => {
-    load();
+    scheduleUi(() => {
+      void load();
+    });
   }, [load]);
 
   async function onUpload(file: File) {

@@ -28,7 +28,10 @@ export class RegisterDto {
   @MinLength(8)
   password: string;
 
-  @ApiPropertyOptional({ example: 'INDIVIDUAL', description: 'INDIVIDUAL or COMPANY' })
+  @ApiPropertyOptional({
+    example: 'INDIVIDUAL',
+    description: 'INDIVIDUAL or COMPANY',
+  })
   @IsOptional()
   @IsIn(['INDIVIDUAL', 'COMPANY'])
   accountType?: string;
@@ -148,7 +151,10 @@ export class LegDto {
 }
 
 export class SearchAircraftDto {
-  @ApiProperty({ example: 'ONE_WAY', description: 'ONE_WAY, ROUND_TRIP, or MULTI_CITY' })
+  @ApiProperty({
+    example: 'ONE_WAY',
+    description: 'ONE_WAY, ROUND_TRIP, or MULTI_CITY',
+  })
   @IsIn(['ONE_WAY', 'ROUND_TRIP', 'MULTI_CITY'])
   tripType: string;
 
@@ -269,7 +275,10 @@ export class JetCardEnquiryDto {
   @IsString()
   message?: string;
 
-  @ApiPropertyOptional({ type: [String], description: 'URLs from POST /enquiries/attachments' })
+  @ApiPropertyOptional({
+    type: [String],
+    description: 'URLs from POST /enquiries/attachments',
+  })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -293,7 +302,10 @@ export class RedeemCreditsDto {
 // --- PARTNER DTOS ---
 
 export class PartnerApplicationDto {
-  @ApiProperty({ example: 'SERVICE', description: 'SERVICE, REFERRAL, or OFFICIAL' })
+  @ApiProperty({
+    example: 'SERVICE',
+    description: 'SERVICE, REFERRAL, or OFFICIAL',
+  })
   @IsIn(['SERVICE', 'REFERRAL', 'OFFICIAL'])
   partnerType: string;
 
@@ -338,7 +350,10 @@ export class PaymentIntentDto {
   @IsInt()
   bookingId: number;
 
-  @ApiProperty({ example: 'CREDIT_CARD', description: 'CREDIT_CARD, BANK_TRANSFER, or HOLD' })
+  @ApiProperty({
+    example: 'CREDIT_CARD',
+    description: 'CREDIT_CARD, BANK_TRANSFER, or HOLD',
+  })
   @IsString()
   @IsNotEmpty()
   method: string;
@@ -463,9 +478,23 @@ export class CreateBookingDto {
 export class UpdateBookingStatusDto {
   @ApiProperty({
     example: 'confirmed',
-    enum: ['draft', 'pending', 'confirmed', 'in_progress', 'completed', 'cancelled'],
+    enum: [
+      'draft',
+      'pending',
+      'confirmed',
+      'in_progress',
+      'completed',
+      'cancelled',
+    ],
   })
-  @IsIn(['draft', 'pending', 'confirmed', 'in_progress', 'completed', 'cancelled'])
+  @IsIn([
+    'draft',
+    'pending',
+    'confirmed',
+    'in_progress',
+    'completed',
+    'cancelled',
+  ])
   status: string;
 }
 
@@ -790,7 +819,10 @@ export class TravelCreditEnquiryDto {
   @IsString()
   message?: string;
 
-  @ApiPropertyOptional({ type: [String], description: 'URLs from POST /enquiries/attachments' })
+  @ApiPropertyOptional({
+    type: [String],
+    description: 'URLs from POST /enquiries/attachments',
+  })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })

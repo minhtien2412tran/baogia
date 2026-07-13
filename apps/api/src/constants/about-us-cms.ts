@@ -21,7 +21,7 @@ export type AboutUsCmsPayload = {
 export const ABOUT_US_CMS_DEFAULT: AboutUsCmsPayload = {
   heroTitle: 'Your Global Air Charter Partner',
   heroSubtitle:
-    'JetBay is a global private jet booking platform headquartered in Singapore with 6 other offices worldwide, providing exceptional service globally.',
+    'JetVina is a global private jet booking platform headquartered in Singapore with 6 other offices worldwide, providing exceptional service globally.',
   introTitle: 'Powering Global Journeys',
   introBody:
     'We provide fast, competitive, and seamless booking experiences, connecting customers to a fleet of over 10,000 business jets and aircraft worldwide.',
@@ -41,14 +41,14 @@ export const ABOUT_US_CMS_DEFAULT: AboutUsCmsPayload = {
       body: 'Fast quotations, transparent pricing, and end-to-end concierge from first enquiry to wheels-down.',
     },
   ],
-  flyAnywhereTitle: 'Fly Anywhere with JetBay',
+  flyAnywhereTitle: 'Fly Anywhere with JetVina',
   flyAnywhereBody:
-    'JetBay optimises charter flight solutions through our global jet database — reducing empty legs and delivering sustainable, efficient travel.',
+    'JetVina optimises charter flight solutions through our global jet database — reducing empty legs and delivering sustainable, efficient travel.',
   teamTitle: 'Industry Leading Team',
   teamCards: [
     {
       title: 'AI & Technology',
-      body: "JetBay's team developed an AI platform integrated with our database, using big data to optimize charter resources for efficient, convenient flights.",
+      body: "JetVina's team developed an AI platform integrated with our database, using big data to optimize charter resources for efficient, convenient flights.",
     },
     {
       title: 'Charter Specialists',
@@ -61,13 +61,26 @@ export const ABOUT_US_CMS_DEFAULT: AboutUsCmsPayload = {
   ],
   awardsTitle: 'Awards & Recognition',
   awardsSubtitle: 'Celebrating Excellence in Jet Charter',
-  whyTitle: 'Why Charter with JetBay?',
-  whyIntro: 'JetBay offers bespoke charter solutions, connecting you to a global fleet.',
+  whyTitle: 'Why Charter with JetVina?',
+  whyIntro:
+    'JetVina offers bespoke charter solutions, connecting you to a global fleet.',
   whyItems: [
-    { title: 'Comprehensive and Competitive Solutions', body: 'Transparent pricing across light, midsize, and long-range aircraft.' },
-    { title: '24/7 Fast Quotations', body: 'Receive tailored quotes within hours, any time zone.' },
-    { title: 'Seamless Booking Process', body: 'From search to contract — one dedicated team handles every step.' },
-    { title: 'Tailored Solutions by Our Specialists', body: 'Personalized routing, catering, and ground services for every mission.' },
+    {
+      title: 'Comprehensive and Competitive Solutions',
+      body: 'Transparent pricing across light, midsize, and long-range aircraft.',
+    },
+    {
+      title: '24/7 Fast Quotations',
+      body: 'Receive tailored quotes within hours, any time zone.',
+    },
+    {
+      title: 'Seamless Booking Process',
+      body: 'From search to contract — one dedicated team handles every step.',
+    },
+    {
+      title: 'Tailored Solutions by Our Specialists',
+      body: 'Personalized routing, catering, and ground services for every mission.',
+    },
   ],
   officesTitle: 'Contact Us',
 };

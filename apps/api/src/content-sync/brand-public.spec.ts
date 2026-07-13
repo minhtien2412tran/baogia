@@ -1,4 +1,7 @@
-import { assertNoJetBayPublicBrand, resolvePublicBrandLogos } from './brand-public';
+import {
+  assertNoJetBayPublicBrand,
+  resolvePublicBrandLogos,
+} from './brand-public';
 
 describe('resolvePublicBrandLogos', () => {
   const base = {
@@ -21,7 +24,11 @@ describe('resolvePublicBrandLogos', () => {
   });
 
   it('exposes official logo for staging flag when not production', () => {
-    const r = resolvePublicBrandLogos({ ...base, officialLogoEnabled: true, isProduction: false });
+    const r = resolvePublicBrandLogos({
+      ...base,
+      officialLogoEnabled: true,
+      isProduction: false,
+    });
     expect(r.publicLogoPrimary).toBe(base.logoPrimary);
     expect(r.canPublishLogo).toBe(false);
     expect(r.usingOfficialLogo).toBe(true);

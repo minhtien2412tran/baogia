@@ -4,10 +4,11 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Input, Button } from '@jetbay/ui';
 import { adminApi, getApiBaseUrl, setToken } from '../../lib/api';
+import { PLATFORM } from '../../lib/platform';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('admin@jetbay.local');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -42,11 +43,11 @@ export default function AdminLoginPage() {
       <div className="jb-login__card">
         <div className="jb-login__brand">
           <div className="jb-login__mark" aria-hidden>
-            JB
+            JV
           </div>
-          <h1 className="jb-login__title">JetBay Admin</h1>
+          <h1 className="jb-login__title">JetVina Admin</h1>
         </div>
-        <p className="jb-login__subtitle">Sign in to manage quotes, bookings, and content.</p>
+        <p className="jb-login__subtitle">Bảng quản trị chung — quotes, bookings, content, fleet.</p>
 
         <form className="jb-login__form" onSubmit={onSubmit}>
           <Input
@@ -75,7 +76,18 @@ export default function AdminLoginPage() {
         {process.env.NODE_ENV !== 'production' && (
           <p className="jb-login__hint">Dev: admin@jetbay.local / Admin123!</p>
         )}
-        <p className="jb-login__api">API · {apiBase}</p>
+        <div className="jb-login__api" style={{ display: 'grid', gap: 4, fontSize: 12, opacity: 0.85 }}>
+          <span>API · {apiBase}</span>
+          <a href={PLATFORM.docs} target="_blank" rel="noreferrer">
+            Swagger · docs.minhtien.online
+          </a>
+          <a href={PLATFORM.web} target="_blank" rel="noreferrer">
+            Web prod · www.minhtien.online
+          </a>
+          <a href={PLATFORM.localWeb} target="_blank" rel="noreferrer">
+            Web local · localhost:3000
+          </a>
+        </div>
       </div>
     </main>
   );

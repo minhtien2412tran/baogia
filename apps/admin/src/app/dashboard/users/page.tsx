@@ -1,9 +1,11 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { SectionTitle, DataTable, Muted, Button } from '@jetbay/ui';
+import { scheduleUi } from '../../../lib/browser';
+import { SectionTitle, DataTable, Muted } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
 import { ActionBtn } from '../../../components/AdminFormFields';
+import { IconButton } from '../../../components/ui/IconButton';
 import { adminApi } from '../../../lib/api';
 
 type UserRow = {
@@ -17,7 +19,7 @@ type UserRow = {
 };
 
 export default function UsersAdminPage() {
-  const [rows, setRows] = useState<Record<string, React.ReactNode>[]>([]);
+  const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState('');
 
@@ -25,40 +27,15 @@ export default function UsersAdminPage() {
     setLoading(true);
     adminApi
       .getUsers()
-      .then((res) => {
-        const users = (res.data as UserRow[]) ?? [];
-        setRows(
-          users.map((u) => ({
-            id: String(u.id),
-            email: u.email,
-            name: [u.firstName, u.lastName].filter(Boolean).join(' ') || '—',
-            phone: u.phone ?? '—',
-            role: u.role,
-            status: u.status,
-            actions: (
-              <span style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                {u.role === 'USER' && (
-                  <ActionBtn onClick={() => update(u.id, { role: 'ADMIN' })}>Make Admin</ActionBtn>
-                )}
-                {u.role === 'ADMIN' && u.email !== 'admin@jetbay.local' && (
-                  <ActionBtn onClick={() => update(u.id, { role: 'USER' })}>Remove Admin</ActionBtn>
-                )}
-                {u.status === 'ACTIVE' ? (
-                  <ActionBtn variant="danger" onClick={() => update(u.id, { status: 'SUSPENDED' })}>Suspend</ActionBtn>
-                ) : (
-                  <ActionBtn onClick={() => update(u.id, { status: 'ACTIVE' })}>Activate</ActionBtn>
-                )}
-              </span>
-            ),
-          })),
-        );
-      })
+      .then((res) => setUsers((res.data as UserRow[]) ?? []))
       .catch((e) => setMsg(e instanceof Error ? e.message : 'Load failed'))
       .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
-    load();
+    scheduleUi(() => {
+      void load();
+    });
   }, [load]);
 
   async function update(id: number, body: { role?: string; status?: string }) {
@@ -71,11 +48,45 @@ export default function UsersAdminPage() {
     }
   }
 
+  const rows = users.map((u) => ({
+    id: String(u.id),
+    email: u.email,
+    name: [u.firstName, u.lastName].filter(Boolean).join(' ') || '—',
+    phone: u.phone ?? '—',
+    role: u.role,
+    status: u.status,
+    actions: (
+      <span style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+        {u.role === 'USER' && (
+          <ActionBtn onClick={() => void update(u.id, { role: 'ADMIN' })}>Make Admin</ActionBtn>
+        )}
+        {u.role === 'ADMIN' && u.email !== 'admin@jetbay.local' && (
+          <ActionBtn onClick={() => void update(u.id, { role: 'USER' })}>Remove Admin</ActionBtn>
+        )}
+        {u.status === 'ACTIVE' ? (
+          <IconButton
+            name="ban"
+            label={`Suspend user ${u.email}`}
+            onClick={() => void update(u.id, { status: 'SUSPENDED' })}
+          />
+        ) : (
+          <IconButton
+            name="check"
+            label={`Activate user ${u.email}`}
+            onClick={() => void update(u.id, { status: 'ACTIVE' })}
+          />
+        )}
+      </span>
+    ),
+  }));
+
   return (
     <AdminShell active="/dashboard/users">
       <SectionTitle>Users</SectionTitle>
       <Muted>Manage roles and account status.</Muted>
-      {loading ? <Muted>Loading users…</Muted> : (
+      {loading ? (
+        <Muted>Loading users…</Muted>
+      ) : (
         <DataTable
           columns={[
             { key: 'id', label: 'ID' },

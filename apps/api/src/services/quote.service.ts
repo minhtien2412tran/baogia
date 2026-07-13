@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
 import { CustomerCareService } from './customer-care/customer-care.service';
@@ -32,7 +36,8 @@ export class QuoteService {
   ) {}
 
   async searchAircraft(body: SearchAircraftDto) {
-    if (!body.legs?.length) throw new BadRequestException('At least one leg is required');
+    if (!body.legs?.length)
+      throw new BadRequestException('At least one leg is required');
 
     const maxPassengers = Math.max(...body.legs.map((l) => l.passengers ?? 1));
     let categories = await this.prisma.aircraftCategory.findMany({
@@ -60,7 +65,9 @@ export class QuoteService {
         categoryCode: cat.code,
         categoryLabel: cat.label,
         maxPassengers: cat.maxPassengers,
-        aircraftModel: model ? `${model.manufacturer} ${model.model}` : cat.label,
+        aircraftModel: model
+          ? `${model.manufacturer} ${model.model}`
+          : cat.label,
         estimatedPrice: Math.round(base * legMultiplier),
         currency,
       };
@@ -77,8 +84,10 @@ export class QuoteService {
     body: RequestQuoteDto,
     opts?: { userId?: number; sourcePage?: string; campaignCode?: string },
   ) {
-    if (!body.isConsentAccepted) throw new BadRequestException('Consent is required');
-    if (!body.legs?.length) throw new BadRequestException('At least one leg is required');
+    if (!body.isConsentAccepted)
+      throw new BadRequestException('Consent is required');
+    if (!body.legs?.length)
+      throw new BadRequestException('At least one leg is required');
 
     const legData: {
       seq: number;
@@ -97,7 +106,9 @@ export class QuoteService {
         where: { iata: leg.toAirport.toUpperCase() },
       });
       if (!from || !to) {
-        throw new BadRequestException(`Invalid airport: ${leg.fromAirport} or ${leg.toAirport}`);
+        throw new BadRequestException(
+          `Invalid airport: ${leg.fromAirport} or ${leg.toAirport}`,
+        );
       }
       legData.push({
         seq: i,
@@ -109,8 +120,7 @@ export class QuoteService {
     }
 
     const tripType =
-      body.tripType ??
-      (body.legs.length > 1 ? 'MULTI_CITY' : 'ONE_WAY');
+      body.tripType ?? (body.legs.length > 1 ? 'MULTI_CITY' : 'ONE_WAY');
 
     const quote = await this.prisma.quoteRequest.create({
       data: {
@@ -125,7 +135,11 @@ export class QuoteService {
         sourcePage: opts?.sourcePage ?? 'WEB_QUOTE_FORM',
         legs: { create: legData },
         ...(opts?.campaignCode
-          ? { worldCupItinerary: { create: { campaignCode: opts.campaignCode } } }
+          ? {
+              worldCupItinerary: {
+                create: { campaignCode: opts.campaignCode },
+              },
+            }
           : {}),
       },
     });
@@ -154,7 +168,8 @@ export class QuoteService {
     return {
       requestId: quote.id,
       status: 'PENDING',
-      message: 'Quote request received. Our team will contact you within 3 hours.',
+      message:
+        'Quote request received. Our team will contact you within 3 hours.',
     };
   }
 
@@ -226,9 +241,12 @@ export class QuoteService {
       where: { id: body.bookingId },
       include: { quoteOffer: true },
     });
-    if (!booking) throw new NotFoundException(`Booking ${body.bookingId} not found`);
+    if (!booking)
+      throw new NotFoundException(`Booking ${body.bookingId} not found`);
 
-    const amount = booking.quoteOffer ? Number(booking.quoteOffer.price) : 12500;
+    const amount = booking.quoteOffer
+      ? Number(booking.quoteOffer.price)
+      : 12500;
 
     const transactionRef = `internal_${Date.now()}`;
     const payment = await this.prisma.payment.create({
@@ -279,11 +297,18 @@ export class QuoteService {
       throw new BadRequestException('Invalid payment intent ID');
     }
 
-    const payment = await this.prisma.payment.findUnique({ where: { id: paymentId } });
+    const payment = await this.prisma.payment.findUnique({
+      where: { id: paymentId },
+    });
     if (!payment) throw new NotFoundException('Payment not found');
 
-    if (this.payments.isStripeEnabled() && payment.transactionRef?.startsWith('pi_')) {
-      const ok = await this.payments.confirmStripePayment(payment.transactionRef);
+    if (
+      this.payments.isStripeEnabled() &&
+      payment.transactionRef?.startsWith('pi_')
+    ) {
+      const ok = await this.payments.confirmStripePayment(
+        payment.transactionRef,
+      );
       if (!ok) {
         throw new BadRequestException('Stripe payment not completed');
       }
@@ -309,9 +334,12 @@ export class QuoteService {
       where: { id: body.bookingId },
       include: { quoteOffer: true },
     });
-    if (!booking) throw new NotFoundException(`Booking ${body.bookingId} not found`);
+    if (!booking)
+      throw new NotFoundException(`Booking ${body.bookingId} not found`);
 
-    const amount = booking.quoteOffer ? Number(booking.quoteOffer.price) : 12500;
+    const amount = booking.quoteOffer
+      ? Number(booking.quoteOffer.price)
+      : 12500;
     const payment = await this.prisma.payment.create({
       data: {
         bookingId: body.bookingId,
@@ -339,9 +367,12 @@ export class QuoteService {
       where: { id: body.bookingId },
       include: { quoteOffer: true },
     });
-    if (!booking) throw new NotFoundException(`Booking ${body.bookingId} not found`);
+    if (!booking)
+      throw new NotFoundException(`Booking ${body.bookingId} not found`);
 
-    const amount = booking.quoteOffer ? Number(booking.quoteOffer.price) : 12500;
+    const amount = booking.quoteOffer
+      ? Number(booking.quoteOffer.price)
+      : 12500;
     const orderRef = `jbay-${body.bookingId}-${Date.now()}`;
     const apiBase = process.env.API_PUBLIC_URL ?? 'http://127.0.0.1:4000';
     const returnUrl =
@@ -363,8 +394,18 @@ export class QuoteService {
 
     const urlResult =
       body.gateway === 'onepay'
-        ? this.onepay.createPaymentUrl({ orderId: orderRef, amount: amount * 25000, returnUrl, currency: 'VND' })
-        : this.ninepay.createPaymentUrl({ orderId: orderRef, amount: amount * 25000, returnUrl, currency: 'VND' });
+        ? this.onepay.createPaymentUrl({
+            orderId: orderRef,
+            amount: amount * 25000,
+            returnUrl,
+            currency: 'VND',
+          })
+        : this.ninepay.createPaymentUrl({
+            orderId: orderRef,
+            amount: amount * 25000,
+            returnUrl,
+            currency: 'VND',
+          });
 
     if (!urlResult) {
       throw new BadRequestException(
@@ -396,7 +437,8 @@ export class QuoteService {
 
   async handleOnepayIpn(query: Record<string, string>) {
     const ok = this.onepay.verifyIpn(query);
-    if (ok && query.vpc_MerchTxnRef) await this.markGatewayPaid(query.vpc_MerchTxnRef);
+    if (ok && query.vpc_MerchTxnRef)
+      await this.markGatewayPaid(query.vpc_MerchTxnRef);
     return ok;
   }
 
@@ -422,7 +464,10 @@ export class QuoteService {
       where: { id: payment.id },
       data: { status: 'PAID' },
     });
-    await this.audit.log('GATEWAY_PAYMENT_CONFIRMED', { paymentId: payment.id, orderRef });
+    await this.audit.log('GATEWAY_PAYMENT_CONFIRMED', {
+      paymentId: payment.id,
+      orderRef,
+    });
     void this.customerCare.onPaymentConfirmed(payment.id);
   }
 
@@ -431,14 +476,22 @@ export class QuoteService {
     if (!event) return { received: false };
 
     if (event.type === 'payment_intent.succeeded') {
-      const intent = event.data.object as { id: string; metadata?: { paymentId?: string } };
-      const paymentId = intent.metadata?.paymentId ? Number(intent.metadata.paymentId) : null;
+      const intent = event.data.object as {
+        id: string;
+        metadata?: { paymentId?: string };
+      };
+      const paymentId = intent.metadata?.paymentId
+        ? Number(intent.metadata.paymentId)
+        : null;
       if (paymentId) {
         await this.prisma.payment.updateMany({
           where: { id: paymentId, status: { not: 'PAID' } },
           data: { status: 'PAID', transactionRef: intent.id },
         });
-        await this.audit.log('STRIPE_PAYMENT_CONFIRMED', { paymentId, intentId: intent.id });
+        await this.audit.log('STRIPE_PAYMENT_CONFIRMED', {
+          paymentId,
+          intentId: intent.id,
+        });
         void this.customerCare.onPaymentConfirmed(paymentId);
       }
     }

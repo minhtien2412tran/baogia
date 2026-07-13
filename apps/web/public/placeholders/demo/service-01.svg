@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-label="Demo placeholder">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a2433"/><stop offset="100%" stop-color="#0a0c10"/></linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#g)"/>
+  <rect x="100" y="100" width="1000" height="700" rx="28" fill="none" stroke="#2a3340" stroke-width="2"/>
+  <circle cx="600" cy="400" r="90" fill="none" stroke="#c9a45c" stroke-width="2" opacity="0.45"/>
+  <path d="M560 400 L590 430 L660 360" fill="none" stroke="#c9a45c" stroke-width="4" opacity="0.55"/>
+  <rect x="360" y="560" width="480" height="18" rx="9" fill="#2a3340"/>
+  <rect x="420" y="600" width="360" height="12" rx="6" fill="#222a36"/>
+  <text x="48" y="860" fill="#6b7382" font-family="Georgia, serif" font-size="22" opacity="0.5">DEMO service</text>
+</svg>

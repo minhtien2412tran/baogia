@@ -47,16 +47,23 @@ export class BookingService {
   private normalizeStatus(status: string): BookingStatus {
     const normalized = status.toLowerCase() as BookingStatus;
     if (!BOOKING_STATUSES.includes(normalized)) {
-      throw new BadRequestException(`Invalid status. Allowed: ${BOOKING_STATUSES.join(', ')}`);
+      throw new BadRequestException(
+        `Invalid status. Allowed: ${BOOKING_STATUSES.join(', ')}`,
+      );
     }
     return normalized;
   }
 
   private documentExportBase() {
-    return (process.env.API_PUBLIC_URL ?? 'http://127.0.0.1:4000').replace(/\/$/, '');
+    return (process.env.API_PUBLIC_URL ?? 'http://127.0.0.1:4000').replace(
+      /\/$/,
+      '',
+    );
   }
 
-  private formatBooking(booking: Awaited<ReturnType<typeof this.findBookingOrThrow>>) {
+  private formatBooking(
+    booking: Awaited<ReturnType<typeof this.findBookingOrThrow>>,
+  ) {
     const latestPayment = booking.payments[0];
     const apiBase = this.documentExportBase();
     return {
@@ -67,7 +74,9 @@ export class BookingService {
       bookingCode: booking.bookingCode,
       customerRouteSummary: booking.customerRouteSummary,
       estimatedPriceTotal:
-        booking.estimatedPriceTotal != null ? Number(booking.estimatedPriceTotal) : null,
+        booking.estimatedPriceTotal != null
+          ? Number(booking.estimatedPriceTotal)
+          : null,
       estimatedPriceCurrency: booking.estimatedPriceCurrency,
       status: STATUS_FROM_DB[booking.bookingStatus] ?? 'pending',
       agreementStatus: booking.agreementStatus,
@@ -142,8 +151,14 @@ export class BookingService {
     if (!dto.passengers?.length) {
       throw new BadRequestException('At least one passenger is required');
     }
-    if (!dto.contact?.email || !dto.contact?.firstName || !dto.contact?.lastName) {
-      throw new BadRequestException('contact.firstName, contact.lastName, contact.email are required');
+    if (
+      !dto.contact?.email ||
+      !dto.contact?.firstName ||
+      !dto.contact?.lastName
+    ) {
+      throw new BadRequestException(
+        'contact.firstName, contact.lastName, contact.email are required',
+      );
     }
   }
 
@@ -187,7 +202,11 @@ export class BookingService {
         passengers: true,
         payments: true,
         documents: true,
-        quoteRequest: { include: { legs: { include: { fromAirport: true, toAirport: true } } } },
+        quoteRequest: {
+          include: {
+            legs: { include: { fromAirport: true, toAirport: true } },
+          },
+        },
       },
     });
 
@@ -315,7 +334,11 @@ export class BookingService {
     return this.formatBooking(updated);
   }
 
-  async findAllAdmin(filters?: { status?: string; page?: number; limit?: number }) {
+  async findAllAdmin(filters?: {
+    status?: string;
+    page?: number;
+    limit?: number;
+  }) {
     const page = filters?.page ?? 1;
     const limit = Math.min(filters?.limit ?? 20, 100);
     const skip = (page - 1) * limit;
@@ -355,7 +378,12 @@ export class BookingService {
     };
   }
 
-  async updateStatusAdmin(id: number, dto: UpdateBookingStatusDto, adminUserId?: number, ipAddress?: string) {
+  async updateStatusAdmin(
+    id: number,
+    dto: UpdateBookingStatusDto,
+    adminUserId?: number,
+    ipAddress?: string,
+  ) {
     const status = this.normalizeStatus(dto.status);
     const booking = await this.findBookingOrThrow(id);
 
@@ -391,5 +419,4 @@ export class BookingService {
 
     return this.formatBooking(updated);
   }
-
 }

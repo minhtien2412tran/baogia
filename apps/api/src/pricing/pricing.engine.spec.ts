@@ -12,7 +12,8 @@ import {
 } from './pricing.engine';
 
 function airport(
-  partial: Partial<AirportGeoFees> & Pick<AirportGeoFees, 'id' | 'iata' | 'city'>,
+  partial: Partial<AirportGeoFees> &
+    Pick<AirportGeoFees, 'id' | 'iata' | 'city'>,
 ): AirportGeoFees {
   return {
     latitude: null,
@@ -98,7 +99,11 @@ describe('pricing engine CAN→HAN→SGN', () => {
     const estimate = buildPricingEstimate({
       aircraft: aircraftAtCan,
       airportsById: map,
-      passengerRoute: { fromAirportId: han.id, toAirportId: sgn.id, passengerCount: 4 },
+      passengerRoute: {
+        fromAirportId: han.id,
+        toAirportId: sgn.id,
+        passengerCount: 4,
+      },
     });
 
     expect(estimate.customerRouteSummary).toBe('HAN → SGN');

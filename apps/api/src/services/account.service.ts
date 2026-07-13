@@ -16,18 +16,23 @@ export class AccountService {
   ) {}
 
   async getDashboard(userId: number, email: string) {
-    const [profile, bookings, quotes, payments, jetCards, travelCredits] = await Promise.all([
-      this.auth.getProfile(userId),
-      this.booking.findMyBookings(userId),
-      this.quote.getMyQuotes(userId, email),
-      this.booking.findMyPayments(userId),
-      this.jetCard.getUserAccounts(userId).catch(() => [] as Awaited<ReturnType<JetCardService['getUserAccounts']>>),
-      this.travelCredit.getBalance(userId).catch(() => ({
-        credits: 0,
-        currency: 'USD',
-        expirySummary: [] as { amount: number; expiresAt: string }[],
-      })),
-    ]);
+    const [profile, bookings, quotes, payments, jetCards, travelCredits] =
+      await Promise.all([
+        this.auth.getProfile(userId),
+        this.booking.findMyBookings(userId),
+        this.quote.getMyQuotes(userId, email),
+        this.booking.findMyPayments(userId),
+        this.jetCard
+          .getUserAccounts(userId)
+          .catch(
+            () => [] as Awaited<ReturnType<JetCardService['getUserAccounts']>>,
+          ),
+        this.travelCredit.getBalance(userId).catch(() => ({
+          credits: 0,
+          currency: 'USD',
+          expirySummary: [] as { amount: number; expiresAt: string }[],
+        })),
+      ]);
 
     const documents = bookings.flatMap((b) =>
       (b.documents ?? []).map((d) => ({

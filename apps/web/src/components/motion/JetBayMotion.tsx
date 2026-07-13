@@ -9,11 +9,15 @@ import { animateCounter } from '../../lib/motion-utils';
  */
 export function JetBayMotion() {
   useEffect(() => {
-    const root = document.querySelector('.jb-page');
-    if (!root) return;
-
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let cancelled = false;
     const cleanups: (() => void)[] = [];
+
+    const start = () => {
+      if (cancelled) return;
+      const root = document.querySelector('.jb-page');
+      if (!root) return;
+
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const revealEls = new Set<HTMLElement>();
 
@@ -190,79 +194,28 @@ export function JetBayMotion() {
       cleanups.push(() => stepIo.disconnect());
     }
 
-    // ── Hero particles (imperative canvas — not React-managed) ──
-    let raf = 0;
-    let particleCanvas: HTMLCanvasElement | null = null;
-
-    if (!reduce) {
-      const hero = root.querySelector('.jb-hero');
-      if (hero) {
-        particleCanvas = document.createElement('canvas');
-        particleCanvas.className = 'jb-hero-particles';
-        particleCanvas.setAttribute('aria-hidden', 'true');
-        const insertAfter = hero.querySelector('.jb-hero-bg');
-        if (insertAfter?.nextSibling) {
-          hero.insertBefore(particleCanvas, insertAfter.nextSibling);
-        } else {
-          hero.appendChild(particleCanvas);
-        }
-
-        const ctx = particleCanvas.getContext('2d');
-        if (ctx) {
-          const dpr = Math.min(window.devicePixelRatio || 1, 2);
-          const dots: { x: number; y: number; r: number; vx: number; a: number }[] = [];
-          let w = 0;
-          let h = 0;
-
-          const resize = () => {
-            if (!particleCanvas) return;
-            const rect = hero.getBoundingClientRect();
-            w = rect.width;
-            h = rect.height;
-            particleCanvas.width = Math.floor(w * dpr);
-            particleCanvas.height = Math.floor(h * dpr);
-            particleCanvas.style.width = `${w}px`;
-            particleCanvas.style.height = `${h}px`;
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-          };
-          resize();
-          window.addEventListener('resize', resize);
-          cleanups.push(() => window.removeEventListener('resize', resize));
-
-          for (let i = 0; i < 36; i++) {
-            dots.push({
-              x: Math.random() * w,
-              y: Math.random() * h,
-              r: 0.5 + Math.random() * 1.2,
-              vx: 0.15 + Math.random() * 0.35,
-              a: 0.08 + Math.random() * 0.2,
-            });
-          }
-
-          const draw = () => {
-            ctx.clearRect(0, 0, w, h);
-            for (const d of dots) {
-              d.x += d.vx;
-              if (d.x > w + 8) d.x = -8;
-              ctx.beginPath();
-              ctx.fillStyle = `rgba(200, 220, 240, ${d.a})`;
-              ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-              ctx.fill();
-            }
-            raf = requestAnimationFrame(draw);
-          };
-          raf = requestAnimationFrame(draw);
-        }
-      }
-    }
+    // Hero particles live in HeroParticles (client component) — not here.
 
     cleanups.push(() => {
       revealIo?.disconnect();
-      cancelAnimationFrame(raf);
-      particleCanvas?.remove();
     });
+    };
 
-    return () => cleanups.forEach((fn) => fn());
+    // Defer DOM class mutations until after nested page hydration settles
+    // (layout JetBayMotion otherwise races streaming RSC hydrate → mismatch).
+    let raf2 = 0;
+    const timer = window.setTimeout(() => {
+      raf2 = window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(start);
+      });
+    }, 200);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+      window.cancelAnimationFrame(raf2);
+      cleanups.forEach((fn) => fn());
+    };
   }, []);
 
   return null;

@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { createHash } from 'crypto';
@@ -34,7 +38,11 @@ export class AuthService {
   }
 
   private async issueTokens(user: { id: number; email: string; role: string }) {
-    const payload: JwtPayload = { sub: user.id, email: user.email, role: user.role };
+    const payload: JwtPayload = {
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+    };
     const refreshToken = this.jwt.sign(
       { sub: user.id, type: 'refresh' },
       { secret: this.refreshSecret(), expiresIn: '30d' },
@@ -68,7 +76,9 @@ export class AuthService {
   async register(body: RegisterDto) {
     if (!body.password) throw new BadRequestException('Password is required');
 
-    const existing = await this.prisma.user.findUnique({ where: { email: body.email } });
+    const existing = await this.prisma.user.findUnique({
+      where: { email: body.email },
+    });
     if (existing) throw new BadRequestException('Email already registered');
 
     const user = await this.prisma.user.create({
@@ -80,7 +90,10 @@ export class AuthService {
       },
     });
     await this.audit.log('USER_REGISTERED', { userId: user.id }, user.id);
-    void this.customerCare.onUserRegistered({ userId: user.id, email: user.email });
+    void this.customerCare.onUserRegistered({
+      userId: user.id,
+      email: user.email,
+    });
     return {
       message: 'User successfully registered',
       user: {
@@ -97,8 +110,13 @@ export class AuthService {
   async login(body: LoginDto) {
     if (!body.password) throw new UnauthorizedException('Invalid credentials');
 
-    const user = await this.prisma.user.findUnique({ where: { email: body.email } });
-    if (!user || !(await this.verifyPassword(body.password, user.passwordHash))) {
+    const user = await this.prisma.user.findUnique({
+      where: { email: body.email },
+    });
+    if (
+      !user ||
+      !(await this.verifyPassword(body.password, user.passwordHash))
+    ) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
@@ -119,17 +137,23 @@ export class AuthService {
     try {
       const payload = this.jwt.verify(refreshToken, {
         secret: this.refreshSecret(),
-      }) as JwtPayload;
-      if (payload.type !== 'refresh') throw new UnauthorizedException('Invalid refresh token');
+      });
+      if (payload.type !== 'refresh')
+        throw new UnauthorizedException('Invalid refresh token');
 
       const tokenHash = this.hashRefreshToken(refreshToken);
-      const stored = await this.prisma.refreshToken.findUnique({ where: { tokenHash } });
+      const stored = await this.prisma.refreshToken.findUnique({
+        where: { tokenHash },
+      });
       if (!stored || stored.revokedAt || stored.expiresAt < new Date()) {
         throw new UnauthorizedException('Invalid refresh token');
       }
 
-      const user = await this.prisma.user.findUnique({ where: { id: payload.sub } });
-      if (!user || user.status !== 'ACTIVE') throw new UnauthorizedException('Invalid refresh token');
+      const user = await this.prisma.user.findUnique({
+        where: { id: payload.sub },
+      });
+      if (!user || user.status !== 'ACTIVE')
+        throw new UnauthorizedException('Invalid refresh token');
 
       return {
         accessToken: this.jwt.sign({
@@ -169,7 +193,12 @@ export class AuthService {
     };
   }
 
-  private async authResponse(user: { id: number; email: string; role: string; accountType: string }) {
+  private async authResponse(user: {
+    id: number;
+    email: string;
+    role: string;
+    accountType: string;
+  }) {
     return {
       message: 'Authentication successful',
       user: {
@@ -199,11 +228,17 @@ export class AuthService {
     });
 
     if (existingProvider) {
-      await this.audit.log('OAUTH_LOGIN', { provider: profile.provider }, existingProvider.userId);
+      await this.audit.log(
+        'OAUTH_LOGIN',
+        { provider: profile.provider },
+        existingProvider.userId,
+      );
       return await this.authResponse(existingProvider.user);
     }
 
-    let user = await this.prisma.user.findUnique({ where: { email: profile.email } });
+    let user = await this.prisma.user.findUnique({
+      where: { email: profile.email },
+    });
     if (!user) {
       user = await this.prisma.user.create({
         data: {
@@ -214,7 +249,11 @@ export class AuthService {
           role: 'USER',
         },
       });
-      await this.audit.log('USER_REGISTERED_OAUTH', { provider: profile.provider }, user.id);
+      await this.audit.log(
+        'USER_REGISTERED_OAUTH',
+        { provider: profile.provider },
+        user.id,
+      );
       void this.customerCare.onUserRegistered({
         userId: user.id,
         email: user.email,
@@ -231,7 +270,11 @@ export class AuthService {
       },
     });
 
-    await this.audit.log('OAUTH_LOGIN', { provider: profile.provider }, user.id);
+    await this.audit.log(
+      'OAUTH_LOGIN',
+      { provider: profile.provider },
+      user.id,
+    );
     return await this.authResponse(user);
   }
 
@@ -240,8 +283,14 @@ export class AuthService {
   }
 
   async verifyOtpLogin(phone: string, code: string) {
-    const { phone: normalized } = await this.otp.verifyOtp(phone, code, 'LOGIN');
-    let user = await this.prisma.user.findFirst({ where: { phone: normalized } });
+    const { phone: normalized } = await this.otp.verifyOtp(
+      phone,
+      code,
+      'LOGIN',
+    );
+    let user = await this.prisma.user.findFirst({
+      where: { phone: normalized },
+    });
     if (!user) {
       const email = `${normalized.replace(/\D/g, '')}@phone.jetbay.local`;
       user = await this.prisma.user.create({
@@ -252,20 +301,30 @@ export class AuthService {
           role: 'USER',
         },
       });
-      await this.audit.log('USER_REGISTERED_OTP', { phone: normalized }, user.id);
+      await this.audit.log(
+        'USER_REGISTERED_OTP',
+        { phone: normalized },
+        user.id,
+      );
     }
     await this.audit.log('OTP_LOGIN', { phone: normalized }, user.id);
     return await this.authResponse(user);
   }
 
   async verifyOtpRegister(phone: string, code: string, email?: string) {
-    const { phone: normalized } = await this.otp.verifyOtp(phone, code, 'REGISTER');
-    const userEmail = email ?? `${normalized.replace(/\D/g, '')}@phone.jetbay.local`;
+    const { phone: normalized } = await this.otp.verifyOtp(
+      phone,
+      code,
+      'REGISTER',
+    );
+    const userEmail =
+      email ?? `${normalized.replace(/\D/g, '')}@phone.jetbay.local`;
 
     const existing = await this.prisma.user.findFirst({
       where: { OR: [{ phone: normalized }, { email: userEmail }] },
     });
-    if (existing) throw new BadRequestException('Phone or email already registered');
+    if (existing)
+      throw new BadRequestException('Phone or email already registered');
 
     const user = await this.prisma.user.create({
       data: {
@@ -276,7 +335,10 @@ export class AuthService {
       },
     });
     await this.audit.log('USER_REGISTERED_OTP', { phone: normalized }, user.id);
-    void this.customerCare.onUserRegistered({ userId: user.id, email: userEmail });
+    void this.customerCare.onUserRegistered({
+      userId: user.id,
+      email: userEmail,
+    });
     return {
       message: 'User successfully registered',
       user: {

@@ -1,5 +1,20 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiSecurity } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiQuery,
+  ApiSecurity,
+} from '@nestjs/swagger';
 import { AdminDashboardService } from '../services/admin-dashboard.service';
 import { UpdateQuoteStatusDto } from '../dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -55,7 +70,10 @@ export class AdminDashboardController {
   @ApiQuery({ name: 'limit', required: false })
   @ApiOperation({ summary: 'Audit log listing' })
   getAuditLogs(@Query('page') page?: string, @Query('limit') limit?: string) {
-    return this.dashboard.getAuditLogs(page ? Number(page) : 1, limit ? Number(limit) : 20);
+    return this.dashboard.getAuditLogs(
+      page ? Number(page) : 1,
+      limit ? Number(limit) : 20,
+    );
   }
 
   @Get('system-health')

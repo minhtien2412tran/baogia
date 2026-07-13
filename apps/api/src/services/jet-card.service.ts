@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
 import { EnquiryMailService } from './enquiry-mail.service';
@@ -37,7 +41,9 @@ export class JetCardService {
   }
 
   async getPlans() {
-    const plans = await this.prisma.jetCardPlan.findMany({ orderBy: { hours: 'asc' } });
+    const plans = await this.prisma.jetCardPlan.findMany({
+      orderBy: { hours: 'asc' },
+    });
     return { plans: plans.map((p) => this.formatPlan(p)) };
   }
 
@@ -74,7 +80,8 @@ export class JetCardService {
     return {
       enquiryId: record.id,
       status: 'PENDING',
-      message: 'Thank you for your interest. A Jet Card specialist will contact you shortly.',
+      message:
+        'Thank you for your interest. A Jet Card specialist will contact you shortly.',
     };
   }
 
@@ -111,7 +118,8 @@ export class JetCardService {
         transactions: { orderBy: { createdAt: 'desc' }, take: 10 },
       },
     });
-    if (!account) throw new NotFoundException(`Jet Card account #${id} not found`);
+    if (!account)
+      throw new NotFoundException(`Jet Card account #${id} not found`);
 
     return {
       accountId: account.id,
@@ -138,7 +146,10 @@ export class JetCardService {
         price: dto.price,
       },
     });
-    await this.audit.log('JET_CARD_PLAN_CREATED', { planId: plan.id, name: plan.name });
+    await this.audit.log('JET_CARD_PLAN_CREATED', {
+      planId: plan.id,
+      name: plan.name,
+    });
     return this.formatPlan(plan);
   }
 
@@ -161,7 +172,9 @@ export class JetCardService {
 
   async deletePlan(id: number) {
     await this.findPlanOrThrow(id);
-    const accounts = await this.prisma.jetCardAccount.count({ where: { planId: id } });
+    const accounts = await this.prisma.jetCardAccount.count({
+      where: { planId: id },
+    });
     if (accounts > 0) {
       throw new BadRequestException('Cannot delete plan with active accounts');
     }

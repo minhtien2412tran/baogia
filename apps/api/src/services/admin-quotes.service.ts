@@ -15,7 +15,11 @@ export class AdminQuotesService {
     private readonly audit: AuditService,
   ) {}
 
-  async listQuotes(filters?: { status?: string; page?: number; limit?: number }) {
+  async listQuotes(filters?: {
+    status?: string;
+    page?: number;
+    limit?: number;
+  }) {
     const page = filters?.page ?? 1;
     const limit = Math.min(filters?.limit ?? 20, 100);
     const skip = (page - 1) * limit;
@@ -128,22 +132,37 @@ export class AdminQuotesService {
     };
   }
 
-  async createOffer(quoteId: number, dto: CreateQuoteOfferDto, adminUserId?: number) {
-    const quote = await this.prisma.quoteRequest.findUnique({ where: { id: quoteId } });
+  async createOffer(
+    quoteId: number,
+    dto: CreateQuoteOfferDto,
+    adminUserId?: number,
+  ) {
+    const quote = await this.prisma.quoteRequest.findUnique({
+      where: { id: quoteId },
+    });
     if (!quote) throw new NotFoundException(`Quote #${quoteId} not found`);
 
     const [aircraft, operator] = await Promise.all([
-      this.prisma.aircraftModel.findUnique({ where: { id: dto.aircraftModelId } }),
+      this.prisma.aircraftModel.findUnique({
+        where: { id: dto.aircraftModelId },
+      }),
       this.prisma.operator.findUnique({ where: { id: dto.operatorId } }),
     ]);
-    if (!aircraft) throw new BadRequestException(`Aircraft model #${dto.aircraftModelId} not found`);
-    if (!operator) throw new BadRequestException(`Operator #${dto.operatorId} not found`);
+    if (!aircraft)
+      throw new BadRequestException(
+        `Aircraft model #${dto.aircraftModelId} not found`,
+      );
+    if (!operator)
+      throw new BadRequestException(`Operator #${dto.operatorId} not found`);
     if (operator.status !== 'ACTIVE') {
       throw new BadRequestException('Operator is not active');
     }
 
     const expiresAt = new Date(dto.expiresAt);
-    if (Number.isNaN(expiresAt.getTime()) || expiresAt.getTime() <= Date.now()) {
+    if (
+      Number.isNaN(expiresAt.getTime()) ||
+      expiresAt.getTime() <= Date.now()
+    ) {
       throw new BadRequestException('expiresAt must be a future date');
     }
 

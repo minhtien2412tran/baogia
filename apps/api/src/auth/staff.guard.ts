@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import type { AuthUser } from './auth.types';
 
 const STAFF_ROLES = new Set(['ADMIN', 'SALES', 'CONTRACT_APPROVER']);

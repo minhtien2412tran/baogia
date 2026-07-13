@@ -22,7 +22,11 @@ describe('AppController', () => {
   describe('root', () => {
     it('should return API metadata', () => {
       const result = appController.getRoot();
-      expect(result).toMatchObject({ name: 'JetBay API', status: 'ok', swagger: '/swagger' });
+      expect(result).toMatchObject({
+        name: 'JetBay API',
+        status: 'ok',
+        swagger: '/swagger',
+      });
     });
   });
 });

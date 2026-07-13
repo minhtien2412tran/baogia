@@ -8,7 +8,12 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
@@ -117,7 +122,8 @@ export class ContractController {
   @ApiBearerAuth('bearer')
   send(
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: { signers: Array<{ email: string; name: string; role: string }> },
+    @Body()
+    body: { signers: Array<{ email: string; name: string; role: string }> },
     @CurrentUser() user: AuthUser,
   ) {
     return this.contracts.sendForSignature(id, body.signers ?? [], user.userId);
@@ -125,7 +131,9 @@ export class ContractController {
 
   @Post('webhooks/docusign')
   @Public()
-  @ApiOperation({ summary: 'DocuSign / mock signature webhook (idempotent by eventId)' })
+  @ApiOperation({
+    summary: 'DocuSign / mock signature webhook (idempotent by eventId)',
+  })
   webhook(
     @Body()
     body: {
@@ -141,7 +149,8 @@ export class ContractController {
       envelopeId: body.envelopeId,
       eventType: body.eventType,
       provider: body.provider,
-      payload: body.payload as import('@prisma/client').Prisma.InputJsonValue | undefined,
+      payload: body.payload as
+        import('@prisma/client').Prisma.InputJsonValue | undefined,
     });
   }
 }

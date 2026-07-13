@@ -6,7 +6,12 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import {
+  ApiConsumes,
+  ApiOperation,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
 import { StorageService } from '../services/storage.service';
 
 const ENQUIRY_FILE_TYPES = new Set([
@@ -28,7 +33,9 @@ export class EnquiryController {
 
   @Post('attachments')
   @ApiConsumes('multipart/form-data')
-  @ApiOperation({ summary: 'Upload an attachment for a sales enquiry (PDF/image, max 5MB)' })
+  @ApiOperation({
+    summary: 'Upload an attachment for a sales enquiry (PDF/image, max 5MB)',
+  })
   @UseInterceptors(FileInterceptor('file', { limits: { fileSize: MAX_BYTES } }))
   async uploadAttachment(@UploadedFile() file?: Express.Multer.File) {
     if (!file) throw new BadRequestException('file is required');
@@ -36,7 +43,9 @@ export class EnquiryController {
       throw new BadRequestException(`Unsupported file type: ${file.mimetype}`);
     }
     if (!this.storage.isConfigured()) {
-      throw new BadRequestException('File storage is not configured on the server');
+      throw new BadRequestException(
+        'File storage is not configured on the server',
+      );
     }
 
     const stored = await this.storage.upload(

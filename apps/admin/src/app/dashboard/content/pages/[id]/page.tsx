@@ -8,6 +8,7 @@ import { AdminShell } from '../../../../../components/AdminShell';
 import { AdminField } from '../../../../../components/AdminFormFields';
 import { RichTextEditor } from '../../../../../components/RichTextEditor';
 import { adminApi } from '../../../../../lib/api';
+import { scheduleUi } from '../../../../../lib/browser';
 
 export default function CmsPageEditor() {
   const router = useRouter();
@@ -28,11 +29,11 @@ export default function CmsPageEditor() {
 
   useEffect(() => {
     if (isNew || !idValid) {
-      setLoading(false);
+      scheduleUi(() => setLoading(false));
       return;
     }
     let cancelled = false;
-    setLoading(true);
+    scheduleUi(() => setLoading(true));
     adminApi
       .getPage(pageId)
       .then((p) => {

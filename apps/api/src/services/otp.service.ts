@@ -45,7 +45,12 @@ export class OtpService {
       purpose,
       expiresInSeconds: OTP_TTL_MS / 1000,
       sent: result.sent,
-      ...(result.devCode ? { devCode: result.devCode, message: 'Dev mode: use devCode from response' } : {}),
+      ...(result.devCode
+        ? {
+            devCode: result.devCode,
+            message: 'Dev mode: use devCode from response',
+          }
+        : {}),
     };
   }
 

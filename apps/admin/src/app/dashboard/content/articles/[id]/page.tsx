@@ -8,6 +8,7 @@ import { AdminShell } from '../../../../../components/AdminShell';
 import { AdminField } from '../../../../../components/AdminFormFields';
 import { RichTextEditor } from '../../../../../components/RichTextEditor';
 import { adminApi } from '../../../../../lib/api';
+import { scheduleUi } from '../../../../../lib/browser';
 
 export default function ArticleEditorPage() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export default function ArticleEditorPage() {
 
   const [type, setType] = useState('news');
   const [slug, setSlug] = useState('');
-  const [author, setAuthor] = useState('JetBay Editorial');
+  const [author, setAuthor] = useState('JetVina Editorial');
   const [status, setStatus] = useState('draft');
   const [title, setTitle] = useState('');
   const [excerpt, setExcerpt] = useState('');
@@ -30,18 +31,18 @@ export default function ArticleEditorPage() {
 
   useEffect(() => {
     if (isNew || !idValid) {
-      setLoading(false);
+      scheduleUi(() => setLoading(false));
       return;
     }
     let cancelled = false;
-    setLoading(true);
+    scheduleUi(() => setLoading(true));
     adminApi
       .getArticle(articleId)
       .then((a) => {
         if (cancelled) return;
         setType(String(a.type ?? 'news').toLowerCase());
         setSlug(String(a.slug ?? ''));
-        setAuthor(String(a.author ?? 'JetBay Editorial'));
+        setAuthor(String(a.author ?? 'JetVina Editorial'));
         setStatus(String(a.status ?? 'draft'));
         setTitle(String(a.title ?? ''));
         setExcerpt(String(a.excerpt ?? ''));
@@ -56,7 +57,7 @@ export default function ArticleEditorPage() {
     return () => {
       cancelled = true;
     };
-  }, [articleId, isNew, idValid]);
+  }, [articleId, idValid, isNew]);
 
   async function save() {
     if (!idValid) {

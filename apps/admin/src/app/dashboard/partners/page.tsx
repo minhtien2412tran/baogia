@@ -1,15 +1,17 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { scheduleUi } from '../../../lib/browser';
 import { SectionTitle, DataTable, Muted } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
-import { ActionBtn } from '../../../components/AdminFormFields';
+import { ConfirmDialog,  ActionBtn } from '../../../components/AdminFormFields';
 import { adminApi } from '../../../lib/api';
 
 export default function PartnersAdminPage() {
   const [rows, setRows] = useState<Record<string, React.ReactNode>[]>([]);
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState('');
+  const [pendingReview, setPendingReview] = useState<{ id: number; status: 'APPROVED' | 'REJECTED' } | null>(null);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -29,8 +31,8 @@ export default function PartnersAdminPage() {
               created: a.createdAt ? String(a.createdAt).slice(0, 10) : '—',
               actions: pending ? (
                 <span style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                  <ActionBtn onClick={() => review(id, 'APPROVED')}>Approve</ActionBtn>
-                  <ActionBtn variant="danger" onClick={() => review(id, 'REJECTED')}>
+                  <ActionBtn onClick={() => setPendingReview({ id: id, status: 'APPROVED' })}>Approve</ActionBtn>
+                  <ActionBtn variant="danger" onClick={() => setPendingReview({ id: id, status: 'REJECTED' })}>
                     Reject
                   </ActionBtn>
                 </span>
@@ -46,11 +48,12 @@ export default function PartnersAdminPage() {
   }, []);
 
   useEffect(() => {
-    load();
+    scheduleUi(() => {
+      void load();
+    });
   }, [load]);
 
   async function review(id: number, status: 'APPROVED' | 'REJECTED') {
-    if (!confirm(`${status === 'APPROVED' ? 'Approve' : 'Reject'} application #${id}?`)) return;
     try {
       await adminApi.reviewPartnerApplication(id, status);
       setMsg(`Application #${id} → ${status}`);
@@ -79,6 +82,18 @@ export default function PartnersAdminPage() {
         />
       )}
       {msg && <p style={{ marginTop: 12, color: '#4ade80' }}>{msg}</p>}
+          <ConfirmDialog
+        open={pendingReview != null}
+        title="Confirm review"
+        message={pendingReview ? `Mark application #${pendingReview.id} as ${pendingReview.status}?` : ''}
+        confirmLabel="Confirm"
+        onCancel={() => setPendingReview(null)}
+        onConfirm={() => {
+          const p = pendingReview;
+          setPendingReview(null);
+          if (p) void review(p.id, p.status);
+        }}
+      />
     </AdminShell>
   );
 }

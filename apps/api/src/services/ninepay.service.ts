@@ -8,8 +8,8 @@ export class NinepayService {
   isConfigured(): boolean {
     return Boolean(
       process.env.NINEPAY_MERCHANT_KEY &&
-        process.env.NINEPAY_SECRET_KEY &&
-        process.env.NINEPAY_ENDPOINT,
+      process.env.NINEPAY_SECRET_KEY &&
+      process.env.NINEPAY_ENDPOINT,
     );
   }
 

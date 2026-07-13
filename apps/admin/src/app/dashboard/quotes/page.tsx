@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import { scheduleUi } from '../../../lib/browser';
 import { SectionTitle, DataTable, Muted } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
 import { ActionBtn, AdminField, AdminPanel, fieldStyle } from '../../../components/AdminFormFields';
@@ -10,9 +11,18 @@ const STATUSES = ['PENDING', 'OFFERED', 'EXPIRED', 'CONVERTED', 'CANCELLED'];
 
 type Operator = { id: number; name: string; region: string };
 type AircraftModel = { id: number; manufacturer: string; model: string };
+type QuoteRow = {
+  id: number;
+  name: string;
+  email: string;
+  route: string;
+  offers: string;
+  status: string;
+  created: string;
+};
 
 export default function QuotesPage() {
-  const [rows, setRows] = useState<Record<string, React.ReactNode>[]>([]);
+  const [quotes, setQuotes] = useState<QuoteRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState('');
   const [offerFor, setOfferFor] = useState<number | null>(null);
@@ -30,29 +40,17 @@ export default function QuotesPage() {
     adminApi
       .getQuotes({ limit: 50 })
       .then((res) => {
-        setRows(
+        setQuotes(
           (res.data ?? []).map((q) => {
             const row = q as Record<string, unknown>;
-            const id = Number(row.id);
-            const status = String(row.status ?? 'PENDING').toUpperCase();
             return {
-              id: String(id),
+              id: Number(row.id),
               name: String(row.name ?? '—'),
               email: String(row.email),
               route: String(row.route ?? '—'),
               offers: String(row.offerCount ?? 0),
-              status,
+              status: String(row.status ?? 'PENDING').toUpperCase(),
               created: row.createdAt ? String(row.createdAt).slice(0, 10) : '—',
-              actions: (
-                <span style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                  <ActionBtn onClick={() => openOffer(id)}>Offer</ActionBtn>
-                  {STATUSES.filter((s) => s !== status).map((s) => (
-                    <ActionBtn key={s} onClick={() => updateStatus(id, s)}>
-                      → {s}
-                    </ActionBtn>
-                  ))}
-                </span>
-              ),
             };
           }),
         );
@@ -62,17 +60,16 @@ export default function QuotesPage() {
   }, []);
 
   useEffect(() => {
-    load();
+    scheduleUi(() => {
+      void load();
+    });
   }, [load]);
 
   async function openOffer(id: number) {
     setOfferFor(id);
     setMsg('');
     try {
-      const [ops, aircraft] = await Promise.all([
-        adminApi.getOperators(),
-        adminApi.getAircraftModels(),
-      ]);
+      const [ops, aircraft] = await Promise.all([adminApi.getOperators(), adminApi.getAircraftModels()]);
       setOperators((ops.operators as Operator[]) ?? []);
       const list = (aircraft as { models?: AircraftModel[] }).models ?? [];
       setModels(list);
@@ -99,7 +96,7 @@ export default function QuotesPage() {
     }
   }
 
-  async function submitOffer(e: React.FormEvent) {
+  async function submitOffer(e: FormEvent) {
     e.preventDefault();
     if (!offerFor) return;
     try {
@@ -116,6 +113,26 @@ export default function QuotesPage() {
       setMsg(err instanceof Error ? err.message : 'Create offer failed');
     }
   }
+
+  const rows = quotes.map((q) => ({
+    id: String(q.id),
+    name: q.name,
+    email: q.email,
+    route: q.route,
+    offers: q.offers,
+    status: q.status,
+    created: q.created,
+    actions: (
+      <span style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+        <ActionBtn onClick={() => void openOffer(q.id)}>Offer</ActionBtn>
+        {STATUSES.filter((s) => s !== q.status).map((s) => (
+          <ActionBtn key={s} onClick={() => void updateStatus(q.id, s)}>
+            → {s}
+          </ActionBtn>
+        ))}
+      </span>
+    ),
+  }));
 
   return (
     <AdminShell active="/dashboard/quotes">

@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
@@ -18,7 +22,8 @@ export class AirportService {
   ) {}
 
   async search(q: string, limit = 10, locale?: string) {
-    if (!q || q.length < 1) return { airports: [], autoSelect: undefined as string | undefined };
+    if (!q || q.length < 1)
+      return { airports: [], autoSelect: undefined as string | undefined };
 
     const raw = q.trim();
     const term = raw.toUpperCase();
@@ -58,7 +63,10 @@ export class AirportService {
         airport: a,
         score: this.scoreMatch(a, raw, term, alias),
       }))
-      .sort((a, b) => b.score - a.score || a.airport.iata.localeCompare(b.airport.iata));
+      .sort(
+        (a, b) =>
+          b.score - a.score || a.airport.iata.localeCompare(b.airport.iata),
+      );
 
     const take = Math.min(Math.max(limit, 1), 25);
     const top = scored.slice(0, take);
@@ -68,7 +76,11 @@ export class AirportService {
       autoSelect = alias.iata.toUpperCase();
     } else if (top.length === 1) {
       autoSelect = top[0].airport.iata;
-    } else if (top.length > 1 && top[0].score >= 70 && top[0].score - top[1].score >= 25) {
+    } else if (
+      top.length > 1 &&
+      top[0].score >= 70 &&
+      top[0].score - top[1].score >= 25
+    ) {
       autoSelect = top[0].airport.iata;
     }
 
@@ -107,19 +119,37 @@ export class AirportService {
     if (a.iata.toUpperCase() === term) score += 100;
     else if (a.iata.toUpperCase().startsWith(term)) score += 80;
 
-    if (alias?.iata && a.iata.toUpperCase() === alias.iata.toUpperCase()) score += 120;
+    if (alias?.iata && a.iata.toUpperCase() === alias.iata.toUpperCase())
+      score += 120;
 
     if (cityLower === rawLower || cityLower === norm) score += 70;
-    else if (cityLower.startsWith(rawLower) || cityLower.startsWith(norm)) score += 50;
+    else if (cityLower.startsWith(rawLower) || cityLower.startsWith(norm))
+      score += 50;
     else if (cityLower.includes(rawLower)) score += 30;
 
-    if (countryLower === rawLower || countryLower.includes(rawLower)) score += 40;
+    if (countryLower === rawLower || countryLower.includes(rawLower))
+      score += 40;
 
-    if (alias?.countries?.some((c) => countryLower.includes(c.toLowerCase()))) score += 35;
-    if (alias?.cities?.some((c) => cityLower.includes(c.toLowerCase()))) score += 45;
+    if (alias?.countries?.some((c) => countryLower.includes(c.toLowerCase())))
+      score += 35;
+    if (alias?.cities?.some((c) => cityLower.includes(c.toLowerCase())))
+      score += 45;
 
     // Prefer major private-jet hubs when searching by country
-    const hubIata = new Set(['LBG', 'NCE', 'LTN', 'TEB', 'VNY', 'OPF', 'SGN', 'HAN', 'HUI', 'DAD', 'DXB', 'SIN']);
+    const hubIata = new Set([
+      'LBG',
+      'NCE',
+      'LTN',
+      'TEB',
+      'VNY',
+      'OPF',
+      'SGN',
+      'HAN',
+      'HUI',
+      'DAD',
+      'DXB',
+      'SIN',
+    ]);
     if (alias && hubIata.has(a.iata)) score += 15;
 
     return score;
@@ -138,8 +168,10 @@ export class AirportService {
     const take = Math.min(limit, 200);
     const skip = (page - 1) * take;
     const where: Prisma.AirportWhereInput = {};
-    if (filters?.continentCode) where.continentCode = filters.continentCode.toUpperCase();
-    if (filters?.countryCode) where.countryCode = filters.countryCode.toUpperCase();
+    if (filters?.continentCode)
+      where.continentCode = filters.continentCode.toUpperCase();
+    if (filters?.countryCode)
+      where.countryCode = filters.countryCode.toUpperCase();
     if (filters?.status) where.status = filters.status;
     if (filters?.scopeWhere) {
       Object.assign(where, { AND: [filters.scopeWhere] });
@@ -147,7 +179,12 @@ export class AirportService {
 
     const [total, airports] = await Promise.all([
       this.prisma.airport.count({ where }),
-      this.prisma.airport.findMany({ where, orderBy: { iata: 'asc' }, skip, take }),
+      this.prisma.airport.findMany({
+        where,
+        orderBy: { iata: 'asc' },
+        skip,
+        take,
+      }),
     ]);
     return {
       data: airports.map((a) => ({
@@ -171,7 +208,12 @@ export class AirportService {
         feeCurrency: a.feeCurrency,
         status: a.status,
       })),
-      pagination: { page, limit: take, total, totalPages: Math.ceil(total / take) },
+      pagination: {
+        page,
+        limit: take,
+        total,
+        totalPages: Math.ceil(total / take),
+      },
     };
   }
 
@@ -197,10 +239,17 @@ export class AirportService {
       where: {
         status: 'ACTIVE',
         countryCode: { not: null },
-        ...(continentCode ? { continentCode: continentCode.toUpperCase() } : {}),
+        ...(continentCode
+          ? { continentCode: continentCode.toUpperCase() }
+          : {}),
       },
       distinct: ['countryCode'],
-      select: { countryCode: true, countryName: true, country: true, continentCode: true },
+      select: {
+        countryCode: true,
+        countryName: true,
+        country: true,
+        continentCode: true,
+      },
       orderBy: { country: 'asc' },
     });
     return {
@@ -217,7 +266,8 @@ export class AirportService {
   async create(body: CreateAirportDto) {
     const iata = body.iata.trim().toUpperCase();
     const existing = await this.prisma.airport.findUnique({ where: { iata } });
-    if (existing) throw new BadRequestException(`Airport ${iata} already exists`);
+    if (existing)
+      throw new BadRequestException(`Airport ${iata} already exists`);
 
     const airport = await this.prisma.airport.create({
       data: {
@@ -239,7 +289,10 @@ export class AirportService {
         feeUpdatedAt: new Date(),
       },
     });
-    await this.audit.log('AIRPORT_CREATED', { airportId: airport.id, iata: airport.iata });
+    await this.audit.log('AIRPORT_CREATED', {
+      airportId: airport.id,
+      iata: airport.iata,
+    });
     return airport;
   }
 
@@ -252,7 +305,8 @@ export class AirportService {
       const clash = await this.prisma.airport.findFirst({
         where: { iata, NOT: { id } },
       });
-      if (clash) throw new BadRequestException(`Airport ${iata} already exists`);
+      if (clash)
+        throw new BadRequestException(`Airport ${iata} already exists`);
     }
 
     const airport = await this.prisma.airport.update({
@@ -265,14 +319,20 @@ export class AirportService {
         ...(body.country != null ? { country: body.country.trim() } : {}),
         ...(body.timezone != null ? { timezone: body.timezone.trim() } : {}),
         ...(body.status != null ? { status: body.status } : {}),
-        ...(body.countryCode != null ? { countryCode: body.countryCode.trim().toUpperCase() } : {}),
+        ...(body.countryCode != null
+          ? { countryCode: body.countryCode.trim().toUpperCase() }
+          : {}),
         ...(body.continentCode != null
           ? { continentCode: body.continentCode.trim().toUpperCase() }
           : {}),
-        ...(body.canParkAircraft != null ? { canParkAircraft: body.canParkAircraft } : {}),
+        ...(body.canParkAircraft != null
+          ? { canParkAircraft: body.canParkAircraft }
+          : {}),
         ...(body.landingFee != null ? { landingFee: body.landingFee } : {}),
         ...(body.parkingFee != null ? { parkingFee: body.parkingFee } : {}),
-        ...(body.overnightFee != null ? { overnightFee: body.overnightFee } : {}),
+        ...(body.overnightFee != null
+          ? { overnightFee: body.overnightFee }
+          : {}),
         ...(body.handlingFee != null ? { handlingFee: body.handlingFee } : {}),
         ...(body.feeCurrency != null ? { feeCurrency: body.feeCurrency } : {}),
         ...((body.landingFee != null ||
@@ -295,7 +355,10 @@ export class AirportService {
         `Cannot delete airport ${existing.iata} — it is referenced by routes or quotes`,
       );
     }
-    await this.audit.log('AIRPORT_DELETED', { airportId: id, iata: existing.iata });
+    await this.audit.log('AIRPORT_DELETED', {
+      airportId: id,
+      iata: existing.iata,
+    });
     return { ok: true, id };
   }
 }

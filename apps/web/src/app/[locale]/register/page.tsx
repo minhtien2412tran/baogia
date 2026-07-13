@@ -109,7 +109,9 @@ export default function RegisterPage({ params }: { params: Promise<{ locale: str
                   <label htmlFor="register-otp">Verification code</label>
                   <input id="register-otp" type="text" value={otp} onChange={(e) => setOtp(e.target.value)} required />
                 </div>
-                {devCode && <p className="jb-account-meta">Dev code: {devCode}</p>}
+                {process.env.NODE_ENV !== 'production' && devCode ? (
+                  <p className="jb-account-meta">Dev code: {devCode}</p>
+                ) : null}
                 <button type="submit" className="jb-btn-primary" disabled={loading}>
                   Verify &amp; Create account
                 </button>

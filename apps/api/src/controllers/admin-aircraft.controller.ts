@@ -10,7 +10,13 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiSecurity } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiQuery,
+  ApiSecurity,
+} from '@nestjs/swagger';
 import { AircraftService } from '../services/aircraft.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
@@ -31,7 +37,9 @@ export class AdminAircraftController {
 
   @Post('categories')
   @ApiOperation({ summary: 'Create aircraft category' })
-  createCategory(@Body() body: { code: string; label: string; maxPassengers?: number }) {
+  createCategory(
+    @Body() body: { code: string; label: string; maxPassengers?: number },
+  ) {
     return this.aircraft.createCategory(body);
   }
 
@@ -54,7 +62,9 @@ export class AdminAircraftController {
   @ApiQuery({ name: 'categoryId', required: false })
   @ApiOperation({ summary: 'List aircraft models' })
   listModels(@Query('categoryId') categoryId?: string) {
-    return this.aircraft.listModels(categoryId ? Number(categoryId) : undefined);
+    return this.aircraft.listModels(
+      categoryId ? Number(categoryId) : undefined,
+    );
   }
 
   @Post('models')

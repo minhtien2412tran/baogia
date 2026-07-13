@@ -1,5 +1,14 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { ContentArticle, ContentTranslation, Destination, Video } from '@prisma/client';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import {
+  ContentArticle,
+  ContentTranslation,
+  Destination,
+  Video,
+} from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
 import { CustomerCareService } from './customer-care/customer-care.service';
@@ -50,11 +59,17 @@ export class ContentService {
     return isPublished ? 'published' : 'draft';
   }
 
-  private async getTranslation(entityType: string, entityId: number, locale: string = CANONICAL_LOCALE) {
+  private async getTranslation(
+    entityType: string,
+    entityId: number,
+    locale: string = CANONICAL_LOCALE,
+  ) {
     const chain = this.locales.fallbackChain(locale);
     for (const loc of chain) {
       const translation = await this.prisma.contentTranslation.findUnique({
-        where: { entityType_entityId_locale: { entityType, entityId, locale: loc } },
+        where: {
+          entityType_entityId_locale: { entityType, entityId, locale: loc },
+        },
       });
       if (translation) return translation;
     }
@@ -103,7 +118,11 @@ export class ContentService {
     if (locale !== CANONICAL_LOCALE) {
       const canonical = await this.prisma.contentTranslation.findUnique({
         where: {
-          entityType_entityId_locale: { entityType, entityId, locale: CANONICAL_LOCALE },
+          entityType_entityId_locale: {
+            entityType,
+            entityId,
+            locale: CANONICAL_LOCALE,
+          },
         },
       });
       if (!canonical) {
@@ -112,7 +131,9 @@ export class ContentService {
             entityType,
             entityId,
             locale: CANONICAL_LOCALE,
-            title: normalized.title ? `[${locale}] ${normalized.title}` : `[${locale}]`,
+            title: normalized.title
+              ? `[${locale}] ${normalized.title}`
+              : `[${locale}]`,
             body: '',
             excerpt: '',
             seoTitle: normalized.seoTitle ?? '',
@@ -126,7 +147,9 @@ export class ContentService {
   }
 
   private formatArticle(
-    article: ContentArticle & { category?: { name: string; slug: string } | null },
+    article: ContentArticle & {
+      category?: { name: string; slug: string } | null;
+    },
     translation: ContentTranslation | null,
     detailed = false,
   ) {
@@ -154,8 +177,11 @@ export class ContentService {
 
   private async resolveCategoryId(slug?: string) {
     if (!slug) return undefined;
-    const category = await this.prisma.contentCategory.findUnique({ where: { slug } });
-    if (!category) throw new BadRequestException(`Category "${slug}" not found`);
+    const category = await this.prisma.contentCategory.findUnique({
+      where: { slug },
+    });
+    if (!category)
+      throw new BadRequestException(`Category "${slug}" not found`);
     return category.id;
   }
 
@@ -187,7 +213,8 @@ export class ContentService {
         title: translation?.seoTitle ?? translation?.title,
         description: translation?.seoDescription,
       },
-      updatedAt: article.publishedAt?.toISOString() ?? article.createdAt.toISOString(),
+      updatedAt:
+        article.publishedAt?.toISOString() ?? article.createdAt.toISOString(),
     };
   }
 
@@ -202,9 +229,7 @@ export class ContentService {
       where: {
         type,
         isPublished,
-        ...(query.category
-          ? { category: { slug: query.category } }
-          : {}),
+        ...(query.category ? { category: { slug: query.category } } : {}),
       },
       include: { category: true },
       orderBy: { publishedAt: 'desc' },
@@ -215,7 +240,11 @@ export class ContentService {
     const withTranslations = await Promise.all(
       articles.map(async (a) => {
         const t = await this.getTranslation('ARTICLE', a.id, locale);
-        if (query.search && t && !t.title.toLowerCase().includes(query.search.toLowerCase())) {
+        if (
+          query.search &&
+          t &&
+          !t.title.toLowerCase().includes(query.search.toLowerCase())
+        ) {
           return null;
         }
         return this.formatArticle(a, t);
@@ -230,17 +259,27 @@ export class ContentService {
     const key = type === 'NEWS' ? 'news' : 'blogs';
     return {
       [key]: data,
-      pagination: { page, limit: take, total, totalPages: Math.ceil(total / take) },
+      pagination: {
+        page,
+        limit: take,
+        total,
+        totalPages: Math.ceil(total / take),
+      },
     };
   }
 
-  async getArticleBySlug(type: 'NEWS' | 'BLOG', slug: string, locale: string = CANONICAL_LOCALE) {
+  async getArticleBySlug(
+    type: 'NEWS' | 'BLOG',
+    slug: string,
+    locale: string = CANONICAL_LOCALE,
+  ) {
     const loc = this.locales.normalize(locale);
     const article = await this.prisma.contentArticle.findFirst({
       where: { slug, type, isPublished: true },
       include: { category: true },
     });
-    if (!article) throw new NotFoundException(`${type} article "${slug}" not found`);
+    if (!article)
+      throw new NotFoundException(`${type} article "${slug}" not found`);
 
     const translation = await this.getTranslation('ARTICLE', article.id, loc);
     return this.formatArticle(article, translation, true);
@@ -264,7 +303,11 @@ export class ContentService {
       await Promise.all(
         videos.map(async (v) => {
           const t = await this.getTranslation('VIDEO', v.id, locale);
-          if (query.search && t && !t.title.toLowerCase().includes(query.search.toLowerCase())) {
+          if (
+            query.search &&
+            t &&
+            !t.title.toLowerCase().includes(query.search.toLowerCase())
+          ) {
             return null;
           }
           return this.formatVideo(v, t);
@@ -275,7 +318,12 @@ export class ContentService {
     const total = await this.prisma.video.count({ where: { isPublished } });
     return {
       videos: data,
-      pagination: { page, limit: take, total, totalPages: Math.ceil(total / take) },
+      pagination: {
+        page,
+        limit: take,
+        total,
+        totalPages: Math.ceil(total / take),
+      },
     };
   }
 
@@ -330,12 +378,20 @@ export class ContentService {
     ).filter(Boolean);
 
     const total = await this.prisma.destination.count({
-      where: { isPublished, ...(query.category ? { category: query.category.toUpperCase() } : {}) },
+      where: {
+        isPublished,
+        ...(query.category ? { category: query.category.toUpperCase() } : {}),
+      },
     });
 
     return {
       destinations: data,
-      pagination: { page, limit: take, total, totalPages: Math.ceil(total / take) },
+      pagination: {
+        page,
+        limit: take,
+        total,
+        totalPages: Math.ceil(total / take),
+      },
     };
   }
 
@@ -349,7 +405,11 @@ export class ContentService {
     return this.formatDestination(dest, t, true);
   }
 
-  private formatDestination(dest: Destination, translation: ContentTranslation | null, detailed = false) {
+  private formatDestination(
+    dest: Destination,
+    translation: ContentTranslation | null,
+    detailed = false,
+  ) {
     const base = {
       id: dest.id,
       slug: dest.slug,
@@ -381,7 +441,10 @@ export class ContentService {
       },
     });
     void this.customerCare.onNewsletterSubscribe(body.email, locale);
-    return { status: 'SUBSCRIBED', message: 'Successfully subscribed to the newsletter.' };
+    return {
+      status: 'SUBSCRIBED',
+      message: 'Successfully subscribed to the newsletter.',
+    };
   }
 
   // --- ADMIN: PAGES ---
@@ -404,7 +467,10 @@ export class ContentService {
     const data = await Promise.all(
       pages.map(async (p) => {
         const t = await this.getTranslation('ARTICLE', p.id, locale);
-        const formatted = this.formatArticle(p, t, true) as Record<string, unknown>;
+        const formatted = this.formatArticle(p, t, true) as Record<
+          string,
+          unknown
+        >;
         return {
           ...formatted,
           body: formatted.content,
@@ -417,7 +483,15 @@ export class ContentService {
       where: { type: { in: ['PAGE', 'LEGAL'] } },
     });
 
-    return { data, pagination: { page, limit: take, total, totalPages: Math.ceil(total / take) } };
+    return {
+      data,
+      pagination: {
+        page,
+        limit: take,
+        total,
+        totalPages: Math.ceil(total / take),
+      },
+    };
   }
 
   async adminCreatePage(dto: CreateContentPageDto) {
@@ -431,8 +505,15 @@ export class ContentService {
       },
     });
     await this.upsertTranslation('ARTICLE', page.id, dto.translation);
-    await this.audit.log('CONTENT_PAGE_CREATED', { pageId: page.id, slug: dto.slug });
-    const t = await this.getTranslation('ARTICLE', page.id, dto.translation.locale);
+    await this.audit.log('CONTENT_PAGE_CREATED', {
+      pageId: page.id,
+      slug: dto.slug,
+    });
+    const t = await this.getTranslation(
+      'ARTICLE',
+      page.id,
+      dto.translation.locale,
+    );
     return this.formatArticle(page, t, true);
   }
 
@@ -440,7 +521,10 @@ export class ContentService {
     const loc = this.locales.normalize(locale);
     const page = await this.findPageOrThrow(id);
     const t = await this.getTranslation('ARTICLE', id, loc);
-    const formatted = this.formatArticle(page, t, true) as Record<string, unknown>;
+    const formatted = this.formatArticle(page, t, true) as Record<
+      string,
+      unknown
+    >;
     return {
       ...formatted,
       body: formatted.content,
@@ -461,9 +545,14 @@ export class ContentService {
           : {}),
       },
     });
-    if (dto.translation) await this.upsertTranslation('ARTICLE', id, dto.translation);
+    if (dto.translation)
+      await this.upsertTranslation('ARTICLE', id, dto.translation);
     await this.audit.log('CONTENT_PAGE_UPDATED', { pageId: id });
-    const t = await this.getTranslation('ARTICLE', id, this.locales.normalize(dto.translation?.locale));
+    const t = await this.getTranslation(
+      'ARTICLE',
+      id,
+      this.locales.normalize(dto.translation?.locale),
+    );
     return this.formatArticle(page, t, true);
   }
 
@@ -517,7 +606,15 @@ export class ContentService {
       where: { type: { in: typeFilter } },
     });
 
-    return { data, pagination: { page, limit: take, total, totalPages: Math.ceil(total / take) } };
+    return {
+      data,
+      pagination: {
+        page,
+        limit: take,
+        total,
+        totalPages: Math.ceil(total / take),
+      },
+    };
   }
 
   async adminGetArticle(id: number, locale: string = CANONICAL_LOCALE) {
@@ -550,15 +647,25 @@ export class ContentService {
     });
 
     await this.upsertTranslation('ARTICLE', article.id, dto.translation);
-    await this.audit.log('CONTENT_ARTICLE_CREATED', { articleId: article.id, type });
-    const t = await this.getTranslation('ARTICLE', article.id, dto.translation.locale);
+    await this.audit.log('CONTENT_ARTICLE_CREATED', {
+      articleId: article.id,
+      type,
+    });
+    const t = await this.getTranslation(
+      'ARTICLE',
+      article.id,
+      dto.translation.locale,
+    );
     return this.formatArticle(article, t, true);
   }
 
   async adminUpdateArticle(id: number, dto: UpdateContentArticleDto) {
     const existing = await this.findArticleOrThrow(id);
     const isPublished = dto.status ? dto.status === 'published' : undefined;
-    const categoryId = dto.category !== undefined ? await this.resolveCategoryId(dto.category) : undefined;
+    const categoryId =
+      dto.category !== undefined
+        ? await this.resolveCategoryId(dto.category)
+        : undefined;
     const type = dto.type ? this.articleTypeFromDto(dto.type) : undefined;
 
     const article = await this.prisma.contentArticle.update({
@@ -577,9 +684,17 @@ export class ContentService {
       include: { category: true },
     });
 
-    if (dto.translation) await this.upsertTranslation('ARTICLE', id, dto.translation);
-    await this.audit.log('CONTENT_ARTICLE_UPDATED', { articleId: id, type: existing.type });
-    const t = await this.getTranslation('ARTICLE', id, this.locales.normalize(dto.translation?.locale));
+    if (dto.translation)
+      await this.upsertTranslation('ARTICLE', id, dto.translation);
+    await this.audit.log('CONTENT_ARTICLE_UPDATED', {
+      articleId: id,
+      type: existing.type,
+    });
+    const t = await this.getTranslation(
+      'ARTICLE',
+      id,
+      this.locales.normalize(dto.translation?.locale),
+    );
     return this.formatArticle(article, t, true);
   }
 
@@ -623,7 +738,15 @@ export class ContentService {
     );
 
     const total = await this.prisma.video.count();
-    return { data, pagination: { page, limit: take, total, totalPages: Math.ceil(total / take) } };
+    return {
+      data,
+      pagination: {
+        page,
+        limit: take,
+        total,
+        totalPages: Math.ceil(total / take),
+      },
+    };
   }
 
   async adminCreateVideo(dto: CreateVideoDto) {
@@ -640,7 +763,11 @@ export class ContentService {
     });
     await this.upsertTranslation('VIDEO', video.id, dto.translation);
     await this.audit.log('CONTENT_VIDEO_CREATED', { videoId: video.id });
-    const t = await this.getTranslation('VIDEO', video.id, dto.translation.locale);
+    const t = await this.getTranslation(
+      'VIDEO',
+      video.id,
+      dto.translation.locale,
+    );
     return this.formatVideo(video, t);
   }
 
@@ -660,9 +787,14 @@ export class ContentService {
           : {}),
       },
     });
-    if (dto.translation) await this.upsertTranslation('VIDEO', id, dto.translation);
+    if (dto.translation)
+      await this.upsertTranslation('VIDEO', id, dto.translation);
     await this.audit.log('CONTENT_VIDEO_UPDATED', { videoId: id });
-    const t = await this.getTranslation('VIDEO', id, this.locales.normalize(dto.translation?.locale));
+    const t = await this.getTranslation(
+      'VIDEO',
+      id,
+      this.locales.normalize(dto.translation?.locale),
+    );
     return this.formatVideo(video, t);
   }
 
@@ -707,7 +839,15 @@ export class ContentService {
     );
 
     const total = await this.prisma.destination.count();
-    return { data, pagination: { page, limit: take, total, totalPages: Math.ceil(total / take) } };
+    return {
+      data,
+      pagination: {
+        page,
+        limit: take,
+        total,
+        totalPages: Math.ceil(total / take),
+      },
+    };
   }
 
   async adminCreateDestination(dto: CreateDestinationDto) {
@@ -724,8 +864,14 @@ export class ContentService {
       },
     });
     await this.upsertTranslation('DESTINATION', dest.id, dto.translation);
-    await this.audit.log('CONTENT_DESTINATION_CREATED', { destinationId: dest.id });
-    const t = await this.getTranslation('DESTINATION', dest.id, dto.translation.locale);
+    await this.audit.log('CONTENT_DESTINATION_CREATED', {
+      destinationId: dest.id,
+    });
+    const t = await this.getTranslation(
+      'DESTINATION',
+      dest.id,
+      dto.translation.locale,
+    );
     return this.formatDestination(dest, t, true);
   }
 
@@ -746,9 +892,14 @@ export class ContentService {
           : {}),
       },
     });
-    if (dto.translation) await this.upsertTranslation('DESTINATION', id, dto.translation);
+    if (dto.translation)
+      await this.upsertTranslation('DESTINATION', id, dto.translation);
     await this.audit.log('CONTENT_DESTINATION_UPDATED', { destinationId: id });
-    const t = await this.getTranslation('DESTINATION', id, this.locales.normalize(dto.translation?.locale));
+    const t = await this.getTranslation(
+      'DESTINATION',
+      id,
+      this.locales.normalize(dto.translation?.locale),
+    );
     return this.formatDestination(dest, t, true);
   }
 

@@ -12,7 +12,12 @@ const PRIVATE_IPV4 = [
 ];
 
 function isPrivateIp(ip: string): boolean {
-  if (ip === '::1' || ip.startsWith('fc') || ip.startsWith('fd') || ip.startsWith('fe80')) {
+  if (
+    ip === '::1' ||
+    ip.startsWith('fc') ||
+    ip.startsWith('fd') ||
+    ip.startsWith('fe80')
+  ) {
     return true;
   }
   return PRIVATE_IPV4.some((re) => re.test(ip));
@@ -35,12 +40,19 @@ export function assertAllowedUrl(
     throw new Error('Invalid URL');
   }
 
-  if (url.protocol !== 'https:' && !(opts?.allowHttpLocal && url.protocol === 'http:')) {
+  if (
+    url.protocol !== 'https:' &&
+    !(opts?.allowHttpLocal && url.protocol === 'http:')
+  ) {
     throw new Error('Only HTTPS URLs are allowed');
   }
 
   const host = url.hostname.toLowerCase();
-  if (host === 'localhost' || host.endsWith('.localhost') || host === '0.0.0.0') {
+  if (
+    host === 'localhost' ||
+    host.endsWith('.localhost') ||
+    host === '0.0.0.0'
+  ) {
     throw new Error('Localhost URLs are blocked');
   }
 
@@ -48,7 +60,9 @@ export function assertAllowedUrl(
     throw new Error('Private IP URLs are blocked');
   }
 
-  const allow = allowedDomains.map((d) => d.toLowerCase().replace(/^www\./, ''));
+  const allow = allowedDomains.map((d) =>
+    d.toLowerCase().replace(/^www\./, ''),
+  );
   const bare = host.replace(/^www\./, '');
   if (!allow.some((d) => bare === d || bare.endsWith(`.${d}`))) {
     throw new Error(`Host ${host} is not in allowlist`);
@@ -58,9 +72,12 @@ export function assertAllowedUrl(
 }
 
 /** Resolve DNS and reject private/link-local targets (SSRF). */
-export async function assertPublicResolvedHost(hostname: string): Promise<void> {
+export async function assertPublicResolvedHost(
+  hostname: string,
+): Promise<void> {
   if (isIP(hostname)) {
-    if (isPrivateIp(hostname)) throw new Error('Private IP blocked after parse');
+    if (isPrivateIp(hostname))
+      throw new Error('Private IP blocked after parse');
     return;
   }
   const records = await lookup(hostname, { all: true });

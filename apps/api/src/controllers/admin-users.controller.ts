@@ -1,5 +1,20 @@
-import { Controller, Get, Patch, Body, Param, Query, ParseIntPipe, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiSecurity } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Patch,
+  Body,
+  Param,
+  Query,
+  ParseIntPipe,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiQuery,
+  ApiSecurity,
+} from '@nestjs/swagger';
 import { AdminUsersService } from '../services/admin-users.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
@@ -20,7 +35,10 @@ export class AdminUsersController {
   @ApiQuery({ name: 'limit', required: false })
   @ApiOperation({ summary: 'List users (admin)' })
   list(@Query('page') page?: string, @Query('limit') limit?: string) {
-    return this.usersService.listUsers(page ? Number(page) : 1, limit ? Number(limit) : 20);
+    return this.usersService.listUsers(
+      page ? Number(page) : 1,
+      limit ? Number(limit) : 20,
+    );
   }
 
   @Patch(':id')

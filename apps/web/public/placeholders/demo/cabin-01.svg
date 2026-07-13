@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-label="Demo placeholder">
+  <defs>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a221c"/><stop offset="100%" stop-color="#12100e"/></linearGradient>
+    <linearGradient id="seat" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4a3528"/><stop offset="100%" stop-color="#2a1c14"/></linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#wall)"/>
+  <ellipse cx="800" cy="120" rx="520" ry="80" fill="#1a1612"/>
+  <rect x="180" y="280" width="280" height="360" rx="28" fill="url(#seat)"/>
+  <rect x="520" y="280" width="280" height="360" rx="28" fill="url(#seat)"/>
+  <rect x="860" y="280" width="280" height="360" rx="28" fill="url(#seat)"/>
+  <rect x="1200" y="280" width="220" height="360" rx="28" fill="url(#seat)"/>
+  <rect x="200" y="300" width="240" height="40" rx="8" fill="#c9a45c" opacity="0.25"/>
+  <rect x="540" y="300" width="240" height="40" rx="8" fill="#c9a45c" opacity="0.25"/>
+  <rect x="880" y="300" width="240" height="40" rx="8" fill="#c9a45c" opacity="0.25"/>
+  <ellipse cx="800" cy="820" rx="600" ry="40" fill="#0a0806" opacity="0.5"/>
+  <text x="80" y="860" fill="#c9a45c" font-family="Georgia, serif" font-size="26" opacity="0.45">DEMO cabin</text>
+</svg>

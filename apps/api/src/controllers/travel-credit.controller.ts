@@ -10,7 +10,14 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery, ApiSecurity } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiQuery,
+  ApiSecurity,
+} from '@nestjs/swagger';
 import {
   CreateTravelCreditPackageDto,
   RedeemCreditsDto,
@@ -101,7 +108,10 @@ export class AdminTravelCreditController {
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'limit', required: false })
   @ApiOperation({ summary: 'List travel credit transactions (admin)' })
-  getTransactions(@Query('page') page?: string, @Query('limit') limit?: string) {
+  getTransactions(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
     return this.travelCreditService.getAdminTransactions(
       page ? Number(page) : 1,
       limit ? Number(limit) : 20,

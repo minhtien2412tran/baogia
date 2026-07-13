@@ -1,7 +1,20 @@
 import { Controller, Post, Get, Body, UseGuards } from '@nestjs/common';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiSecurity } from '@nestjs/swagger';
-import { RegisterDto, LoginDto, OAuthDto, RefreshTokenDto, OtpSendDto, OtpVerifyDto } from '../dto';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiSecurity,
+} from '@nestjs/swagger';
+import {
+  RegisterDto,
+  LoginDto,
+  OAuthDto,
+  RefreshTokenDto,
+  OtpSendDto,
+  OtpVerifyDto,
+} from '../dto';
 import { AuthService } from '../services/auth.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
@@ -52,7 +65,9 @@ export class AuthController {
 
   @Post('auth/otp/verify-login')
   @Throttle({ auth: { limit: 10, ttl: 60_000 } })
-  @ApiOperation({ summary: 'Verify OTP and login (auto-register if new phone)' })
+  @ApiOperation({
+    summary: 'Verify OTP and login (auto-register if new phone)',
+  })
   verifyOtpLogin(@Body() body: OtpVerifyDto) {
     return this.authService.verifyOtpLogin(body.phone, body.code);
   }
@@ -61,7 +76,11 @@ export class AuthController {
   @Throttle({ auth: { limit: 5, ttl: 60_000 } })
   @ApiOperation({ summary: 'Verify OTP and register new account' })
   verifyOtpRegister(@Body() body: OtpVerifyDto) {
-    return this.authService.verifyOtpRegister(body.phone, body.code, body.email);
+    return this.authService.verifyOtpRegister(
+      body.phone,
+      body.code,
+      body.email,
+    );
   }
 
   @Post('auth/logout')

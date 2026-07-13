@@ -11,7 +11,14 @@ import {
   UseGuards,
   ForbiddenException,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery, ApiSecurity } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiQuery,
+  ApiSecurity,
+} from '@nestjs/swagger';
 import type { Request } from 'express';
 import { BookingService } from '../services/booking.service';
 import { CreateBookingDto, UpdateBookingStatusDto } from '../dto';
@@ -24,7 +31,9 @@ import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 
 function clientIp(req: Request): string | undefined {
-  return (req.headers['x-forwarded-for'] as string) ?? req.socket?.remoteAddress;
+  return (
+    (req.headers['x-forwarded-for'] as string) ?? req.socket?.remoteAddress
+  );
 }
 
 const STAFF_ROLES = new Set(['ADMIN', 'SALES', 'CONTRACT_APPROVER']);
@@ -65,7 +74,10 @@ export class BookingController {
   @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Get booking by ID' })
   @ApiResponse({ status: 200, description: 'Booking details.' })
-  findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthUser) {
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthUser,
+  ) {
     return this.bookingService.findById(id, user.userId);
   }
 
@@ -85,7 +97,11 @@ export class BookingController {
     @Body() body?: { reason?: string },
   ) {
     if (STAFF_ROLES.has(user.role)) {
-      const ok = await this.permissions.hasPermission(user.userId, user.role, 'booking.cancel');
+      const ok = await this.permissions.hasPermission(
+        user.userId,
+        user.role,
+        'booking.cancel',
+      );
       if (!ok) {
         throw new ForbiddenException({
           statusCode: 403,
@@ -146,13 +162,20 @@ export class AdminBookingController {
     @CurrentUser() user: AuthUser,
     @Req() req: Request,
   ) {
-    return this.bookingService.updateStatusAdmin(id, body, user.userId, clientIp(req));
+    return this.bookingService.updateStatusAdmin(
+      id,
+      body,
+      user.userId,
+      clientIp(req),
+    );
   }
 
   @Patch(':id/cancel')
   @UseGuards(PermissionGuard)
   @RequirePermissions('booking.cancel')
-  @ApiOperation({ summary: 'Cancel booking as admin (requires booking.cancel)' })
+  @ApiOperation({
+    summary: 'Cancel booking as admin (requires booking.cancel)',
+  })
   adminCancel(
     @Param('id', ParseIntPipe) id: number,
     @CurrentUser() user: AuthUser,

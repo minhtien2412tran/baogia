@@ -9,7 +9,12 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiSecurity } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiSecurity,
+} from '@nestjs/swagger';
 import { CreateJetCardPlanDto, UpdateJetCardPlanDto } from '../dto';
 import { JetCardService } from '../services/jet-card.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -40,7 +45,10 @@ export class AdminJetCardController {
   @Patch(':id')
   @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update Jet Card plan (admin)' })
-  update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateJetCardPlanDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateJetCardPlanDto,
+  ) {
     return this.jetCardService.updatePlan(id, body);
   }
 

@@ -24,7 +24,8 @@ export class EmailService {
 
     const port = Number(process.env.SMTP_PORT ?? 587);
     const secure =
-      process.env.SMTP_SECURE === 'true' || (process.env.SMTP_SECURE !== 'false' && port === 465);
+      process.env.SMTP_SECURE === 'true' ||
+      (process.env.SMTP_SECURE !== 'false' && port === 465);
 
     this.transporter = nodemailer.createTransport({
       host,
@@ -33,13 +34,17 @@ export class EmailService {
       auth: process.env.SMTP_USER
         ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASSWORD ?? '' }
         : undefined,
-      tls: process.env.SMTP_TLS_REJECT_UNAUTHORIZED === 'false' ? { rejectUnauthorized: false } : undefined,
+      tls:
+        process.env.SMTP_TLS_REJECT_UNAUTHORIZED === 'false'
+          ? { rejectUnauthorized: false }
+          : undefined,
     });
     return this.transporter;
   }
 
   async verifyConnection(): Promise<{ ok: boolean; reason?: string }> {
-    if (!this.isConfigured()) return { ok: false, reason: 'SMTP not configured' };
+    if (!this.isConfigured())
+      return { ok: false, reason: 'SMTP not configured' };
     if (this.verified) return { ok: true };
     const transport = this.getTransporter();
     if (!transport) return { ok: false, reason: 'SMTP not configured' };
@@ -48,7 +53,10 @@ export class EmailService {
       this.verified = true;
       return { ok: true };
     } catch (err) {
-      return { ok: false, reason: err instanceof Error ? err.message : 'verify failed' };
+      return {
+        ok: false,
+        reason: err instanceof Error ? err.message : 'verify failed',
+      };
     }
   }
 
@@ -63,7 +71,9 @@ export class EmailService {
   }): Promise<{ sent: boolean; reason?: string }> {
     const transport = this.getTransporter();
     if (!transport) {
-      this.logger.warn(`Email skipped (SMTP not configured): ${opts.subject} → ${opts.to}`);
+      this.logger.warn(
+        `Email skipped (SMTP not configured): ${opts.subject} → ${opts.to}`,
+      );
       return { sent: false, reason: 'SMTP not configured' };
     }
 
@@ -85,8 +95,13 @@ export class EmailService {
       this.logger.log(`Email sent: ${opts.subject} → ${opts.to}`);
       return { sent: true };
     } catch (err) {
-      this.logger.error(`Email failed: ${err instanceof Error ? err.message : err}`);
-      return { sent: false, reason: err instanceof Error ? err.message : 'send failed' };
+      this.logger.error(
+        `Email failed: ${err instanceof Error ? err.message : err}`,
+      );
+      return {
+        sent: false,
+        reason: err instanceof Error ? err.message : 'send failed',
+      };
     }
   }
 
