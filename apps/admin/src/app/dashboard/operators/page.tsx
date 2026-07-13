@@ -52,7 +52,7 @@ export default function OperatorsAdminPage() {
             region: o.region,
             email: o.contactEmail ?? '—',
             users: String(o.users?.length ?? 0),
-            status: o.status,
+            status: o.status ?? 'ACTIVE',
             actions: (
               <span>
                 <ActionBtn
@@ -67,7 +67,7 @@ export default function OperatorsAdminPage() {
                       contactName: o.contactName ?? '',
                       contactEmail: o.contactEmail ?? '',
                       contactPhone: o.contactPhone ?? '',
-                      status: o.status,
+                      status: o.status ?? 'ACTIVE',
                     });
                   }}
                 >
