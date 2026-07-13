@@ -26,6 +26,7 @@ export function localAsset(path: string): string {
 
 /** @deprecated Alias — width resize not used for local files */
 export function cdnUrl(path: string, _width?: 750 | 1200 | 1920): string {
+  void _width;
   return localAsset(path);
 }
 

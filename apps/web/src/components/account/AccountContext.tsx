@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { api, ApiError } from '../../lib/api';
 import type { AccountDashboard } from '../../lib/account-types';
 import { useLogout, userDisplayName, userInitials, type AuthUser } from '../auth/useAuthSession';
+import { scheduleUi } from '../../lib/browser';
 
 type AccountContextValue = {
   locale: string;
@@ -68,7 +69,9 @@ export function AccountProvider({ locale, children }: { locale: string; children
   }, [locale, router]);
 
   useEffect(() => {
-    void refresh();
+    scheduleUi(() => {
+      void refresh();
+    });
   }, [refresh]);
 
   const user = useMemo<AuthUser | null>(() => {

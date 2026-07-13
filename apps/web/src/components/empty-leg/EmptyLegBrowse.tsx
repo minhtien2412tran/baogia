@@ -6,6 +6,7 @@ import { t } from '@jetbay/i18n';
 import { api } from '../../lib/api';
 import { navHref } from '../../config/navigation';
 import { AppIcon } from '../ui/AppIcon';
+import { scheduleUi } from '../../lib/browser';
 
 type Continent = { code: string; name: string };
 type Country = { code: string; name: string };
@@ -27,30 +28,56 @@ export function EmptyLegBrowse({ locale }: { locale: string }) {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
     if (!continentCode) {
-      setCountries([]);
-      return;
+      scheduleUi(() => {
+        if (!cancelled) setCountries([]);
+      });
+      return () => {
+        cancelled = true;
+      };
     }
     api
       .getAirportCountries(continentCode)
-      .then((r) => setCountries(r.countries ?? []))
-      .catch(() => setCountries([]));
+      .then((r) => {
+        if (!cancelled) setCountries(r.countries ?? []);
+      })
+      .catch(() => {
+        if (!cancelled) setCountries([]);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [continentCode]);
 
   useEffect(() => {
-    setLoading(true);
-    setError('');
+    let cancelled = false;
+    scheduleUi(() => {
+      if (!cancelled) {
+        setLoading(true);
+        setError('');
+      }
+    });
     api
       .getEmptyLegs({
         continentCode: continentCode || undefined,
         countryCode: countryCode || undefined,
       })
-      .then((r) => setLegs(r.emptyLegs ?? []))
-      .catch((e: Error) => {
-        setError(e.message);
-        setLegs([]);
+      .then((r) => {
+        if (!cancelled) setLegs(r.emptyLegs ?? []);
       })
-      .finally(() => setLoading(false));
+      .catch((e: Error) => {
+        if (!cancelled) {
+          setError(e.message);
+          setLegs([]);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [continentCode, countryCode]);
 
   const filterLabel = useMemo(() => {

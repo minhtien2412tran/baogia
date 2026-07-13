@@ -11,8 +11,6 @@ function txt(value: string) {
 }
 
 export function AboutUsPage({ locale, data }: { locale: string; data: AboutUsPageData }) {
-  const p = `/${locale}`;
-
   return (
     <main className="jb-subpage jb-about-page">
       <PageHero

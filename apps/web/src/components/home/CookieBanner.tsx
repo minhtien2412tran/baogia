@@ -4,13 +4,15 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { tn } from '@jetbay/i18n';
 import { navHref } from '../../config/navigation';
+import { scheduleUi } from '../../lib/browser';
 
 export function CookieBanner({ locale }: { locale: string }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const accepted = localStorage.getItem('jb-cookie-consent');
-    if (!accepted) setVisible(true);
+    scheduleUi(() => {
+      if (!localStorage.getItem('jb-cookie-consent')) setVisible(true);
+    });
   }, []);
 
   if (!visible) return null;

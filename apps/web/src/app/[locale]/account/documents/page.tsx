@@ -1,5 +1,6 @@
 'use client';
 
+import { use } from 'react';
 import Link from 'next/link';
 import { useAccount } from '../../../../components/account/AccountContext';
 import { AccountEmpty, AccountPanel, StatusBadge } from '../../../../components/account/AccountUI';
@@ -59,7 +60,8 @@ function DocumentsContent({ locale }: { locale: string }) {
   );
 }
 
-export default function AccountDocumentsPage({ params }: { params: { locale: string } }) {
-  const locale = params?.locale ?? 'en-us';
+export default function AccountDocumentsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale: loc } = use(params);
+  const locale = loc ?? 'en-us';
   return <DocumentsContent locale={locale} />;
 }

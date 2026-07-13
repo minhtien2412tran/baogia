@@ -1,5 +1,3 @@
-import { CdnImage } from '../ui/CdnImage';
-
 export function LightSection({
   children,
   className = '',

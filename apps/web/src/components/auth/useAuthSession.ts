@@ -8,6 +8,7 @@ import {
   clearAuthSession,
   getAuthToken,
 } from '../../lib/auth-session';
+import { scheduleUi } from '../../lib/browser';
 
 export type AuthUser = {
   id: number;
@@ -48,7 +49,9 @@ export function useAuthSession() {
   }, []);
 
   useEffect(() => {
-    void refresh();
+    scheduleUi(() => {
+      void refresh();
+    });
     const onChange = () => void refresh();
     window.addEventListener(AUTH_CHANGED_EVENT, onChange);
     window.addEventListener('storage', onChange);

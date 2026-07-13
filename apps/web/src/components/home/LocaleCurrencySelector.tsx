@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { LOCALES, LOCALE_COOKIE } from '../../config/locales';
 import { tn } from '@jetbay/i18n';
+import { scheduleUi, writeCookie } from '../../lib/browser';
+import { AppIcon } from '../ui/AppIcon';
 
 export function LanguagePicker({ locale, className = '' }: { locale: string; className?: string }) {
   const router = useRouter();
@@ -38,7 +40,7 @@ export function LanguagePicker({ locale, className = '' }: { locale: string; cla
       setOpen(false);
       return;
     }
-    document.cookie = `${LOCALE_COOKIE}=${code};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`;
+    writeCookie(LOCALE_COOKIE, code, 60 * 60 * 24 * 365);
     const path = window.location.pathname.replace(/^\/[^/]+/, `/${code}`);
     router.push(path + window.location.search);
     setOpen(false);
@@ -55,9 +57,13 @@ export function LanguagePicker({ locale, className = '' }: { locale: string; cla
         aria-haspopup="listbox"
         aria-label={tn(locale, 'selectLanguage')}
       >
-        <span className="jb-lang-picker__globe" aria-hidden>🌐</span>
+        <span className="jb-lang-picker__globe" aria-hidden>
+          <AppIcon name="globe" size="sm" />
+        </span>
         <span className="jb-lang-picker__label">{current.label}</span>
-        <span className="jb-lang-picker__chev" aria-hidden>▾</span>
+        <span className="jb-lang-picker__chev" aria-hidden>
+          <AppIcon name="chevronDown" size="xs" />
+        </span>
       </button>
 
       {open && (
@@ -81,7 +87,9 @@ export function LanguagePicker({ locale, className = '' }: { locale: string; cla
                   onClick={() => changeLocale(l.code)}
                 >
                   <span className="jb-lang-picker__option-label">{l.label}</span>
-                  <span className="jb-lang-picker__option-meta">{l.htmlLang} · {l.currency}</span>
+                  <span className="jb-lang-picker__option-meta">
+                    {l.htmlLang} · {l.currency}
+                  </span>
                 </button>
               </li>
             ))}
@@ -97,18 +105,18 @@ export function LanguagePicker({ locale, className = '' }: { locale: string; cla
 
 const CURRENCIES = ['USD', 'EUR', 'GBP', 'CNY', 'HKD'] as const;
 
-export function CurrencySelector({ locale, currency }: { locale: string; currency: string }) {
+export function CurrencySelector({ currency }: { locale?: string; currency: string }) {
   const [cur, setCur] = useState(currency);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    scheduleUi(() => {
       const saved = localStorage.getItem('jta_currency');
       if (saved) setCur(saved);
-    }
+    });
   }, []);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') localStorage.setItem('jta_currency', cur);
+    localStorage.setItem('jta_currency', cur);
   }, [cur]);
 
   return (
@@ -119,7 +127,9 @@ export function CurrencySelector({ locale, currency }: { locale: string; currenc
       aria-label="Currency"
     >
       {CURRENCIES.map((c) => (
-        <option key={c} value={c}>{c}</option>
+        <option key={c} value={c}>
+          {c}
+        </option>
       ))}
     </select>
   );
@@ -136,7 +146,7 @@ export function LocaleCurrencySelector({
     <div className="jb-locale-currency">
       <LanguagePicker locale={locale} />
       <span className="jb-lc-sep">·</span>
-      <CurrencySelector locale={locale} currency={currency} />
+      <CurrencySelector currency={currency} />
     </div>
   );
 }

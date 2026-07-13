@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { use } from 'react';
 import { useAccount } from '../../../../components/account/AccountContext';
 import { AccountEmpty, AccountPanel, StatusBadge } from '../../../../components/account/AccountUI';
 import { t } from '../../../../lib/i18n';
@@ -41,7 +41,8 @@ function QuotesContent({ locale }: { locale: string }) {
   );
 }
 
-export default function AccountQuotesPage({ params }: { params: { locale: string } }) {
-  const locale = params?.locale ?? 'en-us';
+export default function AccountQuotesPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale: loc } = use(params);
+  const locale = loc ?? 'en-us';
   return <QuotesContent locale={locale} />;
 }

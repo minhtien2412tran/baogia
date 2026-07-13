@@ -1,5 +1,6 @@
 'use client';
 
+import { use } from 'react';
 import Link from 'next/link';
 import { useAccount } from '../../../../components/account/AccountContext';
 import { AccountEmpty, AccountPanel } from '../../../../components/account/AccountUI';
@@ -47,7 +48,8 @@ function TravelCreditsContent({ locale }: { locale: string }) {
   );
 }
 
-export default function AccountTravelCreditsPage({ params }: { params: { locale: string } }) {
-  const locale = params?.locale ?? 'en-us';
+export default function AccountTravelCreditsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale: loc } = use(params);
+  const locale = loc ?? 'en-us';
   return <TravelCreditsContent locale={locale} />;
 }

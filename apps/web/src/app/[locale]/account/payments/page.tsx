@@ -1,5 +1,6 @@
 'use client';
 
+import { use } from 'react';
 import { useAccount } from '../../../../components/account/AccountContext';
 import { AccountEmpty, AccountPanel, StatusBadge } from '../../../../components/account/AccountUI';
 import { t } from '../../../../lib/i18n';
@@ -52,7 +53,8 @@ function PaymentsContent({ locale }: { locale: string }) {
   );
 }
 
-export default function AccountPaymentsPage({ params }: { params: { locale: string } }) {
-  const locale = params?.locale ?? 'en-us';
+export default function AccountPaymentsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale: loc } = use(params);
+  const locale = loc ?? 'en-us';
   return <PaymentsContent locale={locale} />;
 }

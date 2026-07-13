@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { t, tn } from '@jetbay/i18n';
+import { tn } from '@jetbay/i18n';
 import { SubPageLayout } from '../../../components/layout/SubPageLayout';
 import { api, safeApi } from '../../../lib/api';
 import { buildMetadata } from '../../../lib/metadata';

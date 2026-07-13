@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../lib/api';
 import { t } from '../lib/i18n';
+import { scheduleUi } from '../lib/browser';
 
 type Airport = { iata: string; label: string; city: string; country?: string; name?: string };
 
@@ -52,12 +53,16 @@ export function AirportInput({
 
   useEffect(() => {
     if (!value) {
-      setQuery('');
-      setDisplayLabel(null);
+      scheduleUi(() => {
+        setQuery('');
+        setDisplayLabel(null);
+      });
       return;
     }
     if (/^[A-Z]{3}$/.test(value)) {
-      void resolveLabel(value);
+      scheduleUi(() => {
+        void resolveLabel(value);
+      });
     }
   }, [value, resolveLabel]);
 
@@ -142,42 +147,43 @@ export function AirportInput({
   return (
     <div className="jb-field jb-airport-wrap" ref={wrapRef}>
       <label htmlFor={id}>{label}</label>
-      <input
-        id={id}
-        value={inputValue}
-        onChange={(e) => {
-          const v = e.target.value;
-          setQuery(v);
-          setDisplayLabel(null);
-          onChange('');
-          runSearch(v);
-        }}
-        onFocus={() => {
-          if (displayLabel) {
-            setQuery(displayLabel);
+      <div role="combobox" aria-expanded={open} aria-controls={`${id}-listbox`} aria-haspopup="listbox">
+        <input
+          id={id}
+          value={inputValue}
+          onChange={(e) => {
+            const v = e.target.value;
+            setQuery(v);
             setDisplayLabel(null);
-          }
-          if (suggestions.length > 0) setOpen(true);
-          else if (query.length >= 2) runSearch(query);
-        }}
-        onBlur={() => {
-          window.setTimeout(() => {
-            void tryResolveOnBlur(query);
-          }, 180);
-        }}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && open && suggestions.length > 0) {
-            e.preventDefault();
-            pick(suggestions[0]);
-          }
-        }}
-        placeholder={placeholder}
-        autoComplete="off"
-        required
-        aria-autocomplete="list"
-        aria-controls={`${id}-listbox`}
-        aria-expanded={open}
-      />
+            onChange('');
+            runSearch(v);
+          }}
+          onFocus={() => {
+            if (displayLabel) {
+              setQuery(displayLabel);
+              setDisplayLabel(null);
+            }
+            if (suggestions.length > 0) setOpen(true);
+            else if (query.length >= 2) runSearch(query);
+          }}
+          onBlur={() => {
+            window.setTimeout(() => {
+              void tryResolveOnBlur(query);
+            }, 180);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && open && suggestions.length > 0) {
+              e.preventDefault();
+              pick(suggestions[0]);
+            }
+          }}
+          placeholder={placeholder}
+          autoComplete="off"
+          required
+          aria-autocomplete="list"
+          aria-controls={`${id}-listbox`}
+        />
+      </div>
       {loading && <span className="jb-airport-hint">{t(locale, 'airportSearching')}</span>}
       {!loading && noResults && query.length >= 2 && (
         <p className="jb-airport-empty">{t(locale, 'airportNoResults')}</p>
@@ -188,7 +194,7 @@ export function AirportInput({
       {open && suggestions.length > 0 && (
         <ul className="jb-airport-list" role="listbox" id={`${id}-listbox`}>
           {suggestions.map((a) => (
-            <li key={a.iata} role="option">
+            <li key={a.iata} role="option" aria-selected={value === a.iata}>
               <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => pick(a)}>
                 <span className="jb-airport-option-main">
                   <strong>{a.iata}</strong>

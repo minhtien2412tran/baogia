@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../../lib/api';
 import { storeAuthSession } from './auth-shared';
+import { scheduleUi } from '../../lib/browser';
 
 declare global {
   interface Window {
@@ -50,7 +51,7 @@ export function GoogleSignInButton({
       s.onload = () => setReady(true);
       document.body.appendChild(s);
     } else {
-      setReady(true);
+      scheduleUi(() => setReady(true));
     }
   }, [clientId]);
 
@@ -116,7 +117,7 @@ export function AppleSignInButton({
       s.onload = () => setReady(true);
       document.body.appendChild(s);
     } else {
-      setReady(true);
+      scheduleUi(() => setReady(true));
     }
   }, [clientId]);
 

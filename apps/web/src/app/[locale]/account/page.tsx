@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { use } from 'react';
 import { api } from '../../../lib/api';
 import { useAccount } from '../../../components/account/AccountContext';
 import {
@@ -11,6 +12,7 @@ import {
 } from '../../../components/account/AccountUI';
 import { t } from '../../../lib/i18n';
 import { navHref } from '../../../config/navigation';
+import { navigateExternal } from '../../../lib/browser';
 
 function OverviewContent({ locale }: { locale: string }) {
   const { data, token } = useAccount();
@@ -20,7 +22,7 @@ function OverviewContent({ locale }: { locale: string }) {
     if (!token) return;
     const returnUrl = `${window.location.origin}/${locale}/account`;
     const res = await api.createGatewayPayment(token, { bookingId, gateway, returnUrl });
-    window.location.href = res.redirectUrl;
+    navigateExternal(res.redirectUrl);
   }
 
   return (
@@ -124,7 +126,8 @@ function OverviewContent({ locale }: { locale: string }) {
   );
 }
 
-export default function AccountPage({ params }: { params: { locale: string } }) {
-  const locale = params?.locale ?? 'en-us';
+export default function AccountPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale: loc } = use(params);
+  const locale = loc ?? 'en-us';
   return <OverviewContent locale={locale} />;
 }
