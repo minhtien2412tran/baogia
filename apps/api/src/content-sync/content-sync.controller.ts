@@ -181,11 +181,28 @@ export class ContentSyncController {
   @UseGuards(JwtAuthGuard, PermissionGuard)
   @RequirePermissions('content_sync.publish')
   @ApiBearerAuth('bearer')
+  @ApiOperation({
+    summary: 'Publish approved sync job (staging marker; flag-gated)',
+  })
   publish(
     @Param('id', ParseIntPipe) id: number,
     @CurrentUser() user: AuthUser,
   ) {
     return this.sync.publishJob(id, user.userId);
+  }
+
+  @Post('admin/content-sync/jobs/:id/rollback')
+  @UseGuards(JwtAuthGuard, PermissionGuard)
+  @RequirePermissions('content_sync.rollback')
+  @ApiBearerAuth('bearer')
+  @ApiOperation({
+    summary: 'Rollback published sync job (preserves ContentVersion history)',
+  })
+  rollback(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.sync.rollbackJob(id, user.userId);
   }
 
   @Get('admin/content-rights')
@@ -253,6 +270,21 @@ export class ContentSyncController {
     @CurrentUser() user: AuthUser,
   ) {
     return this.sync.upsertMediaAsset(body as never, user.userId);
+  }
+
+  @Post('admin/media-assets/import-manifest')
+  @UseGuards(JwtAuthGuard, PermissionGuard)
+  @RequirePermissions('content_media.sync')
+  @ApiBearerAuth('bearer')
+  @ApiOperation({
+    summary:
+      'Import JetVina media manifest into MediaAsset (UNVERIFIED; flag-gated)',
+  })
+  importManifest(
+    @Body() body: Record<string, unknown>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.sync.importMediaManifest(body as never, user.userId);
   }
 
   @Post('admin/media-assets/:id/approve-staging')

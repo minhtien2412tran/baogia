@@ -467,6 +467,17 @@ export class ContentSyncService {
     });
   }
 
+  private async nextContentVersion(
+    entityType: string,
+    entityId: string,
+  ): Promise<number> {
+    const agg = await this.prisma.contentVersion.aggregate({
+      where: { entityType, entityId },
+      _max: { version: true },
+    });
+    return (agg._max.version ?? 0) + 1;
+  }
+
   async publishJob(jobId: number, userId?: number) {
     if (process.env.CONTENT_SYNC_PUBLISH_ENABLED !== 'true') {
       throw new ForbiddenException(
@@ -490,11 +501,15 @@ export class ContentSyncService {
       });
     }
     // Staging-only publish marker — does not mutate public CMS articles automatically
+    const version = await this.nextContentVersion(
+      'ContentSyncJob',
+      String(jobId),
+    );
     await this.prisma.contentVersion.create({
       data: {
         entityType: 'ContentSyncJob',
         entityId: String(jobId),
-        version: Date.now(),
+        version,
         data: {
           publishedItemIds: items.map((i) => i.id),
           mode: 'STAGING_MARKER',
@@ -511,11 +526,96 @@ export class ContentSyncService {
       userId,
       afterData: { itemCount: items.length },
     });
+    await this.prisma.contentSyncJob.update({
+      where: { id: jobId },
+      data: {
+        mode: 'PUBLISH',
+        status: 'COMPLETED',
+        completedAt: new Date(),
+      },
+    });
     return {
       ok: true,
       jobId: job.id,
       publishedItems: items.length,
       target: 'staging-marker',
+    };
+  }
+
+  /**
+   * Rollback a published sync job to the previous ContentVersion marker.
+   * Does not mutate booking/user/payment. Keeps full version history.
+   */
+  async rollbackJob(jobId: number, userId?: number) {
+    const job = await this.getJob(jobId);
+    const versions = await this.prisma.contentVersion.findMany({
+      where: { entityType: 'ContentSyncJob', entityId: String(jobId) },
+      orderBy: { version: 'desc' },
+      take: 5,
+    });
+    const latest = versions[0];
+    if (!latest) {
+      throw new NotFoundException('No published version to roll back');
+    }
+    const latestData = latest.data as { mode?: string } | null;
+    if (latestData?.mode === 'ROLLBACK_MARKER') {
+      throw new BadRequestException('Latest version is already a rollback');
+    }
+
+    const previous = versions.find(
+      (v) =>
+        v.id !== latest.id &&
+        (v.data as { mode?: string } | null)?.mode !== 'ROLLBACK_MARKER',
+    );
+
+    await this.prisma.contentVersion.create({
+      data: {
+        entityType: 'ContentSyncJob',
+        entityId: String(jobId),
+        version: await this.nextContentVersion(
+          'ContentSyncJob',
+          String(jobId),
+        ),
+        data: {
+          mode: 'ROLLBACK_MARKER',
+          rolledBackFromVersion: latest.version,
+          restoredToVersion: previous?.version ?? null,
+          previousMode: latestData?.mode ?? null,
+        },
+        createdBy: userId,
+        reason: 'Manual content-sync rollback',
+        sourceJobId: jobId,
+      },
+    });
+
+    await this.prisma.contentSyncJob.update({
+      where: { id: jobId },
+      data: {
+        mode: 'ROLLBACK',
+        status: 'CANCELLED',
+        completedAt: new Date(),
+        errorSummary: `Rolled back from version ${latest.version}`,
+      },
+    });
+
+    await this.audit.logEntity({
+      action: 'CONTENT_SYNC_ROLLBACK',
+      entityType: 'ContentSyncJob',
+      entityId: jobId,
+      userId,
+      beforeData: { version: latest.version, mode: latestData?.mode },
+      afterData: {
+        restoredToVersion: previous?.version ?? null,
+        jobStatus: 'CANCELLED',
+      },
+    });
+
+    return {
+      ok: true,
+      jobId: job.id,
+      rolledBackFromVersion: latest.version,
+      restoredToVersion: previous?.version ?? null,
+      historyPreserved: true,
     };
   }
 
@@ -801,6 +901,211 @@ export class ContentSyncService {
       userId,
     });
     return { asset };
+  }
+
+  /**
+   * Import JetVina (or fixture) manifest records into MediaAsset.
+   * Never auto-approves. Defaults rightsStatus=UNVERIFIED.
+   * Requires EXTERNAL_MEDIA_IMPORT_ENABLED=true.
+   */
+  async importMediaManifest(
+    body: {
+      dryRun?: boolean;
+      records: Array<{
+        storageKey: string;
+        checksum?: string;
+        mimeType?: string;
+        width?: number;
+        height?: number;
+        fileSize?: number;
+        sourceUrl?: string;
+        sourcePageUrl?: string;
+        wordpressMediaId?: number;
+        altText?: string;
+        usageContexts?: string[];
+        localPath?: string;
+      }>;
+    },
+    userId?: number,
+  ) {
+    if (!this.featureFlags().EXTERNAL_MEDIA_IMPORT_ENABLED) {
+      throw new ForbiddenException(
+        'EXTERNAL_MEDIA_IMPORT_ENABLED is off (default)',
+      );
+    }
+    const records = body.records ?? [];
+    if (!records.length) {
+      throw new BadRequestException('records[] required');
+    }
+
+    const report = {
+      dryRun: Boolean(body.dryRun),
+      created: 0,
+      updated: 0,
+      skipped: 0,
+      blocked: 0,
+      errors: [] as string[],
+      ids: [] as number[],
+    };
+
+    const run = async (tx: Prisma.TransactionClient) => {
+      for (const rec of records) {
+        const key = (rec.storageKey || '').trim();
+        if (!key) {
+          report.blocked += 1;
+          report.errors.push('empty storageKey');
+          continue;
+        }
+        if (key.includes('/assets/jetbay') || key.includes('assets/jetbay')) {
+          report.blocked += 1;
+          report.errors.push(`rejected jetbay path: ${key}`);
+          continue;
+        }
+        if (/^https?:\/\//i.test(key)) {
+          report.blocked += 1;
+          report.errors.push(`storageKey must be local path, not URL: ${key}`);
+          continue;
+        }
+        if (
+          rec.sourceUrl &&
+          /jetvina\.com/i.test(rec.sourceUrl) &&
+          !rec.checksum
+        ) {
+          // remote-only without mirror checksum → review-only block from import
+          report.blocked += 1;
+          report.errors.push(
+            `remote jetvina without checksum (mirror first): ${key}`,
+          );
+          continue;
+        }
+
+        const existing = await tx.mediaAsset.findUnique({
+          where: { storageKey: key },
+        });
+
+        if (existing) {
+          // Editor-modified: keep alt/focal when checksum unchanged
+          const checksumChanged =
+            Boolean(rec.checksum) &&
+            Boolean(existing.checksum) &&
+            rec.checksum !== existing.checksum;
+          const editorTouched =
+            existing.reviewedBy != null &&
+            (Boolean(existing.altText) ||
+              existing.focalPointX != null ||
+              existing.focalPointY != null);
+
+          if (!checksumChanged && editorTouched) {
+            report.skipped += 1;
+            report.ids.push(existing.id);
+            continue;
+          }
+
+          if (body.dryRun) {
+            report.updated += 1;
+            report.ids.push(existing.id);
+            continue;
+          }
+
+          const updated = await tx.mediaAsset.update({
+            where: { id: existing.id },
+            data: {
+              checksum: rec.checksum ?? existing.checksum,
+              mimeType: rec.mimeType ?? existing.mimeType,
+              width: rec.width ?? existing.width,
+              height: rec.height ?? existing.height,
+              fileSize: rec.fileSize ?? existing.fileSize,
+              sourceUrl: rec.sourceUrl ?? existing.sourceUrl,
+              sourcePageUrl: rec.sourcePageUrl ?? existing.sourcePageUrl,
+              wordpressMediaId:
+                rec.wordpressMediaId ?? existing.wordpressMediaId,
+              sourceType: 'JETVINA_MIRROR',
+              // never escalate rights or auto-approve
+              rightsStatus:
+                existing.rightsStatus === 'PROHIBITED'
+                  ? 'PROHIBITED'
+                  : existing.rightsStatus === 'UNVERIFIED'
+                    ? 'UNVERIFIED'
+                    : existing.rightsStatus,
+              approvedForPublish: false,
+              ...(checksumChanged || !editorTouched
+                ? {
+                    altText: rec.altText ?? existing.altText,
+                    usageContexts:
+                      rec.usageContexts ?? existing.usageContexts ?? undefined,
+                  }
+                : {}),
+            },
+          });
+          report.updated += 1;
+          report.ids.push(updated.id);
+          continue;
+        }
+
+        if (body.dryRun) {
+          report.created += 1;
+          continue;
+        }
+
+        const created = await tx.mediaAsset.create({
+          data: {
+            storageKey: key,
+            checksum: rec.checksum,
+            mimeType: rec.mimeType,
+            width: rec.width,
+            height: rec.height,
+            fileSize: rec.fileSize,
+            sourceUrl: rec.sourceUrl,
+            sourcePageUrl: rec.sourcePageUrl,
+            wordpressMediaId: rec.wordpressMediaId,
+            altText: rec.altText,
+            usageContexts: rec.usageContexts ?? undefined,
+            sourceType: 'JETVINA_MIRROR',
+            rightsStatus: 'UNVERIFIED',
+            rightsEvidence:
+              'Imported from JetVina manifest — UNVERIFIED until written authorization',
+            approvedForStaging: false,
+            approvedForPublish: false,
+            uploadedBy: userId,
+          },
+        });
+        report.created += 1;
+        report.ids.push(created.id);
+      }
+
+      if (
+        report.errors.length &&
+        report.created === 0 &&
+        report.updated === 0 &&
+        report.skipped === 0 &&
+        report.blocked === records.length
+      ) {
+        throw new BadRequestException({
+          message: 'Import blocked — no valid records',
+          errors: report.errors,
+        });
+      }
+    };
+
+    if (body.dryRun) {
+      await run(this.prisma as unknown as Prisma.TransactionClient);
+    } else {
+      await this.prisma.$transaction(async (tx) => run(tx));
+      await this.audit.logEntity({
+        action: 'media_asset.import_manifest',
+        entityType: 'MediaAsset',
+        entityId: 0,
+        userId,
+        afterData: {
+          created: report.created,
+          updated: report.updated,
+          skipped: report.skipped,
+          blocked: report.blocked,
+        },
+      });
+    }
+
+    return { ok: true, ...report };
   }
 
   /** Public-safe media list — production-approved only. */

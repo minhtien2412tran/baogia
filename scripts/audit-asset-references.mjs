@@ -13,6 +13,7 @@ const ALLOW_PATH = [
   /resolve-media-asset\.test/,
   /resolve-media-asset\.ts$/,
   /media-asset\.integration\.spec/,
+  /media-import\.integration\.spec/,
   /content-sync\.service\.ts$/,
   /jetbay-cdn\.ts$/, // LOCAL_ASSET_ROOT remaps; must not export /assets/jetbay string
   /audit-asset-references/,
