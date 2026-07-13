@@ -55,7 +55,7 @@ async function bootstrap() {
 
   const corsOrigins = (
     process.env.CORS_ORIGIN ??
-    'http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001'
+    'http://localhost:3000,http://localhost:3001,http://localhost:3011,http://127.0.0.1:3000,http://127.0.0.1:3001,http://127.0.0.1:3011'
   )
     .split(',')
     .map((s) => s.trim().replace(/^["']|["']$/g, ''))

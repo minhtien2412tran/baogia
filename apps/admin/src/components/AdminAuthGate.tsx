@@ -1,32 +1,29 @@
 'use client';
 
-import { useEffect, useSyncExternalStore, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Muted } from '@jetbay/ui';
 import { getToken } from '../lib/api';
 
-function subscribe() {
-  return () => undefined;
-}
-function getClientToken() {
-  return Boolean(getToken());
-}
-function getServerToken() {
-  return false;
-}
-
 export function AdminAuthGate({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const hasToken = useSyncExternalStore(subscribe, getClientToken, getServerToken);
+  const [ready, setReady] = useState(false);
+  const [hasToken, setHasToken] = useState(false);
 
   useEffect(() => {
+    setHasToken(Boolean(getToken()));
+    setReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return;
     if (!hasToken) {
       router.replace(`/login?from=${encodeURIComponent(pathname ?? '/dashboard')}`);
     }
-  }, [hasToken, router, pathname]);
+  }, [ready, hasToken, router, pathname]);
 
-  if (!hasToken) {
+  if (!ready || !hasToken) {
     return (
       <div style={{ padding: 48, textAlign: 'center' }}>
         <Muted>Checking authentication…</Muted>

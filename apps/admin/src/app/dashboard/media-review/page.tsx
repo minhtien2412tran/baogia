@@ -26,12 +26,24 @@ type MediaRow = {
 export default function MediaReviewPage() {
   const [assets, setAssets] = useState<MediaRow[]>([]);
   const [filter, setFilter] = useState('UNVERIFIED');
+  const [query, setQuery] = useState('');
   const [msg, setMsg] = useState('');
   const [selected, setSelected] = useState<MediaRow | null>(null);
   const [altText, setAltText] = useState('');
   const [fx, setFx] = useState('0.5');
   const [fy, setFy] = useState('0.5');
   const [busy, setBusy] = useState(false);
+
+  const visible = assets.filter((a) => {
+    const q = query.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      String(a.id).includes(q) ||
+      a.storageKey.toLowerCase().includes(q) ||
+      (a.sourceUrl ?? '').toLowerCase().includes(q) ||
+      (a.checksum ?? '').toLowerCase().includes(q)
+    );
+  });
 
   async function load(status = filter) {
     setMsg('');
@@ -132,6 +144,15 @@ export default function MediaReviewPage() {
             <option value="PROHIBITED">PROHIBITED</option>
           </select>
         </label>
+        <label>
+          Search{' '}
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search media by id source or checksum"
+            placeholder="id / source / checksum"
+          />
+        </label>
         <Button type="button" onClick={() => void load(filter)} disabled={busy}>
           Refresh
         </Button>
@@ -152,7 +173,14 @@ export default function MediaReviewPage() {
             </tr>
           </thead>
           <tbody>
-            {assets.map((a) => (
+            {visible.length === 0 ? (
+              <tr>
+                <td colSpan={8}>
+                  <p role="status">No media assets for this filter.</p>
+                </td>
+              </tr>
+            ) : (
+              visible.map((a) => (
               <tr key={a.id}>
                 <td>{a.id}</td>
                 <td>{a.storageKey.split('/').pop()}</td>
@@ -164,12 +192,13 @@ export default function MediaReviewPage() {
                 </td>
                 <td>{(a.checksum ?? '—').slice(0, 12)}</td>
                 <td>
-                  <Button type="button" onClick={() => openDetail(a)}>
+                  <Button type="button" onClick={() => openDetail(a)} aria-label={`Open media ${a.id}`}>
                     Open
                   </Button>
                 </td>
               </tr>
-            ))}
+              ))
+            )}
           </tbody>
         </table>
       </div>
