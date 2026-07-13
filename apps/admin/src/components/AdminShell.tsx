@@ -27,6 +27,8 @@ const nav = [
   { href: '/dashboard/content/booking-process', label: 'Booking Process' },
   { href: '/dashboard/destinations', label: 'Destinations' },
   { href: '/dashboard/airports', label: 'Airports' },
+  { href: '/dashboard/operators', label: 'Operators' },
+  { href: '/dashboard/email-templates', label: 'Email Templates' },
   { href: '/dashboard/media', label: 'Media' },
   { href: '/dashboard/users', label: 'Users' },
   { href: '/dashboard/audit-logs', label: 'Audit Logs' },

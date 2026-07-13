@@ -1,13 +1,6 @@
 'use client';
 
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type KeyboardEvent,
-} from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../lib/api';
 import { t } from '../lib/i18n';
 
@@ -18,12 +11,13 @@ function friendlyLabel(a: Pick<Airport, 'city' | 'country' | 'iata'>) {
 }
 
 export function AirportInput({
-  id: idProp,
+  id,
   label,
   value,
   onChange,
   placeholder,
   locale = 'en-us',
+  showNearMe = false,
 }: {
   id: string;
   label: string;
@@ -31,63 +25,39 @@ export function AirportInput({
   onChange: (iata: string, label?: string) => void;
   placeholder?: string;
   locale?: string;
+  showNearMe?: boolean;
 }) {
-  const reactId = useId();
-  const id = idProp || `airport-${reactId}`;
-  const listboxId = `${id}-listbox`;
-  const statusId = `${id}-status`;
-
   const [query, setQuery] = useState('');
   const [displayLabel, setDisplayLabel] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<Airport[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [noResults, setNoResults] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(-1);
-  const [resolveError, setResolveError] = useState<string | null>(null);
-
+  const [geoBusy, setGeoBusy] = useState(false);
+  const [geoMsg, setGeoMsg] = useState<string | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const searchSeq = useRef(0);
-  const resolveSeq = useRef(0);
-  const resolveCache = useRef<Map<string, string>>(new Map());
-  const lastResolvedIata = useRef<string | null>(null);
 
-  const resolveLabel = useCallback(async (iata: string) => {
-    if (!/^[A-Z]{3}$/.test(iata)) return;
-    if (lastResolvedIata.current === iata) return;
-    const cached = resolveCache.current.get(iata);
-    if (cached) {
-      lastResolvedIata.current = iata;
-      setDisplayLabel(cached);
-      return;
-    }
-
-    const seq = ++resolveSeq.current;
-    try {
-      const res = await api.searchAirports(iata, locale);
-      if (seq !== resolveSeq.current) return;
-      const match = res.airports.find((a) => a.iata === iata);
-      if (match) {
-        const friendly = friendlyLabel(match);
-        resolveCache.current.set(iata, friendly);
-        lastResolvedIata.current = iata;
-        setDisplayLabel(friendly);
-        setResolveError(null);
+  const resolveLabel = useCallback(
+    async (iata: string) => {
+      if (!/^[A-Z]{3}$/.test(iata)) return;
+      try {
+        const res = await api.searchAirports(iata, locale);
+        const match = res.airports.find((a) => a.iata === iata);
+        if (match) {
+          setDisplayLabel(friendlyLabel(match));
+        }
+      } catch {
+        /* ignore */
       }
-    } catch {
-      if (seq !== resolveSeq.current) return;
-      setResolveError(t(locale, 'airportNoResults'));
-    }
-  }, [locale]);
+    },
+    [locale],
+  );
 
   useEffect(() => {
     if (!value) {
-      lastResolvedIata.current = null;
-      queueMicrotask(() => {
-        setQuery('');
-        setDisplayLabel(null);
-      });
+      setQuery('');
+      setDisplayLabel(null);
       return;
     }
     if (/^[A-Z]{3}$/.test(value)) {
@@ -99,27 +69,17 @@ export function AirportInput({
     function onDocClick(e: MouseEvent) {
       if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) {
         setOpen(false);
-        setActiveIndex(-1);
       }
     }
     document.addEventListener('mousedown', onDocClick);
     return () => document.removeEventListener('mousedown', onDocClick);
   }, []);
 
-  useEffect(() => {
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-      searchSeq.current += 1;
-      resolveSeq.current += 1;
-    };
-  }, []);
-
-  function applySearchResult(res: { airports: Airport[]; autoSelect?: string }, seq: number) {
-    if (seq !== searchSeq.current) return;
+  function applySearchResult(res: { airports: Airport[]; autoSelect?: string }) {
     setSuggestions(res.airports);
     setOpen(res.airports.length > 0);
     setNoResults(res.airports.length === 0);
-    setActiveIndex(res.airports.length > 0 ? 0 : -1);
+    return res;
   }
 
   function runSearch(q: string) {
@@ -128,41 +88,30 @@ export function AirportInput({
       setSuggestions([]);
       setNoResults(false);
       setOpen(false);
-      setActiveIndex(-1);
       return;
     }
     debounceRef.current = setTimeout(() => {
-      const seq = ++searchSeq.current;
       setLoading(true);
       setNoResults(false);
       api
         .searchAirports(q.trim(), locale)
-        .then((res) => applySearchResult(res, seq))
+        .then(applySearchResult)
         .catch(() => {
-          if (seq !== searchSeq.current) return;
           setSuggestions([]);
           setNoResults(true);
-          setOpen(false);
-          setActiveIndex(-1);
         })
-        .finally(() => {
-          if (seq === searchSeq.current) setLoading(false);
-        });
+        .finally(() => setLoading(false));
     }, 220);
   }
 
   function pick(a: Airport) {
     const friendly = friendlyLabel(a);
-    resolveCache.current.set(a.iata, friendly);
-    lastResolvedIata.current = a.iata;
     setQuery(friendly);
     setDisplayLabel(friendly);
     onChange(a.iata, a.label);
     setOpen(false);
     setSuggestions([]);
     setNoResults(false);
-    setActiveIndex(-1);
-    setResolveError(null);
   }
 
   function resolveFromResponse(res: { airports: Airport[]; autoSelect?: string }) {
@@ -174,7 +123,7 @@ export function AirportInput({
       }
     }
     if (res.airports.length === 1) {
-      pick(res.airports[0]!);
+      pick(res.airports[0]);
       return true;
     }
     return false;
@@ -184,68 +133,83 @@ export function AirportInput({
     if (/^[A-Z]{3}$/.test(value)) return;
     const q = currentQuery.trim();
     if (q.length < 2) return;
-    const seq = ++resolveSeq.current;
     try {
       const res = await api.searchAirports(q, locale);
-      if (seq !== resolveSeq.current) return;
       resolveFromResponse(res);
     } catch {
-      if (seq !== resolveSeq.current) return;
-      setResolveError(t(locale, 'airportNoResults'));
+      /* ignore */
     }
   }
 
-  function onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Escape') {
-      if (open) {
-        e.preventDefault();
-        setOpen(false);
-        setActiveIndex(-1);
-      }
+  function useNearMe() {
+    setGeoMsg(null);
+    if (!navigator.geolocation) {
+      setGeoMsg(t(locale, 'nearMeDenied'));
       return;
     }
-    if (!open || suggestions.length === 0) {
-      if (e.key === 'ArrowDown' && suggestions.length > 0) {
-        e.preventDefault();
-        setOpen(true);
-        setActiveIndex(0);
-      }
-      return;
-    }
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setActiveIndex((i) => (i + 1) % suggestions.length);
-      return;
-    }
-    if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setActiveIndex((i) => (i <= 0 ? suggestions.length - 1 : i - 1));
-      return;
-    }
-    if (e.key === 'Enter' && activeIndex >= 0 && suggestions[activeIndex]) {
-      e.preventDefault();
-      pick(suggestions[activeIndex]!);
-    }
+    setGeoBusy(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        api
+          .nearbyAirports(pos.coords.latitude, pos.coords.longitude, {
+            radiusKm: 200,
+            limit: 8,
+            locale,
+          })
+          .then((res) => {
+            if (!res.airports.length) {
+              setGeoMsg(t(locale, 'nearMeNone'));
+              setSuggestions([]);
+              setOpen(false);
+              return;
+            }
+            const mapped = res.airports.map((a) => ({
+              iata: a.iata,
+              label: a.label,
+              city: a.city,
+              country: a.country,
+              name: a.name ?? `${Math.round(a.distanceKm)} km`,
+            }));
+            setSuggestions(mapped);
+            setOpen(true);
+            setNoResults(false);
+            pick(mapped[0]);
+          })
+          .catch(() => setGeoMsg(t(locale, 'nearMeNone')))
+          .finally(() => setGeoBusy(false));
+      },
+      () => {
+        setGeoBusy(false);
+        setGeoMsg(t(locale, 'nearMeDenied'));
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 60_000 },
+    );
   }
 
   const inputValue = open ? query : (displayLabel ?? query);
-  const activeOptionId =
-    open && activeIndex >= 0 && suggestions[activeIndex]
-      ? `${id}-option-${suggestions[activeIndex]!.iata}`
-      : undefined;
 
   return (
     <div className="jb-field jb-airport-wrap" ref={wrapRef}>
-      <label htmlFor={id}>{label}</label>
+      <div className="jb-airport-label-row">
+        <label htmlFor={id}>{label}</label>
+        {showNearMe && (
+          <button
+            type="button"
+            className="jb-airport-near-me"
+            onClick={useNearMe}
+            disabled={geoBusy || loading}
+          >
+            {geoBusy ? t(locale, 'nearMeLocating') : t(locale, 'nearMe')}
+          </button>
+        )}
+      </div>
       <input
         id={id}
-        role="combobox"
         value={inputValue}
         onChange={(e) => {
           const v = e.target.value;
           setQuery(v);
           setDisplayLabel(null);
-          lastResolvedIata.current = null;
           onChange('');
           runSearch(v);
         }}
@@ -258,46 +222,36 @@ export function AirportInput({
           else if (query.length >= 2) runSearch(query);
         }}
         onBlur={() => {
-          // Defer so option mousedown/click can run first
           window.setTimeout(() => {
             void tryResolveOnBlur(query);
           }, 180);
         }}
-        onKeyDown={onKeyDown}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && open && suggestions.length > 0) {
+            e.preventDefault();
+            pick(suggestions[0]);
+          }
+        }}
         placeholder={placeholder}
         autoComplete="off"
         required
         aria-autocomplete="list"
+        aria-controls={`${id}-listbox`}
         aria-expanded={open}
-        aria-controls={listboxId}
-        aria-haspopup="listbox"
-        aria-activedescendant={activeOptionId}
-        aria-describedby={statusId}
       />
-      <div id={statusId} className="jb-airport-status" aria-live="polite">
-        {loading ? t(locale, 'airportSearching') : null}
-        {!loading && noResults && query.length >= 2 ? t(locale, 'airportNoResults') : null}
-        {resolveError && !loading ? resolveError : null}
-        {!loading && !value && query.length >= 2 && suggestions.length > 0 && !open
-          ? t(locale, 'airportPickHint')
-          : null}
-      </div>
-      {open && suggestions.length > 0 ? (
-        <ul className="jb-airport-list" role="listbox" id={listboxId}>
-          {suggestions.map((a, idx) => {
-            const optionId = `${id}-option-${a.iata}`;
-            const selected = activeIndex === idx;
-            return (
-              <li
-                key={a.iata}
-                id={optionId}
-                role="option"
-                aria-selected={selected || value === a.iata}
-                className={selected ? 'jb-airport-option--active' : undefined}
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => pick(a)}
-                onMouseEnter={() => setActiveIndex(idx)}
-              >
+      {loading && <span className="jb-airport-hint">{t(locale, 'airportSearching')}</span>}
+      {geoMsg && <p className="jb-airport-hint">{geoMsg}</p>}
+      {!loading && noResults && query.length >= 2 && (
+        <p className="jb-airport-empty">{t(locale, 'airportNoResults')}</p>
+      )}
+      {!loading && !value && query.length >= 2 && suggestions.length > 0 && !open && (
+        <p className="jb-airport-hint jb-airport-hint--pick">{t(locale, 'airportPickHint')}</p>
+      )}
+      {open && suggestions.length > 0 && (
+        <ul className="jb-airport-list" role="listbox" id={`${id}-listbox`}>
+          {suggestions.map((a) => (
+            <li key={a.iata} role="option">
+              <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => pick(a)}>
                 <span className="jb-airport-option-main">
                   <strong>{a.iata}</strong>
                   <span className="jb-airport-option-city">
@@ -306,11 +260,11 @@ export function AirportInput({
                   </span>
                 </span>
                 {a.name ? <span className="jb-airport-option-sub">{a.name}</span> : null}
-              </li>
-            );
-          })}
+              </button>
+            </li>
+          ))}
         </ul>
-      ) : null}
+      )}
     </div>
   );
 }

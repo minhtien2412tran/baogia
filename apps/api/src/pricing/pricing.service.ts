@@ -58,6 +58,7 @@ export class PricingService {
     id: number;
     registration: string;
     currentAirportId: number | null;
+    baseAirportId: number | null;
     hourlyRate: Prisma.Decimal | null;
     hourlyRateCurrency: string;
     minimumBillableHours: Prisma.Decimal;
@@ -71,6 +72,7 @@ export class PricingService {
       id: aircraft.id,
       registration: aircraft.registration,
       currentAirportId: aircraft.currentAirportId,
+      baseAirportId: aircraft.baseAirportId,
       hourlyRate: hourly,
       hourlyRateCurrency: aircraft.hourlyRateCurrency || 'USD',
       minimumBillableHours: dec(aircraft.minimumBillableHours) || 1,
@@ -88,6 +90,7 @@ export class PricingService {
     quoteRequestId?: number;
     persist?: boolean;
     userId?: number;
+    tripType?: string;
   }): Promise<{
     estimate: PricingBreakdown;
     estimateId?: number;
@@ -109,6 +112,7 @@ export class PricingService {
       params.toAirportId,
     ]);
     if (aircraft.currentAirportId) airportIds.add(aircraft.currentAirportId);
+    if (aircraft.baseAirportId) airportIds.add(aircraft.baseAirportId);
 
     const airports = await this.prisma.airport.findMany({
       where: { id: { in: [...airportIds] } },
@@ -126,6 +130,7 @@ export class PricingService {
         passengerCount: params.passengerCount,
         departureAt: params.departureAt,
       },
+      tripType: params.tripType,
     });
 
     const snapshot = freezePricingSnapshot(breakdown);

@@ -16,6 +16,7 @@ import {
   RequestQuoteDto,
   SearchAircraftDto,
 } from '../dto';
+import { PricingService } from '../pricing/pricing.service';
 
 const BASE_PRICE_BY_CATEGORY: Record<string, number> = {
   LIGHT: 12500,
@@ -33,13 +34,124 @@ export class QuoteService {
     private readonly payments: PaymentService,
     private readonly onepay: OnepayService,
     private readonly ninepay: NinepayService,
+    private readonly pricing: PricingService,
   ) {}
 
   async searchAircraft(body: SearchAircraftDto) {
     if (!body.legs?.length)
       throw new BadRequestException('At least one leg is required');
 
+    const currency = body.currency ?? 'USD';
     const maxPassengers = Math.max(...body.legs.map((l) => l.passengers ?? 1));
+    const fromIata = body.legs[0].fromAirport.toUpperCase();
+    const toIata = body.legs[0].toAirport.toUpperCase();
+
+    const from = await this.prisma.airport.findUnique({ where: { iata: fromIata } });
+    const to = await this.prisma.airport.findUnique({ where: { iata: toIata } });
+
+    if (from && to) {
+      const fleet = await this.prisma.aircraft.findMany({
+        where: {
+          operationalStatus: 'ACTIVE',
+          availabilityStatus: { in: ['AVAILABLE', 'ON_HOLD'] },
+          hourlyRate: { gt: 0 },
+          aircraftModel: { category: { maxPassengers: { gte: maxPassengers } } },
+        },
+        include: {
+          operator: true,
+          aircraftModel: { include: { category: true } },
+        },
+        take: 40,
+      });
+
+      const priced: Array<{
+        categoryId: number;
+        categoryCode: string;
+        categoryLabel: string;
+        maxPassengers: number;
+        aircraftModel: string;
+        estimatedPrice: number;
+        currency: string;
+        operatorId: number;
+        operatorName: string;
+        tailNumber: string;
+        baseAirport?: string;
+        pricingBreakdown: {
+          segments: Array<{
+            type: string;
+            from: string;
+            to: string;
+            km: number;
+            hours: number;
+            cost: number;
+            landingFee: number;
+          }>;
+          flightCost: number;
+          airportFees: number;
+          total: number;
+        };
+      }> = [];
+
+      for (const ac of fleet) {
+        if (ac.operator.status !== 'ACTIVE') continue;
+        try {
+          const { estimate } = await this.pricing.estimate({
+            aircraftId: ac.id,
+            fromAirportId: from.id,
+            toAirportId: to.id,
+            passengerCount: maxPassengers,
+            tripType: body.tripType,
+          });
+          priced.push({
+            categoryId: ac.aircraftModel.categoryId,
+            categoryCode: ac.aircraftModel.category.code,
+            categoryLabel: ac.aircraftModel.category.label,
+            maxPassengers: ac.aircraftModel.category.maxPassengers,
+            aircraftModel: `${ac.aircraftModel.manufacturer} ${ac.aircraftModel.model}`,
+            estimatedPrice: Math.round(estimate.estimatedTotal),
+            currency: estimate.currency || currency,
+            operatorId: ac.operatorId,
+            operatorName: ac.operator.name,
+            tailNumber: ac.registration,
+            baseAirport: undefined,
+            pricingBreakdown: {
+              segments: estimate.legs.map((l) => ({
+                type: l.legType,
+                from: l.fromIata,
+                to: l.toIata,
+                km: Math.round(l.estimatedDistanceKm),
+                hours: l.billableHours,
+                cost: l.estimatedBaseCost,
+                landingFee: l.airportFees,
+              })),
+              flightCost: estimate.flightHourCost,
+              airportFees:
+                estimate.airportFeesTotal +
+                estimate.handlingFeesTotal +
+                estimate.parkingFeesTotal,
+              total: estimate.estimatedTotal,
+            },
+          });
+        } catch {
+          /* skip aircraft that cannot be priced */
+        }
+      }
+
+      const byCategory = new Map<string, (typeof priced)[number]>();
+      for (const opt of priced.sort((a, b) => a.estimatedPrice - b.estimatedPrice)) {
+        if (!byCategory.has(opt.categoryCode)) byCategory.set(opt.categoryCode, opt);
+      }
+      const options = [...byCategory.values()];
+      if (options.length > 0) {
+        return {
+          searchId: `search-${Date.now()}`,
+          tripType: body.tripType,
+          pricingMode: 'POSITIONING',
+          options,
+        };
+      }
+    }
+
     let categories = await this.prisma.aircraftCategory.findMany({
       where: { maxPassengers: { gte: maxPassengers } },
       include: { models: { take: 1 } },
@@ -55,7 +167,6 @@ export class QuoteService {
       });
     }
 
-    const currency = body.currency ?? 'USD';
     const options = categories.map((cat) => {
       const model = cat.models[0];
       const base = BASE_PRICE_BY_CATEGORY[cat.code] ?? 15000;
@@ -76,6 +187,7 @@ export class QuoteService {
     return {
       searchId: `search-${Date.now()}`,
       tripType: body.tripType,
+      pricingMode: 'CATEGORY_FLAT',
       options,
     };
   }

@@ -203,7 +203,7 @@ async function main() {
     }
   }
 
-  // 3c. Seed Aircraft instance parked at CAN (ops platform)
+  // 3c. Seed Aircraft instances (ops platform + VN demo)
   console.log('Seeding Aircraft (ops)...');
   await prisma.aircraft.upsert({
     where: { registration: 'B-JBAY1' },
@@ -233,6 +233,95 @@ async function main() {
       locationUpdatedAt: new Date(),
     },
   });
+
+  const sgnAirport = await prisma.airport.findUnique({ where: { iata: 'SGN' } });
+  const hanAirport = await prisma.airport.findUnique({ where: { iata: 'HAN' } });
+  if (sgnAirport && modelCessna) {
+    await prisma.aircraft.upsert({
+      where: { registration: 'VN-JBA' },
+      update: {
+        operatorId: asiaOps.id,
+        aircraftModelId: modelCessna.id,
+        baseAirportId: sgnAirport.id,
+        currentAirportId: sgnAirport.id,
+        hourlyRate: 4500,
+        availabilityStatus: 'AVAILABLE',
+        operationalStatus: 'ACTIVE',
+      },
+      create: {
+        registration: 'VN-JBA',
+        aircraftModelId: modelCessna.id,
+        operatorId: asiaOps.id,
+        baseAirportId: sgnAirport.id,
+        currentAirportId: sgnAirport.id,
+        availabilityStatus: 'AVAILABLE',
+        operationalStatus: 'ACTIVE',
+        hourlyRate: 4500,
+        hourlyRateCurrency: 'USD',
+        minimumBillableHours: 1,
+      },
+    });
+  }
+  if (hanAirport && modelLearjet) {
+    await prisma.aircraft.upsert({
+      where: { registration: 'VN-JBH' },
+      update: {
+        operatorId: asiaOps.id,
+        aircraftModelId: modelLearjet.id,
+        baseAirportId: hanAirport.id,
+        currentAirportId: hanAirport.id,
+        hourlyRate: 7500,
+        availabilityStatus: 'AVAILABLE',
+        operationalStatus: 'ACTIVE',
+      },
+      create: {
+        registration: 'VN-JBH',
+        aircraftModelId: modelLearjet.id,
+        operatorId: asiaOps.id,
+        baseAirportId: hanAirport.id,
+        currentAirportId: hanAirport.id,
+        availabilityStatus: 'AVAILABLE',
+        operationalStatus: 'ACTIVE',
+        hourlyRate: 7500,
+        hourlyRateCurrency: 'USD',
+        minimumBillableHours: 1,
+      },
+    });
+  }
+
+  console.log('Seeding EmailTemplates...');
+  for (const tpl of [
+    {
+      key: 'operator_flight_notify',
+      subject: '[JetVina] New flight / booking #{{bookingId}}',
+      htmlBody:
+        '<p>Hello {{operatorName}},</p><p>Booking <strong>#{{bookingId}}</strong> — {{itinerary}}</p>',
+      textBody: 'Booking #{{bookingId}} {{itinerary}}',
+    },
+    {
+      key: 'admin_flight_notify',
+      subject: '[JetVina Admin] Booking #{{bookingId}} — {{bookingStatus}}',
+      htmlBody:
+        '<p>Admin: booking #{{bookingId}} operator {{operatorName}} status {{bookingStatus}}</p><p>{{itinerary}}</p>',
+      textBody: 'Admin booking #{{bookingId}} {{bookingStatus}}',
+    },
+  ]) {
+    await prisma.emailTemplate.upsert({
+      where: { key_locale: { key: tpl.key, locale: 'en' } },
+      update: {
+        subject: tpl.subject,
+        htmlBody: tpl.htmlBody,
+        textBody: tpl.textBody,
+      },
+      create: {
+        key: tpl.key,
+        locale: 'en',
+        subject: tpl.subject,
+        htmlBody: tpl.htmlBody,
+        textBody: tpl.textBody,
+      },
+    });
+  }
 
   // 3d. Contract template mock
   const existingTemplate = await prisma.contractTemplate.findFirst({

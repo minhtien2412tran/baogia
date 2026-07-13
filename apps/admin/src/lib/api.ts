@@ -162,6 +162,42 @@ export const adminApi = {
   },
   getQuote: (id: number) => adminRequest<Record<string, unknown>>(`/admin/quotes/${id}`),
   getOperators: () => adminRequest<{ operators: unknown[] }>('/admin/operators'),
+  listOperators: () =>
+    adminRequest<{
+      operators: Array<{
+        id: number;
+        name: string;
+        region: string;
+        contactEmail?: string | null;
+        users?: unknown[];
+      }>;
+    }>('/admin/operators'),
+  createOperator: (body: unknown) =>
+    adminRequest<unknown>('/admin/operators', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  updateOperator: (id: number, body: unknown) =>
+    adminRequest<unknown>(`/admin/operators/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
+  attachOperatorUser: (id: number, body: unknown) =>
+    adminRequest<unknown>(`/admin/operators/${id}/users`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  listEmailTemplates: () =>
+    adminRequest<{ templates: unknown[]; fallbackKeys: string[] }>(
+      '/admin/email-templates',
+    ),
+  getEmailTemplate: (key: string) =>
+    adminRequest<unknown>(`/admin/email-templates/${encodeURIComponent(key)}`),
+  upsertEmailTemplate: (key: string, body: unknown) =>
+    adminRequest<unknown>(`/admin/email-templates/${encodeURIComponent(key)}`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
   createQuoteOffer: (
     quoteId: number,
     body: {

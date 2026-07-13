@@ -30,6 +30,7 @@ export interface AircraftRateInput {
   id: number;
   registration: string;
   currentAirportId: number | null;
+  baseAirportId: number | null;
   hourlyRate: number;
   hourlyRateCurrency: string;
   minimumBillableHours: number;
@@ -182,8 +183,10 @@ export function buildPricingEstimate(input: {
   aircraft: AircraftRateInput;
   airportsById: Map<number, AirportGeoFees>;
   passengerRoute: PassengerRouteInput;
+  tripType?: string;
 }): PricingBreakdown {
   const { aircraft, airportsById, passengerRoute } = input;
+  const tripType = input.tripType ?? 'ONE_WAY';
   const from = airportsById.get(passengerRoute.fromAirportId);
   const to = airportsById.get(passengerRoute.toAirportId);
   if (!from || !to) {
@@ -226,6 +229,40 @@ export function buildPricingEstimate(input: {
     }),
   );
 
+  let last = to;
+  if (tripType === 'ROUND_TRIP') {
+    legs.push(
+      buildLeg({
+        legType: 'RETURN',
+        sequence: sequence++,
+        from: to,
+        to: from,
+        aircraft,
+        hasPassengers: true,
+        passengerCount: passengerRoute.passengerCount ?? 1,
+      }),
+    );
+    last = from;
+  }
+
+  const homeId = aircraft.baseAirportId;
+  if (homeId != null && homeId !== last.id) {
+    const home = airportsById.get(homeId);
+    if (home) {
+      legs.push(
+        buildLeg({
+          legType: 'REPOSITIONING',
+          sequence: sequence++,
+          from: last,
+          to: home,
+          aircraft,
+          hasPassengers: false,
+          passengerCount: 0,
+        }),
+      );
+    }
+  }
+
   const billableHours = roundMoney(
     legs.reduce((s, l) => s + l.billableHours, 0),
   );
@@ -245,7 +282,10 @@ export function buildPricingEstimate(input: {
     flightHourCost + airportFeesTotal + handlingFeesTotal + parkingFeesTotal,
   );
 
-  const customerRouteSummary = `${from.iata} → ${to.iata}`;
+  const customerRouteSummary =
+    tripType === 'ROUND_TRIP'
+      ? `${from.iata} ⇄ ${to.iata}`
+      : `${from.iata} → ${to.iata}`;
   const operationalRouteSummary = legs
     .map((l) => `${l.fromIata}→${l.toIata}`)
     .join(' · ');

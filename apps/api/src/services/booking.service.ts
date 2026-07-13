@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
 import { CustomerCareService } from './customer-care/customer-care.service';
+import { FlightNotifyService } from './flight-notify.service';
 import { CreateBookingDto, UpdateBookingStatusDto } from '../dto';
 
 const BOOKING_STATUSES = [
@@ -42,6 +43,7 @@ export class BookingService {
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
     private readonly customerCare: CustomerCareService,
+    private readonly flightNotify: FlightNotifyService,
   ) {}
 
   private normalizeStatus(status: string): BookingStatus {
@@ -225,6 +227,8 @@ export class BookingService {
         firstName: booking.user.firstName,
       });
     }
+
+    void this.flightNotify.notifyOperatorAndAdmin(booking.id, 'created');
 
     return this.formatBooking(booking);
   }
@@ -416,6 +420,8 @@ export class BookingService {
       adminUserId,
       ipAddress,
     );
+
+    void this.flightNotify.notifyOperatorAndAdmin(id, status);
 
     return this.formatBooking(updated);
   }

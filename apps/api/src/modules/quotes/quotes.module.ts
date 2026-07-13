@@ -5,13 +5,14 @@ import { QuoteService } from '../../services/quote.service';
 import { AdminQuotesService } from '../../services/admin-quotes.service';
 import { BookingService } from '../../services/booking.service';
 import { PermissionsModule } from '../../permissions/permissions.module';
+import { PricingModule } from '../../pricing/pricing.module';
 
 /**
  * Quotes + admin offers. BookingService is registered here because
  * QuoteController exposes GET /payments/my via BookingService (phase 3 will move payments).
  */
 @Module({
-  imports: [PermissionsModule],
+  imports: [PermissionsModule, PricingModule],
   controllers: [QuoteController, AdminQuotesController],
   providers: [QuoteService, AdminQuotesService, BookingService],
   exports: [QuoteService, BookingService],

@@ -39,6 +39,13 @@
 3. (Optional) set prod `APP_ENV=production` khi secrets đã đủ mạnh  
 4. **BE modules** — tiếp phase 2+ theo [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md)  
 
+### Đang làm — Nhánh tổng hợp `jetvina` (2026-07-13)
+
+- Base: JetVina UI/logo từ `feat/api-content-sync` (`b9c4c52`)
+- Gộp: ops-mail (OperatorUser, EmailTemplate, flight notify, admin Operators/Templates)
+- Gộp: nearby airports + quote search dùng pricing engine (positioning + round-trip + về base)
+- Branch: `jetvina` (pushed)
+
 **Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) · [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)
 
 ### Đã merge + deploy (2026-07-10)

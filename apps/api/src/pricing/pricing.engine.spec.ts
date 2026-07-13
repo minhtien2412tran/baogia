@@ -89,6 +89,7 @@ describe('pricing engine CAN→HAN→SGN', () => {
     id: 10,
     registration: 'B-JBAY1',
     currentAirportId: can.id,
+    baseAirportId: null,
     hourlyRate: 8500,
     hourlyRateCurrency: 'USD',
     minimumBillableHours: 2,
