@@ -44,7 +44,7 @@
 - [x] Airport `lat`/`lng` + fees; fleet `OperatorAircraft` + `AircraftContract`
 - [x] `GET /airports/nearby` + quote search giá positioning (base→pickup→dest→home)
 - [x] Web: Near me + price breakdown trên QuoteSearchWidget
-- [ ] Deploy API + Web prod + seed fleet
+- [x] Deploy API + Web prod + seed fleet (2026-07-13) — nearby SGN OK · search POSITIONING · web 200
 
 **Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) · [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)
 
