@@ -337,6 +337,30 @@ export const adminApi = {
   listContentJobItems: (id: number) =>
     adminRequest<{ items: unknown[] }>(`/admin/content-sync/jobs/${id}/items`),
   listContentRights: () => adminRequest<{ rights: unknown[] }>('/admin/content-rights'),
+  listMediaAssets: (rightsStatus?: string) =>
+    adminRequest<{ assets: unknown[] }>(
+      `/admin/media-assets${rightsStatus ? `?rightsStatus=${encodeURIComponent(rightsStatus)}` : ''}`,
+    ),
+  upsertMediaAsset: (body: Record<string, unknown>) =>
+    adminRequest<{ asset: unknown }>('/admin/media-assets', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  approveMediaStaging: (id: number) =>
+    adminRequest<{ asset: unknown }>(`/admin/media-assets/${id}/approve-staging`, {
+      method: 'POST',
+      body: '{}',
+    }),
+  approveMediaProduction: (id: number) =>
+    adminRequest<{ asset: unknown }>(`/admin/media-assets/${id}/approve-production`, {
+      method: 'POST',
+      body: '{}',
+    }),
+  blockMediaAsset: (id: number) =>
+    adminRequest<{ asset: unknown }>(`/admin/media-assets/${id}/block`, {
+      method: 'POST',
+      body: '{}',
+    }),
   getJetbayCleanup: () => adminRequest<{ groups: unknown[] }>('/admin/content-cleanup/jetbay'),
   getBrandSettings: () => adminRequest<Record<string, unknown>>('/admin/site-settings/brand'),
   patchBrandSettings: (body: Record<string, unknown>) =>

@@ -1080,25 +1080,35 @@ model ContentVersion {
 }
 
 model MediaAsset {
-  id                 Int      @id @default(autoincrement())
-  originalFilename   String?
-  storageKey         String   @unique
-  mimeType           String?
-  width              Int?
-  height             Int?
-  fileSize           Int?
-  checksum           String?
-  sourceType         String   @default("UPLOAD") // UPLOAD, CLIENT_PROVIDED, IMPORT_BLOCKED
-  sourceUrl          String?
-  rightsStatus       String   @default("UNVERIFIED")
-  rightsEvidence     String?
-  altText            String?
-  locale             String?
-  approvedForPublish Boolean  @default(false)
-  uploadedBy         Int?
-  reviewedBy         Int?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id                     Int      @id @default(autoincrement())
+  originalFilename       String?
+  storageKey             String   @unique
+  mimeType               String?
+  width                  Int?
+  height                 Int?
+  fileSize               Int?
+  checksum               String?
+  sourceType             String   @default("UPLOAD") // UPLOAD, CLIENT_PROVIDED, IMPORT_BLOCKED, JETVINA_MIRROR
+  sourceUrl              String?
+  sourcePageUrl          String?
+  wordpressMediaId       Int?
+  rightsStatus           String   @default("UNVERIFIED")
+  rightsEvidence         String?
+  altText                String?
+  locale                 String?
+  usageContexts          Json?
+  focalPointX            Float?
+  focalPointY            Float?
+  objectPositionDesktop  String?
+  objectPositionMobile   String?
+  approvedForStaging     Boolean  @default(false)
+  approvedForPublish     Boolean  @default(false) // production publish
+  uploadedBy             Int?
+  reviewedBy             Int?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
 
   @@index([rightsStatus, approvedForPublish])
+  @@index([rightsStatus, approvedForStaging])
+  @@index([wordpressMediaId])
 }

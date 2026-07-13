@@ -226,6 +226,77 @@ export class ContentSyncController {
     return this.sync.blockRights(id);
   }
 
+  @Get('admin/media-assets')
+  @UseGuards(JwtAuthGuard, PermissionGuard)
+  @RequirePermissions('content_media.view')
+  @ApiBearerAuth('bearer')
+  listMedia(@Query('rightsStatus') rightsStatus?: string) {
+    return this.sync.listMediaAssets(
+      rightsStatus ? { rightsStatus } : undefined,
+    );
+  }
+
+  @Get('admin/media-assets/:id')
+  @UseGuards(JwtAuthGuard, PermissionGuard)
+  @RequirePermissions('content_media.view')
+  @ApiBearerAuth('bearer')
+  getMedia(@Param('id', ParseIntPipe) id: number) {
+    return this.sync.getMediaAsset(id);
+  }
+
+  @Post('admin/media-assets')
+  @UseGuards(JwtAuthGuard, PermissionGuard)
+  @RequirePermissions('content_media.review')
+  @ApiBearerAuth('bearer')
+  upsertMedia(
+    @Body() body: Record<string, unknown>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.sync.upsertMediaAsset(body as never, user.userId);
+  }
+
+  @Post('admin/media-assets/:id/approve-staging')
+  @UseGuards(JwtAuthGuard, PermissionGuard)
+  @RequirePermissions('content_media.approve_staging')
+  @ApiBearerAuth('bearer')
+  approveMediaStaging(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.sync.approveMediaStaging(id, user.userId);
+  }
+
+  @Post('admin/media-assets/:id/approve-production')
+  @UseGuards(JwtAuthGuard, PermissionGuard)
+  @RequirePermissions('content_media.approve_production')
+  @ApiBearerAuth('bearer')
+  approveMediaProduction(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.sync.approveMediaProduction(id, user.userId);
+  }
+
+  @Post('admin/media-assets/:id/block')
+  @UseGuards(JwtAuthGuard, PermissionGuard)
+  @RequirePermissions('content_media.block')
+  @ApiBearerAuth('bearer')
+  blockMedia(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.sync.blockMediaAsset(id, user.userId);
+  }
+
+  @Get('content/media-assets')
+  @Public()
+  @ApiOperation({
+    summary: 'Public media — production-approved assets only',
+  })
+  publicMedia() {
+    return this.sync.listPublicApprovedMedia();
+  }
+
   @Get('admin/content-cleanup/jetbay')
   @UseGuards(JwtAuthGuard, PermissionGuard)
   @RequirePermissions('content_source.view')

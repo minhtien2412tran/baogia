@@ -13,6 +13,7 @@ import {
   canPublishRights,
   canStoreCopyrightedHtml,
   contentHash,
+  PUBLISHABLE_RIGHTS,
 } from './url-safety';
 import {
   resolvePublicBrandLogos,
@@ -597,6 +598,233 @@ export class ContentSyncService {
       where: { id },
       data: { rightsStatus: 'PROHIBITED', approvedForPublish: false },
     });
+  }
+
+  async listMediaAssets(filter?: { rightsStatus?: string }) {
+    const assets = await this.prisma.mediaAsset.findMany({
+      where: filter?.rightsStatus
+        ? { rightsStatus: filter.rightsStatus }
+        : undefined,
+      orderBy: { id: 'desc' },
+      take: 200,
+    });
+    return { assets };
+  }
+
+  async getMediaAsset(id: number) {
+    const asset = await this.prisma.mediaAsset.findUnique({ where: { id } });
+    if (!asset) throw new NotFoundException(`MediaAsset ${id} not found`);
+    return { asset };
+  }
+
+  async upsertMediaAsset(
+    body: {
+      id?: number;
+      storageKey: string;
+      originalFilename?: string;
+      mimeType?: string;
+      width?: number;
+      height?: number;
+      fileSize?: number;
+      checksum?: string;
+      sourceType?: string;
+      sourceUrl?: string;
+      sourcePageUrl?: string;
+      wordpressMediaId?: number;
+      rightsStatus?: string;
+      rightsEvidence?: string;
+      altText?: string;
+      usageContexts?: string[];
+      focalPointX?: number;
+      focalPointY?: number;
+      objectPositionDesktop?: string;
+      objectPositionMobile?: string;
+    },
+    userId?: number,
+  ) {
+    const rightsStatus = body.rightsStatus ?? 'UNVERIFIED';
+    if (body.storageKey.includes('/assets/jetbay')) {
+      throw new BadRequestException('JetBay storage paths are not allowed');
+    }
+    const data = {
+      originalFilename: body.originalFilename,
+      mimeType: body.mimeType,
+      width: body.width,
+      height: body.height,
+      fileSize: body.fileSize,
+      checksum: body.checksum,
+      sourceType: body.sourceType ?? 'UPLOAD',
+      sourceUrl: body.sourceUrl,
+      sourcePageUrl: body.sourcePageUrl,
+      wordpressMediaId: body.wordpressMediaId,
+      rightsStatus,
+      rightsEvidence: body.rightsEvidence,
+      altText: body.altText,
+      usageContexts: body.usageContexts ?? undefined,
+      focalPointX: body.focalPointX,
+      focalPointY: body.focalPointY,
+      objectPositionDesktop: body.objectPositionDesktop,
+      objectPositionMobile: body.objectPositionMobile,
+      reviewedBy: userId,
+      // never auto-approve production from upsert
+      approvedForPublish: false,
+    };
+
+    if (body.id) {
+      const before = await this.prisma.mediaAsset.findUnique({
+        where: { id: body.id },
+      });
+      if (!before) throw new NotFoundException(`MediaAsset ${body.id} not found`);
+      const asset = await this.prisma.mediaAsset.update({
+        where: { id: body.id },
+        data: {
+          ...data,
+          storageKey: body.storageKey,
+          approvedForPublish: false,
+        },
+      });
+      await this.audit.logEntity({
+        action: 'media_asset.update',
+        entityType: 'MediaAsset',
+        entityId: asset.id,
+        beforeData: {
+          altText: before.altText,
+          rightsStatus: before.rightsStatus,
+          focalPointX: before.focalPointX,
+          focalPointY: before.focalPointY,
+        },
+        afterData: {
+          altText: asset.altText,
+          rightsStatus: asset.rightsStatus,
+          focalPointX: asset.focalPointX,
+          focalPointY: asset.focalPointY,
+        },
+        userId,
+      });
+      return { asset };
+    }
+
+    const asset = await this.prisma.mediaAsset.create({
+      data: {
+        storageKey: body.storageKey,
+        ...data,
+        uploadedBy: userId,
+      },
+    });
+    await this.audit.logEntity({
+      action: 'media_asset.create',
+      entityType: 'MediaAsset',
+      entityId: asset.id,
+      afterData: {
+        storageKey: asset.storageKey,
+        rightsStatus: asset.rightsStatus,
+      },
+      userId,
+    });
+    return { asset };
+  }
+
+  async approveMediaStaging(id: number, userId?: number) {
+    const before = await this.prisma.mediaAsset.findUnique({ where: { id } });
+    if (!before) throw new NotFoundException(`MediaAsset ${id} not found`);
+    if (before.rightsStatus === 'PROHIBITED') {
+      throw new ForbiddenException('Cannot approve blocked media');
+    }
+    const asset = await this.prisma.mediaAsset.update({
+      where: { id },
+      data: { approvedForStaging: true, reviewedBy: userId },
+    });
+    await this.audit.logEntity({
+      action: 'media_asset.approve_staging',
+      entityType: 'MediaAsset',
+      entityId: id,
+      beforeData: { approvedForStaging: before.approvedForStaging },
+      afterData: { approvedForStaging: true },
+      userId,
+    });
+    return { asset };
+  }
+
+  async approveMediaProduction(id: number, userId?: number) {
+    const before = await this.prisma.mediaAsset.findUnique({ where: { id } });
+    if (!before) throw new NotFoundException(`MediaAsset ${id} not found`);
+    if (!canPublishRights(before.rightsStatus)) {
+      throw new ForbiddenException(
+        'Cannot approve production while rightsStatus is UNVERIFIED or not OWNED/LICENSED/CLIENT_PROVIDED/PUBLIC_DOMAIN',
+      );
+    }
+    if (!before.checksum || !before.storageKey) {
+      throw new BadRequestException(
+        'Production approval requires checksum and storageKey',
+      );
+    }
+    if (before.storageKey.includes('jetbay')) {
+      throw new BadRequestException('JetBay paths cannot be production-approved');
+    }
+    const asset = await this.prisma.mediaAsset.update({
+      where: { id },
+      data: {
+        approvedForPublish: true,
+        approvedForStaging: true,
+        reviewedBy: userId,
+      },
+    });
+    await this.audit.logEntity({
+      action: 'media_asset.approve_production',
+      entityType: 'MediaAsset',
+      entityId: id,
+      beforeData: { approvedForPublish: before.approvedForPublish },
+      afterData: { approvedForPublish: true, rightsStatus: asset.rightsStatus },
+      userId,
+    });
+    return { asset };
+  }
+
+  async blockMediaAsset(id: number, userId?: number) {
+    const before = await this.prisma.mediaAsset.findUnique({ where: { id } });
+    if (!before) throw new NotFoundException(`MediaAsset ${id} not found`);
+    const asset = await this.prisma.mediaAsset.update({
+      where: { id },
+      data: {
+        rightsStatus: 'PROHIBITED',
+        approvedForPublish: false,
+        approvedForStaging: false,
+        reviewedBy: userId,
+      },
+    });
+    await this.audit.logEntity({
+      action: 'media_asset.block',
+      entityType: 'MediaAsset',
+      entityId: id,
+      beforeData: { rightsStatus: before.rightsStatus },
+      afterData: { rightsStatus: 'PROHIBITED' },
+      userId,
+    });
+    return { asset };
+  }
+
+  /** Public-safe media list — production-approved only. */
+  async listPublicApprovedMedia() {
+    const assets = await this.prisma.mediaAsset.findMany({
+      where: {
+        approvedForPublish: true,
+        rightsStatus: { in: [...PUBLISHABLE_RIGHTS] },
+      },
+      select: {
+        id: true,
+        storageKey: true,
+        mimeType: true,
+        width: true,
+        height: true,
+        altText: true,
+        usageContexts: true,
+        objectPositionDesktop: true,
+        objectPositionMobile: true,
+        rightsStatus: true,
+      },
+      take: 100,
+    });
+    return { assets };
   }
 
   /** Static JetBay remnant scan for admin cleanup UI (code paths, not live DB prod scan). */

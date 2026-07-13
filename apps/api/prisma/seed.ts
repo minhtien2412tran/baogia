@@ -701,6 +701,102 @@ async function main() {
     seoDescription: 'Step-by-step private jet booking guide with JetVina.',
   });
 
+  // Media review fixtures (test-only keys — never JetBay paths, never prod-approved JetVina)
+  console.log('Seeding media review fixtures...');
+  await prisma.mediaAsset.upsert({
+    where: { storageKey: 'fixtures/media/unverified-staging.jpg' },
+    update: {
+      rightsStatus: 'UNVERIFIED',
+      approvedForStaging: false,
+      approvedForPublish: false,
+      altText: 'Fixture UNVERIFIED aircraft exterior',
+      usageContexts: ['AIRCRAFT_EXTERIOR', 'EMPTY_LEG'],
+      width: 1600,
+      height: 900,
+      checksum: 'fixture-unverified-sha256',
+      mimeType: 'image/jpeg',
+      sourceType: 'JETVINA_MIRROR',
+      sourceUrl: 'https://jetvina.com/wp-content/uploads/fixture-unverified.jpg',
+    },
+    create: {
+      storageKey: 'fixtures/media/unverified-staging.jpg',
+      originalFilename: 'unverified-staging.jpg',
+      mimeType: 'image/jpeg',
+      width: 1600,
+      height: 900,
+      fileSize: 1024,
+      checksum: 'fixture-unverified-sha256',
+      sourceType: 'JETVINA_MIRROR',
+      sourceUrl: 'https://jetvina.com/wp-content/uploads/fixture-unverified.jpg',
+      rightsStatus: 'UNVERIFIED',
+      altText: 'Fixture UNVERIFIED aircraft exterior',
+      usageContexts: ['AIRCRAFT_EXTERIOR', 'EMPTY_LEG'],
+      approvedForStaging: false,
+      approvedForPublish: false,
+    },
+  });
+  await prisma.mediaAsset.upsert({
+    where: { storageKey: 'fixtures/media/client-provided-plane.jpg' },
+    update: {
+      rightsStatus: 'CLIENT_PROVIDED',
+      rightsEvidence: 'TEST_FIXTURE_ONLY — not real JetVina rights',
+      approvedForStaging: true,
+      approvedForPublish: false,
+      altText: 'Fixture CLIENT_PROVIDED plane',
+      usageContexts: ['AIRCRAFT_EXTERIOR'],
+      width: 1600,
+      height: 900,
+      checksum: 'fixture-client-provided-sha256',
+      mimeType: 'image/jpeg',
+      sourceType: 'CLIENT_PROVIDED',
+      focalPointX: 0.5,
+      focalPointY: 0.4,
+    },
+    create: {
+      storageKey: 'fixtures/media/client-provided-plane.jpg',
+      originalFilename: 'client-provided-plane.jpg',
+      mimeType: 'image/jpeg',
+      width: 1600,
+      height: 900,
+      fileSize: 2048,
+      checksum: 'fixture-client-provided-sha256',
+      sourceType: 'CLIENT_PROVIDED',
+      rightsStatus: 'CLIENT_PROVIDED',
+      rightsEvidence: 'TEST_FIXTURE_ONLY — not real JetVina rights',
+      altText: 'Fixture CLIENT_PROVIDED plane',
+      usageContexts: ['AIRCRAFT_EXTERIOR'],
+      approvedForStaging: true,
+      approvedForPublish: false,
+      focalPointX: 0.5,
+      focalPointY: 0.4,
+    },
+  });
+
+  const mediaReviewer = await prisma.user.upsert({
+    where: { email: 'media.reviewer@jetbay.local' },
+    update: { role: 'SALES', passwordHash: hashPassword('MediaReview123!') },
+    create: {
+      email: 'media.reviewer@jetbay.local',
+      passwordHash: hashPassword('MediaReview123!'),
+      firstName: 'Media',
+      lastName: 'Reviewer',
+      role: 'SALES',
+    },
+  });
+  for (const permission of [
+    'content_media.view',
+    'content_media.review',
+    'content_media.approve_staging',
+  ]) {
+    await prisma.userPermissionOverride.upsert({
+      where: {
+        userId_permission: { userId: mediaReviewer.id, permission },
+      },
+      update: { effect: 'ALLOW' },
+      create: { userId: mediaReviewer.id, permission, effect: 'ALLOW' },
+    });
+  }
+
   console.log('Seed execution completed successfully.');
 }
 

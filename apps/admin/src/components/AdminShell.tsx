@@ -19,6 +19,7 @@ const nav = [
   { href: '/dashboard/content-sources', label: 'Content Sources' },
   { href: '/dashboard/content-sync', label: 'Content Sync' },
   { href: '/dashboard/content-rights', label: 'Content Rights' },
+  { href: '/dashboard/media-review', label: 'Media Review' },
   { href: '/dashboard/jetbay-cleanup', label: 'JetBay Cleanup' },
   { href: '/dashboard/content/pages', label: 'CMS Pages' },
   { href: '/dashboard/content/videos', label: 'Videos' },
