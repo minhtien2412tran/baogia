@@ -15,6 +15,13 @@ type AirportForm = {
   country: string;
   timezone: string;
   status: string;
+  canParkAircraft: boolean;
+  isBaseAirport: boolean;
+  parkingFee: string;
+  overnightFee: string;
+  landingFee: string;
+  feeCurrency: string;
+  operationalNotes: string;
 };
 
 const emptyForm = (): AirportForm => ({
@@ -26,6 +33,13 @@ const emptyForm = (): AirportForm => ({
   country: '',
   timezone: 'UTC',
   status: 'ACTIVE',
+  canParkAircraft: true,
+  isBaseAirport: false,
+  parkingFee: '',
+  overnightFee: '',
+  landingFee: '',
+  feeCurrency: 'USD',
+  operationalNotes: '',
 });
 
 export default function AirportsAdminPage() {
@@ -47,6 +61,8 @@ export default function AirportsAdminPage() {
             iata: String(a.iata),
             city: String(a.city),
             country: String(a.country),
+            park: String(a.canParkAircraft ?? true),
+            base: String(a.isBaseAirport ?? false),
             name: String(a.name ?? '—'),
             status: String(a.status ?? 'ACTIVE'),
             actions: (
@@ -62,6 +78,16 @@ export default function AirportsAdminPage() {
                       country: String(a.country ?? ''),
                       timezone: String(a.timezone ?? 'UTC'),
                       status: String(a.status ?? 'ACTIVE'),
+                      canParkAircraft: Boolean(a.canParkAircraft ?? true),
+                      isBaseAirport: Boolean(a.isBaseAirport ?? false),
+                      parkingFee:
+                        a.parkingFee != null ? String(a.parkingFee) : '',
+                      overnightFee:
+                        a.overnightFee != null ? String(a.overnightFee) : '',
+                      landingFee:
+                        a.landingFee != null ? String(a.landingFee) : '',
+                      feeCurrency: String(a.feeCurrency ?? 'USD'),
+                      operationalNotes: String(a.operationalNotes ?? ''),
                     })
                   }
                 >
@@ -97,6 +123,13 @@ export default function AirportsAdminPage() {
         country: form.country,
         timezone: form.timezone,
         status: form.status,
+        canParkAircraft: form.canParkAircraft,
+        isBaseAirport: form.isBaseAirport,
+        parkingFee: form.parkingFee ? Number(form.parkingFee) : undefined,
+        overnightFee: form.overnightFee ? Number(form.overnightFee) : undefined,
+        landingFee: form.landingFee ? Number(form.landingFee) : undefined,
+        feeCurrency: form.feeCurrency,
+        operationalNotes: form.operationalNotes || undefined,
       };
       if (form.id) {
         await adminApi.updateAirport(form.id, body);
@@ -128,7 +161,7 @@ export default function AirportsAdminPage() {
   return (
     <AdminShell active="/dashboard/airports">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-        <SectionTitle>Airports</SectionTitle>
+        <SectionTitle>Airports & bases</SectionTitle>
         <Button type="button" onClick={() => setForm(emptyForm())}>
           + New Airport
         </Button>
@@ -143,6 +176,27 @@ export default function AirportsAdminPage() {
           <AdminField label="Country" value={form.country} onChange={(v) => setForm({ ...form, country: v })} required />
           <AdminField label="Timezone" value={form.timezone} onChange={(v) => setForm({ ...form, timezone: v })} />
           <AdminField label="Status (ACTIVE / INACTIVE)" value={form.status} onChange={(v) => setForm({ ...form, status: v })} />
+          <label style={{ display: 'block', marginBottom: 8 }}>
+            <input
+              type="checkbox"
+              checked={form.canParkAircraft}
+              onChange={(e) => setForm({ ...form, canParkAircraft: e.target.checked })}
+            />{' '}
+            Can park aircraft (chỗ đậu)
+          </label>
+          <label style={{ display: 'block', marginBottom: 8 }}>
+            <input
+              type="checkbox"
+              checked={form.isBaseAirport}
+              onChange={(e) => setForm({ ...form, isBaseAirport: e.target.checked })}
+            />{' '}
+            Base airport
+          </label>
+          <AdminField label="Parking fee" value={form.parkingFee} onChange={(v) => setForm({ ...form, parkingFee: v })} />
+          <AdminField label="Overnight fee" value={form.overnightFee} onChange={(v) => setForm({ ...form, overnightFee: v })} />
+          <AdminField label="Landing fee" value={form.landingFee} onChange={(v) => setForm({ ...form, landingFee: v })} />
+          <AdminField label="Fee currency" value={form.feeCurrency} onChange={(v) => setForm({ ...form, feeCurrency: v })} />
+          <AdminField label="Operational notes" value={form.operationalNotes} onChange={(v) => setForm({ ...form, operationalNotes: v })} />
           <Button type="button" onClick={save} disabled={saving}>
             {saving ? 'Saving…' : 'Save'}
           </Button>
@@ -158,6 +212,8 @@ export default function AirportsAdminPage() {
             { key: 'iata', label: 'IATA' },
             { key: 'city', label: 'City' },
             { key: 'country', label: 'Country' },
+            { key: 'park', label: 'Park' },
+            { key: 'base', label: 'Base' },
             { key: 'name', label: 'Name' },
             { key: 'status', label: 'Status' },
             { key: 'actions', label: 'Actions' },

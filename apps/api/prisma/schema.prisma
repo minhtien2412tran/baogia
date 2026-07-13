@@ -35,6 +35,7 @@ model User {
   partnerAccounts      PartnerAccount[]
   auditLogs            AuditLog[]
   refreshTokens        RefreshToken[]
+  operatorMemberships  OperatorUser[]
 }
 
 model UserAuthProvider {
@@ -205,6 +206,13 @@ model Airport {
   country             String
   timezone            String
   status              String               @default("ACTIVE")
+  canParkAircraft     Boolean              @default(true)
+  isBaseAirport       Boolean              @default(false)
+  parkingFee          Decimal?             @db.Decimal(12, 2)
+  overnightFee        Decimal?             @db.Decimal(12, 2)
+  landingFee          Decimal?             @db.Decimal(12, 2)
+  feeCurrency         String               @default("USD")
+  operationalNotes    String?
   
   legsFrom            QuoteLeg[]           @relation("LegFromAirport")
   legsTo              QuoteLeg[]           @relation("LegToAirport")
@@ -242,13 +250,35 @@ model AircraftModel {
 }
 
 model Operator {
-  id                Int          @id @default(autoincrement())
+  id                Int            @id @default(autoincrement())
   name              String
+  legalName         String?
   region            String
+  country           String?
+  contactName       String?
+  contactEmail      String?
+  contactPhone      String?
   complianceProfile Json?
-  status            String       @default("ACTIVE")
+  status            String         @default("ACTIVE")
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
   
   quoteOffers       QuoteOffer[]
+  users             OperatorUser[]
+}
+
+model OperatorUser {
+  id         Int      @id @default(autoincrement())
+  operatorId Int
+  userId     Int
+  role       String   @default("OPERATOR_STAFF") // OPERATOR_ADMIN, OPERATOR_STAFF
+  createdAt  DateTime @default(now())
+
+  operator   Operator @relation(fields: [operatorId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([operatorId, userId])
+  @@index([userId])
 }
 
 // --- COMMERCIAL PROGRAMS ---
@@ -576,4 +606,19 @@ model EmailCampaignLog {
   @@unique([campaignKey, email, referenceId])
   @@index([status, scheduledAt])
   @@index([email])
+}
+
+model EmailTemplate {
+  id        Int      @id @default(autoincrement())
+  key       String
+  locale    String   @default("en")
+  subject   String
+  htmlBody  String
+  textBody  String?
+  updatedBy Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([key, locale])
+  @@index([key])
 }

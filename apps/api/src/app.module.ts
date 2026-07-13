@@ -46,6 +46,11 @@ import { AircraftService } from './services/aircraft.service';
 import { IntegrationsStatusService } from './services/integrations-status.service';
 import { AccountController } from './controllers/account.controller';
 import { AccountService } from './services/account.service';
+import {
+  AdminOperatorController,
+  AdminEmailTemplateController,
+} from './controllers/admin-operator.controller';
+import { OperatorService } from './services/operator.service';
 
 @Module({
   imports: [
@@ -69,6 +74,8 @@ import { AccountService } from './services/account.service';
     AppController,
     AirportController,
     AdminAirportController,
+    AdminOperatorController,
+    AdminEmailTemplateController,
     FixedPriceController,
     AdminFixedPriceController,
     EmptyLegController,
@@ -108,6 +115,7 @@ import { AccountService } from './services/account.service';
     AircraftService,
     IntegrationsStatusService,
     AccountService,
+    OperatorService,
   ],
 })
 export class AppModule {}

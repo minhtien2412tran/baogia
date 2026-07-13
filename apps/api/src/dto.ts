@@ -6,6 +6,7 @@ import {
   IsIn,
   IsInt,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   Min,
@@ -1071,6 +1072,41 @@ export class CreateAirportDto {
   @IsOptional()
   @IsIn(['ACTIVE', 'INACTIVE'])
   status?: string;
+
+  @ApiPropertyOptional({ description: 'Aircraft may park overnight' })
+  @IsOptional()
+  @IsBoolean()
+  canParkAircraft?: boolean;
+
+  @ApiPropertyOptional({ description: 'Designated base / home airport' })
+  @IsOptional()
+  @IsBoolean()
+  isBaseAirport?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  parkingFee?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  overnightFee?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  landingFee?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  feeCurrency?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  operationalNotes?: string;
 }
 
 export class UpdateAirportDto {
@@ -1108,6 +1144,41 @@ export class UpdateAirportDto {
   @IsOptional()
   @IsIn(['ACTIVE', 'INACTIVE'])
   status?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  canParkAircraft?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  isBaseAirport?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  parkingFee?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  overnightFee?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  landingFee?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  feeCurrency?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  operationalNotes?: string;
 }
 
 export class CreateContentPageDto {

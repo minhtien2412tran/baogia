@@ -10,6 +10,8 @@ import { NinepayService } from '../../services/ninepay.service';
 import { RedisService } from '../../services/redis.service';
 import { StorageService } from '../../services/storage.service';
 import { SmsService } from '../../services/sms.service';
+import { EmailTemplateService } from '../../services/email-template.service';
+import { FlightNotifyService } from '../../services/flight-notify.service';
 
 /**
  * Shared infra providers used across feature modules.
@@ -22,6 +24,8 @@ import { SmsService } from '../../services/sms.service';
     EmailService,
     EnquiryMailService,
     CustomerCareService,
+    EmailTemplateService,
+    FlightNotifyService,
     PaymentService,
     DocumentService,
     OnepayService,
@@ -35,6 +39,8 @@ import { SmsService } from '../../services/sms.service';
     EmailService,
     EnquiryMailService,
     CustomerCareService,
+    EmailTemplateService,
+    FlightNotifyService,
     PaymentService,
     DocumentService,
     OnepayService,

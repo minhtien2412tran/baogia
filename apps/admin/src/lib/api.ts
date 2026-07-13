@@ -184,6 +184,47 @@ export const adminApi = {
     adminRequest<unknown>(`/admin/airports/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
   deleteAirport: (id: number) =>
     adminRequest<unknown>(`/admin/airports/${id}`, { method: 'DELETE' }),
+  listOperators: () =>
+    adminRequest<{
+      operators: Array<{
+        id: number;
+        name: string;
+        region: string;
+        legalName?: string | null;
+        country?: string | null;
+        contactName?: string | null;
+        contactEmail?: string | null;
+        contactPhone?: string | null;
+        status: string;
+        users?: unknown[];
+      }>;
+    }>('/admin/operators'),
+  createOperator: (body: unknown) =>
+    adminRequest<unknown>('/admin/operators', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  updateOperator: (id: number, body: unknown) =>
+    adminRequest<unknown>(`/admin/operators/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
+  attachOperatorUser: (id: number, body: unknown) =>
+    adminRequest<unknown>(`/admin/operators/${id}/users`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  listEmailTemplates: () =>
+    adminRequest<{ templates: unknown[]; fallbackKeys: string[] }>(
+      '/admin/email-templates',
+    ),
+  getEmailTemplate: (key: string) =>
+    adminRequest<unknown>(`/admin/email-templates/${encodeURIComponent(key)}`),
+  upsertEmailTemplate: (key: string, body: unknown) =>
+    adminRequest<unknown>(`/admin/email-templates/${encodeURIComponent(key)}`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
   getJetCardPlans: () => publicGet<{ plans: unknown[] }>('/jet-card/plans'),
   getTravelCreditPackages: () => publicGet<{ packages: unknown[] }>('/travel-credits/packages'),
   getAdminTravelCreditPackages: () =>

@@ -39,6 +39,16 @@
 3. (Optional) set prod `APP_ENV=production` khi secrets đã đủ mạnh  
 4. **BE modules** — tiếp phase 2+ theo [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md)  
 
+### Đang làm — Ops mail / airports (`feat/api-ops-mail`, 2026-07-13)
+
+- [x] Airport parking/base fields (`canParkAircraft`, `isBaseAirport`, fees)
+- [x] Operator CRUD + `OperatorUser` + contact email
+- [x] `EmailTemplate` editable + flight notify (operator + admin inbox)
+- [x] Admin UI: `/dashboard/operators`, `/dashboard/email-templates`, airports polish
+- [ ] Deploy API + Admin prod (SMTP giữ config VPS hiện có)
+
+Local DB note: migrate/seed on **`jta_db`**.
+
 **Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) · [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)
 
 ### Đã merge + deploy (2026-07-10)

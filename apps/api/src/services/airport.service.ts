@@ -142,6 +142,13 @@ export class AirportService {
         country: a.country,
         timezone: a.timezone,
         status: a.status,
+        canParkAircraft: a.canParkAircraft,
+        isBaseAirport: a.isBaseAirport,
+        parkingFee: a.parkingFee != null ? Number(a.parkingFee) : null,
+        overnightFee: a.overnightFee != null ? Number(a.overnightFee) : null,
+        landingFee: a.landingFee != null ? Number(a.landingFee) : null,
+        feeCurrency: a.feeCurrency,
+        operationalNotes: a.operationalNotes,
       })),
       pagination: { page, limit: take, total, totalPages: Math.ceil(total / take) },
     };
@@ -161,6 +168,13 @@ export class AirportService {
         country: body.country.trim(),
         timezone: body.timezone?.trim() || 'UTC',
         status: body.status ?? 'ACTIVE',
+        canParkAircraft: body.canParkAircraft ?? true,
+        isBaseAirport: body.isBaseAirport ?? false,
+        parkingFee: body.parkingFee,
+        overnightFee: body.overnightFee,
+        landingFee: body.landingFee,
+        feeCurrency: body.feeCurrency ?? 'USD',
+        operationalNotes: body.operationalNotes,
       },
     });
     await this.audit.log('AIRPORT_CREATED', { airportId: airport.id, iata: airport.iata });
@@ -189,6 +203,19 @@ export class AirportService {
         ...(body.country != null ? { country: body.country.trim() } : {}),
         ...(body.timezone != null ? { timezone: body.timezone.trim() } : {}),
         ...(body.status != null ? { status: body.status } : {}),
+        ...(body.canParkAircraft != null
+          ? { canParkAircraft: body.canParkAircraft }
+          : {}),
+        ...(body.isBaseAirport != null
+          ? { isBaseAirport: body.isBaseAirport }
+          : {}),
+        ...(body.parkingFee != null ? { parkingFee: body.parkingFee } : {}),
+        ...(body.overnightFee != null ? { overnightFee: body.overnightFee } : {}),
+        ...(body.landingFee != null ? { landingFee: body.landingFee } : {}),
+        ...(body.feeCurrency != null ? { feeCurrency: body.feeCurrency } : {}),
+        ...(body.operationalNotes != null
+          ? { operationalNotes: body.operationalNotes }
+          : {}),
       },
     });
     await this.audit.log('AIRPORT_UPDATED', { airportId: id });

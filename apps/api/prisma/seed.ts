@@ -141,14 +141,104 @@ async function main() {
 
   // 3b. Seed Operators (for QuoteOffer admin workflow)
   console.log('Seeding Operators...');
-  const operatorCount = await prisma.operator.count();
-  if (operatorCount === 0) {
+  let jetAsia = await prisma.operator.findFirst({
+    where: { name: 'JetBay Asia Ops' },
+  });
+  if (!jetAsia) {
+    jetAsia = await prisma.operator.create({
+      data: {
+        name: 'JetBay Asia Ops',
+        region: 'APAC',
+        status: 'ACTIVE',
+        contactEmail: 'ops.asia@jetbay.local',
+        contactName: 'Ops Desk Asia',
+        country: 'Singapore',
+        legalName: 'JetBay Asia Ops Pte Ltd',
+      },
+    });
+  } else {
+    jetAsia = await prisma.operator.update({
+      where: { id: jetAsia.id },
+      data: {
+        contactEmail: 'ops.asia@jetbay.local',
+        contactName: 'Ops Desk Asia',
+        country: 'Singapore',
+        legalName: 'JetBay Asia Ops Pte Ltd',
+      },
+    });
+  }
+  if ((await prisma.operator.count()) < 3) {
     await prisma.operator.createMany({
       data: [
-        { name: 'JetBay Asia Ops', region: 'APAC', status: 'ACTIVE' },
-        { name: 'Pacific Charter Group', region: 'APAC', status: 'ACTIVE' },
-        { name: 'EuroJet Partners', region: 'EMEA', status: 'ACTIVE' },
+        {
+          name: 'Pacific Charter Group',
+          region: 'APAC',
+          status: 'ACTIVE',
+          contactEmail: 'dispatch@pacific.example',
+          country: 'Australia',
+        },
+        {
+          name: 'EuroJet Partners',
+          region: 'EMEA',
+          status: 'ACTIVE',
+          contactEmail: 'ops@eurojet.example',
+          country: 'France',
+        },
       ],
+      skipDuplicates: true,
+    });
+  }
+
+  const opsUser = await prisma.user.upsert({
+    where: { email: 'operator.asia@jetbay.local' },
+    update: { passwordHash: hashPassword('Operator123!') },
+    create: {
+      email: 'operator.asia@jetbay.local',
+      passwordHash: hashPassword('Operator123!'),
+      firstName: 'Asia',
+      lastName: 'Operator',
+      role: 'USER',
+    },
+  });
+  await prisma.operatorUser.upsert({
+    where: {
+      operatorId_userId: { operatorId: jetAsia.id, userId: opsUser.id },
+    },
+    update: { role: 'OPERATOR_ADMIN' },
+    create: {
+      operatorId: jetAsia.id,
+      userId: opsUser.id,
+      role: 'OPERATOR_ADMIN',
+    },
+  });
+
+  // Mark major bases
+  for (const iata of ['SGN', 'HAN', 'LTN', 'LBG', 'SIN']) {
+    await prisma.airport.updateMany({
+      where: { iata },
+      data: { isBaseAirport: true, canParkAircraft: true },
+    });
+  }
+
+  // Email templates (editable)
+  console.log('Seeding EmailTemplates...');
+  const templateSeeds = [
+    {
+      key: 'operator_flight_notify',
+      subject: '[JetBay] New flight / booking #{{bookingId}}',
+      htmlBody: `<p>Hello {{operatorName}},</p><p>Booking <strong>#{{bookingId}}</strong> — {{bookingStatus}}</p><p>{{customerName}} ({{customerEmail}})</p><p>{{itinerary}}</p>`,
+    },
+    {
+      key: 'admin_flight_notify',
+      subject: '[JetBay Admin] Booking #{{bookingId}} — {{bookingStatus}}',
+      htmlBody: `<p>Admin: booking #{{bookingId}} · {{operatorName}}</p><p>{{customerName}} / {{customerEmail}}</p><p>{{itinerary}}</p>`,
+    },
+  ];
+  for (const t of templateSeeds) {
+    await prisma.emailTemplate.upsert({
+      where: { key_locale: { key: t.key, locale: 'en' } },
+      update: { subject: t.subject, htmlBody: t.htmlBody },
+      create: { key: t.key, locale: 'en', subject: t.subject, htmlBody: t.htmlBody },
     });
   }
 
