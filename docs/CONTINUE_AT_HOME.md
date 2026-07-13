@@ -88,17 +88,14 @@
 - [x] Prisma: SiteSetting · ContentSource/Record · Provenance · Rights · SyncJob/Item · Version · MediaAsset + migration `20260713120000_content_sync_foundation`
 - [x] API: content-sources · discover dry-run · rights · cleanup report · brand settings · SSRF allowlist tests
 - [x] Admin: Content Sources / Sync / Rights / JetBay Cleanup
-- [x] Brand placeholder JetVina · hide unverified stats · email rebrand · footer social removed
-- [x] **JetVina official logo (UNVERIFIED)** — local `/brand/jetvina/*` · `BrandLogo` · brand-tokens · AppIcon · `JETVINA_OFFICIAL_LOGO_ENABLED` · MediaSection blocked · deleted `jetbay-logo.svg` · [brand-logo-icon-image-audit.md](./brand-logo-icon-image-audit.md)
-- [x] **Public branding cleanup pass** — hide marketing sections · media placeholders · AppIcon wire · document/email JetVina · `audit:branding` · Playwright smoke · [public-branding-cleanup-final.md](./public-branding-cleanup-final.md)
-- [x] **Demo images (no copyright photos)** — 14 original SVGs under `/placeholders/demo/*` · `media-policy` hash pick · `pnpm generate:demo-placeholders`
-- [x] **Prefer JetVina media** — curated WP uploads from jetvina.com · `NEXT_PUBLIC_PREFER_JETVINA_MEDIA=true` · remotes in `next.config` · SVG fallback · [assets/jetvina/RIGHTS.md](../apps/web/public/assets/jetvina/RIGHTS.md)
-- [x] **Debug-clean pass (2026-07-13)** — web/admin eslint `--max-warnings=0` · `audit:debug` · AirportInput a11y/race · Admin ConfirmDialog + AppIcon/IconButton · CMS seed/constants JetVina · browser console Playwright · API tests 38 · **API eslint still has legacy unsafe/* debt** · **BLOCKED: PostgreSQL**
-- [x] Fix web TS via rebuild `@jetbay/i18n` (MessageKey dist stale)
-- [x] **Media rights / no prod hotlink (2026-07-13)** — `resolveMediaAsset()` · manifest `jetvina-media-manifest.json` · hardened `pnpm sync:jetvina-media` (SSRF/MIME/rate/merge) · `next.config` remotePatterns only non-prod · `pnpm restart:web` safe PID · `pnpm test:media` 17 · flags `JETVINA_MEDIA_*` · **PARTIAL** · [jetvina-media-pass-report.md](./jetvina-media-pass-report.md) · [jetvina-media-jetbay-asset-audit.md](./jetvina-media-jetbay-asset-audit.md)
-- [ ] i18n residual / baocaotiendo report title · package rename `@jetbay/*` deferred
-- [ ] Client: logo rights letter / CLIENT_PROVIDED confirmation before prod logo/media flags
-- [ ] Admin media review UI full (thumbnail/focal/approve_production) — permissions catalog extended; DB MediaAsset fields pending migrate
+- [x] Brand placeholder JetVina · hide marketing stats · email/document JetVina · demo SVG placeholders
+- [x] **Media pass (PARTIAL)** — resolver + manifest + Playwright staging/prod no-hotlink + `audit:asset-references` + validate manifest · **DB:** migrate+seed on local Postgres · MediaAsset review API/UI · UNVERIFIED prod approve rejected · [jetvina-media-pass-report.md](./jetvina-media-pass-report.md)
+- [x] Debug-clean · web/admin eslint max-warnings=0 · `audit:debug` · **API eslint legacy debt**
+- [x] `/baocaotiendo` public title → JetVina Website · [i18n-baocaotiendo-brand-classification.md](./i18n-baocaotiendo-brand-classification.md)
+- [ ] Client: written media/logo authorization before `JETVINA_MEDIA_PRODUCTION_ENABLED`
+- [ ] Dedicated local DB name `jetbay_db` (CREATE privilege) — currently using existing `jta_db`
+- [ ] Playwright Admin Media Review browser E2E — DEFERRED (HTTP/API smoke PASS)
+- [ ] Package rename `@jetbay/*` — DEFERRED
 - [ ] **No prod deploy**
 
 Demo seed (sau migrate+seed): `sales.vn@jetbay.local` / `Sales123!` (scope VN) · `sales.nocancel@jetbay.local` (DENY `booking.cancel`)

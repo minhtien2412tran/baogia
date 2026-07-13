@@ -37,7 +37,7 @@ export type LinkRef = {
 };
 
 export const REPORT_META = {
-  project: 'JetBay — Website, API và bảng quản trị',
+  project: 'JetVina Website (hợp đồng/mã nội bộ: JetBay) — Website, API và bảng quản trị',
   client: 'Anh Tuấn Anh',
   vendor: 'Minh Tiến Solutions',
   contractScope:

@@ -18,9 +18,9 @@ import { ProgressReportEffects } from './ProgressReportEffects';
 import './baocaotiendo.css';
 
 export const metadata: Metadata = {
-  title: 'Báo cáo tiến độ dự án JetBay | minhtien.online',
+  title: 'JetVina Website – Báo cáo triển khai | minhtien.online',
   description:
-    'Báo cáo tiến độ tuần đầu dự án JetBay gửi Anh Tuấn Anh — theo lộ trình 4 tháng kể từ 09/07/2026.',
+    'Báo cáo tiến độ triển khai website JetVina (hợp đồng / mã nội bộ dự án JetBay) gửi Anh Tuấn Anh — lộ trình 4 tháng kể từ 09/07/2026.',
   robots: { index: false, follow: false },
 };
 
@@ -44,12 +44,13 @@ export default function BaoCaoTienDoPage() {
           <span className="pr-hero__route">GO LIVE</span>
         </div>
         <p className="pr-eyebrow">Báo cáo tiến độ · Dành cho khách hàng</p>
-        <h1 className="pr-title">Báo cáo tiến độ dự án JetBay</h1>
+        <h1 className="pr-title">JetVina Website – Báo cáo triển khai</h1>
         <p className="pr-lead">
           Kính gửi <strong>{REPORT_META.client}</strong>,
           <br />
           <br />
-          Dự án chính thức bắt đầu từ ngày <strong>{REPORT_META.startDate}</strong>, thực hiện trong khoảng{' '}
+          Dự án (mã nội bộ / hợp đồng: JetBay → thương hiệu công khai JetVina) chính thức bắt đầu từ ngày{' '}
+          <strong>{REPORT_META.startDate}</strong>, thực hiện trong khoảng{' '}
           <strong>{REPORT_META.plannedMonths} tháng ({REPORT_META.plannedWeeks} tuần)</strong> theo{' '}
           <a href={REPORT_META.quoteUrl} target="_blank" rel="noopener noreferrer">
             hợp đồng &amp; báo giá 74TR
