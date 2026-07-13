@@ -1,7 +1,9 @@
 /**
  * Gracefully restart @jetbay/web on :3000 without killing unrelated Node processes.
  *
- * Usage: node scripts/restart-web-dev.mjs
+ * Usage:
+ *   node scripts/restart-web-dev.mjs
+ *   node scripts/restart-web-dev.mjs --dry-run
  */
 import { execFileSync, spawn } from 'node:child_process';
 import fs from 'node:fs';
@@ -12,6 +14,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const pidFile = path.join(root, '.jetbay-web-dev.pid');
 const PORT = 3000;
+const dryRun = process.argv.includes('--dry-run');
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
@@ -33,13 +36,20 @@ function health() {
 
 function listPortPids() {
   try {
-    const out = execFileSync('powershell.exe', [
-      '-NoProfile',
-      '-Command',
-      `(Get-NetTCPConnection -LocalPort ${PORT} -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique) -join ','`,
-    ], { encoding: 'utf8' }).trim();
+    const out = execFileSync(
+      'powershell.exe',
+      [
+        '-NoProfile',
+        '-Command',
+        `(Get-NetTCPConnection -LocalPort ${PORT} -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique) -join ','`,
+      ],
+      { encoding: 'utf8' },
+    ).trim();
     if (!out) return [];
-    return out.split(',').map((s) => Number(s.trim())).filter(Boolean);
+    return out
+      .split(',')
+      .map((s) => Number(s.trim()))
+      .filter(Boolean);
   } catch {
     return [];
   }
@@ -57,14 +67,32 @@ function commandLine(pid) {
   }
 }
 
+function cwdOf(pid) {
+  try {
+    return execFileSync(
+      'powershell.exe',
+      [
+        '-NoProfile',
+        '-Command',
+        `(Get-Process -Id ${pid} -ErrorAction SilentlyContinue).Path`,
+      ],
+      { encoding: 'utf8' },
+    ).trim();
+  } catch {
+    return '';
+  }
+}
+
 function isJetbayWeb(cmd) {
   const c = cmd.toLowerCase();
   if (!c) return false;
   if (c.includes('@jetbay/web')) return true;
   const inRepo =
-    c.includes('baogia') || c.includes('apps\\web') || c.includes('apps/web') || c.includes('apps\\\\web');
+    c.includes('baogia') ||
+    c.includes('apps\\web') ||
+    c.includes('apps/web') ||
+    c.includes('apps\\\\web');
   if (!inRepo) return false;
-  // next dev may show as next CLI or as dist/server/lib/start-server.js
   return (
     c.includes('next') ||
     c.includes('start-server') ||
@@ -75,11 +103,17 @@ function isJetbayWeb(cmd) {
 
 async function gracefulStop(pid) {
   const cmd = commandLine(pid);
-  if (!isJetbayWeb(cmd) && !fs.existsSync(pidFile)) {
-    console.error(`Refusing to kill PID ${pid} — command line not recognized as @jetbay/web:\n${cmd}`);
+  const exe = cwdOf(pid);
+  console.log(`Candidate PID ${pid}\n  cmd: ${cmd || '(unknown)'}\n  path: ${exe || '(unknown)'}`);
+  if (!isJetbayWeb(cmd)) {
+    console.error(`Refusing to kill PID ${pid} — not recognized as @jetbay/web under this repo.`);
     return false;
   }
-  console.log(`Stopping JetBay web PID ${pid}`);
+  if (dryRun) {
+    console.log(`[dry-run] would graceful-stop PID ${pid}`);
+    return true;
+  }
+  console.log(`Stopping @jetbay/web PID ${pid}`);
   try {
     process.kill(pid, 'SIGTERM');
   } catch {
@@ -108,16 +142,34 @@ async function gracefulStop(pid) {
 
 const healthy = await health();
 console.log(`Current /en-us health: ${healthy ? 'OK' : 'DOWN'}`);
+console.log(dryRun ? 'Mode: dry-run (no kill, no spawn)' : 'Mode: restart');
 
 const pids = listPortPids();
 const knownPid = fs.existsSync(pidFile) ? Number(fs.readFileSync(pidFile, 'utf8').trim()) : null;
-const candidates = [...new Set([knownPid, ...pids].filter(Boolean))];
-
-for (const pid of candidates) {
-  await gracefulStop(pid);
+if (knownPid && !Number.isFinite(knownPid)) {
+  console.warn(`Ignoring corrupt PID file: ${pidFile}`);
 }
-if (fs.existsSync(pidFile)) fs.unlinkSync(pidFile);
+const candidates = [...new Set([knownPid, ...pids].filter((p) => Number.isFinite(p) && p > 0))];
 
+let refusedForeign = false;
+for (const pid of candidates) {
+  const ok = await gracefulStop(pid);
+  if (!ok) refusedForeign = true;
+}
+
+if (refusedForeign && pids.length && !pids.every((p) => isJetbayWeb(commandLine(p)))) {
+  console.error(`Port ${PORT} is occupied by a non-project process — aborting restart.`);
+  process.exitCode = 1;
+  process.exit();
+}
+
+if (dryRun) {
+  console.log('[dry-run] would start: pnpm --filter @jetbay/web dev');
+  console.log('[dry-run] PASS (no processes killed)');
+  process.exit(0);
+}
+
+if (fs.existsSync(pidFile)) fs.unlinkSync(pidFile);
 await sleep(500);
 
 const child = spawn(
@@ -132,7 +184,7 @@ const child = spawn(
 );
 child.unref();
 fs.writeFileSync(pidFile, String(child.pid));
-console.log(`Started web dev PID ${child.pid}`);
+console.log(`Started web dev wrapper PID ${child.pid}`);
 
 let ok = false;
 for (let i = 0; i < 60; i++) {
