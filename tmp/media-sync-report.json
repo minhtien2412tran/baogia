@@ -1,0 +1,31 @@
+{
+  "downloaded": 5,
+  "updated": 0,
+  "unchanged": 0,
+  "duplicate": 0,
+  "blocked": 0,
+  "failed": 0,
+  "dryRun": true,
+  "items": [
+    {
+      "url": "https://jetvina.com/wp-content/uploads/2024/08/flyprivatejet-flugzeuge-global60001.jpg",
+      "status": "dry-run"
+    },
+    {
+      "url": "https://jetvina.com/wp-content/uploads/2025/11/Bombardier-Global-7500.jpg",
+      "status": "dry-run"
+    },
+    {
+      "url": "https://jetvina.com/wp-content/uploads/2025/10/Phenom-300-Ext-JS.jpg",
+      "status": "dry-run"
+    },
+    {
+      "url": "https://jetvina.com/wp-content/uploads/2025/09/embraer-legacy-450web.jpg",
+      "status": "dry-run"
+    },
+    {
+      "url": "https://jetvina.com/wp-content/uploads/2025/07/praetor-300.jpg",
+      "status": "dry-run"
+    }
+  ]
+}

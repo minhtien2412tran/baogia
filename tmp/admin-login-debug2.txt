@@ -1,0 +1,21 @@
+apiHint:API · http://127.0.0.1:4000
+Swagger · docs.minhtien.online
+Web prod · www.minhtien.online
+Web local · localhost:3000
+url:http://127.0.0.1:3001/login?
+error:none
+body:JV
+JetVina Admin
+
+Bảng quản trị chung — quotes, bookings, content, fleet.
+
+Email
+Password
+Sign in
+
+Dev: admin@jetbay.local / Admin123!
+
+API · http://127.0.0.1:4000
+Swagger · docs.minhtien.online
+Web prod · www.minhtien.online
+Web local · localhost:3000

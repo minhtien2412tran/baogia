@@ -1,0 +1,31 @@
+console:info:%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+console:error:WebSocket connection to 'ws://127.0.0.1:3001/_next/webpack-hmr?id=vuUqzjp42HQCr8IalYzoZ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE
+console:info:%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+console:error:WebSocket connection to 'ws://127.0.0.1:3001/_next/webpack-hmr?id=YNVssX6fax_NgBVlGkBZK' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE
+console:error:WebSocket connection to 'ws://127.0.0.1:3001/_next/webpack-hmr?id=YNVssX6fax_NgBVlGkBZK' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE
+console:error:WebSocket connection to 'ws://127.0.0.1:3001/_next/webpack-hmr?id=YNVssX6fax_NgBVlGkBZK' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE
+console:error:WebSocket connection to 'ws://127.0.0.1:3001/_next/webpack-hmr?id=YNVssX6fax_NgBVlGkBZK' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE
+url:http://127.0.0.1:3001/login?
+console:error:WebSocket connection to 'ws://127.0.0.1:3001/_next/webpack-hmr?id=YNVssX6fax_NgBVlGkBZK' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE
+console:error:WebSocket connection to 'ws://127.0.0.1:3001/_next/webpack-hmr?id=YNVssX6fax_NgBVlGkBZK' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE
+console:error:WebSocket connection to 'ws://127.0.0.1:3001/_next/webpack-hmr?id=YNVssX6fax_NgBVlGkBZK' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE
+console:error:WebSocket connection to 'ws://127.0.0.1:3001/_next/webpack-hmr?id=YNVssX6fax_NgBVlGkBZK' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE
+console:error:WebSocket connection to 'ws://127.0.0.1:3001/_next/webpack-hmr?id=YNVssX6fax_NgBVlGkBZK' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE
+console:error:WebSocket connection to 'ws://127.0.0.1:3001/_next/webpack-hmr?id=YNVssX6fax_NgBVlGkBZK' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE
+console:error:WebSocket connection to 'ws://127.0.0.1:3001/_next/webpack-hmr?id=YNVssX6fax_NgBVlGkBZK' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE
+error:null
+bodyText:JV
+JetVina Admin
+
+Bảng quản trị chung — quotes, bookings, content, fleet.
+
+Email
+Password
+Sign in
+
+Dev: admin@jetbay.local / Admin123!
+
+API · http://127.0.0.1:4000
+Swagger · docs.minhtien.online
+Web prod · www.minhtien.online
+Web local · localhost:3000
