@@ -1,3 +1,4 @@
+import { BRAND_LEGAL } from '../../lib/brand';
 import Link from 'next/link';
 import { getFooterCompany, getFooterServices, tn } from '@jetbay/i18n';
 import { navHref } from '../../config/navigation';
@@ -56,13 +57,9 @@ export function JetBayFooter({ locale }: { locale: string }) {
           </div>
         </div>
         <div className="jb-footer-bottom">
-          <span>© {new Date().getFullYear()} JetBay Inc. {tn(locale, 'copyright')}</span>
+          <span>© {new Date().getFullYear()} {BRAND_LEGAL}. {tn(locale, 'copyright')}</span>
           <div className="jb-social">
-            {JB.social.map((s) => (
-              <a key={s.alt} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.alt}>
-                <CdnImage src={s.src} alt={s.alt} width={24} height={24} className="jb-social-icon" />
-              </a>
-            ))}
+            {/* Social links omitted until client provides official accounts (SAFE_REFERENCE_MODE). */}
           </div>
         </div>
       </div>

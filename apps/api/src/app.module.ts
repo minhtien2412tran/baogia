@@ -13,6 +13,7 @@ import { QuotesModule } from './modules/quotes/quotes.module';
 import { PricingModule } from './pricing/pricing.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { ContractsModule } from './contracts/contracts.module';
+import { ContentSyncModule } from './content-sync/content-sync.module';
 
 // Remaining domains (phase 2–5) — still registered on AppModule
 import { FixedPriceController } from './controllers/fixed-price.controller';
@@ -60,6 +61,7 @@ import { AccountService } from './services/account.service';
     PricingModule,
     PermissionsModule,
     ContractsModule,
+    ContentSyncModule,
     ThrottlerModule.forRoot([
       { name: 'default', ttl: 60_000, limit: 120 },
       { name: 'auth', ttl: 60_000, limit: 20 },

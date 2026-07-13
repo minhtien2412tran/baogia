@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { t } from '@jetbay/i18n';
-import { api } from '../../../lib/api';
-import { navHref } from '../../../config/navigation';
+import { api } from '../../lib/api';
+import { navHref } from '../../config/navigation';
 
 type Continent = { code: string; name: string };
 type Country = { code: string; name: string };

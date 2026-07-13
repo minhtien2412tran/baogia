@@ -64,6 +64,11 @@ export class BookingService {
       quoteId: booking.quoteRequestId ?? booking.quoteOfferId ?? null,
       userId: booking.userId,
       bookingType: booking.bookingType,
+      bookingCode: booking.bookingCode,
+      customerRouteSummary: booking.customerRouteSummary,
+      estimatedPriceTotal:
+        booking.estimatedPriceTotal != null ? Number(booking.estimatedPriceTotal) : null,
+      estimatedPriceCurrency: booking.estimatedPriceCurrency,
       status: STATUS_FROM_DB[booking.bookingStatus] ?? 'pending',
       agreementStatus: booking.agreementStatus,
       paymentStatus: latestPayment?.status?.toLowerCase() ?? 'pending',

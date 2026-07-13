@@ -906,3 +906,199 @@ model SignatureWebhookEvent {
 
   @@index([envelopeId])
 }
+
+// --- CONTENT SYNC / RIGHTS / BRAND (SAFE_REFERENCE_MODE foundation) ---
+
+model SiteSetting {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     Json
+  locale    String?
+  updatedBy Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([locale])
+}
+
+model ContentSource {
+  id             Int      @id @default(autoincrement())
+  name           String
+  baseUrl        String
+  sourceType     String   // CMS_API, WORDPRESS_API, XML_EXPORT, JSON_EXPORT, RSS, SITEMAP, HTML_REFERENCE, MANUAL
+  authType       String   @default("NONE")
+  isEnabled      Boolean  @default(true)
+  syncMode       String   @default("SAFE_REFERENCE_MODE") // SAFE_REFERENCE_MODE | AUTHORIZED_DIRECT_SYNC
+  defaultLocale  String   @default("en")
+  allowedDomains Json     // string[]
+  rateLimitPerMin Int     @default(30)
+  lastTestAt     DateTime?
+  lastTestOk     Boolean?
+  lastError      String?
+  createdBy      Int?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  records        ContentSourceRecord[]
+  jobs           ContentSyncJob[]
+
+  @@index([syncMode, isEnabled])
+}
+
+model ContentSourceRecord {
+  id                 Int      @id @default(autoincrement())
+  sourceId           Int
+  externalId         String
+  sourceUrl          String
+  canonicalUrl       String?
+  contentType        String   // PAGE, POST, SERVICE, FLEET, EMPTY_LEG, NEWS, LEGAL, OTHER
+  locale             String   @default("en")
+  title              String?
+  rawMetadata        Json?    // facts/metadata only in SAFE_REFERENCE_MODE — never full marketing HTML
+  publishedAt        DateTime?
+  modifiedAt         DateTime?
+  fetchedAt          DateTime @default(now())
+  contentHash        String?
+  etag               String?
+  lastModifiedHeader String?
+  status             String   @default("DISCOVERED")
+  // DISCOVERED, FETCHED, NORMALIZED, BLOCKED, REVIEW_PENDING, APPROVED, PUBLISHED, SOURCE_MISSING
+
+  source             ContentSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceId, externalId, locale])
+  @@index([status])
+  @@index([contentType])
+}
+
+model ContentProvenance {
+  id                 Int      @id @default(autoincrement())
+  entityType         String
+  entityId           String
+  sourceId           Int?
+  sourceUrl          String?
+  externalId         String?
+  importedAt         DateTime @default(now())
+  importJobId        Int?
+  transformationMode String   // DIRECT_AUTHORIZED, FACTS_ONLY, ORIGINAL_REWRITE, MANUAL_ENTRY, CLIENT_PROVIDED
+  rightsStatus       String   @default("UNVERIFIED")
+  rightsEvidence     String?
+  reviewedBy         Int?
+  reviewedAt         DateTime?
+
+  @@index([entityType, entityId])
+  @@index([rightsStatus])
+}
+
+model ContentRights {
+  id              Int       @id @default(autoincrement())
+  assetType       String    // IMAGE, VIDEO, TEXT, LOGO, DOCUMENT
+  sourceUrl       String?
+  storageKey      String?
+  rightsStatus    String    @default("UNVERIFIED")
+  // OWNED, LICENSED, CLIENT_PROVIDED, PUBLIC_DOMAIN, UNVERIFIED, PROHIBITED
+  rightsOwner     String?
+  licenseType     String?
+  licenseDocument String?
+  licenseStartAt  DateTime?
+  licenseEndAt    DateTime?
+  usageScope      String?
+  notes           String?
+  approvedForPublish Boolean @default(false)
+  approvedBy      Int?
+  approvedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([rightsStatus, approvedForPublish])
+  @@index([storageKey])
+}
+
+model ContentSyncJob {
+  id            Int       @id @default(autoincrement())
+  sourceId      Int
+  mode          String    // DISCOVER, PREVIEW, RUN, PUBLISH, ROLLBACK
+  status        String    @default("PENDING")
+  // PENDING, RUNNING, COMPLETED, FAILED, CANCELLED
+  startedAt     DateTime?
+  completedAt   DateTime?
+  fetchedCount  Int       @default(0)
+  newCount      Int       @default(0)
+  changedCount  Int       @default(0)
+  skippedCount  Int       @default(0)
+  blockedCount  Int       @default(0)
+  failedCount   Int       @default(0)
+  dryRun        Boolean   @default(true)
+  triggeredBy   Int?
+  errorSummary  String?
+  createdAt     DateTime  @default(now())
+
+  source        ContentSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  items         ContentSyncItem[]
+
+  @@index([sourceId, createdAt])
+  @@index([status])
+}
+
+model ContentSyncItem {
+  id               Int       @id @default(autoincrement())
+  jobId            Int
+  externalId       String?
+  targetEntityType String?
+  targetEntityId   String?
+  action           String    // CREATE, UPDATE, SKIP, BLOCK, CONFLICT, SOURCE_MISSING
+  beforeData       Json?
+  proposedData     Json?
+  diff             Json?
+  rightsStatus     String    @default("UNVERIFIED")
+  reviewStatus     String    @default("PENDING")
+  // PENDING, APPROVED, REJECTED, REWRITE_REQUESTED
+  error            String?
+  approvedBy       Int?
+  approvedAt       DateTime?
+  createdAt        DateTime  @default(now())
+
+  job              ContentSyncJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId, reviewStatus])
+  @@index([rightsStatus])
+}
+
+model ContentVersion {
+  id           Int      @id @default(autoincrement())
+  entityType   String
+  entityId     String
+  version      Int
+  data         Json
+  createdBy    Int?
+  createdAt    DateTime @default(now())
+  reason       String?
+  sourceJobId  Int?
+
+  @@unique([entityType, entityId, version])
+  @@index([entityType, entityId])
+}
+
+model MediaAsset {
+  id                 Int      @id @default(autoincrement())
+  originalFilename   String?
+  storageKey         String   @unique
+  mimeType           String?
+  width              Int?
+  height             Int?
+  fileSize           Int?
+  checksum           String?
+  sourceType         String   @default("UPLOAD") // UPLOAD, CLIENT_PROVIDED, IMPORT_BLOCKED
+  sourceUrl          String?
+  rightsStatus       String   @default("UNVERIFIED")
+  rightsEvidence     String?
+  altText            String?
+  locale             String?
+  approvedForPublish Boolean  @default(false)
+  uploadedBy         Int?
+  reviewedBy         Int?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([rightsStatus, approvedForPublish])
+}

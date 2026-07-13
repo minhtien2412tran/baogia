@@ -29,11 +29,11 @@ function wrapHtml(title: string, bodyHtml: string): string {
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" style="background:#1a1a1a;border:1px solid #3d3528;border-radius:8px;overflow:hidden;">
         <tr><td style="padding:28px 32px 8px;text-align:center;">
-          <span style="font-size:22px;letter-spacing:0.2em;color:#c9a962;">JETBAY</span>
+          <span style="font-size:22px;letter-spacing:0.2em;color:#c9a962;">JETVINA</span>
         </td></tr>
         <tr><td style="padding:8px 32px 32px;font-size:15px;line-height:1.65;color:#e8e0d0;">
           ${bodyHtml}
-          <p style="margin-top:28px;font-size:13px;color:#9a9080;">— JetBay Private Jet Charter<br>
+          <p style="margin-top:28px;font-size:13px;color:#9a9080;">— JetVina Private Air Charter<br>
           <a href="${SITE}" style="color:#c9a962;">${SITE.replace(/^https?:\/\//, '')}</a></p>
         </td></tr>
       </table>
@@ -59,29 +59,29 @@ export function renderEmailTemplate(
 
   switch (campaignKey) {
     case 'welcome_register': {
-      const subject = loc === 'vi' ? 'Chào mừng đến với JetBay' : 'Welcome to JetBay';
+      const subject = loc === 'vi' ? 'Chào mừng đến với JETVINA' : 'Welcome to JetVina';
       const text =
         loc === 'vi'
-          ? `${greet}\n\nCảm ơn bạn đã tạo tài khoản JetBay. Quản lý báo giá, booking và tài liệu charter tại: ${accountUrl}\n\n— JetBay`
-          : `${greet}\n\nThank you for creating your JetBay account. Manage quotes, bookings, and charter documents at: ${accountUrl}\n\n— JetBay`;
+          ? `${greet}\n\nCảm ơn bạn đã tạo tài khoản JETVINA. Quản lý báo giá, booking và tài liệu charter tại: ${accountUrl}\n\n— JETVINA`
+          : `${greet}\n\nThank you for creating your JETVINA account. Manage quotes, bookings, and charter documents at: ${accountUrl}\n\n— JETVINA`;
       const body =
         loc === 'vi'
-          ? `<p>${greet}</p><p>Cảm ơn bạn đã tham gia JetBay. Tài khoản của bạn đã sẵn sàng — theo dõi báo giá, thanh toán và tài liệu charter mọi lúc.</p>${btn(accountUrl, 'Vào My Account')}`
-          : `<p>${greet}</p><p>Thank you for joining JetBay. Your account is ready — track quotes, payments, and charter documents anytime.</p>${btn(accountUrl, 'Go to My Account')}`;
+          ? `<p>${greet}</p><p>Cảm ơn bạn đã tham gia JETVINA. Tài khoản của bạn đã sẵn sàng — theo dõi báo giá, thanh toán và tài liệu charter mọi lúc.</p>${btn(accountUrl, 'Vào My Account')}`
+          : `<p>${greet}</p><p>Thank you for joining JETVINA. Your account is ready — track quotes, payments, and charter documents anytime.</p>${btn(accountUrl, 'Go to My Account')}`;
       return { subject, text, html: wrapHtml(subject, body) };
     }
 
     case 'quote_received': {
       const requestId = meta.requestId ?? '';
       const subject =
-        loc === 'vi' ? `JetBay đã nhận yêu cầu báo giá #${requestId}` : `JetBay Quote Request #${requestId} Received`;
+        loc === 'vi' ? `JETVINA đã nhận yêu cầu báo giá #${requestId}` : `JETVINA Quote Request #${requestId} Received`;
       const text =
         loc === 'vi'
-          ? `${greet}\n\nChúng tôi đã nhận yêu cầu charter (#${requestId}). Chuyên viên sẽ liên hệ trong vòng 3 giờ.\n\n— JetBay`
-          : `${greet}\n\nWe received your charter quote request (#${requestId}). A specialist will contact you within 3 hours.\n\n— JetBay`;
+          ? `${greet}\n\nChúng tôi đã nhận yêu cầu charter (#${requestId}). Chuyên viên sẽ liên hệ trong vòng 3 giờ.\n\n— JETVINA`
+          : `${greet}\n\nWe received your charter quote request (#${requestId}). A specialist will contact you within 3 hours.\n\n— JETVINA`;
       const body =
         loc === 'vi'
-          ? `<p>${greet}</p><p>Yêu cầu báo giá <strong>#${requestId}</strong> đã được ghi nhận. Đội ngũ charter JetBay sẽ liên hệ trong vòng <strong>3 giờ</strong>.</p>${btn(quoteUrl, 'Xem báo giá')}`
+          ? `<p>${greet}</p><p>Yêu cầu báo giá <strong>#${requestId}</strong> đã được ghi nhận. Đội ngũ charter JETVINA sẽ liên hệ trong vòng <strong>3 giờ</strong>.</p>${btn(quoteUrl, 'Xem báo giá')}`
           : `<p>${greet}</p><p>Your quote request <strong>#${requestId}</strong> is confirmed. Our charter team will reach out within <strong>3 hours</strong>.</p>${btn(quoteUrl, 'View My Quotes')}`;
       return { subject, text, html: wrapHtml(subject, body) };
     }
@@ -90,39 +90,39 @@ export function renderEmailTemplate(
       const requestId = meta.requestId ?? '';
       const subject =
         loc === 'vi'
-          ? `Cập nhật báo giá #${requestId} — JetBay`
-          : `Update on your quote #${requestId} — JetBay`;
+          ? `Cập nhật báo giá #${requestId} — JETVINA`
+          : `Update on your quote #${requestId} — JETVINA`;
       const text =
         loc === 'vi'
-          ? `${greet}\n\nYêu cầu #${requestId} vẫn đang được xử lý. Cần hỗ trợ gấp? Trả lời email này hoặc truy cập ${quoteUrl}\n\n— JetBay`
-          : `${greet}\n\nQuote #${requestId} is still in progress. Need urgent help? Reply to this email or visit ${quoteUrl}\n\n— JetBay`;
+          ? `${greet}\n\nYêu cầu #${requestId} vẫn đang được xử lý. Cần hỗ trợ gấp? Trả lời email này hoặc truy cập ${quoteUrl}\n\n— JETVINA`
+          : `${greet}\n\nQuote #${requestId} is still in progress. Need urgent help? Reply to this email or visit ${quoteUrl}\n\n— JETVINA`;
       const body =
         loc === 'vi'
-          ? `<p>${greet}</p><p>Yêu cầu <strong>#${requestId}</strong> đang được chuyên viên JetBay xử lý. Bạn cần điều chỉnh lịch trình hoặc hành khách? Hãy cho chúng tôi biết.</p>${btn(quoteUrl, 'Xem chi tiết')}`
+          ? `<p>${greet}</p><p>Yêu cầu <strong>#${requestId}</strong> đang được chuyên viên JETVINA xử lý. Bạn cần điều chỉnh lịch trình hoặc hành khách? Hãy cho chúng tôi biết.</p>${btn(quoteUrl, 'Xem chi tiết')}`
           : `<p>${greet}</p><p>Quote <strong>#${requestId}</strong> is being handled by our team. Need to adjust itinerary or passengers? Let us know.</p>${btn(quoteUrl, 'View details')}`;
       return { subject, text, html: wrapHtml(subject, body) };
     }
 
     case 'newsletter_welcome': {
-      const subject = loc === 'vi' ? 'Cảm ơn bạn đã đăng ký JetBay Newsletter' : 'Thanks for subscribing to JetBay';
+      const subject = loc === 'vi' ? 'Cảm ơn bạn đã đăng ký JETVINA Newsletter' : 'Thanks for subscribing to JETVINA';
       const text =
         loc === 'vi'
-          ? `${greet}\n\nBạn sẽ nhận tin ưu đãi charter, empty leg và điểm đến mới từ JetBay.\n\n— JetBay`
-          : `${greet}\n\nYou'll receive charter deals, empty legs, and destination highlights from JetBay.\n\n— JetBay`;
+          ? `${greet}\n\nBạn sẽ nhận tin ưu đãi charter, empty leg và điểm đến mới từ JETVINA.\n\n— JETVINA`
+          : `${greet}\n\nYou'll receive charter deals, empty legs, and destination highlights from JETVINA.\n\n— JETVINA`;
       const body =
         loc === 'vi'
-          ? `<p>${greet}</p><p>Cảm ơn bạn đã đăng ký newsletter. Chúng tôi sẽ gửi ưu đãi charter và cập nhật hành trình phù hợp với bạn.</p>${btn(SITE, 'Khám phá JetBay')}`
-          : `<p>${greet}</p><p>Thanks for subscribing. We'll send curated charter offers and travel inspiration.</p>${btn(SITE, 'Explore JetBay')}`;
+          ? `<p>${greet}</p><p>Cảm ơn bạn đã đăng ký newsletter. Chúng tôi sẽ gửi ưu đãi charter và cập nhật hành trình phù hợp với bạn.</p>${btn(SITE, 'Khám phá JETVINA')}`
+          : `<p>${greet}</p><p>Thanks for subscribing. We'll send curated charter offers and travel inspiration.</p>${btn(SITE, 'Explore JETVINA')}`;
       return { subject, text, html: wrapHtml(subject, body) };
     }
 
     case 'booking_created': {
       const bookingId = meta.bookingId ?? '';
-      const subject = loc === 'vi' ? `Booking #${bookingId} đã tạo — JetBay` : `Booking #${bookingId} created — JetBay`;
+      const subject = loc === 'vi' ? `Booking #${bookingId} đã tạo — JETVINA` : `Booking #${bookingId} created — JETVINA`;
       const text =
         loc === 'vi'
-          ? `${greet}\n\nBooking #${bookingId} đã được tạo. Hoàn tất thanh toán và ký tài liệu charter tại: ${accountUrl}\n\n— JetBay`
-          : `${greet}\n\nBooking #${bookingId} has been created. Complete payment and sign charter documents at: ${accountUrl}\n\n— JetBay`;
+          ? `${greet}\n\nBooking #${bookingId} đã được tạo. Hoàn tất thanh toán và ký tài liệu charter tại: ${accountUrl}\n\n— JETVINA`
+          : `${greet}\n\nBooking #${bookingId} has been created. Complete payment and sign charter documents at: ${accountUrl}\n\n— JETVINA`;
       const body =
         loc === 'vi'
           ? `<p>${greet}</p><p>Booking <strong>#${bookingId}</strong> đã sẵn sàng. Vui lòng hoàn tất thanh toán và ký thỏa thuận charter trong My Account.</p>${btn(accountUrl, 'Quản lý booking')}`
@@ -134,15 +134,15 @@ export function renderEmailTemplate(
       const amount = meta.amount ?? '';
       const currency = meta.currency ?? 'USD';
       const bookingId = meta.bookingId ?? '';
-      const subject = loc === 'vi' ? 'Thanh toán JetBay đã xác nhận' : 'JetBay payment confirmed';
+      const subject = loc === 'vi' ? 'Thanh toán JETVINA đã xác nhận' : 'JETVINA payment confirmed';
       const text =
         loc === 'vi'
-          ? `${greet}\n\nThanh toán ${amount} ${currency} cho booking #${bookingId} đã được xác nhận.\n\n— JetBay`
-          : `${greet}\n\nPayment of ${amount} ${currency} for booking #${bookingId} is confirmed.\n\n— JetBay`;
+          ? `${greet}\n\nThanh toán ${amount} ${currency} cho booking #${bookingId} đã được xác nhận.\n\n— JETVINA`
+          : `${greet}\n\nPayment of ${amount} ${currency} for booking #${bookingId} is confirmed.\n\n— JETVINA`;
       const body =
         loc === 'vi'
-          ? `<p>${greet}</p><p>Chúng tôi đã xác nhận thanh toán <strong>${amount} ${currency}</strong> cho booking <strong>#${bookingId}</strong>. Cảm ơn bạn đã tin tưởng JetBay.</p>${btn(accountUrl, 'Xem booking')}`
-          : `<p>${greet}</p><p>We've confirmed your payment of <strong>${amount} ${currency}</strong> for booking <strong>#${bookingId}</strong>. Thank you for flying with JetBay.</p>${btn(accountUrl, 'View booking')}`;
+          ? `<p>${greet}</p><p>Chúng tôi đã xác nhận thanh toán <strong>${amount} ${currency}</strong> cho booking <strong>#${bookingId}</strong>. Cảm ơn bạn đã tin tưởng JETVINA.</p>${btn(accountUrl, 'Xem booking')}`
+          : `<p>${greet}</p><p>We've confirmed your payment of <strong>${amount} ${currency}</strong> for booking <strong>#${bookingId}</strong>. Thank you for flying with JETVINA.</p>${btn(accountUrl, 'View booking')}`;
       return { subject, text, html: wrapHtml(subject, body) };
     }
 
@@ -152,20 +152,20 @@ export function renderEmailTemplate(
       const searchUrl = `${SITE}/${loc === 'vi' ? 'vi-vn' : 'en-us'}`;
       const text =
         loc === 'vi'
-          ? `${greet}\n\nJetBay hỗ trợ charter toàn cầu 24/7. Yêu cầu báo giá miễn phí tại ${searchUrl}\n\n— JetBay`
-          : `${greet}\n\nJetBay offers 24/7 global charter support. Request a free quote at ${searchUrl}\n\n— JetBay`;
+          ? `${greet}\n\nJETVINA hỗ trợ charter toàn cầu 24/7. Yêu cầu báo giá miễn phí tại ${searchUrl}\n\n— JETVINA`
+          : `${greet}\n\nJETVINA offers 24/7 global charter support. Request a free quote at ${searchUrl}\n\n— JETVINA`;
       const body =
         loc === 'vi'
-          ? `<p>${greet}</p><p>Bạn đang lên kế hoạch cho chuyến đi sắp tới? Đội ngũ JetBay sẵn sàng tư vấn máy bay phù hợp và báo giá trong vài giờ.</p>${btn(searchUrl, 'Yêu cầu báo giá')}`
+          ? `<p>${greet}</p><p>Bạn đang lên kế hoạch cho chuyến đi sắp tới? Đội ngũ JETVINA sẵn sàng tư vấn máy bay phù hợp và báo giá trong vài giờ.</p>${btn(searchUrl, 'Yêu cầu báo giá')}`
           : `<p>${greet}</p><p>Planning your next trip? Our charter specialists can recommend the right aircraft and quote within hours.</p>${btn(searchUrl, 'Request a quote')}`;
       return { subject, text, html: wrapHtml(subject, body) };
     }
 
     default:
       return {
-        subject: 'JetBay',
-        text: `${greet}\n\n— JetBay`,
-        html: wrapHtml('JetBay', `<p>${greet}</p>`),
+        subject: 'JETVINA',
+        text: `${greet}\n\n— JETVINA`,
+        html: wrapHtml('JETVINA', `<p>${greet}</p>`),
       };
   }
 }

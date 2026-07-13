@@ -317,4 +317,31 @@ export const adminApi = {
     }),
   getBookingBreakdown: (id: number) =>
     adminRequest<unknown>(`/pricing/bookings/${id}/breakdown`),
+  listContentSources: () => adminRequest<{ sources: unknown[]; flags: unknown }>('/admin/content-sources'),
+  seedJetvinaSource: () =>
+    adminRequest<unknown>('/admin/content-sources/seed-jetvina-reference', {
+      method: 'POST',
+      body: '{}',
+    }),
+  testContentSource: (id: number) =>
+    adminRequest<unknown>(`/admin/content-sources/${id}/test-connection`, {
+      method: 'POST',
+      body: '{}',
+    }),
+  discoverContent: (sourceId: number, dryRun = true) =>
+    adminRequest<unknown>('/admin/content-sync/discover', {
+      method: 'POST',
+      body: JSON.stringify({ sourceId, dryRun }),
+    }),
+  listContentJobs: () => adminRequest<{ jobs: unknown[] }>('/admin/content-sync/jobs'),
+  listContentJobItems: (id: number) =>
+    adminRequest<{ items: unknown[] }>(`/admin/content-sync/jobs/${id}/items`),
+  listContentRights: () => adminRequest<{ rights: unknown[] }>('/admin/content-rights'),
+  getJetbayCleanup: () => adminRequest<{ groups: unknown[] }>('/admin/content-cleanup/jetbay'),
+  getBrandSettings: () => adminRequest<Record<string, unknown>>('/admin/site-settings/brand'),
+  patchBrandSettings: (body: Record<string, unknown>) =>
+    adminRequest<unknown>('/admin/site-settings/brand', {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
 };

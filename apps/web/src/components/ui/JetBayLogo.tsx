@@ -1,17 +1,17 @@
-import { JETBAY_LOGO } from '../../config/jetbay-cdn';
+import { BRAND_LOGO, BRAND_NAME } from '../../lib/brand';
 
 type Props = {
   className?: string;
   priority?: boolean;
 };
 
-/** Crisp vector logo — avoids blurry webp upscale on Retina */
+/** Brand wordmark — internal placeholder until CLIENT_PROVIDED logo is approved. */
 export function JetBayLogo({ className = 'jb-logo-img', priority }: Props) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={JETBAY_LOGO}
-      alt="JetBay"
+      src={BRAND_LOGO}
+      alt={BRAND_NAME}
       className={className}
       width={120}
       height={32}

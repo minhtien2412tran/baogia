@@ -1,5 +1,6 @@
 'use client';
 
+import { SHOW_UNVERIFIED_STATS } from '../../lib/brand';
 import { JB } from '../../config/jetbay-cdn';
 import { CdnImage } from '../ui/CdnImage';
 import { FlightScrollRail } from '../ui/FlightScrollRail';
@@ -31,7 +32,7 @@ const STATS = [
   {
     num: 'No.1',
     label: "Asia's Transaction Volume",
-    desc: 'JetBay leads private aviation transactions across Asia, connecting key business and leisure hubs with speed and precision.',
+    desc: 'JetVina connects private aviation travellers across Asia — claim pending client verification.',
     variant: 'plain' as const,
     icon: JB.stats.tab,
   },
@@ -57,7 +58,7 @@ const DESKTOP_STATS = [
   {
     num: 'No.1',
     label: "Asia's Transaction Volume",
-    desc: 'JetBay leads private aviation transactions across Asia, connecting key business and leisure hubs with precision. A trusted platform for high-volume and time-critical flights.',
+    desc: 'JetVina connects private aviation travellers across Asia — claim pending client verification. A platform for time-critical flights.',
     icon: JB.stats.tab,
   },
   {
@@ -85,6 +86,9 @@ const DESKTOP_STATS = [
 ];
 
 export function StatsSection() {
+  // Unverified marketing metrics (10K+, No.1, etc.) blocked until client provides approved figures.
+  if (!SHOW_UNVERIFIED_STATS) return null;
+
   return (
     <section className="jb-stats jb-stats-light">
       <div className="jb-container">

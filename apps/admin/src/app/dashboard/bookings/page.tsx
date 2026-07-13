@@ -76,6 +76,8 @@ export default function BookingsPage() {
             { key: 'id', label: 'ID' },
             { key: 'email', label: 'Email' },
             { key: 'type', label: 'Type' },
+            { key: 'route', label: 'Route' },
+            { key: 'estimate', label: 'Giá ước tính' },
             { key: 'status', label: 'Status' },
             { key: 'created', label: 'Created' },
             { key: 'actions', label: 'Actions' },

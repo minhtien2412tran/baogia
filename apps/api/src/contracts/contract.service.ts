@@ -88,7 +88,7 @@ export class ContractService {
         operator: true,
         contractTemplate: true,
         history: { orderBy: { createdAt: 'asc' } },
-        signatureEvents: { orderBy: { receivedAt: 'asc' } },
+        signatureEvents: { orderBy: { createdAt: 'asc' } },
       },
     });
     if (!contract) throw new NotFoundException(`Contract ${id} not found`);

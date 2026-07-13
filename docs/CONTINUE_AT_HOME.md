@@ -69,6 +69,31 @@
 - [x] **Media public URLs** (2026-07-11) — `@Public()` GET `/media/*` · fix NestJS wildcard truncate · admin URL textarea · sync-admin + i18n vendor
 - [x] **Local polish bugs** (2026-07-13) — fix hydration (imperative hero canvas) · scroll-behavior attr · DateField in quote widget · pax/date contrast · remove nested pnpm-workspace · turbopack.root
 
+### Đang làm — Ops platform (`feat/api-ops-platform`, 2026-07-13)
+
+- [x] Phase 1 schema — `Aircraft` tail + location · FlightLeg · PricingEstimate · RBAC · Contracts · migration `20260713100000_ops_platform` · seed CAN/HAN/SGN + `B-JBAY1` @ CAN · sales.vn / sales.nocancel
+- [x] Phase 2 pricing — `POST /pricing/estimate` · booking breakdown/recalculate · unit tests CAN→HAN→SGN (positioning + min hours + snapshot)
+- [x] Phase 3 — `/airports/continents|countries` · empty-leg continent/country filters · web `EmptyLegBrowse` + «Giá ước tính»
+- [x] Phase 4 — Permission DENY>ALLOW>ROLE · `PermissionGuard` · airport scope APIs · admin `/dashboard/permissions`
+- [x] Phase 5–6 — OperatorContract workflow · mock DocuSign · idempotent `POST /webhooks/docusign` · `.env.example` DocuSign keys
+- [x] Phase 7 — admin fleet/contracts/permissions · booking «Giá ước tính» columns · API `nest build` PASS · unit 11/11 PASS
+- [ ] **Blocked local:** no Docker → chưa `migrate deploy` / seed trên máy này — chạy migrate+seed khi có Postgres (local hoặc VPS staging)
+- [ ] **Không deploy prod** cho đến khi được yêu cầu
+
+### Đang làm — Content sync / JetVina SAFE_REFERENCE (`feat/api-content-sync`, 2026-07-13)
+
+- [x] Mode **SAFE_REFERENCE_MODE** (no ownership evidence in repo)
+- [x] Docs: content-source-audit · jetbay-cleanup-audit · jetvina-content-mapping · content-sync-workflow · content-rights-policy · runbook · rollback
+- [x] Prisma: SiteSetting · ContentSource/Record · Provenance · Rights · SyncJob/Item · Version · MediaAsset + migration `20260713120000_content_sync_foundation`
+- [x] API: content-sources · discover dry-run · rights · cleanup report · brand settings · SSRF allowlist tests
+- [x] Admin: Content Sources / Sync / Rights / JetBay Cleanup
+- [x] Brand placeholder JetVina · hide unverified stats · email rebrand · footer social removed
+- [ ] i18n/page-content JetBay strings (partial) · package rename `@jetbay/*` deferred
+- [ ] Client: logo, legal, contact, authorization letter
+- [ ] **No prod deploy**
+
+Demo seed (sau migrate+seed): `sales.vn@jetbay.local` / `Sales123!` (scope VN) · `sales.nocancel@jetbay.local` (DENY `booking.cancel`)
+
 - [x] `feat/api-security-hardening` (+ admin screens / partner-TC) → **`main`** (`9893789`)  
 - [x] VPS API `jetbay-be` + Admin `jetbay-admin` redeployed  
 - [x] Prod smoke admin **16/16** · web **8/8**  

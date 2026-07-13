@@ -24,6 +24,18 @@ export const PERMISSIONS = [
   'contract.send_docusign',
   'permission.manage',
   'user.manage',
+  'content_source.view',
+  'content_source.manage',
+  'content_sync.discover',
+  'content_sync.preview',
+  'content_sync.run',
+  'content_sync.review',
+  'content_sync.publish',
+  'content_sync.rollback',
+  'content_rights.view',
+  'content_rights.approve',
+  'content_media.approve',
+  'content_rewrite.approve',
 ] as const;
 
 export type Permission = (typeof PERMISSIONS)[number];

@@ -22,25 +22,24 @@ export const metadata: Metadata = {
   metadataBase: siteMetadataBase(),
   title: {
     default: `${BRAND_NAME} | ${BRAND_TAGLINE}`,
-    template: `%s | ${BRAND_NAME} Private Jet Charter`,
+    template: `%s | ${BRAND_NAME}`,
   },
-  description: 'Global private jet charter platform — access 10,000+ aircraft with 24/7 concierge support.',
+  description: 'Private air charter booking platform — request quotes, empty legs, and managed itineraries.',
   icons: {
-    icon: [{ url: '/assets/jta/favicon.svg', type: 'image/svg+xml' }],
-    apple: '/assets/jta/apple-touch-icon.svg',
+    icon: [{ url: '/assets/brand/logo-placeholder.svg', type: 'image/svg+xml' }],
+    apple: '/assets/brand/logo-placeholder.svg',
   },
   openGraph: {
     type: 'website',
-    siteName: `${BRAND_NAME} Private Jet Charter`,
+    siteName: `${BRAND_NAME} Private Air Charter`,
     title: `${BRAND_NAME} | ${BRAND_TAGLINE}`,
-    description: 'Global private jet charter platform — access 10,000+ aircraft with 24/7 concierge support.',
+    description: 'Private air charter booking platform — request quotes, empty legs, and managed itineraries.',
     images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: BRAND_NAME }],
   },
   twitter: {
     card: 'summary_large_image',
     title: `${BRAND_NAME} | ${BRAND_TAGLINE}`,
-    description: 'Global private jet charter platform — access 10,000+ aircraft with 24/7 concierge support.',
-    images: [DEFAULT_OG_IMAGE],
+    description: 'Private air charter booking platform — request quotes, empty legs, and managed itineraries.',
   },
 };
 
