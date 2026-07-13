@@ -53,14 +53,14 @@ export class EnquiryMailService {
       payload.packageName ? `Package: ${payload.packageName}` : '',
       'Our charter specialists will contact you within one business day.',
       '',
-      '— JetBay Private Jet Charter',
+      '— JetVina Private Jet Charter',
     ]
       .filter(Boolean)
       .join('\n');
 
     const customer = await this.email.sendMail({
       to: payload.email,
-      subject: `JetBay ${label} Enquiry #${payload.enquiryId} Received`,
+      subject: `JetVina ${label} Enquiry #${payload.enquiryId} Received`,
       text: customerText,
       html: customerText.replace(/\n/g, '<br>'),
     });
@@ -84,7 +84,7 @@ export class EnquiryMailService {
       const sales = await this.email.sendMail({
         to: salesTo,
         replyTo: payload.email,
-        subject: `[JetBay ${label}] ${name} — #${payload.enquiryId}`,
+        subject: `[JetVina ${label}] ${name} — #${payload.enquiryId}`,
         text: salesText,
         html: salesText.replace(/\n/g, '<br>'),
       });

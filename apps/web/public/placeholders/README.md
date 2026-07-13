@@ -13,3 +13,8 @@ Optional mirror: `pnpm sync:jetvina-media`
 ## SVG demo regenerate
 
 `pnpm generate:demo-placeholders`
+
+## Payment chips (footer)
+
+`/placeholders/payment/*.svg` — original text/mark chips (Visa / MC / Amex / UnionPay / Discover).  
+Do **not** remap through JetBay CDN; keeps footer free of JetVina promo art and third-party logo files.

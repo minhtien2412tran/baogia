@@ -988,7 +988,16 @@
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  align-items: center;
   margin-top: 12px;
+}
+
+.jb-pay-img {
+  height: 28px;
+  width: auto;
+  max-width: 80px;
+  max-height: 28px;
+  object-fit: contain;
 }
 
 .jb-pay-badge {
@@ -1857,10 +1866,8 @@
 
 /* ── Aircraft showcase ── */
 .jb-aircraft-showcase {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  align-items: center;
+  display: block;
+  width: 100%;
 }
 
 .jb-aircraft-img {
@@ -1943,9 +1950,6 @@
   }
   .jb-step-img {
     display: none;
-  }
-  .jb-aircraft-showcase {
-    grid-template-columns: 1fr;
   }
   .jb-mega-vertical {
     flex-direction: column;

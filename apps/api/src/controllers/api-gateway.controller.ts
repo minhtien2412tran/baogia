@@ -35,7 +35,7 @@ export class ApiGatewayController {
   @ApiResponse({
     status: 200,
     description:
-      'Per-page and per-endpoint coverage for the JETBAY sample web UI.',
+      'Per-page and per-endpoint coverage for the JetVina sample web UI.',
   })
   getUiAudit() {
     return this.gateway.getUiAudit();

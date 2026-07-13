@@ -16,7 +16,7 @@ export class SmsService {
     phone: string,
     code: string,
   ): Promise<{ sent: boolean; devCode?: string }> {
-    const message = `JetBay verification code: ${code}. Valid for 5 minutes.`;
+    const message = `JetVina verification code: ${code}. Valid for 5 minutes.`;
 
     if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
       return this.sendTwilio(phone, message);

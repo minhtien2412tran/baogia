@@ -79,7 +79,7 @@ export class EmailService {
 
     try {
       await transport.sendMail({
-        from: process.env.SMTP_FROM ?? 'JetBay <noreply@jetbay.local>',
+        from: process.env.SMTP_FROM ?? 'JetVina <noreply@jetvina.local>',
         to: opts.to,
         cc: opts.cc,
         replyTo: opts.replyTo,
@@ -112,14 +112,14 @@ export class EmailService {
   }) {
     return this.sendMail({
       to: opts.email,
-      subject: `JetBay Quote Request #${opts.requestId} Received`,
+      subject: `JetVina Quote Request #${opts.requestId} Received`,
       text: [
         `Dear ${opts.firstName},`,
         '',
         `Thank you for your private jet charter quote request (#${opts.requestId}).`,
         'Our charter specialists will contact you within 3 hours.',
         '',
-        '— JetBay Private Jet Charter',
+        '— JetVina Private Jet Charter',
       ].join('\n'),
     });
   }

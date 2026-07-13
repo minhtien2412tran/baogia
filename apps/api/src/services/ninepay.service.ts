@@ -43,7 +43,7 @@ export class NinepayService {
       return_url: opts.returnUrl,
       time: String(time),
       signature,
-      description: `JetBay Booking ${opts.orderId}`,
+      description: `JetVina Booking ${opts.orderId}`,
     });
 
     return { gateway: '9pay', redirectUrl: `${endpoint}?${params.toString()}` };

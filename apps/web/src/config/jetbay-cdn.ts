@@ -152,12 +152,13 @@ export const JB = {
     tab: L('/v4/batch/tab-917148112383422464.webp'),
   },
 
+  /** Original chip SVGs under /placeholders — never JetBay CDN or JetVina promo art. */
   payment: [
-    { alt: 'Visa', src: L('/v4/batch/visa-907283502671294464.webp') },
-    { alt: 'Mastercard', src: L('/v4/batch/master_card-907283499261325312.webp') },
-    { alt: 'Amex', src: L('/v4/batch/amex-907283493871644672.webp') },
-    { alt: 'UnionPay', src: L('/v4/batch/union_pay-907283500712554496.webp') },
-    { alt: 'Discover', src: L('/v4/batch/discover-907283497763958784.webp') },
+    { alt: 'Visa', src: '/placeholders/payment/visa.svg' },
+    { alt: 'Mastercard', src: '/placeholders/payment/mastercard.svg' },
+    { alt: 'Amex', src: '/placeholders/payment/amex.svg' },
+    { alt: 'UnionPay', src: '/placeholders/payment/unionpay.svg' },
+    { alt: 'Discover', src: '/placeholders/payment/discover.svg' },
   ],
 
   media: [

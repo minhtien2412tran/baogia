@@ -131,26 +131,30 @@
 }
 
 .jb-payment-row {
-  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
   margin-top: 20px;
 }
 
 .jb-pay-img {
-  height: 26px;
+  height: 28px;
   width: auto;
-  padding: 7px 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  max-width: 80px;
+  max-height: 28px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 5px;
   object-fit: contain;
-  filter: grayscale(100%) brightness(1.6);
-  opacity: 0.88;
-  transition: opacity 0.2s, border-color 0.2s;
+  filter: none;
+  opacity: 0.9;
+  transition: opacity 0.2s, outline-color 0.2s;
 }
 
 .jb-pay-img:hover {
   opacity: 1;
-  border-color: rgba(201, 164, 92, 0.25);
 }
 
 .jb-membership-row {

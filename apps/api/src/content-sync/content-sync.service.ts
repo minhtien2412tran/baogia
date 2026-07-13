@@ -172,7 +172,7 @@ export class ContentSyncService {
         signal: controller.signal,
         headers: {
           'User-Agent':
-            'JetBayContentSync/1.0 (+tech@minhtien.online; SAFE_REFERENCE_MODE)',
+            'JetVinaContentSync/1.0 (+tech@minhtien.online; SAFE_REFERENCE_MODE)',
           Accept: 'application/json',
         },
         redirect: 'manual',
@@ -234,7 +234,7 @@ export class ContentSyncService {
       const res = await fetch(listUrl.toString(), {
         headers: {
           'User-Agent':
-            'JetBayContentSync/1.0 (+tech@minhtien.online; SAFE_REFERENCE_MODE)',
+            'JetVinaContentSync/1.0 (+tech@minhtien.online; SAFE_REFERENCE_MODE)',
           Accept: 'application/json',
         },
         redirect: 'error',
@@ -744,7 +744,7 @@ export class ContentSyncService {
   ) {
     const rightsStatus = body.rightsStatus ?? 'UNVERIFIED';
     if (body.storageKey.includes('/assets/jetbay')) {
-      throw new BadRequestException('JetBay storage paths are not allowed');
+      throw new BadRequestException('Legacy third-party storage paths are not allowed');
     }
     const data = {
       originalFilename: body.originalFilename,
@@ -859,7 +859,7 @@ export class ContentSyncService {
       );
     }
     if (before.storageKey.includes('jetbay')) {
-      throw new BadRequestException('JetBay paths cannot be production-approved');
+      throw new BadRequestException('Legacy third-party paths cannot be production-approved');
     }
     const asset = await this.prisma.mediaAsset.update({
       where: { id },
@@ -1156,7 +1156,7 @@ export class ContentSyncService {
             'StatsSection hidden behind feature flag until client-approved numbers',
         },
         {
-          group: 'JetBay logo / CDN assets',
+          group: 'Legacy logo / CDN assets',
           findings: 1,
           replaced: 0,
           removed: 0,
@@ -1267,7 +1267,7 @@ export class ContentSyncService {
         contactPhone: null,
         whatsapp: null,
         rightsNote:
-          'Sanitized — JetBay strings stripped from public brand response',
+          'Sanitized — legacy brand strings stripped from public brand response',
         _sanitizedKeys: jetbayHits.length,
       };
     }

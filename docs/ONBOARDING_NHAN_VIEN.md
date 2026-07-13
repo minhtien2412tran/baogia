@@ -173,6 +173,14 @@ pnpm --filter @jetbay/admin dev
 
 ### Chỉ nối API prod (không cần Docker DB)
 
+**Topology mặc định (2026-07):** Web local (`:3000`) thường trỏ **prod API** (`https://api.minhtien.online`) để UI khớp live. API local (`:4000`) dùng cho BE/admin e2e và phát triển Nest.
+
+| Client | API mặc định | Khi nào đổi |
+|--------|--------------|-------------|
+| `apps/web` | prod `api.minhtien.online` | Set `NEXT_PUBLIC_API_URL=http://127.0.0.1:4000` + sync key khi test BE local |
+| `apps/admin` | local hoặc prod (tuỳ `.env.local`) | E2E admin → local `:4000` |
+| Swagger | docs = prod OpenAPI | Local: `http://127.0.0.1:4000/swagger` |
+
 Trong `apps/web/.env.local` / `apps/admin/.env.local` có thể trỏ:
 
 ```env
@@ -180,7 +188,15 @@ NEXT_PUBLIC_API_URL=https://api.minhtien.online
 NEXT_PUBLIC_API_KEY=<xin Minh key hoặc sync từ local nếu chỉ test UI>
 ```
 
-Vẫn **không** commit file này.
+Kiểm tra đồng bộ contract:
+
+```bash
+node scripts/smoke-api-sync.mjs
+```
+
+Vẫn **không** commit file `.env.local`.
+
+Chi tiết bảo mật / sync: [JETBAY_API_SYNC_SECURITY_PLAN.md](./JETBAY_API_SYNC_SECURITY_PLAN.md).
 
 ---
 

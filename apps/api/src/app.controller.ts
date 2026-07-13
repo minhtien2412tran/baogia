@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IntegrationsStatusService } from './services/integrations-status.service';
 import { Public } from './auth/public.decorator';
 
@@ -10,9 +10,14 @@ export class AppController {
 
   @Public()
   @Get()
+  @ApiOperation({
+    summary: 'API root index',
+    description:
+      'Returns service name, status, and links to Swagger/OpenAPI/health. Public (no X-API-Key).',
+  })
   getRoot() {
     return {
-      name: 'JetBay API',
+      name: 'JetVina API',
       status: 'ok',
       swagger: '/swagger',
       openapi: '/openapi.json',
@@ -26,6 +31,11 @@ export class AppController {
 
   @Public()
   @Get('health')
+  @ApiOperation({
+    summary: 'Liveness probe',
+    description:
+      'Lightweight health check for load balancers and deploy scripts. Public (no X-API-Key).',
+  })
   getHealth() {
     return {
       status: 'ok',
@@ -35,9 +45,13 @@ export class AppController {
     };
   }
 
-  /** Public readiness of JWT/DB/Redis + which G4 integrations are configured (no secrets). */
   @Public()
   @Get('integrations/status')
+  @ApiOperation({
+    summary: 'Integration readiness flags',
+    description:
+      'Boolean readiness for JWT/DB/Redis and G4 integrations. Never returns secret values. Requires X-API-Key.',
+  })
   getIntegrationsStatus() {
     return this.integrations.getStatus();
   }

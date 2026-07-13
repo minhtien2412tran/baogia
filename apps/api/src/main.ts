@@ -5,6 +5,14 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { stringify as yamlStringify } from 'yaml';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
+import {
+  SWAGGER_API_DESCRIPTION,
+  SWAGGER_TAG_META,
+  enrichOpenApiDocument,
+} from './swagger/openapi-enrichment';
+import { normalizeSwaggerLang } from './swagger/swagger-locales';
+import { SWAGGER_THEME_CSS } from './swagger/swagger-theme.css';
+import { buildSwaggerI18nJs } from './swagger/swagger-i18n.client';
 
 function assertProductionSecrets() {
   const env = process.env.APP_ENV ?? process.env.NODE_ENV;
@@ -40,6 +48,22 @@ function assertProductionSecrets() {
   }
 }
 
+function cloneDocument<T>(doc: T): T {
+  return JSON.parse(JSON.stringify(doc)) as T;
+}
+
+function langFromRequest(req: { query?: Record<string, unknown>; headers?: Record<string, unknown> }): string {
+  const q = req.query?.lang;
+  if (typeof q === 'string' && q.trim()) return q;
+  if (Array.isArray(q) && typeof q[0] === 'string') return q[0];
+  const cookie = String(req.headers?.cookie ?? '');
+  const m = cookie.match(/(?:^|;\s*)jb_swagger_lang=([^;]+)/);
+  if (m?.[1]) return decodeURIComponent(m[1]);
+  const accept = String(req.headers?.['accept-language'] ?? '');
+  if (accept) return accept.split(',')[0] ?? 'en';
+  return 'en';
+}
+
 async function bootstrap() {
   assertProductionSecrets();
 
@@ -48,7 +72,6 @@ async function bootstrap() {
   app.use(
     helmet({
       contentSecurityPolicy: false,
-      // APIs serving browser clients must allow cross-origin reads
       crossOriginResourcePolicy: { policy: 'cross-origin' },
     }),
   );
@@ -95,31 +118,30 @@ async function bootstrap() {
       servers.set(apiPublic, 'API_PUBLIC_URL');
     }
   } else {
-    servers.set(apiPublic, 'Current');
-    servers.set(
-      'https://api.minhtien.online',
-      'Production (api.minhtien.online)',
-    );
     servers.set('http://127.0.0.1:4000', 'Local development');
+    if (apiPublic !== 'http://127.0.0.1:4000') {
+      servers.set(apiPublic, 'Current (API_PUBLIC_URL)');
+    }
+    servers.set('https://api.minhtien.online', 'Production');
   }
+
   let builder = new DocumentBuilder()
-    .setTitle('JetBay API')
-    .setDescription(
-      [
-        'Private jet booking platform API (JETBAY).',
-        '',
-        '**App key:** header `X-API-Key` (required on most routes; not needed for `/health`).',
-        '**User auth:** `Authorization: Bearer <accessToken>` from `POST /auth/login`.',
-        '**Health:** `GET /health` · **Integrations (no secrets):** `GET /integrations/status`',
-        '**UI audit:** `GET /api-gateway/ui-audit`',
-        '',
-        'Production docs: https://docs.minhtien.online/swagger',
-      ].join('\n'),
-    )
-    .setVersion(process.env.APP_VERSION ?? '1.0.0');
+    .setTitle('JetVina API')
+    .setDescription(SWAGGER_API_DESCRIPTION)
+    .setVersion(process.env.APP_VERSION ?? '1.0.0')
+    .setContact('JetVina', 'https://www.minhtien.online', '')
+    .setExternalDoc(
+      'Human API reference (docs/API.md)',
+      'https://github.com/minhtien2412tran/baogia/blob/main/docs/API.md',
+    );
+
   for (const [url, name] of servers) {
     builder = builder.addServer(url, name);
   }
+  for (const tag of SWAGGER_TAG_META) {
+    builder = builder.addTag(tag.name, tag.description);
+  }
+
   const config = builder
     .addBearerAuth(
       {
@@ -127,7 +149,7 @@ async function bootstrap() {
         scheme: 'bearer',
         bearerFormat: 'JWT',
         description:
-          'JWT accessToken from POST /auth/login (without Bearer prefix in Swagger field)',
+          'JWT accessToken from POST /auth/login (paste token only — Swagger adds Bearer)',
       },
       'bearer',
     )
@@ -137,35 +159,61 @@ async function bootstrap() {
         name: 'X-API-Key',
         in: 'header',
         description:
-          'App identification key (same pattern as api.homefix.asia)',
+          'App identification key (API_KEY). Required on most routes except /health and OpenAPI.',
       },
       'X-API-Key',
     )
     .build();
-  const document = SwaggerModule.createDocument(app, config);
+
+  const baseDocument = enrichOpenApiDocument(
+    SwaggerModule.createDocument(app, config),
+    'en',
+  );
 
   const expressApp = app.getHttpAdapter().getInstance();
+  type Req = {
+    query?: Record<string, unknown>;
+    headers?: Record<string, unknown>;
+  };
   type Res = {
     setHeader: (k: string, v: string) => void;
     send: (d: unknown) => void;
     type: (t: string) => { send: (d: unknown) => void };
   };
-  expressApp.get('/openapi.json', (_req: unknown, res: Res) => {
+
+  expressApp.get('/openapi.json', (req: Req, res: Res) => {
+    const lang = normalizeSwaggerLang(langFromRequest(req));
+    const doc = enrichOpenApiDocument(cloneDocument(baseDocument), lang);
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    res.send(document);
+    res.setHeader('Content-Language', lang);
+    res.send(doc);
   });
-  expressApp.get('/openapi.yaml', (_req: unknown, res: Res) => {
+  expressApp.get('/openapi.yaml', (req: Req, res: Res) => {
+    const lang = normalizeSwaggerLang(langFromRequest(req));
+    const doc = enrichOpenApiDocument(cloneDocument(baseDocument), lang);
     res.setHeader('Content-Type', 'application/yaml; charset=utf-8');
-    res.send(yamlStringify(document));
+    res.setHeader('Content-Language', lang);
+    res.send(yamlStringify(doc));
   });
 
-  SwaggerModule.setup('swagger', app, document, {
-    customSiteTitle: 'JetBay API Docs',
+  SwaggerModule.setup('swagger', app, baseDocument, {
+    customSiteTitle: 'JetVina API Docs',
+    customCss: SWAGGER_THEME_CSS,
+    customJsStr: buildSwaggerI18nJs(),
+    patchDocumentOnRequest: (req, _res, document) => {
+      const lang = normalizeSwaggerLang(langFromRequest(req as Req));
+      return enrichOpenApiDocument(cloneDocument(document), lang);
+    },
     swaggerOptions: {
       persistAuthorization: true,
       docExpansion: 'none',
       tagsSorter: 'alpha',
       operationsSorter: 'alpha',
+      filter: true,
+      displayRequestDuration: true,
+      tryItOutEnabled: true,
+      defaultModelsExpandDepth: -1,
+      syntaxHighlight: { activate: true, theme: 'obsidian' },
     },
   });
 
@@ -173,8 +221,7 @@ async function bootstrap() {
   const port = Number(process.env.PORT ?? 4000);
   await app.listen(port, host);
   console.log(`Jet-Bay API listening on http://${host}:${port}`);
-  console.log(`Swagger: http://${host}:${port}/swagger`);
-  console.log(`OpenAPI JSON: http://${host}:${port}/openapi.json`);
-  console.log(`OpenAPI YAML: http://${host}:${port}/openapi.yaml`);
+  console.log(`Swagger: http://${host}:${port}/swagger?lang=vi`);
+  console.log(`OpenAPI JSON: http://${host}:${port}/openapi.json?lang=vi`);
 }
 bootstrap();

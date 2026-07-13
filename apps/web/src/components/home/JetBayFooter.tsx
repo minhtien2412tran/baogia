@@ -28,9 +28,16 @@ export function JetBayFooter({ locale }: { locale: string }) {
             </p>
             <p className="jb-footer-newsletter-hint">{tn(locale, 'footerNewsletterHint')}</p>
             <NewsletterForm locale={locale} />
-            <div className="jb-payment-row">
+            <div className="jb-payment-row" aria-label="Accepted payment methods">
               {JB.payment.map((c) => (
-                <CdnImage key={c.alt} src={c.src} alt={c.alt} width={48} height={32} className="jb-pay-img" />
+                <CdnImage
+                  key={c.alt}
+                  src={c.src}
+                  alt={c.alt}
+                  width={64}
+                  height={32}
+                  className="jb-pay-img"
+                />
               ))}
             </div>
           </div>

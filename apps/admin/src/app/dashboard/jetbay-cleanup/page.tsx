@@ -18,7 +18,7 @@ export default function JetbayCleanupPage() {
 
   return (
     <AdminShell active="/dashboard/jetbay-cleanup">
-      <SectionTitle>JetBay cleanup report</SectionTitle>
+      <SectionTitle>Legacy brand cleanup report</SectionTitle>
       <Muted>Tracking remnant brand/claims. Full table: docs/jetbay-cleanup-audit.md</Muted>
       {msg ? <p>{msg}</p> : null}
       <DataTable

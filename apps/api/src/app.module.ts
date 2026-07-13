@@ -76,6 +76,7 @@ import { OperatorService } from './services/operator.service';
     ThrottlerModule.forRoot([
       { name: 'default', ttl: 60_000, limit: 120 },
       { name: 'auth', ttl: 60_000, limit: 20 },
+      { name: 'quotes', ttl: 60_000, limit: 30 },
     ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({

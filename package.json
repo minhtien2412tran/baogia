@@ -19,6 +19,7 @@
     "audit:asset-references": "node scripts/audit-asset-references.mjs",
     "validate:jetvina-media-manifest": "node scripts/validate-jetvina-media-manifest.mjs",
     "audit:docs": "node scripts/audit-docs.mjs",
+    "smoke:api-sync": "node scripts/smoke-api-sync.mjs",
     "import:jetvina-media": "node scripts/import-jetvina-media.mjs",
     "test:e2e:media-staging": "playwright test -c playwright.media-staging.config.ts",
     "test:e2e:media-production": "playwright test -c playwright.media-production.config.ts",

@@ -10,6 +10,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import {
   ApiTags,
   ApiOperation,
@@ -46,6 +47,7 @@ export class QuoteController {
     private readonly bookingService: BookingService,
   ) {}
   @Post('quotes/search-aircraft')
+  @Throttle({ quotes: { limit: 30, ttl: 60_000 } })
   @ApiOperation({ summary: 'Search available aircraft options' })
   @ApiResponse({
     status: 200,
@@ -56,6 +58,7 @@ export class QuoteController {
   }
 
   @Post('quotes/request')
+  @Throttle({ quotes: { limit: 20, ttl: 60_000 } })
   @UseGuards(OptionalJwtAuthGuard)
   @ApiBearerAuth('bearer')
   @ApiOperation({

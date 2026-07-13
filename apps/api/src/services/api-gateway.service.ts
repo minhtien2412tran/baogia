@@ -52,7 +52,7 @@ export class ApiGatewayService {
     );
 
     return {
-      name: 'JetBay API Gateway',
+      name: 'JetVina API Gateway',
       version: '1.0',
       documentation: {
         swagger: '/swagger',

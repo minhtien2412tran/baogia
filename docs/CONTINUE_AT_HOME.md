@@ -39,12 +39,20 @@
 3. (Optional) set prod `APP_ENV=production` khi secrets đã đủ mạnh  
 4. **BE modules** — tiếp phase 2+ theo [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md)  
 
-### Đang làm — Nhánh tổng hợp `jetvina` (2026-07-13)
+### Đã deploy — Nhánh tổng hợp `jetvina` (2026-07-13)
 
 - Base: JetVina UI/logo từ `feat/api-content-sync` (`b9c4c52`)
 - Gộp: ops-mail (OperatorUser, EmailTemplate, flight notify, admin Operators/Templates)
 - Gộp: nearby airports + quote search dùng pricing engine (positioning + round-trip + về base)
-- Branch: `jetvina` (pushed)
+- Branch: `jetvina` · **API + Admin + Web đã deploy VPS** · migrate + seed OK
+- Smoke BE: `/health` 200 · `/airports/nearby` 200 (SGN) · `POST /quotes/search-aircraft` 201 (3 options, POSITIONING) · admin `/dashboard/operators` + `/email-templates` 200 · web `/en-us` 200
+- Fix deploy web: khôi phục `formatNumber` trong `apps/web/src/config/locales.ts` (local, chưa commit nếu chưa push)
+- **Footer payment chips** (2026-07-13) — bỏ remap JetBay CDN → ảnh JetVina; dùng `/placeholders/payment/*.svg` gốc (Visa/MC/Amex/UnionPay/Discover)
+- **API sync + security plan** (2026-07-13) — local `:4000` ↔ prod ↔ docs **173 paths đồng bộ**; web local/prod cùng prod API · [JETBAY_API_SYNC_SECURITY_PLAN.md](./JETBAY_API_SYNC_SECURITY_PLAN.md)
+- **Fleet slider + Phase A security** (2026-07-13) — aircraft showcase → FlightScrollRail + dots · placeholder ảnh · throttle quotes · `pnpm smoke:api-sync` · onboarding topology
+- **Swagger polish** (2026-07-13) — enrich OpenAPI (summary+description mọi op) · tag descriptions · rewrite [API.md](./API.md) · deploy docs.minhtien.online
+- **Swagger i18n + responsive UI** (2026-07-13) — `?lang=vi|en|zh-cn` · theme tối JetVina · picker ngôn ngữ · mobile/tablet friendly
+- **Rebrand public JetBay→JetVina** (2026-07-13) — Swagger/docs · API mail/SMS · Admin shell (giữ path kỹ thuật cleanup)
 
 **Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) · [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)
 

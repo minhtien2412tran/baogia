@@ -44,7 +44,7 @@ export class OnepayService {
       vpc_Merchant: process.env.ONEPAY_MERCHANT_ID!,
       vpc_ReturnURL: opts.returnUrl,
       vpc_MerchTxnRef: opts.orderId,
-      vpc_OrderInfo: `JetBay Booking ${opts.orderId}`,
+      vpc_OrderInfo: `JetVina Booking ${opts.orderId}`,
       vpc_Amount: String(Math.round(opts.amount * 100)),
       vpc_Currency: opts.currency ?? 'VND',
       vpc_Locale: 'vn',

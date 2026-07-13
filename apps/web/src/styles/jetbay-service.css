@@ -312,13 +312,13 @@
 
 /* ── Aircraft showcase (dark band, light cards) ── */
 .jb-aircraft-showcase {
-  padding: 48px 0 56px;
+  display: block;
+  padding: 48px 24px 40px;
   margin-top: 16px;
   background: linear-gradient(180deg, var(--jb-navy-soft) 0%, var(--jb-navy) 100%);
   border-radius: 24px;
   border: 1px solid rgba(201, 164, 92, 0.15);
-  padding-left: 24px;
-  padding-right: 24px;
+  overflow: hidden;
 }
 
 .jb-aircraft-showcase .jb-section-title {
@@ -337,7 +337,20 @@
   text-align: center;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 28px;
   color: #a8b0bc;
+}
+
+.jb-aircraft-slider {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+}
+
+.jb-aircraft-slider-rail.jb-flight-rail {
+  padding-left: 48px;
+  padding-right: 48px;
+  padding-bottom: 28px;
 }
 
 .jb-aircraft-showcase .jb-aircraft-card {
@@ -349,7 +362,7 @@
 }
 
 .jb-aircraft-showcase .jb-aircraft-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-6px);
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28), 0 0 32px var(--jb-gold-glow);
 }
 
@@ -365,6 +378,43 @@
 .jb-aircraft-showcase .jb-aircraft-spec-row strong {
   color: var(--jb-ink);
   font-weight: 600;
+}
+
+.jb-aircraft-card-photo {
+  object-fit: cover;
+  background: #0f141c;
+}
+
+.jb-aircraft-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  padding-bottom: 4px;
+}
+
+.jb-aircraft-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: rgba(201, 164, 92, 0.35);
+  transition:
+    width 0.2s ease,
+    background 0.2s ease;
+}
+
+.jb-aircraft-dot.is-active {
+  width: 22px;
+  background: var(--jb-gold, #c9a45c);
+}
+
+.jb-aircraft-dot:focus-visible {
+  outline: 2px solid var(--jb-gold, #c9a45c);
+  outline-offset: 2px;
 }
 
 /* ── FAQ section ── */

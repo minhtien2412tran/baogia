@@ -232,8 +232,13 @@
 }
 
 /* ── Aircraft carousel (refactored) ── */
+.jb-aircraft-rail {
+  align-items: stretch;
+}
+
 .jb-aircraft-rail .jb-aircraft-card {
-  flex: 0 0 min(320px, 88vw);
+  flex: 0 0 min(300px, 82vw);
+  max-width: 300px;
 }
 
 /* ── Stats mobile ── */

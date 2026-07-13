@@ -20,7 +20,7 @@ const nav = [
   { href: '/dashboard/content-sync', label: 'Content Sync' },
   { href: '/dashboard/content-rights', label: 'Content Rights' },
   { href: '/dashboard/media-review', label: 'Media Review' },
-  { href: '/dashboard/jetbay-cleanup', label: 'JetBay Cleanup' },
+  { href: '/dashboard/jetbay-cleanup', label: 'Brand Cleanup' },
   { href: '/dashboard/content/pages', label: 'CMS Pages' },
   { href: '/dashboard/content/videos', label: 'Videos' },
   { href: '/dashboard/content/about-us', label: 'About Us CMS' },
@@ -51,7 +51,7 @@ export function AdminShell({ children, active }: { children: React.ReactNode; ac
             <span className="jb-shell__mark" aria-hidden>
               JB
             </span>
-            JetBay Admin
+            JetVina Admin
           </div>
           <button type="button" className="jb-shell__logout" onClick={logout}>
             Logout
