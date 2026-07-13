@@ -64,6 +64,8 @@
 - **Aviation motion icons** (2026-07-13) — SVG `AviationMotionIcon` (takeoff/landing/swap/radar/shield…) · hero trust + quote widget · redeploy web
 - **Security Phase B ops** (2026-07-13) — Nginx rate-limit **applied** · Swagger Basic **ON** (401 anonymous) · demo passwords **rotated** · creds: `/root/backups/jetbay-security-ops-20260713-162720/` · [JETBAY_API_SYNC_SECURITY_PLAN.md](./JETBAY_API_SYNC_SECURITY_PLAN.md)
 - **Fleet nearest-base search** (2026-07-13) — +10 airports (CDG/ORY/KIX/TPE/SFO/ORD/BOS/MLE/SEZ/HPH) · +10 aircraft · search ưu tiên base gần điểm đi · luôn hiện `baseAirport` + km · seed prod
+- **JetVina media + loader + samples** (2026-07-13) — hotlink `jetvina.com` ON · page loader · +6 hãng mẫu · email templates en/vi · [JETVINA_SAMPLE_CONTENT.md](./JETVINA_SAMPLE_CONTENT.md)
+- **Báo cáo tiến độ v3.0** (2026-07-13) — `/baocaotiendo` cập nhật % GĐ1/WEB/ADM · demo + Swagger Basic passwords (đã rotate) · không còn `Admin123!`/`Demo123!`
 
 **Ops còn lại:** SMTP prod thật · CMS dịch locale · G4 keys KH · pen-test/IDOR
 **Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) · [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)

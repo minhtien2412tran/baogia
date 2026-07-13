@@ -9,6 +9,7 @@ import {
   PHASES,
   REFERENCE_LINKS,
   REPORT_META,
+  SWAGGER_ACCESS,
   TECH_BENEFITS,
   VALUE_POINTS,
   statusLabel,
@@ -55,10 +56,10 @@ export default function BaoCaoTienDoPage() {
           <a href={REPORT_META.quoteUrl} target="_blank" rel="noopener noreferrer">
             hợp đồng &amp; báo giá 74TR
           </a>
-          . Đây là báo cáo tuần đầu (tuần {REPORT_META.currentWeek}/{REPORT_META.plannedWeeks}): chúng tôi
-          tập trung dựng nền Backend và môi trường kiểm thử. Các phần Web hoàn thiện, CMS vận hành và
-          thanh toán online vẫn theo lịch các tháng sau — báo cáo cố ý không ghi nhận vượt mốc để Anh
-          theo dõi đúng nhịp hợp đồng.
+          . Đây là cập nhật tuần {REPORT_META.currentWeek}/{REPORT_META.plannedWeeks} (bản{' '}
+          {REPORT_META.reportVersion}): Backend và môi trường kiểm thử đã ổn định; GĐ1 có biên bản
+          nghiệm thu nội bộ. Web/admin đang dựng sớm để Anh xem thử — các phần Web hoàn thiện, CMS
+          vận hành và thanh toán online vẫn theo lịch các tháng sau, cố ý không ghi nhận vượt mốc.
         </p>
         <dl className="pr-meta">
           <div>
@@ -387,7 +388,8 @@ export default function BaoCaoTienDoPage() {
         <h2>7. Tài khoản xem thử (môi trường đang phát triển)</h2>
         <p className="pr-section__intro">
           Anh có thể đăng nhập để xem khung hệ thống. Đây là bản đang làm, chưa phải bản nghiệm thu
-          cuối từng giai đoạn.
+          cuối từng giai đoạn. Mật khẩu demo đã được đổi ngày 13/07/2026 (mật khẩu cũ Admin123! /
+          Demo123! không còn dùng được).
         </p>
         <div className="pr-demo">
           {DEMO_ACCOUNTS.map((a) => (
@@ -401,6 +403,18 @@ export default function BaoCaoTienDoPage() {
               </a>
             </article>
           ))}
+          <article>
+            <h3>Tài liệu API (Swagger · HTTP Basic)</h3>
+            <p className="pr-section__intro" style={{ marginBottom: '0.5rem' }}>
+              {SWAGGER_ACCESS.note}
+            </p>
+            <p>
+              <code>{SWAGGER_ACCESS.username}</code> / <code>{SWAGGER_ACCESS.password}</code>
+            </p>
+            <a href={SWAGGER_ACCESS.url} target="_blank" rel="noopener noreferrer">
+              Mở Swagger ↗
+            </a>
+          </article>
         </div>
       </section>
 

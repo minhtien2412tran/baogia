@@ -723,7 +723,100 @@
   }
 }
 
-/* ── Aviation motion icons (quote widget + trust) ── */
+/* ── JetVina page loader (jetvina.com–style) ── */
+.jb-page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at 50% 40%, #1a1814 0%, #0a0a0a 70%);
+  animation: jb-loader-fade-out 0.35s ease 0s forwards;
+}
+
+.jb-page-loader__inner {
+  text-align: center;
+  color: var(--jb-gold-light, #c9a45c);
+}
+
+.jb-page-loader__mark {
+  font-family: Georgia, 'Times New Roman', serif;
+  letter-spacing: 0.35em;
+  font-size: 13px;
+  margin-bottom: 28px;
+  opacity: 0.9;
+}
+
+.jb-page-loader__plane {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 24px;
+  display: block;
+  animation: jb-loader-fly 1.6s ease-in-out infinite;
+  filter: drop-shadow(0 0 12px rgba(201, 164, 92, 0.45));
+}
+
+.jb-page-loader__track {
+  width: min(220px, 60vw);
+  height: 2px;
+  margin: 0 auto;
+  background: rgba(201, 164, 92, 0.18);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.jb-page-loader__bar {
+  height: 100%;
+  background: linear-gradient(90deg, #a8863f, #e8d5a3, #c9a45c);
+  transition: width 0.2s ease;
+}
+
+.jb-page-loader__hint {
+  margin-top: 16px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: rgba(245, 240, 230, 0.55);
+}
+
+@keyframes jb-loader-fly {
+  0%,
+  100% {
+    transform: translateX(-10px) rotate(-8deg);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateX(10px) rotate(6deg);
+    opacity: 1;
+  }
+}
+
+@keyframes jb-loader-fade-out {
+  to {
+    opacity: 1;
+  }
+}
+
+.jb-page-loader[data-done='true'] {
+  pointer-events: none;
+  animation: jb-loader-hide 0.4s ease forwards;
+}
+
+@keyframes jb-loader-hide {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jb-page-loader__plane,
+  .jb-page-loader__bar {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 .jb-avi-icon {
   display: inline-block;
   flex-shrink: 0;

@@ -4,10 +4,14 @@ import { fileURLToPath } from 'node:url';
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
 
-/** Production must not hotlink jetvina.com — only allow remote patterns for staging/dev review. */
+const allowJetvinaRemote =
+  process.env.NEXT_PUBLIC_ALLOW_JETVINA_REMOTE === 'true' ||
+  process.env.JETVINA_MEDIA_PRODUCTION_ENABLED === 'true';
+
 const isProductionApp = (process.env.NEXT_PUBLIC_APP_ENV || process.env.APP_ENV || '') === 'production';
 const remoteReview =
-  !isProductionApp && process.env.JETVINA_MEDIA_REMOTE_REVIEW_ENABLED !== 'false';
+  allowJetvinaRemote ||
+  (!isProductionApp && process.env.JETVINA_MEDIA_REMOTE_REVIEW_ENABLED !== 'false');
 
 const nextConfig: NextConfig = {
   transpilePackages: ['@jetbay/ui', '@jetbay/i18n'],

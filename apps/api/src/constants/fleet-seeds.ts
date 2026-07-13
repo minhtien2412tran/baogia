@@ -92,6 +92,52 @@ export const OPERATOR_SEEDS: OperatorSeed[] = [
     country: 'Switzerland',
     contactEmail: 'ops@alpinecharter.local',
   },
+  // Sample suppliers — editable later in Admin → Operators
+  {
+    name: 'Indochina Jet Supply',
+    legalName: 'Indochina Jet Supply Co., Ltd (sample)',
+    region: 'APAC',
+    country: 'Vietnam',
+    contactEmail: 'dispatch@indochina-jet.local',
+    paymentTerms: 'Net 7',
+    cancellationPolicy: '40% within 72h',
+  },
+  {
+    name: 'Silk Route Aviation',
+    legalName: 'Silk Route Aviation Pte Ltd (sample)',
+    region: 'APAC',
+    country: 'Singapore',
+    contactEmail: 'ops@silkroute.local',
+  },
+  {
+    name: 'Lotus Private Wings',
+    legalName: 'Lotus Private Wings Co., Ltd (sample)',
+    region: 'APAC',
+    country: 'Thailand',
+    contactEmail: 'charter@lotuswings.local',
+  },
+  {
+    name: 'Saigon Executive Air',
+    legalName: 'Saigon Executive Air JSC (sample)',
+    region: 'APAC',
+    country: 'Vietnam',
+    contactEmail: 'ops@sgxair.local',
+    paymentTerms: 'Net 5',
+  },
+  {
+    name: 'Horizon Gulf Charter',
+    legalName: 'Horizon Gulf Charter LLC (sample)',
+    region: 'EMEA',
+    country: 'United Arab Emirates',
+    contactEmail: 'ops@horizongulf.local',
+  },
+  {
+    name: 'Nordic Prestige Jets',
+    legalName: 'Nordic Prestige Jets AB (sample)',
+    region: 'EMEA',
+    country: 'Sweden',
+    contactEmail: 'ops@nordicprestige.local',
+  },
 ];
 
 export const AIRCRAFT_MODEL_SEEDS: AircraftModelSeed[] = [
@@ -134,4 +180,12 @@ export const AIRCRAFT_INSTANCE_SEEDS: AircraftInstanceSeed[] = [
   { registration: 'B-TPE1', manufacturer: 'Embraer', model: 'Praetor 600', operatorName: 'Pacific Charter Group', baseIata: 'TPE', hourlyRate: 6900, minimumBillableHours: 2 },
   { registration: 'N-SFO1', manufacturer: 'Gulfstream', model: 'G650', operatorName: 'Americas Jet Partners', baseIata: 'SFO', hourlyRate: 9900, minimumBillableHours: 2 },
   { registration: '8Q-MLE1', manufacturer: 'Cessna', model: 'Citation XLS+', operatorName: 'Gulf Prestige Aviation', baseIata: 'MLE', hourlyRate: 3600, minimumBillableHours: 1 },
+  // Sample fleet from new operators
+  { registration: 'VN-ICS1', manufacturer: 'Embraer', model: 'Phenom 300', operatorName: 'Indochina Jet Supply', baseIata: 'SGN', hourlyRate: 4000, minimumBillableHours: 1 },
+  { registration: 'VN-ICS2', manufacturer: 'Bombardier', model: 'Challenger 350', operatorName: 'Indochina Jet Supply', baseIata: 'HAN', hourlyRate: 6000, minimumBillableHours: 2 },
+  { registration: '9V-SRA1', manufacturer: 'Gulfstream', model: 'G280', operatorName: 'Silk Route Aviation', baseIata: 'SIN', hourlyRate: 7300, minimumBillableHours: 2 },
+  { registration: 'HS-LPW1', manufacturer: 'Cessna', model: 'Citation Latitude', operatorName: 'Lotus Private Wings', baseIata: 'BKK', hourlyRate: 4400, minimumBillableHours: 1 },
+  { registration: 'VN-SGX1', manufacturer: 'Dassault', model: 'Falcon 7X', operatorName: 'Saigon Executive Air', baseIata: 'SGN', hourlyRate: 9100, minimumBillableHours: 2 },
+  { registration: 'A6-HGC1', manufacturer: 'Bombardier', model: 'Global 6000', operatorName: 'Horizon Gulf Charter', baseIata: 'DXB', hourlyRate: 10500, minimumBillableHours: 3 },
+  { registration: 'SE-NPJ1', manufacturer: 'Embraer', model: 'Praetor 600', operatorName: 'Nordic Prestige Jets', baseIata: 'ARN', hourlyRate: 6700, minimumBillableHours: 2 },
 ];

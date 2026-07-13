@@ -13,6 +13,7 @@ import { JetBayHeader } from '../../components/home/JetBayHeader';
 import { JetBayFooter } from '../../components/home/JetBayFooter';
 import { CookieBanner } from '../../components/home/CookieBanner';
 import { JetBayMotion } from '../../components/motion/JetBayMotion';
+import { JetVinaPageLoader } from '../../components/motion/JetVinaPageLoader';
 import { PageTransition } from '../../components/motion/PageTransition';
 import { LocaleHtmlLang } from '../../components/layout/LocaleHtmlLang';
 import { getLocaleConfig, isValidLocale } from '../../config/locales';
@@ -32,6 +33,7 @@ export default async function LocaleLayout({
 
   return (
     <div className="jb-page">
+      <JetVinaPageLoader />
       <LocaleHtmlLang locale={locale} />
       <a href="#main-content" className="jb-skip-link">
         {t(locale, 'skipToContent')}

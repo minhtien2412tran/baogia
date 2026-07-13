@@ -36,11 +36,16 @@ cat > "${APP_ROOT}/.env.local" <<EOF
 NEXT_PUBLIC_API_URL=https://api.minhtien.online
 NEXT_PUBLIC_SITE_URL=https://${DOMAIN_WWW}
 NEXT_PUBLIC_API_KEY=${API_KEY}
+NEXT_PUBLIC_APP_ENV=production
+NEXT_PUBLIC_PREFER_JETVINA_MEDIA=true
+NEXT_PUBLIC_ALLOW_JETVINA_REMOTE=true
+JETVINA_MEDIA_PRODUCTION_ENABLED=true
+JETVINA_MEDIA_REMOTE_REVIEW_ENABLED=true
 PORT=${PORT}
 HOSTNAME=127.0.0.1
 EOF
 chmod 600 "${APP_ROOT}/.env.local"
-echo "[web] .env.local written (API_KEY len=${#API_KEY})"
+echo "[web] .env.local written (API_KEY len=${#API_KEY}, jetvina remote ON)"
 
 echo "[web] build i18n vendor..."
 cd "${APP_ROOT}/vendor/i18n"

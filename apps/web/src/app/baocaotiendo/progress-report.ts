@@ -4,7 +4,7 @@
  * Quy tắc báo cáo:
  * - Ngày bắt đầu HĐ: 09/07/2026 · thời hạn ~4 tháng / 16 tuần
  * - Chỉ báo đúng phần đã tới hạn theo lộ trình; không “làm xong sớm” trên giấy
- * - Việc dựng sẵn môi trường / khung kỹ thuật = khởi động GĐ1, không tính nghiệm thu GĐ2–GĐ4
+ * - GĐ1 có biên bản nội bộ (GD1_SIGNOFF) — ghi nhận cao; GĐ2–GĐ4 chưa tới hạn nghiệm thu HĐ
  */
 
 export type WorkStatus = 'done' | 'partial' | 'blocked' | 'not_started';
@@ -45,22 +45,22 @@ export const REPORT_META = {
   quoteUrl: 'https://m-tien.com/jet-bay/',
   startDate: '09/07/2026',
   startDateIso: '2026-07-09',
-  reportDate: '10/07/2026',
-  reportVersion: '2.0',
+  reportDate: '13/07/2026',
+  reportVersion: '3.0',
   plannedMonths: 4,
   plannedWeeks: 16,
   /** Tuần hiện tại kể từ ngày bắt đầu (tuần 1 = 09–15/07) */
   currentWeek: 1,
   currentPhaseLabel: 'Giai đoạn 1 — khởi động & dựng nền',
   overallNote:
-    'Dự án mới bắt đầu từ ngày 09/07/2026. Báo cáo này phản ánh tuần đầu tiên: tập trung dựng môi trường, khung Backend và các đường dẫn kiểm thử nội bộ. Các giai đoạn Web hoàn thiện, vận hành CMS đầy đủ và thanh toán online vẫn nằm ở các tháng sau theo hợp đồng — chưa đến hạn nghiệm thu.',
+    'Cập nhật giữa tuần 1 (13/07): Backend và môi trường kiểm thử đã ổn định; GĐ1 có biên bản nghiệm thu nội bộ. Web/admin đang dựng sớm để Anh xem thử — nghiệm thu GĐ2–GĐ4 vẫn theo lịch 4 tháng, chưa ghi nhận vượt mốc.',
 };
 
 /**
  * % tổng thể theo lịch 4 tháng (tuần 1/16).
- * Cố ý giữ thấp: tránh tạo cảm giác “đã xong phần lớn” khi mới khởi động.
+ * Phản ánh GĐ1 gần xong + chuẩn bị sớm GĐ2 — cố ý không vượt mốc nghiệm thu GĐ2–GĐ4.
  */
-export const OVERALL_PROGRESS_PCT = 8;
+export const OVERALL_PROGRESS_PCT = 22;
 
 export type ContractModule = {
   code: string;
@@ -81,65 +81,72 @@ export const CONTRACT_MODULES: ContractModule[] = [
     name: 'Backend API & cơ sở dữ liệu',
     in74tr: true,
     status: 'partial',
-    progressPct: 22,
+    progressPct: 70,
     quoteLine: 'Theo hợp đồng: làm Backend trước để Web, Dashboard và app sau này dùng chung một API.',
     doneHighlights: [
-      'Đã dựng máy chủ API riêng trên VPS, có địa chỉ https://api.minhtien.online để đội kỹ thuật kiểm thử',
-      'Đã tạo cơ sở dữ liệu riêng (jetbay_db), tách biệt hệ thống đang chạy sẵn trên máy chủ',
-      'Đã có khung đăng nhập JWT và tài liệu Swagger để đối chiếu endpoint trong quá trình phát triển',
+      'Máy chủ API riêng trên VPS: https://api.minhtien.online — health/docs ổn định',
+      'Database riêng jetbay_db + migrate/seed; mẫu: ~120 sân bay, 14 operator, 32 máy bay',
+      'JWT + phân quyền USER/ADMIN; Swagger đã khóa HTTP Basic (không còn mở công khai)',
+      'API cốt lõi GĐ1: quote, fleet/airport, Fixed Price, empty-leg, news, CMS, bookings, payments stub, media, email template',
+      'Biên bản nghiệm thu nội bộ GĐ1 (10/07/2026)',
     ],
     why: 'Nếu làm giao diện trước khi có API ổn định, sau này phải nối lại và dễ lệch nghiệp vụ. Hợp đồng cũng xếp Backend ở bước đầu.',
     benefit:
-      'Anh có thể xem sớm “xương sống” hệ thống; khi sang tháng Web/Dashboard, các màn hình sẽ gắn vào API thật thay vì dữ liệu giả.',
+      'Anh có thể xem sớm “xương sống” hệ thống; web/admin gắn API thật. Tài liệu Swagger đã khóa Basic để bảo vệ môi trường đang phát triển.',
     pending:
-      'Còn hoàn thiện nghiệp vụ theo từng giai đoạn, siết cấu hình production và chờ khóa tích hợp (thanh toán, SMS, email) ở GĐ4.',
+      'Siết vận hành production (backup định kỳ, SMTP thật); chờ khóa tích hợp thanh toán / SMS / email ở GĐ4.',
   },
   {
     code: 'WEB',
-    name: 'Website công khai (clone Jet-Bay)',
+    name: 'Website công khai (clone Jet-Bay / JetVina)',
     in74tr: true,
     status: 'partial',
-    progressPct: 12,
-    quoteLine: 'Website nhiều trang, form báo giá, sản phẩm Fixed Price / Empty Leg / Jet Card… — thuộc các tuần giữa lộ trình.',
+    progressPct: 28,
+    quoteLine:
+      'Website nhiều trang, form báo giá, sản phẩm Fixed Price / Empty Leg / Jet Card… — thuộc các tuần giữa lộ trình.',
     doneHighlights: [
-      'Đã dựng bản web trên https://www.minhtien.online để xem khung giao diện và nối thử API',
-      'Một số trang chính đã hiện dữ liệu từ API (đang ở mức kiểm thử nội bộ)',
+      'Bản xem trước https://www.minhtien.online — nhiều trang nối API thật (quote, fleet, FP, news…)',
+      'i18n EN/VI cho product UI (quote widget, airport search, hero…)',
+      'Hình ảnh / media mẫu theo hướng JetVina trên môi trường xem trước',
+      'Loader chuyển trang và icon chuyển động nhẹ theo phong cách hàng không',
     ],
     why: 'Cần có bản xem sớm để Anh góp ý hướng giao diện, nhưng chưa phải bản nghiệm thu tháng 2.',
     benefit:
-      'Anh theo dõi được hình hài sản phẩm song song với Backend, thay vì chờ đến cuối mới nhìn thấy web.',
+      'Anh theo dõi được hình hài sản phẩm song song với Backend; góp ý sớm giảm chỉnh lớn ở tháng 2.',
     pending:
-      'Chỉnh giao diện sát mẫu, hoàn thiện toàn bộ trang và trải nghiệm người dùng — sẽ đẩy mạnh trong Giai đoạn 2 theo lịch.',
+      'Chỉnh giao diện sát mẫu JetVina toàn trang, responsive/DoD từng page, quote widget ổn định — đẩy mạnh Giai đoạn 2 theo lịch.',
   },
   {
     code: 'ADM',
     name: 'Bảng quản trị & CMS',
     in74tr: true,
     status: 'partial',
-    progressPct: 10,
+    progressPct: 22,
     quoteLine: 'Dashboard quản lý nội dung, giá, báo giá — theo hợp đồng nằm ở giai đoạn giữa–cuối.',
     doneHighlights: [
-      'Đã mở cổng admin thử nghiệm tại https://admin.minhtien.online để đội nội bộ kiểm tra quyền đăng nhập',
-      'Đang dựng dần các màn hình quản lý (bài viết, chuyến, báo giá…) — chưa bàn giao vận hành',
-      'Đã bổ sung form chỉnh giá Fixed Price theo từng hạng máy bay (tier) — phục vụ kiểm thử nội bộ, chưa nghiệm thu CMS',
+      'Cổng admin https://admin.minhtien.online — đăng nhập JWT nối API production',
+      'Màn hình quản lý đang dựng dần (bài viết, chuyến, báo giá, Fixed Price theo tier…)',
+      'Đã siết bảo mật demo: mật khẩu tài khoản xem thử đã đổi (13/07/2026)',
     ],
     why: 'Cần khung admin sớm để kiểm tra quyền USER/ADMIN và luồng dữ liệu, nhưng chưa đến hạn “CMS vận hành đầy đủ”.',
     benefit: 'Khi tới giai đoạn nghiệm thu CMS, Anh sẽ có sẵn đường vào và tài khoản demo để xem thực tế.',
-    pending: 'Bổ sung form, quy trình duyệt, hướng dẫn vận hành — tiếp tục trong các tuần tới.',
+    pending: 'Bổ sung form, quy trình duyệt, hướng dẫn vận hành — tiếp tục trong các tuần tới / GĐ3.',
   },
   {
     code: 'AUTH',
     name: 'Đăng nhập & phân quyền',
     in74tr: true,
     status: 'partial',
-    progressPct: 18,
+    progressPct: 45,
     quoteLine: 'JWT dùng chung Web/Admin; Google / Apple / SMS OTP thuộc phần tích hợp giai đoạn sau.',
     doneHighlights: [
-      'Đã có đăng ký / đăng nhập bằng email–mật khẩu trên môi trường thử',
-      'Đã tách quyền người dùng thường và quản trị (admin không mở cho tài khoản thường)',
+      'Đăng ký / đăng nhập email–mật khẩu trên môi trường thử',
+      'Tách quyền USER / ADMIN (admin không mở cho tài khoản thường)',
+      'Đã rotate mật khẩu demo admin & user (13/07/2026)',
     ],
     why: 'Mọi client sau này (web, admin, app) cần cùng một cách đăng nhập — làm sớm phần lõi sẽ đỡ sửa lại.',
-    benefit: 'An toàn hơn khi đặt chỗ/báo giá; sẵn sàng gắn thêm Google/Apple/SMS khi Anh cung cấp thông tin nhà cung cấp.',
+    benefit:
+      'An toàn hơn khi đặt chỗ/báo giá; sẵn sàng gắn thêm Google/Apple/SMS khi Anh cung cấp thông tin nhà cung cấp.',
     pending: 'Google, Apple, SMS OTP — chờ cấu hình phía Anh và nằm ở Giai đoạn 4.',
   },
   {
@@ -150,7 +157,7 @@ export const CONTRACT_MODULES: ContractModule[] = [
     progressPct: 5,
     quoteLine: 'Tích hợp kỹ thuật trong gói 74TR; phí merchant do Bên A — theo lịch khoảng tháng 4.',
     doneHighlights: [
-      'Mới chuẩn bị khung mã nguồn (chưa bật thanh toán thật, chưa có giao dịch thử)',
+      'Đã có khung API/webhook stub (chưa bật thanh toán thật, chưa có giao dịch thử)',
     ],
     why: 'Phần này phụ thuộc khóa merchant và UAT — chưa đến hạn trong tuần đầu.',
     benefit: 'Khi tới giai đoạn thanh toán, đội sẽ cấu hình và chạy thử sandbox thay vì viết lại từ đầu.',
@@ -194,7 +201,7 @@ export const VALUE_POINTS: ValuePoint[] = [
   {
     title: 'Không báo vượt tiến độ',
     detail:
-      'Dù khung kỹ thuật dựng nhanh trong tuần đầu, các mốc nghiệm thu GĐ2–GĐ4 vẫn giữ đúng lịch 4 tháng. Phần chưa tới hạn ghi nhận là đang phát triển hoặc tỷ lệ thấp.',
+      'Dù khung kỹ thuật dựng nhanh và GĐ1 đã có biên bản nội bộ, các mốc nghiệm thu GĐ2–GĐ4 vẫn giữ đúng lịch 4 tháng. Phần chưa tới hạn ghi nhận tỷ lệ thấp.',
   },
 ];
 
@@ -216,9 +223,10 @@ export const TECH_BENEFITS: TechBenefit[] = [
     helps: 'Bảo vệ khu vực quản trị và dữ liệu đặt chỗ; cùng chuẩn cho nhiều ứng dụng.',
   },
   {
-    tech: 'Swagger (OpenAPI)',
+    tech: 'Swagger (OpenAPI) + HTTP Basic',
     role: 'Tài liệu API đang phát triển',
-    helps: 'Anh hoặc đối tác kỹ thuật xem được danh sách API trong lúc làm, giảm hiểu nhầm khi nối hệ thống.',
+    helps:
+      'Anh hoặc đối tác kỹ thuật xem được danh sách API; đã khóa Basic để tránh lộ tài liệu công khai.',
   },
   {
     tech: 'Next.js (Web & Admin)',
@@ -235,36 +243,36 @@ export const PHASES: PhaseReport[] = [
     weeks: 'Tuần 1–4',
     calendar: '09/07 – đầu tháng 08/2026',
     summary:
-      'Đúng lịch tuần 1: dựng môi trường, database, khung API và đường dẫn kiểm thử. Đây là giai đoạn đang triển khai — chưa kết thúc GĐ1.',
+      'Đúng lịch tuần 1: môi trường, DB, khung API và đường dẫn kiểm thử đã sẵn. Biên bản nghiệm thu nội bộ GĐ1 đã có (10/07) — còn siết vận hành trước khi đóng HĐ GĐ1 với Anh.',
     status: 'partial',
-    completionPct: 28,
+    completionPct: 85,
     done: [
       { title: 'Chốt phạm vi theo báo giá 74TR và tách hạ tầng JetBay trên VPS', status: 'done' },
       { title: 'Tạo database riêng, chạy migrate/seed dữ liệu mẫu để kiểm thử', status: 'done' },
-      { title: 'Mở API HTTPS + trang tài liệu Swagger nội bộ', status: 'done' },
-      { title: 'Khung đăng nhập JWT và tài khoản demo để Anh xem thử', status: 'done' },
+      { title: 'Mở API HTTPS + trang tài liệu Swagger (đã bật HTTP Basic)', status: 'done' },
+      { title: 'Khung đăng nhập JWT và tài khoản demo (mật khẩu đã rotate 13/07)', status: 'done' },
+      {
+        title: 'Nhóm API cốt lõi GĐ1 (quote, fleet, FP, CMS, bookings…) — checklist nội bộ',
+        status: 'done',
+      },
     ],
     inProgress: [
       {
-        title: 'Hoàn thiện các nhóm API cốt lõi (báo giá, sản phẩm, nội dung) theo checklist GĐ1',
+        title: 'Siết cấu hình vận hành (SMTP production, sao lưu định kỳ, checklist an toàn)',
         status: 'partial',
-        note: 'Đang làm dở trong tháng 1',
-      },
-      {
-        title: 'Siết cấu hình vận hành (môi trường, sao lưu, checklist an toàn cơ bản)',
-        status: 'partial',
+        note: 'Tuần 2–4',
       },
     ],
     backlog: [
       {
-        title: 'Nghiệm thu kết thúc Giai đoạn 1 (ERD/spec/môi trường ổn định theo biên bản)',
+        title: 'Nghiệm thu kết thúc Giai đoạn 1 với Anh (biên bản HĐ)',
         status: 'not_started',
         note: 'Dự kiến cuối tuần 4',
       },
     ],
     deliverables: [
-      { label: 'API (đang phát triển)', href: 'https://api.minhtien.online/health' },
-      { label: 'Swagger', href: 'https://docs.minhtien.online/swagger' },
+      { label: 'API (đang phát triển)', href: 'https://api.minhtien.online' },
+      { label: 'Swagger (cần Basic)', href: 'https://docs.minhtien.online/swagger' },
     ],
   },
   {
@@ -274,19 +282,22 @@ export const PHASES: PhaseReport[] = [
     weeks: 'Tuần 5–8',
     calendar: 'Tháng 2 theo lộ trình HĐ',
     summary:
-      'Chưa tới hạn. Hiện chỉ có bản web dựng sớm để xem khung — chưa tính nghiệm thu Frontend staging.',
+      'Chưa tới hạn nghiệm thu. Đã có bản web xem trước + i18n + media mẫu — chưa tính nghiệm thu Frontend staging.',
     status: 'partial',
-    completionPct: 8,
+    completionPct: 18,
     done: [],
     inProgress: [
       {
-        title: 'Dựng khung trang và nối thử API (bản nội bộ)',
+        title: 'Dựng khung trang, nối API, i18n, media theo hướng JetVina (bản nội bộ)',
         status: 'partial',
         note: 'Chuẩn bị trước, nghiệm thu vẫn theo tháng 2',
       },
     ],
     backlog: [
-      { title: 'Hoàn thiện giao diện theo mẫu, responsive, quote widget ổn định', status: 'not_started' },
+      {
+        title: 'Hoàn thiện giao diện theo mẫu, responsive, quote widget ổn định',
+        status: 'not_started',
+      },
       { title: 'Nghiệm thu staging Frontend (mốc thanh toán đợt 2 theo HĐ)', status: 'not_started' },
     ],
     deliverables: [{ label: 'Web xem trước', href: 'https://www.minhtien.online/en-us' }],
@@ -300,7 +311,7 @@ export const PHASES: PhaseReport[] = [
     summary:
       'Chưa tới hạn. Admin mới ở mức khung kiểm thử nội bộ — chưa bàn giao “CMS vận hành”.',
     status: 'not_started',
-    completionPct: 6,
+    completionPct: 12,
     done: [],
     inProgress: [
       {
@@ -310,7 +321,10 @@ export const PHASES: PhaseReport[] = [
       },
     ],
     backlog: [
-      { title: 'Hoàn thiện CRUD/CMS, quy trình báo giá–offer, tài liệu vận hành', status: 'not_started' },
+      {
+        title: 'Hoàn thiện CRUD/CMS, quy trình báo giá–offer, tài liệu vận hành',
+        status: 'not_started',
+      },
       { title: 'Nghiệm thu API + CMS (mốc thanh toán đợt 3)', status: 'not_started' },
     ],
     deliverables: [{ label: 'Admin xem trước', href: 'https://admin.minhtien.online/login' }],
@@ -328,13 +342,20 @@ export const PHASES: PhaseReport[] = [
     done: [],
     inProgress: [],
     backlog: [
-      { title: 'Cấu hình Stripe / OnePay / 9Pay và giao dịch sandbox', status: 'blocked', note: 'Chờ khóa từ Anh' },
+      {
+        title: 'Cấu hình Stripe / OnePay / 9Pay và giao dịch sandbox',
+        status: 'blocked',
+        note: 'Chờ khóa từ Anh',
+      },
       { title: 'Google / Apple / SMS OTP', status: 'blocked', note: 'Chờ cấu hình từ Anh' },
       { title: 'Email SMTP production', status: 'blocked', note: 'Chờ thông tin máy chủ thư' },
       { title: 'UAT xuất PDF/Word + go-live cứng', status: 'not_started' },
     ],
     deliverables: [
-      { label: 'Trạng thái tích hợp (sơ bộ)', href: 'https://api.minhtien.online/integrations/status' },
+      {
+        label: 'Trạng thái tích hợp (sơ bộ)',
+        href: 'https://api.minhtien.online/v1/integrations/status',
+      },
     ],
   },
 ];
@@ -351,21 +372,33 @@ export const DEMO_ACCOUNTS = [
   {
     role: 'Quản trị (xem thử)',
     email: 'admin@jetbay.local',
-    password: 'Admin123!',
+    password: 'WTtymX89cEWUwgJBzqAa1!',
     url: 'https://admin.minhtien.online/login',
   },
   {
     role: 'Người dùng (xem thử)',
     email: 'demo@jetbay.local',
-    password: 'Demo123!',
+    password: 'J9q9snOLWiMcmTYHFIAa1!',
     url: 'https://www.minhtien.online/en-us/login',
   },
-];
+] as const;
+
+/** Swagger / docs — HTTP Basic (cửa sổ trình duyệt, không phải form JWT). */
+export const SWAGGER_ACCESS = {
+  url: 'https://docs.minhtien.online/swagger',
+  username: 'docs',
+  password: 'UNURseKKFiiWGp0bHtr4GWqEG9Gk',
+  note: 'Cửa sổ “Sign in to access this site” = HTTP Basic bảo vệ tài liệu API, không phải tài khoản đăng nhập JetVina.',
+} as const;
 
 export const REFERENCE_LINKS: LinkRef[] = [
   { label: 'Website xem trước', href: 'https://www.minhtien.online/en-us', kind: 'live' },
   { label: 'API đang phát triển', href: 'https://api.minhtien.online', kind: 'live' },
-  { label: 'Tài liệu API (Swagger)', href: 'https://docs.minhtien.online/swagger', kind: 'live' },
+  {
+    label: 'Tài liệu API (Swagger · Basic)',
+    href: 'https://docs.minhtien.online/swagger',
+    kind: 'live',
+  },
   { label: 'Bảng quản trị xem trước', href: 'https://admin.minhtien.online/login', kind: 'live' },
   {
     label: 'Hợp đồng & báo giá 74TR',
@@ -406,9 +439,9 @@ export const NEXT_ACTIONS = [
   {
     owner: 'Phía Minh Tiến Solutions',
     items: [
-      'Tiếp tục hoàn thiện Giai đoạn 1 đúng lịch tuần 2–4',
-      'Chuẩn bị sớm một số màn web (tin tức, newsletter, hiển thị giá FP) — nội bộ, chưa nghiệm thu GĐ2',
-      'Cập nhật báo cáo tiến độ định kỳ (không dồn một lần cuối)',
+      'Tiếp tục đóng GĐ1 theo lịch tuần 2–4 (SMTP, backup, biên bản với Anh)',
+      'Đẩy sớm màn web (tin tức, newsletter, FP, fleet) — nội bộ, chưa nghiệm thu GĐ2',
+      'Cập nhật báo cáo tiến độ định kỳ trên cùng địa chỉ này',
       'Chỉ mở nghiệm thu từng giai đoạn khi đủ điều kiện theo hợp đồng',
     ],
   },

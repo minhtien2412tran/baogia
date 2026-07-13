@@ -3,6 +3,7 @@ import {
   IS_MEDIA_PRODUCTION,
   JETVINA_MEDIA_REMOTE_REVIEW_ENABLED,
   PREFER_JETVINA_MEDIA,
+  ALLOW_JETVINA_REMOTE,
 } from './media-env';
 import {
   isJetBayMediaPath,
@@ -58,14 +59,14 @@ function guessKind(path: string): PlaceholderKind {
 }
 
 /**
- * Remap JetBay mirrors → resolveMediaAsset (JetVina local/remote review or placeholder).
- * Production never returns jetvina.com hotlinks.
+ * Remap JetBay mirrors → resolveMediaAsset (JetVina local/remote or placeholder).
+ * When ALLOW_JETVINA_REMOTE: jetvina.com hotlinks are kept (client-directed).
  */
 export function sanitizePublicMediaSrc(src: string, kind?: PlaceholderKind): string {
   if (!src) return PLACEHOLDER.service;
 
-  // Absolute JetVina remote in production → placeholder
   if (isJetvinaRemoteUrl(src)) {
+    if (ALLOW_JETVINA_REMOTE) return src;
     return sanitizeResolvedSrc(src, kind ? KIND_TO_CONTEXT[kind] : usageContextFromPath(src), src);
   }
 
@@ -86,5 +87,6 @@ export {
   IS_MEDIA_PRODUCTION,
   JETVINA_MEDIA_REMOTE_REVIEW_ENABLED,
   PREFER_JETVINA_MEDIA,
+  ALLOW_JETVINA_REMOTE,
   resolveMediaAsset,
 };

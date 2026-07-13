@@ -4,6 +4,7 @@ import {
   JETVINA_MEDIA_LOCAL_MIRROR_ENABLED,
   JETVINA_MEDIA_REMOTE_REVIEW_ENABLED,
   PREFER_JETVINA_MEDIA,
+  ALLOW_JETVINA_REMOTE,
 } from './media-env';
 import { buildCatalogManifest } from './jetvina-manifest-builder';
 import type {
@@ -117,12 +118,15 @@ function recordMatchesContext(rec: JetVinaMediaRecord, ctx: MediaUsageContext): 
 }
 
 function productionPublishEnabled(): boolean {
-  return process.env.JETVINA_MEDIA_PRODUCTION_ENABLED === 'true';
+  return (
+    process.env.JETVINA_MEDIA_PRODUCTION_ENABLED === 'true' || ALLOW_JETVINA_REMOTE
+  );
 }
 
 function canUseInEnv(rec: JetVinaMediaRecord, env: ReturnType<typeof getMediaEnvironment>): boolean {
   if (rec.rightsStatus === 'PROHIBITED') return false;
   if (env === 'production') {
+    if (ALLOW_JETVINA_REMOTE) return rec.approvedForStaging !== false;
     if (!productionPublishEnabled()) return false;
     if (!rec.approvedForProduction) return false;
     if (!['OWNED', 'LICENSED', 'CLIENT_PROVIDED'].includes(rec.rightsStatus)) return false;
@@ -176,6 +180,17 @@ export function resolveMediaAsset(input: ResolveMediaInput): ResolvedMedia {
           objectPosition: chosen.objectPositionDesktop,
         };
       }
+      if (ALLOW_JETVINA_REMOTE && chosen.sourceUrl) {
+        return {
+          src: chosen.sourceUrl,
+          alt: chosen.altText ?? 'JetVina media',
+          width: chosen.width,
+          height: chosen.height,
+          source: 'REMOTE_JETVINA_REVIEW',
+          rightsStatus: chosen.rightsStatus,
+          objectPosition: chosen.objectPositionDesktop,
+        };
+      }
       return pickDemo(fallbackKind, seed);
     }
 
@@ -209,14 +224,14 @@ export function resolveMediaAsset(input: ResolveMediaInput): ResolvedMedia {
     return pickDemo(fallbackKind, seed);
   }
 
-  // Prefer remote catalog URLs in non-prod even without checksum/local mirror
-  if (env !== 'production' && JETVINA_MEDIA_REMOTE_REVIEW_ENABLED && PREFER_JETVINA_MEDIA) {
+  // Prefer remote catalog URLs when remote is allowed (incl. production client-directed)
+  if ((env !== 'production' || ALLOW_JETVINA_REMOTE) && JETVINA_MEDIA_REMOTE_REVIEW_ENABLED && PREFER_JETVINA_MEDIA) {
     const fromManifest = manifest.records.filter((r) => recordMatchesContext(r, input.context));
     if (fromManifest.length) {
       const rec = fromManifest[hashSeed(seed) % fromManifest.length]!;
       return {
         src: rec.sourceUrl,
-        alt: rec.altText ?? 'JetVina media (staging review)',
+        alt: rec.altText ?? 'JetVina media',
         width: rec.width,
         height: rec.height,
         source: 'REMOTE_JETVINA_REVIEW',
@@ -250,15 +265,18 @@ export function isJetvinaRemoteUrl(src: string): boolean {
 }
 
 /**
- * Sanitize any public image src: block JetBay, block JetVina remote in production.
+ * Sanitize any public image src: block JetBay; JetVina remote allowed when ALLOW_JETVINA_REMOTE.
  */
 export function sanitizeResolvedSrc(src: string, context: MediaUsageContext, seed?: string): string {
   if (BLOCK_JETBAY_MEDIA_ASSETS && isJetBayMediaPath(src)) {
     return resolveMediaAsset({ context, seed: seed ?? src }).src;
   }
-  if (isJetvinaRemoteUrl(src) && getMediaEnvironment() === 'production') {
-    warnBlockedRemote(src);
-    return resolveMediaAsset({ context, seed: seed ?? src, environment: 'production' }).src;
+  if (isJetvinaRemoteUrl(src)) {
+    if (ALLOW_JETVINA_REMOTE) return src;
+    if (getMediaEnvironment() === 'production') {
+      warnBlockedRemote(src);
+      return resolveMediaAsset({ context, seed: seed ?? src, environment: 'production' }).src;
+    }
   }
   return src;
 }

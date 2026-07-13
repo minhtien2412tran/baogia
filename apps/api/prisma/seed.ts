@@ -9,6 +9,7 @@ import {
   AIRCRAFT_MODEL_SEEDS,
   OPERATOR_SEEDS,
 } from '../src/constants/fleet-seeds';
+import { EMAIL_TEMPLATE_SEEDS } from '../src/constants/email-template-seeds';
 
 const prisma = new PrismaClient();
 
@@ -276,24 +277,9 @@ async function main() {
   }
 
   console.log('Seeding EmailTemplates...');
-  for (const tpl of [
-    {
-      key: 'operator_flight_notify',
-      subject: '[JetVina] New flight / booking #{{bookingId}}',
-      htmlBody:
-        '<p>Hello {{operatorName}},</p><p>Booking <strong>#{{bookingId}}</strong> — {{itinerary}}</p>',
-      textBody: 'Booking #{{bookingId}} {{itinerary}}',
-    },
-    {
-      key: 'admin_flight_notify',
-      subject: '[JetVina Admin] Booking #{{bookingId}} — {{bookingStatus}}',
-      htmlBody:
-        '<p>Admin: booking #{{bookingId}} operator {{operatorName}} status {{bookingStatus}}</p><p>{{itinerary}}</p>',
-      textBody: 'Admin booking #{{bookingId}} {{bookingStatus}}',
-    },
-  ]) {
+  for (const tpl of EMAIL_TEMPLATE_SEEDS) {
     await prisma.emailTemplate.upsert({
-      where: { key_locale: { key: tpl.key, locale: 'en' } },
+      where: { key_locale: { key: tpl.key, locale: tpl.locale } },
       update: {
         subject: tpl.subject,
         htmlBody: tpl.htmlBody,
@@ -301,7 +287,7 @@ async function main() {
       },
       create: {
         key: tpl.key,
-        locale: 'en',
+        locale: tpl.locale,
         subject: tpl.subject,
         htmlBody: tpl.htmlBody,
         textBody: tpl.textBody,

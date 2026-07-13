@@ -10,13 +10,13 @@ const FALLBACK: Record<
   { subject: string; htmlBody: string; textBody: string }
 > = {
   operator_flight_notify: {
-    subject: '[JetVina] New flight / booking #{{bookingId}}',
-    htmlBody: `<p>Hello {{operatorName}},</p>
-<p>A new booking <strong>#{{bookingId}}</strong> requires your attention.</p>
+    subject: '[JetVina] New charter request #{{bookingId}} — {{operatorName}}',
+    htmlBody: `<p>Hello <strong>{{operatorName}}</strong>,</p>
+<p>A new booking <strong>#{{bookingId}}</strong> requires operational confirmation.</p>
 <p><strong>Customer:</strong> {{customerName}} ({{customerEmail}})<br/>
 <strong>Status:</strong> {{bookingStatus}}<br/>
 <strong>Itinerary:</strong> {{itinerary}}</p>
-<p>Please confirm operational readiness.</p>`,
+<p>Please confirm aircraft readiness within 2 hours.</p>`,
     textBody:
       'Booking #{{bookingId}} for {{customerName}}. Status: {{bookingStatus}}. Itinerary: {{itinerary}}',
   },

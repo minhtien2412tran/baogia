@@ -18,21 +18,28 @@ export const IS_MEDIA_PRODUCTION = getMediaEnvironment() === 'production';
 export const PREFER_JETVINA_MEDIA = process.env.NEXT_PUBLIC_PREFER_JETVINA_MEDIA !== 'false';
 
 /**
- * Allow hotlink to jetvina.com for review only (never production).
- * Server-side flag preferred; NEXT_PUBLIC_ is not a security boundary alone.
+ * Explicit allow of https://jetvina.com WP media in any env (incl. production).
+ * Client-directed — JetVina brand site is the demo image source.
+ */
+export const ALLOW_JETVINA_REMOTE =
+  process.env.NEXT_PUBLIC_ALLOW_JETVINA_REMOTE === 'true' ||
+  process.env.JETVINA_MEDIA_PRODUCTION_ENABLED === 'true';
+
+/**
+ * Allow hotlink to jetvina.com for review (non-prod) or when ALLOW_JETVINA_REMOTE.
  */
 export const JETVINA_MEDIA_REMOTE_REVIEW_ENABLED =
-  !IS_MEDIA_PRODUCTION && process.env.JETVINA_MEDIA_REMOTE_REVIEW_ENABLED !== 'false';
+  ALLOW_JETVINA_REMOTE ||
+  (!IS_MEDIA_PRODUCTION && process.env.JETVINA_MEDIA_REMOTE_REVIEW_ENABLED !== 'false');
 
 /** Prefer local mirror files under /assets/jetvina/mirror when present. */
 export const JETVINA_MEDIA_LOCAL_MIRROR_ENABLED =
   process.env.JETVINA_MEDIA_LOCAL_MIRROR_ENABLED !== 'false';
 
 /**
- * Publish JetVina media in production only after written rights + approvedForProduction.
- * Default false while rightsStatus remains UNVERIFIED.
+ * Publish JetVina media in production — also true when ALLOW_JETVINA_REMOTE.
  */
 export const JETVINA_MEDIA_PRODUCTION_ENABLED =
-  process.env.JETVINA_MEDIA_PRODUCTION_ENABLED === 'true';
+  process.env.JETVINA_MEDIA_PRODUCTION_ENABLED === 'true' || ALLOW_JETVINA_REMOTE;
 
 export const BLOCK_JETBAY_MEDIA_ASSETS = process.env.NEXT_PUBLIC_ALLOW_JETBAY_MEDIA !== 'true';

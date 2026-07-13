@@ -1,5 +1,7 @@
 /** Historical media seeds — remapped by sanitize; never emit /assets/jetbay to the DOM. */
 import { sanitizePublicMediaSrc } from '../lib/media-policy';
+import { JETVINA_MEDIA } from '../lib/jetvina-media-catalog';
+import { ALLOW_JETVINA_REMOTE } from '../lib/media-env';
 
 export const LOCAL_ASSET_ROOT = '/media-seed';
 /** @deprecated Use BrandLogo /brand/jetvina — JetVina SVG removed from public brand path */
@@ -10,6 +12,9 @@ export const JETBAY_LOGO = JTA_LOGO;
 export function localAsset(path: string): string {
   if (path.startsWith('/placeholders/') || path.startsWith('/brand/')) return path;
   if (path.startsWith('/assets/jetvina/')) return path;
+  if (path.startsWith('https://jetvina.com/') || path.startsWith('https://www.jetvina.com/')) {
+    return sanitizePublicMediaSrc(path);
+  }
   if (path.startsWith('/media-seed/') || path.startsWith('/assets/jetbay/')) {
     return sanitizePublicMediaSrc(path);
   }
@@ -19,6 +24,9 @@ export function localAsset(path: string): string {
   if (path.startsWith('http')) {
     try {
       const u = new URL(path.split('?')[0]);
+      if (u.hostname === 'jetvina.com' || u.hostname === 'www.jetvina.com') {
+        return sanitizePublicMediaSrc(path);
+      }
       return localAsset(decodeURIComponent(u.pathname));
     } catch {
       return sanitizePublicMediaSrc(path);
@@ -44,7 +52,9 @@ const L = localAsset;
 export const JB = {
   logo: JETBAY_LOGO,
   logoDefault: JETBAY_LOGO,
-  homeBg: L('/v4/default/homeBg-904817913171628032.webp'),
+  homeBg: ALLOW_JETVINA_REMOTE
+    ? JETVINA_MEDIA.hero[0]
+    : L('/v4/default/homeBg-904817913171628032.webp'),
   callIcon: L('/v4/default/call-910545791444205568.webp'),
   globalIcon: L('/jetbayImg/common/global_b.png'),
   subscribeIcon: L('/v4/default/subscribe-icon-910621258612318208.webp'),

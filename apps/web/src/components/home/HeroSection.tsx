@@ -1,16 +1,18 @@
 import { JB } from '../../config/jetbay-cdn';
+import { sanitizePublicMediaSrc } from '../../lib/media-policy';
 import { QuoteSearchWidget } from '../QuoteSearchWidget';
 import { AviationMotionIcon } from '../ui/AviationMotionIcon';
 import { t } from '../../lib/i18n';
 import { HeroParticles } from './HeroParticles';
 
 export function HeroSection({ locale, currency }: { locale: string; currency?: string }) {
+  const heroBg = sanitizePublicMediaSrc(JB.homeBg, 'hero');
   return (
     <section className="jb-hero">
       <div
         className="jb-hero-bg"
         aria-hidden
-        style={{ backgroundImage: `linear-gradient(105deg, rgba(10, 12, 15, 0.92) 0%, rgba(10, 12, 15, 0.55) 45%, rgba(10, 12, 15, 0.75) 100%), url(${JB.homeBg})` }}
+        style={{ backgroundImage: `linear-gradient(105deg, rgba(10, 12, 15, 0.92) 0%, rgba(10, 12, 15, 0.55) 45%, rgba(10, 12, 15, 0.75) 100%), url(${heroBg})` }}
       />
       <HeroParticles />
       <div className="jb-hero-flight" aria-hidden>
