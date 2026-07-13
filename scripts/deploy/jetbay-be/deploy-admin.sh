@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env bash
+#!/usr/bin/env bash
 # Deploy Jet-Bay Admin to /var/www/jetbay-admin on 127.0.0.1:3011
 # Requires: admin Next.js standalone/build already synced to APP_ROOT
 set -euo pipefail
