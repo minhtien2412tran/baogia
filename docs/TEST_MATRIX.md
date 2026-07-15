@@ -27,6 +27,7 @@ Local convenience credential: NEEDS_LOCAL_ENV_REFRESH
 | smoke:html-probe | `pnpm smoke:html-probe … 3.1` | prod | **PASS** | — | 0 | 30s timeout |
 | smoke:newsletter-smtp | `pnpm smoke:newsletter-smtp` | prod | **PASS** | — | 0 | emailDeliverable=false |
 | backup-restore-drill | VPS script | VPS | **PASS** | — | 0 | 120=120 · dump `20260714-145739` |
+| Mailpit catcher | VPS docker + `SMTP_ALLOW_CATCHER` | prod | **PASS catcher** | — | 0 | smtpCatcher=true · mail in UI · not real inbox |
 | T-S4-01 inbox | real mailbox | prod | **BLOCKED_OWNER_SMTP** | — | — | see canonical below |
 
 ## History quote IDs (not contradictions)

@@ -2,7 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import {
   isSmtpDeliverableConfigured,
-  smtpNonDeliverableReason,
+  isSmtpTransportConfigured,
+  smtpTransportBlockedReason,
 } from '../utils/smtp-config';
 
 export type MailAttachment = {
@@ -17,8 +18,13 @@ export class EmailService {
   private transporter: nodemailer.Transporter | null = null;
   private verified = false;
 
-  /** True only when SMTP can actually deliver (rejects prod loopback). */
+  /** True when transport can send (real SMTP or allowed Mailpit catcher). */
   isConfigured(): boolean {
+    return isSmtpTransportConfigured();
+  }
+
+  /** True only for real customer-inbox SMTP (never loopback in production). */
+  isDeliverable(): boolean {
     return isSmtpDeliverableConfigured();
   }
 
@@ -49,7 +55,7 @@ export class EmailService {
   }
 
   async verifyConnection(): Promise<{ ok: boolean; reason?: string }> {
-    const blocked = smtpNonDeliverableReason();
+    const blocked = smtpTransportBlockedReason();
     if (blocked) return { ok: false, reason: blocked };
     if (!this.isConfigured())
       return { ok: false, reason: 'SMTP not configured' };
@@ -77,10 +83,10 @@ export class EmailService {
     cc?: string;
     attachments?: MailAttachment[];
   }): Promise<{ sent: boolean; reason?: string }> {
-    const blocked = smtpNonDeliverableReason();
+    const blocked = smtpTransportBlockedReason();
     if (blocked) {
       this.logger.warn(
-        `Email skipped (SMTP not deliverable): ${opts.subject} → ${opts.to} (${blocked})`,
+        `Email skipped (SMTP transport blocked): ${opts.subject} → ${opts.to} (${blocked})`,
       );
       return { sent: false, reason: blocked };
     }

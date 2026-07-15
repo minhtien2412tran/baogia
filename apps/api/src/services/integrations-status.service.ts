@@ -3,7 +3,9 @@ import { RedisService } from './redis.service';
 import { StorageService } from './storage.service';
 import { PrismaService } from '../prisma/prisma.service';
 import {
+  isSmtpCatcherMode,
   isSmtpDeliverableConfigured,
+  isSmtpTransportConfigured,
   smtpNonDeliverableReason,
 } from '../utils/smtp-config';
 
@@ -36,6 +38,8 @@ export class IntegrationsStatusService {
     const redisPing = await this.redis.ping();
     const minioPing = await this.storage.ping();
     const smtpDeliverable = isSmtpDeliverableConfigured();
+    const smtpTransportReady = isSmtpTransportConfigured();
+    const smtpCatcher = isSmtpCatcherMode();
     const smtpBlockedReason = smtpNonDeliverableReason();
 
     return {
@@ -52,10 +56,12 @@ export class IntegrationsStatusService {
         port: Number(process.env.PORT ?? 0) || null,
       },
       integrations: {
-        /** True only when production-ready SMTP (not localhost/MailHog). */
+        /** True only for real customer-inbox SMTP (never Mailpit/loopback). */
         smtp: smtpDeliverable,
         smtpHostSet: present('SMTP_HOST'),
         smtpDeliverable,
+        smtpTransportReady,
+        smtpCatcher,
         smtpBlockedReason,
         minio: minioPing === 'not_configured' ? 'local' : minioPing,
         googleOAuth: present('GOOGLE_CLIENT_ID'),
@@ -75,7 +81,7 @@ export class IntegrationsStatusService {
         minio:
           'MinIO optional — empty MINIO_ENDPOINT uses local upload path (UPLOAD_PATH).',
         smtp:
-          'integrations.smtp means deliverable SMTP (rejects localhost in production). See SMTP_SETUP_GUIDE.md.',
+          'integrations.smtp = real inbox. smtpCatcher = Mailpit allowed via SMTP_ALLOW_CATCHER (not T-S4-01 PASS). See SMTP_SETUP_GUIDE.md.',
         g4: 'SMTP / OAuth / Payment / SMS need customer merchant keys — see docs/JETBAY_G4_INTEGRATIONS.md',
       },
     };

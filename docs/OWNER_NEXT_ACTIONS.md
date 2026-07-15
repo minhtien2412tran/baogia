@@ -41,7 +41,8 @@ curl -sS https://api.minhtien.online/integrations/status
 }
 ```
 
-Today (2026-07-15): `smtp=false` because `SMTP_HOST` is **LOOPBACK** (`localhost:1025`).
+Today (2026-07-15): Mailpit catcher running on VPS (`127.0.0.1:1025` + UI `:8025` via SSH tunnel).  
+Flags: `smtp=false` · `smtpCatcher=true` · `smtpTransportReady=true` — **not** a real customer inbox; T-S4-01 stays blocked until real provider SMTP_*.
 
 ### Dev verification after Owner configures
 

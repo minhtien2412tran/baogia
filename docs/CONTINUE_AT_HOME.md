@@ -38,7 +38,8 @@
 
 **Trạng thái phiên 15/07:** **GĐ2 Dev complete · Waiting for Owner** · pack **ready to commit** ([COMMIT_PLAN_GD2.md](./COMMIT_PLAN_GD2.md))
 
-1. **P0 Owner** — [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md): O4 SMTP (hiện LOOPBACK) · inbox verify  
+1. **P0 Owner** — [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md): O4 **SMTP thật** (Mailpit catcher đã ON VPS — `smtpCatcher=true`, vẫn **không** PASS T-S4-01) · inbox khách  
+ 
 2. **P1 Owner** — UAT · CMS · G4 sandbox keys · media decision  
 3. **O3** — v3.1 **DEPLOYED / OPTIONAL_OWNER_REVIEW**  
 4. **Git** — `jetvina` đã commit GĐ2 pack (4 commits · base `a15b270`) · chưa push trừ khi Owner bảo  
