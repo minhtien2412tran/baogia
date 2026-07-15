@@ -33,6 +33,7 @@ export type MessageKey =
   | 'requestQuoteBtn'
   | 'quoteConsentLabel'
   | 'quoteEmailRequired'
+  | 'quotePhoneRequired'
   | 'quoteSearchFirst'
   | 'noAircraftFound'
   | 'emptyLegDepartLabel'
@@ -59,6 +60,30 @@ export type MessageKey =
   | 'addLeg'
   | 'emailOptional'
   | 'phoneOptional'
+  | 'phoneRequired'
+  | 'apiLoadFailed'
+  | 'listEmpty'
+  | 'fleetSampleTag'
+  | 'fleetShowcaseTitle'
+  | 'fleetShowcaseDesc'
+  | 'fleetSampleNote'
+  | 'quoteSuccessWithId'
+  | 'accountLoadFailed'
+  | 'accountLoadFailedHint'
+  | 'retry'
+  | 'noQuotesTitle'
+  | 'noQuotesHint'
+  | 'noBookingsTitle'
+  | 'noBookingsHint'
+  | 'noPaymentsTitle'
+  | 'noPaymentsHint'
+  | 'noDocumentsTitle'
+  | 'noDocumentsHint'
+  | 'noJetCardTitle'
+  | 'exploreJetCard'
+  | 'noCreditsTitle'
+  | 'buyCredits'
+  | 'paymentGatewaysNote'
   | 'departurePlaceholder'
   | 'destinationPlaceholder'
   | 'upToPax'
@@ -208,6 +233,7 @@ const en: Catalog = {
   requestQuoteBtn: 'Request Quote',
   quoteConsentLabel: 'I agree to be contacted about this charter request.',
   quoteEmailRequired: 'Email is required to request a quote.',
+  quotePhoneRequired: 'Phone is required to request a quote.',
   quoteSearchFirst: 'Search for aircraft first, then request a quote.',
   noAircraftFound: 'No aircraft match your passenger count for this route.',
   emptyLegDepartLabel: 'Departure',
@@ -234,6 +260,33 @@ const en: Catalog = {
   addLeg: 'Add another flight leg',
   emailOptional: 'Email (optional)',
   phoneOptional: 'Phone (optional)',
+  phoneRequired: 'Phone',
+  apiLoadFailed: 'Unable to load data right now. Please try again shortly.',
+  listEmpty: 'Nothing available at the moment. Please check back soon.',
+  fleetSampleTag: 'Sample fleet',
+  fleetShowcaseTitle: 'Compare and Book Our Most Popular Private Jets',
+  fleetShowcaseDesc:
+    'Explore a handpicked selection of popular jets designed for comfort, privacy, and performance.',
+  fleetSampleNote:
+    'Illustrative samples for browsing — not live inventory. Use Get a Quote for availability on your dates.',
+  quoteSuccessWithId: '{message} Reference #{id}.',
+  accountLoadFailed: 'Unable to load your account',
+  accountLoadFailedHint: 'Check your connection, then try again. If you were signed out, please log in again.',
+  retry: 'Retry',
+  noQuotesTitle: 'No quote requests yet',
+  noQuotesHint: 'Search aircraft on the homepage to request a charter quote.',
+  noBookingsTitle: 'No bookings yet',
+  noBookingsHint: 'Confirm a quote with our team to create your first booking.',
+  noPaymentsTitle: 'No payments yet',
+  noPaymentsHint: 'Payments appear when you complete a booking checkout.',
+  noDocumentsTitle: 'No documents yet',
+  noDocumentsHint: 'Documents are generated when you have an active or completed booking.',
+  noJetCardTitle: 'No active Jet Card membership',
+  exploreJetCard: 'Explore plans',
+  noCreditsTitle: 'No credits on account',
+  buyCredits: 'Buy credits',
+  paymentGatewaysNote:
+    'Online payment gateways may still be unavailable. You can view history here; checkout goes live when keys are configured.',
   departurePlaceholder: 'Departure city or airport',
   destinationPlaceholder: 'Destination city or airport',
   upToPax: 'up to {n} pax',
@@ -381,6 +434,7 @@ const vi: Catalog = {
   requestQuoteBtn: 'Yêu cầu báo giá',
   quoteConsentLabel: 'Tôi đồng ý được liên hệ về yêu cầu charter này.',
   quoteEmailRequired: 'Cần email để gửi yêu cầu báo giá.',
+  quotePhoneRequired: 'Cần số điện thoại để gửi yêu cầu báo giá.',
   quoteSearchFirst: 'Hãy tìm máy bay trước, sau đó yêu cầu báo giá.',
   noAircraftFound: 'Không có máy bay phù hợp số hành khách cho tuyến này.',
   emptyLegDepartLabel: 'Khởi hành',
@@ -407,6 +461,33 @@ const vi: Catalog = {
   addLeg: 'Thêm chặng bay',
   emailOptional: 'Email (tùy chọn)',
   phoneOptional: 'Điện thoại (tùy chọn)',
+  phoneRequired: 'Điện thoại',
+  apiLoadFailed: 'Không tải được dữ liệu lúc này. Vui lòng thử lại sau.',
+  listEmpty: 'Hiện chưa có mục nào. Vui lòng quay lại sau.',
+  fleetSampleTag: 'Đội bay mẫu',
+  fleetShowcaseTitle: 'So sánh các máy bay riêng phổ biến',
+  fleetShowcaseDesc:
+    'Khám phá tuyển chọn các máy bay phổ biến, thiết kế cho sự thoải mái, riêng tư và hiệu suất.',
+  fleetSampleNote:
+    'Hình ảnh minh họa để tham khảo — không phải inventory thời gian thực. Dùng Get a Quote để kiểm tra ngày bay.',
+  quoteSuccessWithId: '{message} Mã tham chiếu #{id}.',
+  accountLoadFailed: 'Không tải được tài khoản',
+  accountLoadFailedHint: 'Kiểm tra kết nối rồi thử lại. Nếu đã hết phiên, vui lòng đăng nhập lại.',
+  retry: 'Thử lại',
+  noQuotesTitle: 'Chưa có yêu cầu báo giá',
+  noQuotesHint: 'Tìm máy bay trên trang chủ để gửi yêu cầu charter.',
+  noBookingsTitle: 'Chưa có booking',
+  noBookingsHint: 'Xác nhận báo giá với đội ngũ để tạo booking đầu tiên.',
+  noPaymentsTitle: 'Chưa có thanh toán',
+  noPaymentsHint: 'Thanh toán xuất hiện sau khi hoàn tất checkout booking.',
+  noDocumentsTitle: 'Chưa có tài liệu',
+  noDocumentsHint: 'Tài liệu được tạo khi bạn có booking đang hoạt động hoặc đã hoàn tất.',
+  noJetCardTitle: 'Chưa có Jet Card',
+  exploreJetCard: 'Xem các gói',
+  noCreditsTitle: 'Chưa có credits',
+  buyCredits: 'Mua credits',
+  paymentGatewaysNote:
+    'Cổng thanh toán online có thể chưa sẵn sàng. Bạn vẫn xem lịch sử tại đây; checkout bật khi đủ keys.',
   departurePlaceholder: 'Thành phố hoặc sân bay đi',
   destinationPlaceholder: 'Thành phố hoặc sân bay đến',
   upToPax: 'tối đa {n} hành khách',
@@ -556,6 +637,7 @@ const zhCn: Catalog = {
   requestQuoteBtn: '请求报价',
   quoteConsentLabel: '我同意就此次包机请求与我联系。',
   quoteEmailRequired: '请求报价需要填写邮箱。',
+  quotePhoneRequired: '请求报价需要填写电话。',
   quoteSearchFirst: '请先搜索飞机，再请求报价。',
   noAircraftFound: '没有符合乘客人数的飞机适用于此航线。',
   emptyLegDepartLabel: '出发',
@@ -582,6 +664,30 @@ const zhCn: Catalog = {
   addLeg: '添加航段',
   emailOptional: '邮箱（可选）',
   phoneOptional: '电话（可选）',
+  phoneRequired: '电话',
+  apiLoadFailed: '暂时无法加载数据，请稍后重试。',
+  listEmpty: '暂无内容，请稍后再来查看。',
+  fleetSampleTag: '示例机队',
+  fleetShowcaseTitle: '比较并预订我们最受欢迎的私人飞机',
+  fleetShowcaseDesc: '精选热门机型，兼顾舒适、私密与性能。',
+  fleetSampleNote: '展示用示例，非实时库存。请通过「获取报价」查询您出行日期的可用飞机。',
+  quoteSuccessWithId: '{message} 参考编号 #{id}。',
+  accountLoadFailed: '无法加载账户',
+  accountLoadFailedHint: '请检查网络后重试。若已退出登录，请重新登录。',
+  retry: '重试',
+  noQuotesTitle: '暂无报价请求',
+  noQuotesHint: '请在首页搜索飞机以申请包机报价。',
+  noBookingsTitle: '暂无预订',
+  noBookingsHint: '与团队确认报价后即可创建首个预订。',
+  noPaymentsTitle: '暂无付款记录',
+  noPaymentsHint: '完成预订结账后将显示付款记录。',
+  noDocumentsTitle: '暂无文件',
+  noDocumentsHint: '当您有进行中或已完成的预订时，系统会生成相关文件。',
+  noJetCardTitle: '暂无有效 Jet Card',
+  exploreJetCard: '查看套餐',
+  noCreditsTitle: '账户暂无积分',
+  buyCredits: '购买积分',
+  paymentGatewaysNote: '在线支付网关可能尚未开通。您可在此查看历史；密钥配置后结账将上线。',
   departurePlaceholder: '出发城市或机场',
   destinationPlaceholder: '目的地城市或机场',
   upToPax: '最多 {n} 人',
@@ -714,6 +820,7 @@ const zhHk: Catalog = {
   requestQuoteBtn: '請求報價',
   quoteConsentLabel: '我同意就此次包機請求與我聯絡。',
   quoteEmailRequired: '請求報價需要填寫電郵。',
+  quotePhoneRequired: '請求報價需要填寫電話。',
   quoteSearchFirst: '請先搜尋飛機，再請求報價。',
   noAircraftFound: '沒有符合乘客人數的飛機適用於此航線。',
   emptyLegDepartLabel: '出發',

@@ -1,10 +1,19 @@
 import { t } from '@jetbay/i18n';
 import { EmptyLegAlertsForm } from './EmptyLegAlertsForm';
 import { FlightScrollRail } from '../ui/FlightScrollRail';
+import { ApiLoadNotice } from '../ui/ApiLoadNotice';
 
 type EmptyLeg = Record<string, unknown>;
 
-export function EmptyLegsSection({ locale, emptyLegs }: { locale: string; emptyLegs: EmptyLeg[] }) {
+export function EmptyLegsSection({
+  locale,
+  emptyLegs,
+  loadError,
+}: {
+  locale: string;
+  emptyLegs: EmptyLeg[];
+  loadError?: boolean;
+}) {
   const p = `/${locale}`;
   return (
     <section className="jb-section">
@@ -19,7 +28,9 @@ export function EmptyLegsSection({ locale, emptyLegs }: { locale: string; emptyL
           </a>
         </div>
 
-        {emptyLegs.length === 0 ? (
+        {loadError ? (
+          <ApiLoadNotice locale={locale} kind="error" />
+        ) : emptyLegs.length === 0 ? (
           <p className="jb-section-desc">{t(locale, 'emptyLegsEmptyDesc')}</p>
         ) : (
           <FlightScrollRail trackClassName="jb-empty-rail" ariaLabel={t(locale, 'emptyLegsNearYou')}>

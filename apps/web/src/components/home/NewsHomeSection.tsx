@@ -1,16 +1,17 @@
 import Link from 'next/link';
-import { api, safeApi } from '../../lib/api';
+import { api, loadApi } from '../../lib/api';
 import { apiLocale } from '../../config/locales';
 import { navHref } from '../../config/navigation';
 import { JB } from '../../config/jetbay-cdn';
 import { rebrandText } from '../../lib/brand';
 import { CdnImage } from '../ui/CdnImage';
 import { EmptyState } from '../ui/EmptyState';
+import { ApiLoadNotice } from '../ui/ApiLoadNotice';
 import { t } from '../../lib/i18n';
 
 export async function NewsHomeSection({ locale }: { locale: string }) {
-  const data = await safeApi(() => api.getNews(apiLocale(locale)), { news: [] });
-  const items = data.news.slice(0, 3);
+  const load = await loadApi(() => api.getNews(apiLocale(locale)), { news: [] });
+  const items = load.data.news.slice(0, 3);
 
   return (
     <section className="jb-section jb-light-band">
@@ -24,7 +25,9 @@ export async function NewsHomeSection({ locale }: { locale: string }) {
           ) : null}
         </div>
 
-        {items.length === 0 ? (
+        {!load.ok ? (
+          <ApiLoadNotice locale={locale} kind="error" />
+        ) : items.length === 0 ? (
           <EmptyState
             variant="light"
             icon="news"

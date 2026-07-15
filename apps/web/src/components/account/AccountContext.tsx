@@ -24,6 +24,9 @@ const AccountContext = createContext<AccountContextValue | null>(null);
 
 function formatAccountError(e: unknown): string {
   if (e instanceof ApiError) {
+    if (e.status === 401 || e.status === 403) {
+      return 'SESSION_EXPIRED';
+    }
     if (e.status === 429) {
       return 'Too many requests. Please wait a moment and try again.';
     }
@@ -61,7 +64,14 @@ export function AccountProvider({ locale, children }: { locale: string; children
       const dash = await api.getAccountDashboard(t);
       setData(dash);
     } catch (e) {
-      setError(formatAccountError(e));
+      const msg = formatAccountError(e);
+      if (msg === 'SESSION_EXPIRED') {
+        localStorage.removeItem('jetbay_token');
+        localStorage.removeItem('jetbay_refresh_token');
+        router.push(`/${locale}/login`);
+        return;
+      }
+      setError(msg);
       setData(null);
     } finally {
       setLoading(false);

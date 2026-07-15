@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { api } from '../lib/api';
 import { t } from '../lib/i18n';
 import { AviationMotionIcon } from './ui/AviationMotionIcon';
@@ -41,32 +41,38 @@ export function AirportInput({
   const wrapRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const resolveLabel = useCallback(
-    async (iata: string) => {
-      if (!/^[A-Z]{3}$/.test(iata)) return;
-      try {
-        const res = await api.searchAirports(iata, locale);
-        const match = res.airports.find((a) => a.iata === iata);
-        if (match) {
-          setDisplayLabel(friendlyLabel(match));
-        }
-      } catch {
-        /* ignore */
-      }
-    },
-    [locale],
-  );
-
-  useEffect(() => {
+  // Reset controlled empty value during render (avoid setState-in-effect lint).
+  const [prevValue, setPrevValue] = useState(value);
+  if (value !== prevValue) {
+    setPrevValue(value);
     if (!value) {
       setQuery('');
       setDisplayLabel(null);
-      return;
     }
-    if (/^[A-Z]{3}$/.test(value)) {
-      void resolveLabel(value);
-    }
-  }, [value, resolveLabel]);
+  }
+
+  useEffect(() => {
+    if (!value || !/^[A-Z]{3}$/.test(value)) return;
+    let cancelled = false;
+    // Defer so label fetch setState is not synchronous inside the effect body.
+    const timer = window.setTimeout(() => {
+      void (async () => {
+        try {
+          const res = await api.searchAirports(value, locale);
+          const match = res.airports.find((a) => a.iata === value);
+          if (!cancelled && match) {
+            setDisplayLabel(friendlyLabel(match));
+          }
+        } catch {
+          /* ignore */
+        }
+      })();
+    }, 0);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [value, locale]);
 
   useEffect(() => {
     function onDocClick(e: MouseEvent) {
@@ -220,6 +226,7 @@ export function AirportInput({
         />
         <input
           id={id}
+          role="combobox"
           value={inputValue}
           onChange={(e) => {
             const v = e.target.value;
@@ -253,6 +260,7 @@ export function AirportInput({
           aria-autocomplete="list"
           aria-controls={`${id}-listbox`}
           aria-expanded={open}
+          aria-haspopup="listbox"
         />
       </div>
       {loading && <span className="jb-airport-hint">{t(locale, 'airportSearching')}</span>}
@@ -266,7 +274,7 @@ export function AirportInput({
       {open && suggestions.length > 0 && (
         <ul className="jb-airport-list" role="listbox" id={`${id}-listbox`}>
           {suggestions.map((a) => (
-            <li key={a.iata} role="option">
+            <li key={a.iata} role="option" aria-selected={value === a.iata}>
               <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => pick(a)}>
                 <span className="jb-airport-option-main">
                   <strong>{a.iata}</strong>

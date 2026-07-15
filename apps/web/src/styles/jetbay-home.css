@@ -437,6 +437,16 @@
   margin: 0;
 }
 
+.jb-api-load-notice {
+  color: var(--jb-text-muted);
+  font-size: 15px;
+  margin: 0 0 16px;
+  line-height: 1.45;
+}
+.jb-api-load-notice--error {
+  color: #c45c4a;
+}
+
 .jb-link-gold {
   color: var(--jb-gold);
   font-size: 14px;

@@ -38,8 +38,8 @@ function OverviewContent({ locale }: { locale: string }) {
         <AccountPanel title="Recent Quotes" subtitle={`${data.quotes.length} total requests`}>
           {data.quotes.length === 0 ? (
             <AccountEmpty
-              title="No quote requests yet"
-              hint="Search aircraft on the homepage to get started."
+              title={t(locale, 'noQuotesTitle')}
+              hint={t(locale, 'noQuotesHint')}
               action={
                 <Link href={navHref(locale, '/')} className="jb-btn-primary">
                   {t(locale, 'searchFlights')}
@@ -65,7 +65,7 @@ function OverviewContent({ locale }: { locale: string }) {
 
         <AccountPanel title="Active Bookings" subtitle={`${data.bookings.length} bookings`}>
           {data.bookings.length === 0 ? (
-            <AccountEmpty title="No bookings yet" hint="Confirm a quote to create your first booking." />
+            <AccountEmpty title={t(locale, 'noBookingsTitle')} hint={t(locale, 'noBookingsHint')} />
           ) : (
             <ul className="jb-account-list">
               {data.bookings.slice(0, 5).map((b) => {

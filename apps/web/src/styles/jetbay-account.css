@@ -99,6 +99,25 @@
   padding: 24px;
 }
 
+.jb-account-panel--error h2 {
+  margin: 0 0 8px;
+  color: var(--jb-gold, #b8975a);
+}
+
+.jb-account-error-detail {
+  opacity: 0.75;
+  font-size: 12px;
+  margin-bottom: 16px;
+  word-break: break-word;
+}
+
+.jb-account-panel--error .jb-account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
 .jb-account-panel__head {
   display: flex;
   justify-content: space-between;
@@ -225,6 +244,15 @@
   opacity: 0.7;
 }
 
+.jb-account-empty__mark {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(184, 151, 90, 0.45);
+  background: radial-gradient(circle at 40% 35%, rgba(184, 151, 90, 0.35), transparent 70%);
+}
+
 .jb-account-empty h3 {
   margin: 0 0 8px;
   color: #fff;
@@ -295,7 +323,11 @@
 }
 
 .jb-account-doc-card__icon {
-  font-size: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(135deg, rgba(184, 151, 90, 0.25), rgba(255, 255, 255, 0.04));
 }
 
 .jb-account-doc-card__actions {

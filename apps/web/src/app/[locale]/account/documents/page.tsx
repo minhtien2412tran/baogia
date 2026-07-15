@@ -19,8 +19,8 @@ function DocumentsContent({ locale }: { locale: string }) {
       <AccountPanel title="Charter Documents" subtitle="Agreements and contracts for your bookings">
         {data.documents.length === 0 ? (
           <AccountEmpty
-            title="No documents yet"
-            hint="Documents are generated when you have an active or completed booking."
+            title={t(locale, 'noDocumentsTitle')}
+            hint={t(locale, 'noDocumentsHint')}
             action={
               data.bookings.length === 0 ? (
                 <Link href={`/${locale}`} className="jb-btn-primary">
@@ -33,7 +33,7 @@ function DocumentsContent({ locale }: { locale: string }) {
           <div className="jb-account-doc-grid">
             {data.documents.map((d) => (
               <article key={d.id} className="jb-account-doc-card">
-                <div className="jb-account-doc-card__icon" aria-hidden>📄</div>
+                <div className="jb-account-doc-card__icon" aria-hidden />
                 <div>
                   <h3>{d.documentType.replace(/_/g, ' ')}</h3>
                   <p className="jb-account-meta">Booking #{d.bookingId}</p>

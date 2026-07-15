@@ -145,6 +145,10 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
       setError(t(locale, 'quoteEmailRequired'));
       return;
     }
+    if (!phone.trim()) {
+      setError(t(locale, 'quotePhoneRequired'));
+      return;
+    }
     if (!consent) {
       setError(t(locale, 'quoteConsentLabel'));
       return;
@@ -159,7 +163,7 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
         firstName,
         lastName,
         email: email.trim(),
-        phone: phone.trim() || '+10000000000',
+        phone: phone.trim(),
         tripType,
         legs: buildApiLegs(),
         isConsentAccepted: true,
@@ -169,7 +173,12 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
             ? `searchId=${searchId}`
             : undefined,
       });
-      setResult(quote.message);
+      setResult(
+        t(locale, 'quoteSuccessWithId', {
+          message: quote.message,
+          id: quote.requestId,
+        }),
+      );
     } catch (err) {
       setError(parseApiErrorMessage(err, t(locale, 'quoteError')));
     } finally {
@@ -404,8 +413,16 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
                 />
               </div>
               <div className="jb-field">
-                <label htmlFor="phone">{t(locale, 'phoneOptional')}</label>
-                <input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+1..." />
+                <label htmlFor="phone">{t(locale, 'phoneRequired')}</label>
+                <input
+                  id="phone"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+8490..."
+                  required
+                  autoComplete="tel"
+                />
               </div>
             </div>
             <label className="jb-consent-row">

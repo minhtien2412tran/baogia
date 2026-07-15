@@ -1,9 +1,18 @@
 import { t } from '@jetbay/i18n';
 import { FlightScrollRail } from '../ui/FlightScrollRail';
+import { ApiLoadNotice } from '../ui/ApiLoadNotice';
 
 type Route = Record<string, unknown>;
 
-export function FixedPriceSection({ locale, routes }: { locale: string; routes: Route[] }) {
+export function FixedPriceSection({
+  locale,
+  routes,
+  loadError,
+}: {
+  locale: string;
+  routes: Route[];
+  loadError?: boolean;
+}) {
   const p = `/${locale}`;
   return (
     <section className="jb-section" style={{ background: 'var(--jb-bg-elevated)' }}>
@@ -18,6 +27,10 @@ export function FixedPriceSection({ locale, routes }: { locale: string; routes: 
           </a>
         </div>
 
+        {loadError ? <ApiLoadNotice locale={locale} kind="error" /> : null}
+        {!loadError && routes.length === 0 ? <ApiLoadNotice locale={locale} kind="empty" /> : null}
+
+        {routes.length > 0 ? (
         <FlightScrollRail trackClassName="jb-routes-scroll" ariaLabel={t(locale, 'fixedPricePageTitle')}>
           {routes.map((r) => {
             const from = r.fromAirport as { city: string; iata: string };
@@ -68,6 +81,7 @@ export function FixedPriceSection({ locale, routes }: { locale: string; routes: 
             );
           })}
         </FlightScrollRail>
+        ) : null}
       </div>
     </section>
   );

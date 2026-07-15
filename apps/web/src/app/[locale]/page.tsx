@@ -12,7 +12,7 @@ import { StatsSection } from '../../components/home/StatsSection';
 import { MediaSection } from '../../components/home/MediaSection';
 import { NewsHomeSection } from '../../components/home/NewsHomeSection';
 import { NewsletterBand } from '../../components/home/NewsletterBand';
-import { api, safeApi } from '../../lib/api';
+import { api, loadApi } from '../../lib/api';
 import { buildMetadata } from '../../lib/metadata';
 import { SHOW_UNVERIFIED_MARKETING_SECTIONS } from '../../lib/brand';
 import { fixedPriceRegion } from '../../config/jetbay-cdn';
@@ -28,23 +28,35 @@ export async function generateMetadata() {
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const region = fixedPriceRegion(locale);
-  const [routes, emptyLegs, jetPlans] = await Promise.all([
-    safeApi(() => api.getFixedPriceRoutes(region), { routes: [] }),
-    safeApi(() => api.getEmptyLegs(), { emptyLegs: [] }),
-    safeApi(() => api.getJetCardPlans(), { plans: [] }),
+  const [routesLoad, emptyLegsLoad, jetPlansLoad] = await Promise.all([
+    loadApi(() => api.getFixedPriceRoutes(region), { routes: [] }),
+    loadApi(() => api.getEmptyLegs(), { emptyLegs: [] }),
+    loadApi(() => api.getJetCardPlans(), { plans: [] }),
   ]);
 
   return (
     <main>
       <HeroSection locale={locale} />
       <PromoCarousel locale={locale} />
-      <FixedPriceSection locale={locale} routes={routes.routes} />
-      <EmptyLegsSection locale={locale} emptyLegs={emptyLegs.emptyLegs} />
+      <FixedPriceSection
+        locale={locale}
+        routes={routesLoad.data.routes}
+        loadError={!routesLoad.ok}
+      />
+      <EmptyLegsSection
+        locale={locale}
+        emptyLegs={emptyLegsLoad.data.emptyLegs}
+        loadError={!emptyLegsLoad.ok}
+      />
       <DestinationsSection locale={locale} />
       {SHOW_UNVERIFIED_MARKETING_SECTIONS ? (
         <>
           <SosSection locale={locale} />
-          <JetCardHomeSection locale={locale} plans={jetPlans.plans} />
+          <JetCardHomeSection
+            locale={locale}
+            plans={jetPlansLoad.data.plans}
+            loadError={!jetPlansLoad.ok}
+          />
           <PartnerSection locale={locale} />
           <AppDownloadSection locale={locale} />
           <WhySections locale={locale} />

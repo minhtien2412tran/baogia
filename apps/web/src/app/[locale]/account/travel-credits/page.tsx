@@ -26,10 +26,10 @@ function TravelCreditsContent({ locale }: { locale: string }) {
         </div>
         {balance.expirySummary.length === 0 ? (
           <AccountEmpty
-            title="No credits on account"
+            title={t(locale, 'noCreditsTitle')}
             action={
               <Link href={`/${locale}/travel-credit`} className="jb-btn-primary">
-                Buy credits
+                {t(locale, 'buyCredits')}
               </Link>
             }
           />

@@ -420,9 +420,23 @@ export const api = {
 };
 
 export async function safeApi<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
+  const result = await loadApi(fn, fallback);
+  return result.data;
+}
+
+export type ApiLoadResult<T> =
+  | { ok: true; data: T; error?: undefined }
+  | { ok: false; data: T; error: string };
+
+/** Like safeApi but preserves failure so UI can show error vs empty. */
+export async function loadApi<T>(fn: () => Promise<T>, fallback: T): Promise<ApiLoadResult<T>> {
   try {
-    return await fn();
-  } catch {
-    return fallback;
+    return { ok: true, data: await fn() };
+  } catch (err) {
+    return {
+      ok: false,
+      data: fallback,
+      error: parseApiErrorMessage(err, 'Service temporarily unavailable'),
+    };
   }
 }

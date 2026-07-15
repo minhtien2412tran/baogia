@@ -97,6 +97,6 @@ describe('MediaAsset rights workflow (DB)', () => {
         storageKey: '/assets/jetbay/evil.jpg',
         rightsStatus: 'CLIENT_PROVIDED',
       }),
-    ).rejects.toThrow(/JetBay/i);
+    ).rejects.toThrow(/Legacy third-party|JetBay/i);
   });
 });

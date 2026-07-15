@@ -19,10 +19,10 @@ function JetCardContent({ locale }: { locale: string }) {
       <AccountPanel title="Jet Card Balance">
         {data.jetCards.length === 0 ? (
           <AccountEmpty
-            title="No active Jet Card membership"
+            title={t(locale, 'noJetCardTitle')}
             action={
               <Link href={`/${locale}/jet-card`} className="jb-btn-primary">
-                Explore plans
+                {t(locale, 'exploreJetCard')}
               </Link>
             }
           />

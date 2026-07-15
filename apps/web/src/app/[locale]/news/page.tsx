@@ -1,13 +1,14 @@
 import Link from 'next/link';
 import { t, tn } from '@jetbay/i18n';
 import { SubPageLayout } from '../../../components/layout/SubPageLayout';
-import { api, safeApi } from '../../../lib/api';
+import { api, loadApi } from '../../../lib/api';
 import { apiLocale } from '../../../config/locales';
 import { buildMetadata } from '../../../lib/metadata';
 import { navHref } from '../../../config/navigation';
 import { JB } from '../../../config/jetbay-cdn';
 import { CdnImage } from '../../../components/ui/CdnImage';
 import { EmptyState } from '../../../components/ui/EmptyState';
+import { ApiLoadNotice } from '../../../components/ui/ApiLoadNotice';
 import { rebrandText } from '../../../lib/brand';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -21,7 +22,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function NewsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const data = await safeApi(() => api.getNews(apiLocale(locale)), { news: [] });
+  const load = await loadApi(() => api.getNews(apiLocale(locale)), { news: [] });
+  const data = load.data;
 
   return (
     <SubPageLayout
@@ -31,7 +33,9 @@ export default async function NewsPage({ params }: { params: Promise<{ locale: s
       tag={tn(locale, 'navCompany')}
       heroImage={JB.pages.newsDefault}
     >
-      {data.news.length === 0 ? (
+      {!load.ok ? (
+        <ApiLoadNotice locale={locale} kind="error" />
+      ) : data.news.length === 0 ? (
         <EmptyState
           variant="dark"
           icon="news"

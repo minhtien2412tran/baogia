@@ -101,8 +101,8 @@ export function AccountPanel({
 
 export function AccountEmpty({ title, hint, action }: { title: string; hint?: string; action?: React.ReactNode }) {
   return (
-    <div className="jb-account-empty">
-      <div className="jb-account-empty__icon" aria-hidden>✦</div>
+    <div className="jb-account-empty" role="status">
+      <div className="jb-account-empty__mark" aria-hidden />
       <h3>{title}</h3>
       {hint && <p>{hint}</p>}
       {action}

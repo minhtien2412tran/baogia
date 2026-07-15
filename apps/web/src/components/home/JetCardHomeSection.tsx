@@ -1,5 +1,6 @@
 import { jetCardArt } from '../../config/jetbay-cdn';
 import { CdnImage } from '../ui/CdnImage';
+import { ApiLoadNotice } from '../ui/ApiLoadNotice';
 
 type Plan = Record<string, unknown>;
 
@@ -9,10 +10,18 @@ const PLAN_COPY: Record<number, { subtitle: string; desc: string }> = {
   50: { subtitle: 'Frequent global travellers', desc: 'Best value, ultimate convenience' },
 };
 
-export function JetCardHomeSection({ locale, plans }: { locale: string; plans: Plan[] }) {
+export function JetCardHomeSection({
+  locale,
+  plans,
+  loadError,
+}: {
+  locale: string;
+  plans: Plan[];
+  loadError?: boolean;
+}) {
   const p = `/${locale}`;
 
-  if (plans.length === 0) {
+  if (!loadError && plans.length === 0) {
     return null;
   }
 
@@ -26,6 +35,9 @@ export function JetCardHomeSection({ locale, plans }: { locale: string; plans: P
           </div>
           <a href={`${p}/jet-card`} className="jb-link-gold">More information about Jet Card →</a>
         </div>
+
+        {loadError ? <ApiLoadNotice locale={locale} kind="error" /> : null}
+        {!loadError && plans.length === 0 ? <ApiLoadNotice locale={locale} kind="empty" /> : null}
 
         <div className="jb-jetcard-grid jb-jetcard-grid--premium">
           {plans.map((plan) => {

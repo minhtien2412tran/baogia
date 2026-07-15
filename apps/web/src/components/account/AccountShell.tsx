@@ -74,12 +74,18 @@ export function AccountLayoutInner({ locale, children }: { locale: string; child
             {loading ? (
               <AccountSkeleton />
             ) : error ? (
-              <div className="jb-account-panel jb-account-panel--error">
-                <h2>{t(locale, 'loading')}</h2>
-                <p className="jb-account-meta">{error}</p>
-                <button type="button" className="jb-btn-primary" onClick={() => void refresh()}>
-                  Retry
-                </button>
+              <div className="jb-account-panel jb-account-panel--error" role="alert">
+                <h2>{t(locale, 'accountLoadFailed')}</h2>
+                <p className="jb-account-meta">{t(locale, 'accountLoadFailedHint')}</p>
+                <p className="jb-account-meta jb-account-error-detail">{error}</p>
+                <div className="jb-account-actions">
+                  <button type="button" className="jb-btn-primary" onClick={() => void refresh()}>
+                    {t(locale, 'retry')}
+                  </button>
+                  <Link href={`/${locale}/login`} className="jb-btn-ghost">
+                    {t(locale, 'login')}
+                  </Link>
+                </div>
               </div>
             ) : (
               children

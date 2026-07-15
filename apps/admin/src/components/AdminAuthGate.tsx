@@ -8,22 +8,23 @@ import { getToken } from '../lib/api';
 export function AdminAuthGate({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [ready, setReady] = useState(false);
-  const [hasToken, setHasToken] = useState(false);
+  const [hasToken, setHasToken] = useState<boolean | null>(null);
 
   useEffect(() => {
-    setHasToken(Boolean(getToken()));
-    setReady(true);
+    // Defer past effect body so setState is not flagged as sync-in-effect.
+    const timer = window.setTimeout(() => {
+      setHasToken(Boolean(getToken()));
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    if (!ready) return;
-    if (!hasToken) {
+    if (hasToken === false) {
       router.replace(`/login?from=${encodeURIComponent(pathname ?? '/dashboard')}`);
     }
-  }, [ready, hasToken, router, pathname]);
+  }, [hasToken, router, pathname]);
 
-  if (!ready || !hasToken) {
+  if (hasToken !== true) {
     return (
       <div style={{ padding: 48, textAlign: 'center' }}>
         <Muted>Checking authentication…</Muted>

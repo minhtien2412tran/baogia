@@ -190,7 +190,7 @@ export async function ServicePage({ locale, pageKey }: { locale: string; pageKey
 
 
 
-              <AircraftCarousel />
+              <AircraftCarousel locale={locale} />
 
             </>
 

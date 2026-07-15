@@ -5,10 +5,11 @@ import { JetCardComparison } from '../../../components/layout/JetCardComparison'
 import { FaqAccordion } from '../../../components/layout/FaqAccordion';
 import { StepsTimeline } from '../../../components/layout/StepsTimeline';
 import { LightSection } from '../../../components/layout/LightSection';
-import { api, safeApi } from '../../../lib/api';
+import { api, loadApi } from '../../../lib/api';
 import { buildMetadata } from '../../../lib/metadata';
 import { JB, jetCardArt } from '../../../config/jetbay-cdn';
 import { CdnImage } from '../../../components/ui/CdnImage';
+import { ApiLoadNotice } from '../../../components/ui/ApiLoadNotice';
 
 const PLAN_COPY: Record<number, { subtitle: string; desc: string }> = {
   10: { subtitle: 'Occasional private flyers', desc: 'Flexibility without long-term commitment' },
@@ -25,7 +26,8 @@ export async function generateMetadata() {
 
 export default async function JetCardPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const data = await safeApi(() => api.getJetCardPlans(), { plans: [] });
+  const load = await loadApi(() => api.getJetCardPlans(), { plans: [] });
+  const data = load.data;
 
   return (
     <div className="jb-jetcard-page">
@@ -54,6 +56,8 @@ export default async function JetCardPage({ params }: { params: Promise<{ locale
 
         <section className="jb-sub-section">
           <h2 className="jb-section-title">Choose Your Preferred Private Jet Membership Option</h2>
+          {!load.ok ? <ApiLoadNotice locale={locale} kind="error" /> : null}
+          {load.ok && data.plans.length === 0 ? <ApiLoadNotice locale={locale} kind="empty" /> : null}
           <div className="jb-jetcard-grid">
             {data.plans.map((p: Record<string, unknown>) => {
               const hours = Number(p.hours ?? 10);

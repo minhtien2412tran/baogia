@@ -1,11 +1,13 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { t } from '@jetbay/i18n';
 import { AIRCRAFT_FLEET } from '../../lib/aircraft-catalog';
 import { CdnImage } from '../ui/CdnImage';
 import { FlightScrollRail } from '../ui/FlightScrollRail';
 
-export function AircraftCarousel() {
+/** Charter fleet showcase — sample catalog (not live API inventory). See T-S2-02. */
+export function AircraftCarousel({ locale }: { locale: string }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const [count, setCount] = useState(AIRCRAFT_FLEET.length);
@@ -48,17 +50,18 @@ export function AircraftCarousel() {
 
   return (
     <section className="jb-sub-section jb-aircraft-showcase">
-      <h2 className="jb-section-title">Compare and Book Our Most Popular Private Jets</h2>
-      <p className="jb-section-desc">
-        Explore a handpicked selection of our popular top-rated jets designed for ultimate comfort, privacy, and
-        performance.
+      <p className="jb-tag">{t(locale, 'fleetSampleTag')}</p>
+      <h2 className="jb-section-title">{t(locale, 'fleetShowcaseTitle')}</h2>
+      <p className="jb-section-desc">{t(locale, 'fleetShowcaseDesc')}</p>
+      <p className="jb-section-desc jb-fleet-sample-note" role="note">
+        {t(locale, 'fleetSampleNote')}
       </p>
 
       <div className="jb-aircraft-slider" ref={wrapRef}>
         <FlightScrollRail
           className="jb-aircraft-slider-rail"
           trackClassName="jb-aircraft-rail"
-          ariaLabel="Aircraft fleet"
+          ariaLabel={t(locale, 'fleetShowcaseTitle')}
           autoHideNav={false}
         >
           {AIRCRAFT_FLEET.map((jet) => (

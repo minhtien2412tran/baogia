@@ -1,9 +1,10 @@
 import { SubPageLayout } from '../../../components/layout/SubPageLayout';
 import { TravelCreditEnquiryForm } from '../../../components/forms/TravelCreditEnquiryForm';
-import { api, safeApi } from '../../../lib/api';
+import { api, loadApi } from '../../../lib/api';
 import { buildMetadata } from '../../../lib/metadata';
 import { JB } from '../../../config/jetbay-cdn';
 import { CdnImage } from '../../../components/ui/CdnImage';
+import { ApiLoadNotice } from '../../../components/ui/ApiLoadNotice';
 
 export async function generateMetadata() {
   return buildMetadata({ title: 'Travel Credits', description: 'Prepaid travel credits for flexible private jet bookings.' });
@@ -11,7 +12,8 @@ export async function generateMetadata() {
 
 export default async function TravelCreditPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const data = await safeApi(() => api.getTravelCreditPackages(), { packages: [] });
+  const load = await loadApi(() => api.getTravelCreditPackages(), { packages: [] });
+  const data = load.data;
   const packages = data.packages.map((pkg: Record<string, unknown>) => ({
     id: Number(pkg.id),
     name: String(pkg.name),
@@ -40,6 +42,8 @@ export default async function TravelCreditPage({ params }: { params: Promise<{ l
         </section>
 
         <section className="jb-sub-section">
+          {!load.ok ? <ApiLoadNotice locale={locale} kind="error" /> : null}
+          {load.ok && data.packages.length === 0 ? <ApiLoadNotice locale={locale} kind="empty" /> : null}
           <div className="jb-jetcard-grid">
             {data.packages.map((pkg: Record<string, unknown>) => (
               <div key={String(pkg.id)} className="jb-jetcard-item">

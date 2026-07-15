@@ -15,9 +15,9 @@ function PaymentsContent({ locale }: { locale: string }) {
         <h1>{t(locale, 'payments')}</h1>
         <p>{data.payments.length} transactions</p>
       </header>
-      <AccountPanel title="Payment History">
+      <AccountPanel title="Payment History" subtitle={t(locale, 'paymentGatewaysNote')}>
         {data.payments.length === 0 ? (
-          <AccountEmpty title="No payments yet" hint="Payments appear when you complete a booking checkout." />
+          <AccountEmpty title={t(locale, 'noPaymentsTitle')} hint={t(locale, 'noPaymentsHint')} />
         ) : (
           <div className="jb-account-table-wrap">
             <table className="jb-account-table">

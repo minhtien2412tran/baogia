@@ -1,9 +1,11 @@
 'use client';
 
 import { use } from 'react';
+import Link from 'next/link';
 import { useAccount } from '../../../../components/account/AccountContext';
 import { AccountEmpty, AccountPanel, StatusBadge } from '../../../../components/account/AccountUI';
 import { t } from '../../../../lib/i18n';
+import { navHref } from '../../../../config/navigation';
 
 function QuotesContent({ locale }: { locale: string }) {
   const { data } = useAccount();
@@ -17,7 +19,15 @@ function QuotesContent({ locale }: { locale: string }) {
       </header>
       <AccountPanel title="All Quote Requests">
         {data.quotes.length === 0 ? (
-          <AccountEmpty title="No quote requests yet" hint="Use the search widget to request a charter quote." />
+          <AccountEmpty
+            title={t(locale, 'noQuotesTitle')}
+            hint={t(locale, 'noQuotesHint')}
+            action={
+              <Link href={navHref(locale, '/')} className="jb-btn-primary">
+                {t(locale, 'searchFlights')}
+              </Link>
+            }
+          />
         ) : (
           <ul className="jb-account-list">
             {data.quotes.map((q) => (

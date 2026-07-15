@@ -6,6 +6,7 @@ import { t } from '@jetbay/i18n';
 import { api } from '../../lib/api';
 import { navHref } from '../../config/navigation';
 import { AppIcon } from '../ui/AppIcon';
+import { ApiLoadNotice } from '../ui/ApiLoadNotice';
 import { scheduleUi } from '../../lib/browser';
 
 type Continent = { code: string; name: string };
@@ -130,9 +131,9 @@ export function EmptyLegBrowse({ locale }: { locale: string }) {
         </span>
       </div>
 
-      {loading ? <p className="jb-section-desc">Loading…</p> : null}
-      {error ? <p className="jb-section-desc">{error}</p> : null}
-      {!loading && legs.length === 0 ? (
+      {loading ? <p className="jb-section-desc">{t(locale, 'loading')}</p> : null}
+      {error ? <ApiLoadNotice locale={locale} kind="error" /> : null}
+      {!loading && !error && legs.length === 0 ? (
         <p className="jb-section-desc">{t(locale, 'emptyLegsEmptyDesc')}</p>
       ) : null}
 

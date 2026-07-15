@@ -10,7 +10,8 @@ export type AircraftEntry = {
 };
 
 /**
- * Popular jets — specs from charter JSON-LD; photos from https://jetvina.com (shared catalog).
+ * SAMPLE showcase only (T-S2-02) — not live inventory from `/admin/aircraft/fleet`.
+ * Specs from charter JSON-LD; photos from https://jetvina.com (shared catalog).
  * Indices map to JETVINA_MEDIA.aircraft in jetvina-media-catalog.ts
  */
 export const AIRCRAFT_FLEET: AircraftEntry[] = [

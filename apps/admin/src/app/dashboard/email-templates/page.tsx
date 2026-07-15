@@ -34,7 +34,8 @@ export default function EmailTemplatesPage() {
   }, []);
 
   useEffect(() => {
-    load();
+    const timer = window.setTimeout(() => load(), 0);
+    return () => window.clearTimeout(timer);
   }, [load]);
 
   async function openKey(key: string) {

@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import { t } from '@jetbay/i18n';
 import { SubPageLayout } from '../../../components/layout/SubPageLayout';
-import { api, safeApi } from '../../../lib/api';
+import { api, loadApi } from '../../../lib/api';
 import { buildMetadata } from '../../../lib/metadata';
 import { navHref } from '../../../config/navigation';
 import { JB, fixedPriceRegion } from '../../../config/jetbay-cdn';
 import { CdnImage } from '../../../components/ui/CdnImage';
+import { ApiLoadNotice } from '../../../components/ui/ApiLoadNotice';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -18,7 +19,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function FixedPricePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const data = await safeApi(() => api.getFixedPriceRoutes(fixedPriceRegion(locale)), { routes: [] });
+  const load = await loadApi(() => api.getFixedPriceRoutes(fixedPriceRegion(locale)), { routes: [] });
+  const data = load.data;
 
   return (
     <SubPageLayout
@@ -42,6 +44,8 @@ export default async function FixedPricePage({ params }: { params: Promise<{ loc
 
       <section className="jb-sub-section">
         <h2 className="jb-section-title">{t(locale, 'allFixedPriceRoutes')}</h2>
+        {!load.ok ? <ApiLoadNotice locale={locale} kind="error" /> : null}
+        {load.ok && data.routes.length === 0 ? <ApiLoadNotice locale={locale} kind="empty" /> : null}
         <div className="jb-routes-scroll" style={{ flexWrap: 'wrap', overflow: 'visible' }}>
           {data.routes.map((r: Record<string, unknown>) => {
             const from = r.fromAirport as { city: string; iata: string };

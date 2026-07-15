@@ -45,22 +45,22 @@ export const REPORT_META = {
   quoteUrl: 'https://m-tien.com/jet-bay/',
   startDate: '09/07/2026',
   startDateIso: '2026-07-09',
-  reportDate: '13/07/2026',
-  reportVersion: '3.0',
+  reportDate: '14/07/2026',
+  reportVersion: '3.1',
   plannedMonths: 4,
   plannedWeeks: 16,
   /** Tuần hiện tại kể từ ngày bắt đầu (tuần 1 = 09–15/07) */
   currentWeek: 1,
-  currentPhaseLabel: 'Giai đoạn 1 — khởi động & dựng nền',
+  currentPhaseLabel: 'Giai đoạn 1 — khởi động & dựng nền (+ chuẩn bị GĐ2)',
   overallNote:
-    'Cập nhật giữa tuần 1 (13/07): Backend và môi trường kiểm thử đã ổn định; GĐ1 có biên bản nghiệm thu nội bộ. Web/admin đang dựng sớm để Anh xem thử — nghiệm thu GĐ2–GĐ4 vẫn theo lịch 4 tháng, chưa ghi nhận vượt mốc.',
+    'Cập nhật 14/07 (v3.1): GĐ1 nền tảng ổn định; smoke commercial/auth/quote PASS. Web staging GĐ2: empty/error, fleet sample label, account polish, charter CMS map — chờ deploy web và SMTP Owner. Mail deliver và thanh toán vẫn BLOCKED.',
 };
 
 /**
  * % tổng thể theo lịch 4 tháng (tuần 1/16).
  * Phản ánh GĐ1 gần xong + chuẩn bị sớm GĐ2 — cố ý không vượt mốc nghiệm thu GĐ2–GĐ4.
  */
-export const OVERALL_PROGRESS_PCT = 22;
+export const OVERALL_PROGRESS_PCT = 24;
 
 export type ContractModule = {
   code: string;
@@ -101,7 +101,7 @@ export const CONTRACT_MODULES: ContractModule[] = [
     name: 'Website công khai (clone Jet-Bay / JetVina)',
     in74tr: true,
     status: 'partial',
-    progressPct: 28,
+    progressPct: 36,
     quoteLine:
       'Website nhiều trang, form báo giá, sản phẩm Fixed Price / Empty Leg / Jet Card… — thuộc các tuần giữa lộ trình.',
     doneHighlights: [
@@ -109,12 +109,13 @@ export const CONTRACT_MODULES: ContractModule[] = [
       'i18n EN/VI cho product UI (quote widget, airport search, hero…)',
       'Hình ảnh / media mẫu theo hướng JetVina trên môi trường xem trước',
       'Loader chuyển trang và icon chuyển động nhẹ theo phong cách hàng không',
+      'GĐ2 staging (14/07): empty/error minh bạch, quote phone bắt buộc, fleet mẫu có nhãn, account Retry',
     ],
     why: 'Cần có bản xem sớm để Anh góp ý hướng giao diện, nhưng chưa phải bản nghiệm thu tháng 2.',
     benefit:
       'Anh theo dõi được hình hài sản phẩm song song với Backend; góp ý sớm giảm chỉnh lớn ở tháng 2.',
     pending:
-      'Chỉnh giao diện sát mẫu JetVina toàn trang, responsive/DoD từng page, quote widget ổn định — đẩy mạnh Giai đoạn 2 theo lịch.',
+      'SMTP thật để mail quote; CMS thêm tin; polish visual DoD; payment GĐ4.',
   },
   {
     code: 'ADM',
