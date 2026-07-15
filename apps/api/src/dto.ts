@@ -697,38 +697,58 @@ export class UpdateEmptyLegDto {
 
 export class EmptyLegAlertSubscribeDto {
   @ApiProperty({ example: 'alerts@example.com' })
+  @IsEmail()
   email: string;
 
   @ApiProperty({ example: 'LTN' })
+  @IsString()
+  @IsNotEmpty()
   fromAirport: string;
 
   @ApiProperty({ example: 'LBG' })
+  @IsString()
+  @IsNotEmpty()
   toAirport: string;
 
   @ApiPropertyOptional({ example: 'en' })
+  @IsOptional()
+  @IsString()
   locale?: string;
 }
 
 export class EmptyLegRequestDto {
   @ApiProperty({ example: 'Jane' })
+  @IsString()
+  @IsNotEmpty()
   firstName: string;
 
   @ApiProperty({ example: 'Smith' })
+  @IsString()
+  @IsNotEmpty()
   lastName: string;
 
   @ApiProperty({ example: 'jane@example.com' })
+  @IsEmail()
   email: string;
 
   @ApiProperty({ example: '+44123456789' })
+  @IsString()
+  @IsNotEmpty()
   phone: string;
 
   @ApiProperty({ example: 4 })
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
   passengers: number;
 
   @ApiPropertyOptional({ example: 'Flexible on departure time' })
+  @IsOptional()
+  @IsString()
   message?: string;
 
   @ApiProperty({ example: true })
+  @IsBoolean()
   isConsentAccepted: boolean;
 }
 

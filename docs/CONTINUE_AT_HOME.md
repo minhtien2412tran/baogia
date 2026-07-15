@@ -39,9 +39,9 @@
 **Trạng thái phiên 15/07:** **GĐ2 Dev complete · HTML email redesign (localized) · Waiting Owner SMTP thật**
 
 1. **P0 Owner** — SMTP provider thật ([OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)); Mailpit catcher chỉ ops  
-2. **Order mail HTML** — [ORDER_EMAIL_AUTOMATION.md](./ORDER_EMAIL_AUTOMATION.md): layout charcoal/gold; copy theo `locale` / SĐT; **chưa redeploy** template mới nếu chưa bảo  
+2. **Order mail HTML** — [ORDER_EMAIL_AUTOMATION.md](./ORDER_EMAIL_AUTOMATION.md): layout charcoal/gold · **API deployed** 2026-07-15 · web `locale` form chưa deploy (phone `+84` vẫn → vi)  
 3. **P1 Owner** — UAT · CMS · G4 keys  
-4. **Git** — email redesign trên working tree — commit / deploy khi bảo  
+4. **Git** — email redesign trên working tree — commit khi bảo  
 5. **Sau unlock** — [GD4_SANDBOX_READINESS.md](./GD4_SANDBOX_READINESS.md)
 
 ### Đã deploy — Nhánh tổng hợp `jetvina` (2026-07-13)
@@ -87,7 +87,8 @@
 - **FINDSTR fix** — `pnpm smoke:html-probe`
 - **Quote evidence** — `#37` prior · `#38`/`#39` earlier 15/07 · chốt `#40` quote-ui · `#41` smoke-web-api
 - **Owner handoff** — [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)
-- **HTML email redesign** (2026-07-15) — layout charcoal/gold · ops + campaign templates localize (vi/zh-cn/en) · `locale` từ quote/JC/TC form · phone fallback · Jest email-templates PASS · **chưa deploy**
+- **HTML email redesign** (2026-07-15) — layout charcoal/gold · ops + campaign templates localize (vi/zh-cn/en) · `locale` từ quote/JC/TC form · phone fallback · Jest PASS · **API deployed** (`jetbay-be` backup `/root/backups/jetbay-be-20260715-144402`) · web form `locale` chưa sync
+- **Empty-leg alert 400** (2026-07-15) — `EmptyLegAlertSubscribeDto` thiếu `class-validator` → `forbidNonWhitelisted` chặn mọi field · đã thêm decorator + redeploy · smoke `POST /empty-legs/alerts/subscribe` **201**
 
 **VƯỚNG (Owner):** O4 SMTP · UAT · CMS · G4 keys · media decision — xem [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)  
 **Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **SMTP:** [SMTP_SETUP_GUIDE.md](./SMTP_SETUP_GUIDE.md)

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { api } from '../../lib/api';
+import { api, parseApiErrorMessage } from '../../lib/api';
 import { t } from '../../lib/i18n';
 import { AirportInput } from '../AirportInput';
 
@@ -23,7 +23,10 @@ export function EmptyLegAlertsForm({ locale }: { locale: string }) {
       setFrom('');
       setTo('');
     } catch (err) {
-      setMsg({ type: 'err', text: err instanceof Error ? err.message : t(locale, 'subscribeFailed') });
+      setMsg({
+        type: 'err',
+        text: parseApiErrorMessage(err, t(locale, 'subscribeFailed')),
+      });
     } finally {
       setLoading(false);
     }
