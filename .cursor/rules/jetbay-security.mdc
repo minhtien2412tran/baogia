@@ -1,0 +1,14 @@
+---
+description: Git and secrets hygiene for JetBay / JetVina
+alwaysApply: true
+---
+
+# Security (Git + code)
+
+- Never commit `.env`, `.env.local`, PEM/P12 keys, `credentials.json`, or live Stripe/Twilio/SMTP/DB passwords.
+- Never print production secrets, API keys, JWT secrets, or Basic auth passwords in chat or docs.
+- Before finishing a commit pack: remind that `pnpm security:scan` / pre-commit must pass.
+- Prefer documenting env **names** and meta (`SET` / `NOT_SET` / `LOOPBACK`) — not values.
+- SMTP catcher / Mailpit is not inbox verification (T-S4-01 stays Owner-blocked until real SMTP).
+- Do not weaken ValidationPipe whitelist, ApiKeyGuard, or production boot secret checks.
+- New features: stick to báo giá scope; do not pull HomeFix secrets/DB into this repo.

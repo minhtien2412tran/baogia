@@ -53,8 +53,13 @@ With `APP_ENV=production`, API refuses to start if JWT/refresh/API_KEY/PAYMENT_S
 
 Seed defaults `Admin123!` / `Demo123!` **no longer valid** on prod after rotation.
 
+## Git hooks & CI
+
+See **[GIT_AND_CODE_SECURITY.md](./GIT_AND_CODE_SECURITY.md)** — `pnpm security:hooks` · `pnpm security:scan` · CI secret scan + Dependabot.
+
 ## Related docs
 
+- [GIT_AND_CODE_SECURITY.md](./GIT_AND_CODE_SECURITY.md) — pre-commit, CI, GitHub branch protection  
 - [JETBAY_SECURITY_VS_FEATURES.md](./JETBAY_SECURITY_VS_FEATURES.md) — bảo mật tham khảo HomeFix × chức năng theo báo giá  
 - [JETBAY_VPS_DEPLOY.md](./JETBAY_VPS_DEPLOY.md) — deploy runbook  
 - [API.md](./API.md) — Swagger / OpenAPI URLs  

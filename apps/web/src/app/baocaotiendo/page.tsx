@@ -396,7 +396,7 @@ export default function BaoCaoTienDoPage() {
             <article key={a.email}>
               <h3>{a.role}</h3>
               <p>
-                <code>{a.email}</code> / <code>{a.password}</code>
+                <code>{a.email}</code> / <span>{a.passwordHint}</span>
               </p>
               <a href={a.url} target="_blank" rel="noopener noreferrer">
                 Mở trang đăng nhập ↗
@@ -409,7 +409,7 @@ export default function BaoCaoTienDoPage() {
               {SWAGGER_ACCESS.note}
             </p>
             <p>
-              <code>{SWAGGER_ACCESS.username}</code> / <code>{SWAGGER_ACCESS.password}</code>
+              <code>{SWAGGER_ACCESS.username}</code> / <span>{SWAGGER_ACCESS.passwordHint}</span>
             </p>
             <a href={SWAGGER_ACCESS.url} target="_blank" rel="noopener noreferrer">
               Mở Swagger ↗

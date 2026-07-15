@@ -35,12 +35,15 @@ git push -u origin HEAD
 ## An toàn trước khi push
 
 ```bash
+pnpm security:hooks          # một lần / máy (core.hooksPath)
 git status
 git diff --cached
-# FAIL nếu thấy: .env, .env.local, credentials, private keys
+pnpm security:scan           # hoặc để pre-commit chạy tự động
+# FAIL nếu thấy: .env, credentials, private keys, sk_live_, ghp_, …
 ```
 
-Đã ignore: `.env*`, `*.env.bak*` (xem `.gitignore`).
+Đã ignore: `.env*`, keys/PEM, `credentials.json` (xem `.gitignore`).  
+Chi tiết: [GIT_AND_CODE_SECURITY.md](./GIT_AND_CODE_SECURITY.md).
 
 ## Cursor / AI trên máy mới
 

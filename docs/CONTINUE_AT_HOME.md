@@ -104,6 +104,7 @@ Next technical phase after Owner unlock:
 - **Empty-leg alert 400** (2026-07-15) — DTO validators · redeploy · smoke **201** · commit `b9dce75`
 - **GĐ2 closure audit** (2026-07-15 evening) — tree was clean at `b9dce75` · SMTP still LOOPBACK/catcher · tests PASS · residual: html-probe default + prod-recheck script — [COMMIT_PLAN_GD2.md](./COMMIT_PLAN_GD2.md)
 - **Spec Kit** (2026-07-15) — CLI `specify` **v0.12.15** (uv tool, GitHub) · `specify init --here --integration cursor-agent --script ps` · constitution JetBay · [SPEC_KIT.md](./SPEC_KIT.md)
+- **Git/code security** (2026-07-15) — `pnpm security:scan` + pre-commit hooks · CI secret job · Dependabot · [GIT_AND_CODE_SECURITY.md](./GIT_AND_CODE_SECURITY.md)
 
 **VƯỚNG (Owner):** O4 SMTP · UAT · CMS · G4 keys · media decision — xem [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)  
 **Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **SMTP:** [SMTP_SETUP_GUIDE.md](./SMTP_SETUP_GUIDE.md)

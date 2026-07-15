@@ -369,17 +369,18 @@ export const OUT_OF_SCOPE_NOW: WorkItem[] = [
   },
 ];
 
+/** Demo logins — passwords are NOT published on this public page (Git/security). */
 export const DEMO_ACCOUNTS = [
   {
     role: 'Quản trị (xem thử)',
     email: 'admin@jetbay.local',
-    password: 'WTtymX89cEWUwgJBzqAa1!',
+    passwordHint: 'Xin Owner / file backup VPS jetbay-security-ops (không commit mật khẩu)',
     url: 'https://admin.minhtien.online/login',
   },
   {
     role: 'Người dùng (xem thử)',
     email: 'demo@jetbay.local',
-    password: 'J9q9snOLWiMcmTYHFIAa1!',
+    passwordHint: 'Xin Owner / file backup VPS jetbay-security-ops (không commit mật khẩu)',
     url: 'https://www.minhtien.online/en-us/login',
   },
 ] as const;
@@ -388,8 +389,8 @@ export const DEMO_ACCOUNTS = [
 export const SWAGGER_ACCESS = {
   url: 'https://docs.minhtien.online/swagger',
   username: 'docs',
-  password: 'UNURseKKFiiWGp0bHtr4GWqEG9Gk',
-  note: 'Cửa sổ “Sign in to access this site” = HTTP Basic bảo vệ tài liệu API, không phải tài khoản đăng nhập JetVina.',
+  passwordHint: 'Xin Owner / file backup VPS jetbay-security-ops (không commit mật khẩu)',
+  note: 'Cửa sổ “Sign in to access this site” = HTTP Basic bảo vệ tài liệu API, không phải tài khoản đăng nhập JetVina. Mật khẩu Basic không lưu trên Git / trang public.',
 } as const;
 
 export const REFERENCE_LINKS: LinkRef[] = [

@@ -26,6 +26,7 @@ Chat sessions do **not** remember progress. Before coding, read and update the f
 | [docs/BE_ARCHITECTURE.md](./docs/BE_ARCHITECTURE.md) | Nest module target layout + refactor phases |
 | [docs/ONBOARDING_NHAN_VIEN.md](./docs/ONBOARDING_NHAN_VIEN.md) | Full clone + setup for new teammates |
 | [docs/SPEC_KIT.md](./docs/SPEC_KIT.md) | **Spec Kit** — `specify` CLI + Cursor `/speckit-*` skills |
+| [docs/GIT_AND_CODE_SECURITY.md](./docs/GIT_AND_CODE_SECURITY.md) | **Git/code security** — secret scan, hooks, CI, Dependabot |
 | [docs/JETBAY_PRODUCT_MAP.md](./docs/JETBAY_PRODUCT_MAP.md) | Product vs báo giá — architecture map |
 | [docs/JETBAY_WEB_PAGE_DOD.md](./docs/JETBAY_WEB_PAGE_DOD.md) | Clone page DoD |
 | [docs/JETBAY_DELIVERY_CHECKLIST.md](./docs/JETBAY_DELIVERY_CHECKLIST.md) | Delivery DoD G0–G4 + App gate |
@@ -50,7 +51,7 @@ Chat sessions do **not** remember progress. Before coding, read and update the f
 
 1. **Features** only from `docs/JETBAY_BAO_GIA.md` + `docs/JETBAY_DANH_GIA_KY_THUAT.md` — not HomeFix CRM/marketplace.
 2. **Security patterns** may follow `api.homefix.asia` (JWT, X-API-Key, throttle) but **secrets/DB/ports stay JetBay-only**.
-3. **Never commit** `.env`, `.env.local`, real API keys, DB passwords.
+3. **Never commit** `.env`, `.env.local`, real API keys, DB passwords. Run `pnpm security:hooks` + `pnpm security:scan` (see [GIT_AND_CODE_SECURITY.md](./docs/GIT_AND_CODE_SECURITY.md)).
 4. After meaningful work: update `docs/CONTINUE_AT_HOME.md` + checklist log.
 5. Prefer one concern per PR; stay on the matching branch prefix.
 

@@ -26,7 +26,8 @@ Prefer one concern per PR. Do not mix web/api/admin concerns without need.
 
 ### IV. Secrets & production safety
 Never commit `.env`, `.env.local`, API keys, DB passwords, Stripe/Twilio/SMTP secrets.  
-Never print production secrets in chat, logs, or docs.  
+Never print production secrets in chat, logs, docs, or public pages (`/baocaotiendo`).  
+Use `pnpm security:hooks` + `pnpm security:scan` (see `docs/GIT_AND_CODE_SECURITY.md`).  
 Do not mark SMTP / payment / OAuth / SMS as PASS without real provider + inbox/sandbox verification.
 
 ### V. Progress board is source of truth

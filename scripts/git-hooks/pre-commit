@@ -1,0 +1,5 @@
+#!/bin/sh
+# auto — installed by scripts/security/install-git-hooks.mjs
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT" || exit 1
+exec node scripts/security/scan-secrets.mjs --staged
