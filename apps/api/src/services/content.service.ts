@@ -26,6 +26,7 @@ import {
   UpdateDestinationDto,
   UpdateVideoDto,
 } from '../dto';
+import { isSmtpDeliverableConfigured } from '../utils/smtp-config';
 
 type ListQuery = {
   page?: number;
@@ -441,9 +442,14 @@ export class ContentService {
       },
     });
     void this.customerCare.onNewsletterSubscribe(body.email, locale);
+    const smtpOk = isSmtpDeliverableConfigured();
     return {
       status: 'SUBSCRIBED',
-      message: 'Successfully subscribed to the newsletter.',
+      message: smtpOk
+        ? 'Successfully subscribed to the newsletter.'
+        : 'Subscribed. Email delivery is temporarily unavailable — we saved your address.',
+      emailQueued: true,
+      emailDeliverable: smtpOk,
     };
   }
 

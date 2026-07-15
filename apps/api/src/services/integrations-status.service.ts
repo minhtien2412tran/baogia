@@ -2,6 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { RedisService } from './redis.service';
 import { StorageService } from './storage.service';
 import { PrismaService } from '../prisma/prisma.service';
+import {
+  isSmtpDeliverableConfigured,
+  smtpNonDeliverableReason,
+} from '../utils/smtp-config';
 
 function present(key: string): boolean {
   const v = process.env[key]?.trim();
@@ -31,6 +35,8 @@ export class IntegrationsStatusService {
 
     const redisPing = await this.redis.ping();
     const minioPing = await this.storage.ping();
+    const smtpDeliverable = isSmtpDeliverableConfigured();
+    const smtpBlockedReason = smtpNonDeliverableReason();
 
     return {
       status: database === 'up' && present('JWT_SECRET') ? 'ok' : 'degraded',
@@ -46,7 +52,11 @@ export class IntegrationsStatusService {
         port: Number(process.env.PORT ?? 0) || null,
       },
       integrations: {
-        smtp: present('SMTP_HOST'),
+        /** True only when production-ready SMTP (not localhost/MailHog). */
+        smtp: smtpDeliverable,
+        smtpHostSet: present('SMTP_HOST'),
+        smtpDeliverable,
+        smtpBlockedReason,
         minio: minioPing === 'not_configured' ? 'local' : minioPing,
         googleOAuth: present('GOOGLE_CLIENT_ID'),
         appleOAuth: present('APPLE_CLIENT_ID'),
@@ -64,6 +74,8 @@ export class IntegrationsStatusService {
         jwt: 'Required for auth. Set JWT_SECRET + REFRESH_TOKEN_SECRET.',
         minio:
           'MinIO optional — empty MINIO_ENDPOINT uses local upload path (UPLOAD_PATH).',
+        smtp:
+          'integrations.smtp means deliverable SMTP (rejects localhost in production). See SMTP_SETUP_GUIDE.md.',
         g4: 'SMTP / OAuth / Payment / SMS need customer merchant keys — see docs/JETBAY_G4_INTEGRATIONS.md',
       },
     };

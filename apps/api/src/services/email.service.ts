@@ -1,5 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import {
+  isSmtpDeliverableConfigured,
+  smtpNonDeliverableReason,
+} from '../utils/smtp-config';
 
 export type MailAttachment = {
   filename: string;
@@ -13,12 +17,14 @@ export class EmailService {
   private transporter: nodemailer.Transporter | null = null;
   private verified = false;
 
+  /** True only when SMTP can actually deliver (rejects prod loopback). */
   isConfigured(): boolean {
-    return Boolean(process.env.SMTP_HOST?.trim());
+    return isSmtpDeliverableConfigured();
   }
 
   private getTransporter(): nodemailer.Transporter | null {
     if (this.transporter) return this.transporter;
+    if (!this.isConfigured()) return null;
     const host = process.env.SMTP_HOST?.trim();
     if (!host) return null;
 
@@ -43,6 +49,8 @@ export class EmailService {
   }
 
   async verifyConnection(): Promise<{ ok: boolean; reason?: string }> {
+    const blocked = smtpNonDeliverableReason();
+    if (blocked) return { ok: false, reason: blocked };
     if (!this.isConfigured())
       return { ok: false, reason: 'SMTP not configured' };
     if (this.verified) return { ok: true };
@@ -69,6 +77,14 @@ export class EmailService {
     cc?: string;
     attachments?: MailAttachment[];
   }): Promise<{ sent: boolean; reason?: string }> {
+    const blocked = smtpNonDeliverableReason();
+    if (blocked) {
+      this.logger.warn(
+        `Email skipped (SMTP not deliverable): ${opts.subject} → ${opts.to} (${blocked})`,
+      );
+      return { sent: false, reason: blocked };
+    }
+
     const transport = this.getTransporter();
     if (!transport) {
       this.logger.warn(
