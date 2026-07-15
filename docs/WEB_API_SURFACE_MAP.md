@@ -1,0 +1,95 @@
+# Web ↔ API Surface Map
+
+> **Updated:** 2026-07-14 · **Status:** CURRENT · **Evidence:** code audit + prod smoke  
+> **Verify:** `node scripts/deploy/jetbay-be/smoke-web-api.mjs` · `pnpm smoke:api-sync` (needs local API)  
+> **Owner:** Dev · **Reviewer:** Project owner (priorities only)
+
+Legend — Data status: `DONE` | `PARTIAL` | `MOCK` | `BLOCKED` | `NOT_STARTED` | `NEEDS_VERIFY` | `PROD_ONLY_ISSUE`
+
+---
+
+## Public Web (apps/web)
+
+| Module | Web route | Admin route | API endpoint | Method | Auth | API client | Data status | Loading | Error | Empty | Test | Production status | Ghi chú |
+|--------|-----------|-------------|--------------|--------|------|------------|-------------|---------|-------|-------|------|-------------------|---------|
+| Home commercial | `/{locale}` | — | `/fixed-price/routes` | GET | API key | `getFixedPriceRoutes` | DONE | layout | `loadApi` + notice | ApiLoadNotice | smoke-web-api | PROD OK n=12 | T-S2-01 |
+| Home EL | `/{locale}` | — | `/empty-legs` | GET | API key | `getEmptyLegs` | DONE | layout | `loadApi` + notice | ApiLoadNotice / emptyLegsEmptyDesc | smoke-web-api | PROD OK n=2 | T-S2-01 |
+| Home JetCard | `/{locale}` | — | `/jet-card/plans` | GET | API key | `getJetCardPlans` | DONE | layout | `loadApi` + notice | ApiLoadNotice | smoke-web-api | PROD OK n=3 | T-S2-01 |
+| Home news | `/{locale}` | content/articles | `/content/news` | GET | API key | `getNews` | PARTIAL | — | `loadApi` + EmptyState / notice | CTA noNews* | smoke-web-api | PROD OK n=1 | T-S2-04 |
+| Fleet showcase | charter ServicePage | — | — (admin fleet only) | — | — | `AIRCRAFT_FLEET` + sample label | SAMPLE | — | labelled | “Sample fleet” note | visual | local | T-S2-02 — not live inventory |
+| Home marketing sections | `/{locale}` | — | mixed | — | — | brand flags | PARTIAL | — | — | hidden | — | Often hidden | `SHOW_UNVERIFIED_*` default false |
+| Charter ×6 | `/{locale}/private-jet-charter`(+5) | content/pages | `/content/pages/:slug` optional | GET | API key | `PAGE_CONTENT` + cms | PARTIAL | — | optional CMS | static + CMS body | route 200 | PROD live | [CHARTER_CMS_MAP.md](./CHARTER_CMS_MAP.md) T-S3-01 |
+| Fixed-price list | `/fixed-price-charter` | fixed-price | `/fixed-price/routes` | GET | API key | `getFixedPriceRoutes` | DONE | — | `loadApi` + notice | ApiLoadNotice | smoke-web-api | PROD | T-S2-01 |
+| Fixed-price detail | `/fixed-price-charter/[slug]` | fixed-price | `/fixed-price/routes/:slug` | GET | API key | `getFixedPriceRoute` | DONE | — | not-found UI | ok | NEEDS_VERIFY | PROD | |
+| Fixed-price book | detail form | quotes | `/fixed-price/quote` | POST | API key | `requestFixedPriceQuote` | DONE | form | form msg | — | NEEDS_VERIFY | PROD | Email optional phone gap |
+| Empty Legs list | `/empty-leg` | empty-legs | `/empty-legs` | GET | API key | page uses browse | PARTIAL | — | client error → ApiLoadNotice | empty + error | smoke-web-api | PROD | T-S2-01 |
+| Empty Leg detail | `/empty-leg-recommendation/[slug]` | empty-legs | `/empty-legs/:slug` | GET | API key | `getEmptyLeg` | DONE | — | not-found | ok | NEEDS_VERIFY | PROD | |
+| Empty Leg request | detail form | quotes | `/empty-legs/:id/request` | POST | API key | `requestEmptyLeg` | DONE | form | form | — | NEEDS_VERIFY | PROD | |
+| Empty Leg alerts | forms | — | `/empty-legs/alerts/subscribe` | POST | API key | `subscribeEmptyLegAlerts` | DONE | form | form | — | NEEDS_VERIFY | PROD | |
+| Jet Card | `/jet-card` | jet-card | `/jet-card/plans` + `/jet-card/enquiries` | GET/POST | API key | plans + enquiry | DONE | form | `loadApi` + notice | ApiLoadNotice | smoke-web-api | PROD | T-S2-01 |
+| Travel Credit | `/travel-credit` | travel-credits | `/travel-credits/packages` + enquiries | GET/POST | API key | packages + enquiry | DONE | form | `loadApi` + notice | ApiLoadNotice | smoke-web-api | PROD enquiry id OK | T-S2-01 |
+| Destinations | `/destination` (+golf/ski/island) | destinations | `/content/destinations` | GET | API key | `getDestinations` | DONE | — | silent | blank | smoke-web-api | PROD n≥5 | |
+| Airports search | Quote / EL widgets | airports | `/airports/search` `/nearby` | GET | API key | `AirportInput` | DONE | dropdown | msg | no-results i18n | smoke-web-api | PROD | |
+| Quote search | hero widget | quotes | `/quotes/search-aircraft` | POST | API key | `searchAircraft` | DONE | skeleton | form | empty results | **PASS 2026-07-14** legs DTO | PROD | Body must use `legs[]` |
+| Quote request | hero widget | quotes | `/quotes/request` | POST | API key | `requestQuote` | DONE | form | form | — | smoke-web-api + E2E | PROD creates quote | Phone **required** (T-S1-03); no `+10000000000` fake |
+| Quote email notify | — | email-templates | SMTP | — | — | EmailService | BLOCKED | — | — | — | NOT_RUN prod mail | SMTP stub | Code OK, deliver FAIL |
+| Newsletter | footer | — | `/newsletter/subscribe` | POST | API key | `NewsletterForm` | DONE | form | form | — | 201 prod | PARTIAL | Mail deliver blocked |
+| Contact | (no dedicated page) | — | enquiries variants | — | — | forms | PARTIAL | — | — | — | — | — | Contact = quote/enquiry forms |
+| Auth login/register | `/login` `/register` | — | `/auth/*` | POST | public+key | pages | DONE | form | form | — | smoke-auth-booking | PROD | OTP/OAuth env-gated |
+| OAuth Google/Apple | login buttons | — | `/auth/oauth/*` | POST | — | buttons | BLOCKED | — | NOT_CONFIGURED | — | — | integrations false | Need client IDs |
+| OTP SMS | login/register | — | `/auth/otp/*` | POST | — | pages | BLOCKED | — | — | — | — | sms=false | Dev logs code |
+| Account dashboard | `/account/*` | users | `/account/dashboard` | GET | JWT | `AccountContext` | DONE | skeleton | retry + 401→login | AccountEmpty CTA i18n | auth-booking | PROD | T-S3-02 |
+| Account payments | `/account/payments` | — | `/payments/gateway` | POST | JWT | pay button | BLOCKED | — | not configured | — | — | pay keys missing | OnePay/9Pay/Stripe |
+| News/Blogs/Videos | `/news` `/blogs` `/video-centre` | content/* | `/content/*` | GET | API key | list/detail | PARTIAL | — | silent empty | blank | smoke news | PROD thin content | |
+| World Cup | WC pages | — | `/campaigns/world-cup/*` | GET/POST | API key | forms | PARTIAL | — | — | hide empty | NEEDS_VERIFY | — | IATA raw inputs |
+| Partners | partnership page | partners | `/partners/*` | GET/POST | API key | forms | PARTIAL | — | hide empty | — | NEEDS_VERIFY | — | |
+| Pricing estimate | — | bookings | `/pricing/estimate` | POST | API key | **none in web** | NOT_STARTED | — | — | — | — | API exists | Dead FE client `estimatePricing` |
+| Progress report | `/baocaotiendo` | — | — | — | — | static TS | DONE | — | — | — | visual | PROD v3.0 | Update to 3.1 |
+
+---
+
+## Admin (apps/admin)
+
+| Module | Web route | Admin route | API endpoint | Method | Auth | API client | Data status | Loading | Error | Empty | Test | Production status | Ghi chú |
+|--------|-----------|-------------|--------------|--------|------|------------|-------------|---------|-------|-------|------|-------------------|---------|
+| Login | — | `/login` | `/auth/login` | POST | — | adminApi | DONE | form | form | — | manual | PROD → api.minhtien.online | Fixed bake URL |
+| Dashboard | — | `/dashboard` | `/admin/dashboard/*` | GET | Admin JWT | adminApi | DONE | — | — | — | smoke-admin (hist) | PROD | |
+| Quotes | — | `/dashboard/quotes` | `/admin/quotes*` | GET/PATCH/POST | Admin | adminApi | DONE | — | — | — | NEEDS_VERIFY | PROD | Quote E2E end appears here |
+| Bookings | — | `/dashboard/bookings` | `/admin/bookings*` | GET/PATCH | Admin | adminApi | DONE | — | — | — | auth-booking | PROD | |
+| Airports/Aircraft | — | airports/aircraft | `/admin/airports` `/admin/aircraft/*` | CRUD | Admin | adminApi | DONE | — | — | — | smoke-admin-crud | PROD | |
+| FP / EL / JC / TC | — | commercial pages | `/admin/fixed-price|empty-legs|jet-card|travel-credits` | CRUD | Admin | adminApi | DONE | — | — | — | smoke-admin-crud | PROD | |
+| Content CMS | — | content/* | `/admin/content/*` | CRUD | Admin | adminApi | PARTIAL | — | — | — | NEEDS_VERIFY | PROD | Locale body thiếu |
+| Media | — | media / media-review | `/admin/media*` `/admin/media-assets*` | CRUD | Admin | adminApi | PARTIAL | — | — | — | media tests | PROD | Hotlink JetVina staging |
+| Operators / Templates | — | operators / email-templates | `/admin/operators` `/admin/email-templates` | CRUD | Admin | adminApi | DONE | — | — | — | hist 200 | PROD | Samples seeded |
+| Audit | — | audit-logs | `/admin/audit-logs` | GET | Admin | adminApi | DONE | — | — | — | NEEDS_VERIFY | PROD | |
+| Permissions | — | permissions | `/admin/permissions*` | GET/PUT | Admin | adminApi | PARTIAL | — | — | — | NEEDS_VERIFY | PROD | |
+| Contracts | — | contracts | `/admin/contracts*` | workflow | Admin | adminApi | PARTIAL | — | — | — | — | DocuSign mock | GĐ4 |
+| Settings / brand | — | settings | `/admin/site-settings/brand` | GET/PATCH | Admin | adminApi | PARTIAL | — | — | — | — | PROD | |
+| Revenue demo | — | dashboard | `/admin/dashboard/revenue-demo` | GET | Admin | adminApi | MOCK | — | — | — | — | Demo metric | Labelled demo |
+
+---
+
+## System / contract
+
+| Check | Status | Evidence 2026-07-14 |
+|-------|--------|---------------------|
+| Prod health | DONE | `GET /health` → `ok` `production` |
+| Integrations | PARTIAL | smtp=true (host set), oauth/payment/sms=false; mail deliver still stub host |
+| OpenAPI public | PROD_ONLY_ISSUE | `/openapi.json` → **401** (Swagger Basic on) — sync via Basic or VPS |
+| Local↔prod path sync | NOT_RUN | Local API `:4000` unreachable today — `smoke:api-sync` FAIL fetch |
+| Web↔API commercial smoke | DONE | `smoke-web-api.mjs` **RESULT pass** |
+| Auth+booking smoke | DONE | `smoke-auth-booking.mjs` **RESULT pass** |
+| Media unit | DONE | `pnpm test:media` pass |
+
+---
+
+## Priority findings (surface)
+
+1. **P2** — remaining `safeApi` call sites (blogs/destinations/CMS detail) still swallow errors; news + commercial/home fixed.
+2. **P2** — Fleet showcase is labelled SAMPLE (T-S2-02); public live fleet GET still optional later.
+3. **P0** — SMTP deliver still blocked (Owner O4).
+4. **P2** — Charter copy still primarily static; CMS slugs mapped — Owner publish optional (T-S3-01).
+5. **P1** — Pay/OAuth/SMS keys false on `/integrations/status` (G4).
+6. **P2** — OpenAPI/docs anonymous 401 — sync scripts need `SWAGGER_BASIC_*` (T-S1-04 supports this).
+
+Next map updates: after Owner CMS charter pages and public fleet API (if product requires live inventory).

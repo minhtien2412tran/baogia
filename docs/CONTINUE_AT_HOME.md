@@ -34,10 +34,15 @@
 
 ## Việc tiếp theo (ưu tiên sản phẩm)
 
-1. **Polish clone** (ongoing) — so `scratch/` vs live · Home news/newsletter · FP tier labels  
-2. **G4 keys** — SMTP / OAuth / payment / SMS **chờ KH** → [KH_G4_KEYS_CHECKLIST.md](./KH_G4_KEYS_CHECKLIST.md)  
-3. (Optional) set prod `APP_ENV=production` khi secrets đã đủ mạnh  
-4. **BE modules** — tiếp phase 2+ theo [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md)  
+> **Plan:** [NEXT_SPRINT_PLAN.md](./NEXT_SPRINT_PLAN.md) · [GD2_ROADMAP.md](./GD2_ROADMAP.md) · [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md) · [OWNER_ACTION_ITEMS.md](./OWNER_ACTION_ITEMS.md) · [TEST_MATRIX.md](./TEST_MATRIX.md)
+
+**Trạng thái phiên 15/07:** **GĐ2 Dev complete · Waiting for Owner** · pack **ready to commit** ([COMMIT_PLAN_GD2.md](./COMMIT_PLAN_GD2.md))
+
+1. **P0 Owner** — [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md): O4 SMTP (hiện LOOPBACK) · inbox verify  
+2. **P1 Owner** — UAT · CMS · G4 sandbox keys · media decision  
+3. **O3** — v3.1 **DEPLOYED / OPTIONAL_OWNER_REVIEW**  
+4. **Git** — `jetvina` đã commit GĐ2 pack (4 commits · base `a15b270`) · chưa push trừ khi Owner bảo  
+5. **Sau unlock** — [GD4_SANDBOX_READINESS.md](./GD4_SANDBOX_READINESS.md) (prep only · không bật prod giả) 
 
 ### Đã deploy — Nhánh tổng hợp `jetvina` (2026-07-13)
 
@@ -67,9 +72,24 @@
 - **JetVina media + loader + samples** (2026-07-13) — hotlink `jetvina.com` ON · page loader · +6 hãng mẫu · email templates en/vi · [JETVINA_SAMPLE_CONTENT.md](./JETVINA_SAMPLE_CONTENT.md)
 - **Báo cáo tiến độ v3.0** (2026-07-13) — `/baocaotiendo` cập nhật % GĐ1/WEB/ADM · demo + Swagger Basic passwords (đã rotate) · không còn `Admin123!`/`Demo123!`
 - **JetVina images shared** (2026-07-13) — `jv()` helper · private-jet-charter + heroes/fleet/destinations dùng catalog [jetvina.com](https://jetvina.com/) · không còn SVG demo fleet
+- **T-S1-03 Quote phone** (2026-07-14) — bỏ `+10000000000`; validate `quotePhoneRequired`; label `phoneRequired` · rebuild `@jetbay/i18n`
+- **T-S1-04 api-sync** (2026-07-14) — `smoke-api-sync.mjs`: Basic auth + `SYNC_MODE=auto|full|prod-docs` (local down → so sánh prod↔docs)
+- **T-S2-01 empty/error** (2026-07-14) — `loadApi` + `ApiLoadNotice` trên Home FP/EL/JC + FP/JC/TC pages + EmptyLegBrowse
+- **T-S2-02 fleet sample** (2026-07-14) — `AircraftCarousel` gắn tag “Sample fleet” + note; không silent MOCK; chưa public fleet API
+- **T-S2-03 Quote UI proof** (2026-07-14) — `pnpm smoke:quote-ui` PASS · **requestId=36** · UI hiện `quoteSuccessWithId` (Reference #id)
+- **T-S2-04 home news** (2026-07-14) — `loadApi` + EmptyState CTA / ApiLoadNotice trên Home + `/news`
+- **T-S3-01 + T-S3-03** (2026-07-14) — [CHARTER_CMS_MAP.md](./CHARTER_CMS_MAP.md) · `PAGE_CMS_SLUG` ×6 · ADMIN_OPS §6–7
+- **T-S3-02 Account UX** (2026-07-14) — error panel Retry/Login i18n · 401→login · empty CTA trên quotes/JC/TC/payments note
+- **T-S4-02 backup drill** (2026-07-14) — **PASS** dump + restore test Airports **120=120** · script `backup-restore-drill.sh`
+- **T-S4-03** (2026-07-14) — UAT pack + baocaotiendo **v3.1** live · web S1–S3 polish **deployed** www
+- **T-S4-01 SMTP** (canonical): Dev implementation **PASS** · Production SMTP configuration **BLOCKED_OWNER_SMTP** · Inbox delivery **NOT RUN** · Overall **BLOCKED_OWNER**
+- **Production API sync** — PASS **173=173** (VPS) · Local Basic: **NEEDS_LOCAL_ENV_REFRESH** nếu stale — [API_SYNC_SMOKE.md](./API_SYNC_SMOKE.md)
+- **FINDSTR fix** — `pnpm smoke:html-probe`
+- **Quote evidence** — `#37` prior · `#38`/`#39` earlier 15/07 · chốt `#40` quote-ui · `#41` smoke-web-api
+- **Owner handoff** — [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)
 
-**Ops còn lại:** SMTP prod thật · CMS dịch locale · G4 keys KH · pen-test/IDOR
-**Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **BE docs:** [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md) · [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) · [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)
+**VƯỚNG (Owner):** O4 SMTP · UAT · CMS · G4 keys · media decision — xem [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)  
+**Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **SMTP:** [SMTP_SETUP_GUIDE.md](./SMTP_SETUP_GUIDE.md)
 
 ### Đã merge + deploy (2026-07-10)
 

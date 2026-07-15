@@ -10,6 +10,16 @@ Chat sessions do **not** remember progress. Before coding, read and update the f
 | Doc | Purpose |
 |-----|---------|
 | [docs/CONTINUE_AT_HOME.md](./docs/CONTINUE_AT_HOME.md) | **Where we left off** — start here on a new machine |
+| [docs/NEXT_SPRINT_PLAN.md](./docs/NEXT_SPRINT_PLAN.md) | **Sprint plan** — Web↔API · sync · docs · việc KH |
+| [docs/WEB_API_SURFACE_MAP.md](./docs/WEB_API_SURFACE_MAP.md) | Web/Admin ↔ API status matrix |
+| [docs/OWNER_ACTION_ITEMS.md](./docs/OWNER_ACTION_ITEMS.md) | Việc chủ dự án phải làm |
+| [docs/OWNER_NEXT_ACTIONS.md](./docs/OWNER_NEXT_ACTIONS.md) | **Owner handoff pack** (P0 SMTP → UAT/CMS/G4) |
+| [docs/GD4_SANDBOX_READINESS.md](./docs/GD4_SANDBOX_READINESS.md) | GĐ4 sandbox gap checklist (prep only) |
+| [docs/COMMIT_PLAN_GD2.md](./docs/COMMIT_PLAN_GD2.md) | GĐ2 dirty-tree commit plan |
+| [docs/GD2_ROADMAP.md](./docs/GD2_ROADMAP.md) | GĐ2 tasks P0–P3 + page priority |
+| [docs/CHARTER_CMS_MAP.md](./docs/CHARTER_CMS_MAP.md) | Charter ×6 static vs CMS slugs |
+| [docs/TEST_MATRIX.md](./docs/TEST_MATRIX.md) | Test commands + evidence |
+| [docs/API_SYNC_SMOKE.md](./docs/API_SYNC_SMOKE.md) | OpenAPI prod↔docs sync + Basic |
 | [docs/BE_AUDIT.md](./docs/BE_AUDIT.md) | **Backend audit** — domain-by-domain status / gaps / smoke |
 | [docs/BE_TEST.md](./docs/BE_TEST.md) | **Backend test** — smoke scripts, ma trận case ↔ domain |
 | [docs/BE_ARCHITECTURE.md](./docs/BE_ARCHITECTURE.md) | Nest module target layout + refactor phases |
