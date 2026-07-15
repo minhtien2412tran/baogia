@@ -1,5 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EmailService } from './email.service';
+import { inferLocaleFromPhone, normalizeEmailLocale } from './customer-care/email-layout';
+import {
+  renderEnquiryCustomerEmail,
+  renderEnquirySalesEmail,
+  renderQuoteSalesEmail,
+} from './customer-care/ops-email-templates';
 
 type EnquiryKind = 'travel_credit' | 'jet_card';
 
@@ -13,6 +19,7 @@ type EnquiryPayload = {
   message?: string | null;
   packageName?: string;
   attachmentUrls?: string[];
+  locale?: string;
 };
 
 @Injectable()
@@ -30,63 +37,66 @@ export class EnquiryMailService {
     );
   }
 
-  private kindLabel(kind: EnquiryKind): string {
+  private resolveLocale(locale?: string, phone?: string): string {
+    return normalizeEmailLocale(
+      locale || inferLocaleFromPhone(phone) || 'en',
+    );
+  }
+
+  private kindLabel(kind: EnquiryKind, locale: string): string {
+    if (locale === 'vi') {
+      return kind === 'travel_credit' ? 'Travel Credits' : 'Jet Card';
+    }
+    if (locale === 'zh-cn') {
+      return kind === 'travel_credit' ? '旅行积分' : 'Jet Card';
+    }
     return kind === 'travel_credit' ? 'Travel Credits' : 'Jet Card';
   }
 
   async notifyEnquiry(
     payload: EnquiryPayload,
   ): Promise<{ customerSent: boolean; salesSent: boolean }> {
-    const label = this.kindLabel(payload.kind);
+    const locale = this.resolveLocale(payload.locale, payload.phone);
+    const label = this.kindLabel(payload.kind, locale);
     const name = [payload.firstName, payload.lastName]
       .filter(Boolean)
       .join(' ');
-    const attachmentBlock =
-      payload.attachmentUrls && payload.attachmentUrls.length > 0
-        ? `\n\nAttachments:\n${payload.attachmentUrls.map((u) => `- ${u}`).join('\n')}`
-        : '';
 
-    const customerText = [
-      `Dear ${payload.firstName},`,
-      '',
-      `Thank you for your ${label} enquiry (#${payload.enquiryId}).`,
-      payload.packageName ? `Package: ${payload.packageName}` : '',
-      'Our charter specialists will contact you within one business day.',
-      '',
-      '— JetVina Private Jet Charter',
-    ]
-      .filter(Boolean)
-      .join('\n');
+    const customerMail = renderEnquiryCustomerEmail({
+      locale,
+      enquiryId: payload.enquiryId,
+      firstName: payload.firstName,
+      kindLabel: label,
+      packageName: payload.packageName,
+    });
 
     const customer = await this.email.sendMail({
       to: payload.email,
-      subject: `JetVina ${label} Enquiry #${payload.enquiryId} Received`,
-      text: customerText,
-      html: customerText.replace(/\n/g, '<br>'),
+      subject: customerMail.subject,
+      text: customerMail.text,
+      html: customerMail.html,
     });
 
     const salesTo = this.salesInbox();
     let salesSent = false;
     if (salesTo) {
-      const salesText = [
-        `[${label}] New enquiry #${payload.enquiryId}`,
-        '',
-        `Name: ${name}`,
-        `Email: ${payload.email}`,
-        `Phone: ${payload.phone}`,
-        payload.packageName ? `Package: ${payload.packageName}` : '',
-        payload.message ? `Message: ${payload.message}` : '',
-        attachmentBlock,
-      ]
-        .filter(Boolean)
-        .join('\n');
-
+      const salesMail = renderEnquirySalesEmail({
+        locale,
+        enquiryId: payload.enquiryId,
+        name,
+        email: payload.email,
+        phone: payload.phone,
+        kindLabel: label,
+        packageName: payload.packageName,
+        message: payload.message,
+        attachmentUrls: payload.attachmentUrls,
+      });
       const sales = await this.email.sendMail({
         to: salesTo,
         replyTo: payload.email,
-        subject: `[JetVina ${label}] ${name} - #${payload.enquiryId}`,
-        text: salesText,
-        html: salesText.replace(/\n/g, '<br>'),
+        subject: salesMail.subject,
+        text: salesMail.text,
+        html: salesMail.html,
       });
       salesSent = sales.sent;
     } else {
@@ -108,6 +118,7 @@ export class EnquiryMailService {
     message?: string | null;
     tripSummary?: string;
     sourcePage?: string;
+    locale?: string;
   }): Promise<{ salesSent: boolean }> {
     const salesTo = this.salesInbox();
     if (!salesTo) {
@@ -117,30 +128,27 @@ export class EnquiryMailService {
       return { salesSent: false };
     }
 
+    const locale = this.resolveLocale(payload.locale, payload.phone);
     const name = [payload.firstName, payload.lastName]
       .filter(Boolean)
       .join(' ');
-    const salesText = [
-      `[Quote] New charter request #${payload.quoteId}`,
-      '',
-      `Name: ${name}`,
-      `Email: ${payload.email}`,
-      `Phone: ${payload.phone}`,
-      payload.tripSummary ? `Route: ${payload.tripSummary}` : '',
-      payload.sourcePage ? `Source: ${payload.sourcePage}` : '',
-      payload.message ? `Message: ${payload.message}` : '',
-      '',
-      'Admin → Quotes to review / create offer.',
-    ]
-      .filter(Boolean)
-      .join('\n');
+    const mail = renderQuoteSalesEmail({
+      locale,
+      quoteId: payload.quoteId,
+      name,
+      email: payload.email,
+      phone: payload.phone,
+      tripSummary: payload.tripSummary,
+      sourcePage: payload.sourcePage,
+      message: payload.message,
+    });
 
     const sales = await this.email.sendMail({
       to: salesTo,
       replyTo: payload.email,
-      subject: `[JetVina Quote] ${name} - #${payload.quoteId}`,
-      text: salesText,
-      html: salesText.replace(/\n/g, '<br>'),
+      subject: mail.subject,
+      text: mail.text,
+      html: mail.html,
     });
     return { salesSent: sales.sent };
   }

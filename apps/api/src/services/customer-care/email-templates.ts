@@ -1,3 +1,12 @@
+import {
+  EMAIL_SITE as SITE,
+  emailCta,
+  emailDetailCard,
+  normalizeEmailLocale,
+  webPath,
+  wrapEmailHtml,
+} from './email-layout';
+
 export type CampaignKey =
   | 'welcome_register'
   | 'quote_received'
@@ -11,12 +20,6 @@ export type CampaignKey =
 
 export type EmailTemplate = { subject: string; text: string; html: string };
 
-const SITE = (
-  process.env.WEB_PUBLIC_URL ??
-  process.env.NEXT_PUBLIC_WEB_URL ??
-  'https://www.minhtien.online'
-).replace(/\/$/, '');
-
 function greeting(firstName: string | undefined, locale: string): string {
   const name = firstName?.trim();
   if (locale === 'vi') return `Kính gửi ${name || 'Quý khách'},`;
@@ -29,46 +32,23 @@ function greeting(firstName: string | undefined, locale: string): string {
   return `Dear ${name || 'there'},`;
 }
 
-function webPath(locale: string): string {
-  if (locale === 'vi') return 'vi';
-  if (locale === 'zh-cn') return 'zh-cn';
-  if (locale === 'ja') return 'ja';
-  if (locale === 'ko') return 'ko';
-  if (locale === 'th') return 'th';
-  if (locale === 'id') return 'id';
-  if (locale === 'fr') return 'fr';
-  if (locale === 'de') return 'de';
-  if (locale === 'es') return 'es';
-  if (locale === 'it') return 'it';
-  if (locale === 'ru') return 'ru';
-  if (locale === 'ar') return 'ar';
-  return 'en-us';
-}
-
-function wrapHtml(title: string, bodyHtml: string, lang = 'en'): string {
-  return `<!DOCTYPE html>
-<html lang="${lang}">
-<head><meta charset="utf-8"><title>${title}</title></head>
-<body style="margin:0;padding:0;background:#0d0d0d;font-family:Georgia,'Times New Roman',serif;color:#f5f0e6;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0d0d0d;padding:32px 16px;">
-    <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" style="background:#1a1a1a;border:1px solid #3d3528;border-radius:8px;overflow:hidden;">
-        <tr><td style="padding:28px 32px 8px;text-align:center;">
-          <span style="font-size:22px;letter-spacing:0.2em;color:#c9a962;">JETVINA</span>
-        </td></tr>
-        <tr><td style="padding:8px 32px 32px;font-size:15px;line-height:1.65;color:#e8e0d0;">
-          ${bodyHtml}
-          <p style="margin-top:28px;font-size:13px;color:#9a9080;">— JetVina Private Air Charter<br>
-          <a href="${SITE}" style="color:#c9a962;">${SITE.replace(/^https?:\/\//, '')}</a></p>
-        </td></tr>
-      </table>
-    </td></tr>
-  </table>
-</body></html>`;
+function wrapHtml(
+  title: string,
+  bodyHtml: string,
+  lang = 'en',
+  opts?: { eyebrow?: string; preheader?: string },
+): string {
+  return wrapEmailHtml({
+    title,
+    lang,
+    bodyHtml,
+    eyebrow: opts?.eyebrow,
+    preheader: opts?.preheader ?? title,
+  });
 }
 
 function btn(href: string, label: string): string {
-  return `<p style="margin:24px 0;"><a href="${href}" style="display:inline-block;padding:12px 24px;background:#c9a962;color:#0d0d0d;text-decoration:none;border-radius:4px;font-weight:bold;">${label}</a></p>`;
+  return emailCta(href, label);
 }
 
 type Pack = { subject: string; text: string; body: string; cta: string };
