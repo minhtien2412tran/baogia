@@ -74,11 +74,11 @@ Legend — Data status: `DONE` | `PARTIAL` | `MOCK` | `BLOCKED` | `NOT_STARTED` 
 | Check | Status | Evidence 2026-07-14 |
 |-------|--------|---------------------|
 | Prod health | DONE | `GET /health` → `ok` `production` |
-| Integrations | PARTIAL | smtp=true (host set), oauth/payment/sms=false; mail deliver still stub host |
+| Integrations | PARTIAL | `smtp=false` · catcher Mailpit · pay/oauth/sms=false · **T-S4-01 BLOCKED_OWNER_SMTP** |
 | OpenAPI public | PROD_ONLY_ISSUE | `/openapi.json` → **401** (Swagger Basic on) — sync via Basic or VPS |
-| Local↔prod path sync | NOT_RUN | Local API `:4000` unreachable today — `smoke:api-sync` FAIL fetch |
-| Web↔API commercial smoke | DONE | `smoke-web-api.mjs` **RESULT pass** |
-| Auth+booking smoke | DONE | `smoke-auth-booking.mjs` **RESULT pass** |
+| Local↔prod path sync | PASS remote | Remote VPS `prod-docs` **173=173** · Local convenience: NEEDS_LOCAL_ENV_REFRESH |
+| Web↔API commercial smoke | DONE | `smoke-web-api.mjs` **RESULT pass** (quote #41) |
+| Auth+booking smoke | DONE | `smoke-auth-booking.mjs` **RESULT pass** (booking #7) |
 | Media unit | DONE | `pnpm test:media` pass |
 
 ---

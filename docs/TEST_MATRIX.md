@@ -24,7 +24,7 @@ Local convenience credential: NEEDS_LOCAL_ENV_REFRESH
 | Production API sync | VPS remote runner | prod↔docs | **PASS** | — | 0 | **173=173** |
 | Local api-sync | `SYNC_MODE=prod-docs pnpm smoke:api-sync` | laptop | exit 2 if stale | — | — | NEEDS_LOCAL_ENV_REFRESH |
 | smtp-config jest | `jest --testPathPatterns=smtp-config` | local | **PASS** | ≥4 | 0 | + host.docker.internal |
-| smoke:html-probe | `pnpm smoke:html-probe … 3.1` | prod | **PASS** | — | 0 | 30s timeout |
+| smoke:html-probe | `pnpm smoke:html-probe` (defaults baocaotiendo 3.1 / 14/07) | prod | **PASS** | — | 0 | 30s timeout |
 | smoke:newsletter-smtp | `pnpm smoke:newsletter-smtp` | prod | **PASS** | — | 0 | emailDeliverable=false |
 | backup-restore-drill | VPS script | VPS | **PASS** | — | 0 | 120=120 · dump `20260714-145739` |
 | Mailpit catcher | VPS docker + `SMTP_ALLOW_CATCHER` | prod | **PASS catcher** | — | 0 | smtpCatcher=true · mail in UI · not real inbox |
