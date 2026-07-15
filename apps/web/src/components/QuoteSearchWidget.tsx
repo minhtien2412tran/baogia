@@ -167,6 +167,7 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
         tripType,
         legs: buildApiLegs(),
         isConsentAccepted: true,
+        locale,
         message: selected
           ? `Selected aircraft: ${selected.categoryLabel} (${selected.aircraftModel}) — ${selected.currency} ${formatNumber(selected.estimatedPrice, locale)}${searchId ? ` · searchId=${searchId}` : ''}`
           : searchId

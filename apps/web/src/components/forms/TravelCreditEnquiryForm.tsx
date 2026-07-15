@@ -5,7 +5,13 @@ import { api, parseApiErrorMessage } from '../../lib/api';
 
 type Pkg = { id: number; name: string };
 
-export function TravelCreditEnquiryForm({ packages }: { packages: Pkg[] }) {
+export function TravelCreditEnquiryForm({
+  packages,
+  locale,
+}: {
+  packages: Pkg[];
+  locale?: string;
+}) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -37,6 +43,7 @@ export function TravelCreditEnquiryForm({ packages }: { packages: Pkg[] }) {
         message,
         attachmentUrls,
         isConsentAccepted: true,
+        locale,
       });
       setResult(res.message);
       setStatus('done');

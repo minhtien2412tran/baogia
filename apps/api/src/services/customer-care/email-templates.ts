@@ -67,11 +67,7 @@ export function renderEmailTemplate(
   locale: string,
   meta: Record<string, unknown> = {},
 ): EmailTemplate {
-  const loc = locale.startsWith('vi')
-    ? 'vi'
-    : locale.startsWith('zh')
-      ? 'zh-cn'
-      : locale.split('-')[0] || 'en';
+  const loc = normalizeEmailLocale(locale);
   const firstName =
     typeof meta.firstName === 'string' ? meta.firstName : undefined;
   const greet = greeting(firstName, loc === 'en' ? 'en' : loc);
@@ -79,6 +75,8 @@ export function renderEmailTemplate(
   const accountUrl = `${SITE}/${path}/account`;
   const quoteUrl = `${SITE}/${path}/account/quotes`;
   const homeUrl = `${SITE}/${path}`;
+  const eyebrow =
+    loc === 'vi' ? 'Thông báo' : loc === 'zh-cn' ? '通知' : 'Notice';
 
   switch (campaignKey) {
     case 'welcome_register': {
@@ -86,55 +84,79 @@ export function renderEmailTemplate(
         vi: {
           subject: 'Chào mừng đến với JETVINA',
           text: `${greet}\n\nCảm ơn bạn đã tạo tài khoản JETVINA. Quản lý báo giá, booking và tài liệu charter tại: ${accountUrl}\n\n— JETVINA`,
-          body: `<p>${greet}</p><p>Cảm ơn bạn đã tham gia JETVINA. Tài khoản của bạn đã sẵn sàng — theo dõi báo giá, thanh toán và tài liệu charter mọi lúc.</p>`,
+          body: `<p style="margin:0 0 12px;">${greet}</p><p style="margin:0;">Cảm ơn bạn đã tham gia JETVINA. Tài khoản đã sẵn sàng — theo dõi báo giá, thanh toán và tài liệu charter mọi lúc.</p>`,
           cta: 'Vào My Account',
         },
         'zh-cn': {
           subject: '欢迎加入 JETVINA',
           text: `${greet}\n\n感谢注册 JETVINA。管理报价、订单与包机文件：${accountUrl}\n\n— JETVINA`,
-          body: `<p>${greet}</p><p>感谢加入 JETVINA。您的账户已就绪 — 随时查看报价、支付与包机文件。</p>`,
+          body: `<p style="margin:0 0 12px;">${greet}</p><p style="margin:0;">感谢加入 JETVINA。您的账户已就绪 — 随时查看报价、支付与包机文件。</p>`,
           cta: '进入我的账户',
         },
         en: {
           subject: 'Welcome to JetVina',
           text: `${greet}\n\nThank you for creating your JETVINA account. Manage quotes, bookings, and charter documents at: ${accountUrl}\n\n— JETVINA`,
-          body: `<p>${greet}</p><p>Thank you for joining JETVINA. Your account is ready — track quotes, payments, and charter documents anytime.</p>`,
+          body: `<p style="margin:0 0 12px;">${greet}</p><p style="margin:0;">Thank you for joining JETVINA. Your account is ready — track quotes, payments, and charter documents anytime.</p>`,
           cta: 'Go to My Account',
         },
       });
       return {
         subject: pack.subject,
         text: pack.text,
-        html: wrapHtml(pack.subject, `${pack.body}${btn(accountUrl, pack.cta)}`, loc),
+        html: wrapHtml(
+          pack.subject,
+          `${pack.body}${btn(accountUrl, pack.cta)}`,
+          loc === 'en' ? 'en' : loc,
+          { eyebrow, preheader: pack.subject },
+        ),
       };
     }
 
     case 'quote_received': {
       const requestId = meta.requestId ?? '';
+      const tripSummary =
+        typeof meta.tripSummary === 'string' ? meta.tripSummary : '';
       const pack = pickPack(loc, {
         vi: {
           subject: `JETVINA đã nhận yêu cầu báo giá #${requestId}`,
-          text: `${greet}\n\nChúng tôi đã nhận yêu cầu charter (#${requestId}). Chuyên viên sẽ liên hệ trong vòng 3 giờ.\n\n— JETVINA`,
-          body: `<p>${greet}</p><p>Yêu cầu báo giá <strong>#${requestId}</strong> đã được ghi nhận. Đội ngũ charter JETVINA sẽ liên hệ trong vòng <strong>3 giờ</strong>.</p>`,
+          text: `${greet}\n\nChúng tôi đã nhận yêu cầu charter (#${requestId})${tripSummary ? ` · ${tripSummary}` : ''}. Chuyên viên sẽ liên hệ trong vòng 3 giờ.\n\n— JETVINA`,
+          body: `<p style="margin:0 0 12px;">${greet}</p><p style="margin:0 0 8px;">Yêu cầu báo giá <strong>#${requestId}</strong> đã được ghi nhận. Đội ngũ charter JETVINA sẽ liên hệ trong vòng <strong>3 giờ</strong>.</p>`,
           cta: 'Xem báo giá',
         },
         'zh-cn': {
           subject: `JETVINA 已收到报价请求 #${requestId}`,
           text: `${greet}\n\n我们已收到包机报价请求（#${requestId}）。顾问将在 3 小时内联系您。\n\n— JETVINA`,
-          body: `<p>${greet}</p><p>报价请求 <strong>#${requestId}</strong> 已确认。JETVINA 包机团队将在 <strong>3 小时</strong>内联系您。</p>`,
+          body: `<p style="margin:0 0 12px;">${greet}</p><p style="margin:0 0 8px;">报价请求 <strong>#${requestId}</strong> 已确认。JETVINA 包机团队将在 <strong>3 小时</strong>内联系您。</p>`,
           cta: '查看我的报价',
         },
         en: {
           subject: `JETVINA Quote Request #${requestId} Received`,
-          text: `${greet}\n\nWe received your charter quote request (#${requestId}). A specialist will contact you within 3 hours.\n\n— JETVINA`,
-          body: `<p>${greet}</p><p>Your quote request <strong>#${requestId}</strong> is confirmed. Our charter team will reach out within <strong>3 hours</strong>.</p>`,
+          text: `${greet}\n\nWe received your charter quote request (#${requestId})${tripSummary ? ` · ${tripSummary}` : ''}. A specialist will contact you within 3 hours.\n\n— JETVINA`,
+          body: `<p style="margin:0 0 12px;">${greet}</p><p style="margin:0 0 8px;">Your quote request <strong>#${requestId}</strong> is confirmed. Our charter team will reach out within <strong>3 hours</strong>.</p>`,
           cta: 'View My Quotes',
         },
       });
+      const card = emailDetailCard(
+        [
+          {
+            label: loc === 'vi' ? 'Mã' : loc === 'zh-cn' ? '编号' : 'Reference',
+            value: `#${requestId}`,
+          },
+          {
+            label: loc === 'vi' ? 'Hành trình' : loc === 'zh-cn' ? '航线' : 'Route',
+            value: tripSummary,
+          },
+        ].filter((r) => r.value),
+      );
       return {
         subject: pack.subject,
         text: pack.text,
-        html: wrapHtml(pack.subject, `${pack.body}${btn(quoteUrl, pack.cta)}`, loc),
+        html: wrapHtml(
+          pack.subject,
+          `${pack.body}${card}${btn(quoteUrl, pack.cta)}`,
+          loc === 'en' ? 'en' : loc,
+          { eyebrow, preheader: pack.subject },
+        ),
       };
     }
 
@@ -147,26 +169,47 @@ export function renderEmailTemplate(
         vi: {
           subject: `JETVINA đã gửi báo giá #${requestId}`,
           text: `${greet}\n\nChúng tôi đã chuẩn bị offer cho yêu cầu #${requestId}${aircraft ? ` (${aircraft})` : ''}${price ? `: ${price} ${currency}` : ''}. Xem chi tiết: ${quoteUrl}\n\n— JETVINA`,
-          body: `<p>${greet}</p><p>Báo giá <strong>#${requestId}</strong> đã sẵn sàng${aircraft ? ` — <strong>${aircraft}</strong>` : ''}${price ? ` với mức <strong>${price} ${currency}</strong>` : ''}. Vui lòng đăng nhập My Account để xem và tiếp tục đặt chỗ.</p>`,
+          body: `<p style="margin:0 0 12px;">${greet}</p><p style="margin:0 0 8px;">Báo giá <strong>#${requestId}</strong> đã sẵn sàng. Vui lòng đăng nhập My Account để xem và tiếp tục đặt chỗ.</p>`,
           cta: 'Xem báo giá',
         },
         'zh-cn': {
           subject: `JETVINA 报价已就绪 #${requestId}`,
           text: `${greet}\n\n报价请求 #${requestId} 已生成方案${aircraft ? `（${aircraft}）` : ''}${price ? `：${price} ${currency}` : ''}。查看：${quoteUrl}\n\n— JETVINA`,
-          body: `<p>${greet}</p><p>报价 <strong>#${requestId}</strong> 已就绪${aircraft ? ` — <strong>${aircraft}</strong>` : ''}${price ? `，金额 <strong>${price} ${currency}</strong>` : ''}。请登录账户查看并继续预订。</p>`,
+          body: `<p style="margin:0 0 12px;">${greet}</p><p style="margin:0 0 8px;">报价 <strong>#${requestId}</strong> 已就绪。请登录账户查看并继续预订。</p>`,
           cta: '查看报价',
         },
         en: {
           subject: `JETVINA Quote Offer #${requestId} Ready`,
           text: `${greet}\n\nWe've prepared an offer for quote #${requestId}${aircraft ? ` (${aircraft})` : ''}${price ? `: ${price} ${currency}` : ''}. View details: ${quoteUrl}\n\n— JETVINA`,
-          body: `<p>${greet}</p><p>Your quote <strong>#${requestId}</strong> now has an offer${aircraft ? ` — <strong>${aircraft}</strong>` : ''}${price ? ` at <strong>${price} ${currency}</strong>` : ''}. Please sign in to My Account to review and continue booking.</p>`,
+          body: `<p style="margin:0 0 12px;">${greet}</p><p style="margin:0 0 8px;">Your quote <strong>#${requestId}</strong> now has an offer. Please sign in to My Account to review and continue booking.</p>`,
           cta: 'View My Quotes',
         },
       });
+      const offerCard = emailDetailCard(
+        [
+          {
+            label: loc === 'vi' ? 'Mã' : loc === 'zh-cn' ? '编号' : 'Reference',
+            value: `#${requestId}`,
+          },
+          {
+            label: loc === 'vi' ? 'Máy bay' : loc === 'zh-cn' ? '机型' : 'Aircraft',
+            value: String(aircraft || ''),
+          },
+          {
+            label: loc === 'vi' ? 'Giá' : loc === 'zh-cn' ? '价格' : 'Price',
+            value: price ? `${price} ${currency}` : '',
+          },
+        ].filter((r) => r.value),
+      );
       return {
         subject: pack.subject,
         text: pack.text,
-        html: wrapHtml(pack.subject, `${pack.body}${btn(quoteUrl, pack.cta)}`, loc),
+        html: wrapHtml(
+          pack.subject,
+          `${pack.body}${offerCard}${btn(quoteUrl, pack.cta)}`,
+          loc === 'en' ? 'en' : loc,
+          { eyebrow, preheader: pack.subject },
+        ),
       };
     }
 
@@ -195,7 +238,10 @@ export function renderEmailTemplate(
       return {
         subject: pack.subject,
         text: pack.text,
-        html: wrapHtml(pack.subject, `${pack.body}${btn(quoteUrl, pack.cta)}`, loc),
+        html: wrapHtml(pack.subject, `${pack.body}${btn(quoteUrl, pack.cta)}`, loc === 'en' ? 'en' : loc, {
+          eyebrow,
+          preheader: pack.subject,
+        }),
       };
     }
 
@@ -223,7 +269,10 @@ export function renderEmailTemplate(
       return {
         subject: pack.subject,
         text: pack.text,
-        html: wrapHtml(pack.subject, `${pack.body}${btn(homeUrl, pack.cta)}`, loc),
+        html: wrapHtml(pack.subject, `${pack.body}${btn(homeUrl, pack.cta)}`, loc === 'en' ? 'en' : loc, {
+          eyebrow,
+          preheader: pack.subject,
+        }),
       };
     }
 
@@ -252,7 +301,10 @@ export function renderEmailTemplate(
       return {
         subject: pack.subject,
         text: pack.text,
-        html: wrapHtml(pack.subject, `${pack.body}${btn(accountUrl, pack.cta)}`, loc),
+        html: wrapHtml(pack.subject, `${pack.body}${btn(accountUrl, pack.cta)}`, loc === 'en' ? 'en' : loc, {
+          eyebrow,
+          preheader: pack.subject,
+        }),
       };
     }
 
@@ -281,7 +333,10 @@ export function renderEmailTemplate(
       return {
         subject: pack.subject,
         text: pack.text,
-        html: wrapHtml(pack.subject, `${pack.body}${btn(accountUrl, pack.cta)}`, loc),
+        html: wrapHtml(pack.subject, `${pack.body}${btn(accountUrl, pack.cta)}`, loc === 'en' ? 'en' : loc, {
+          eyebrow,
+          preheader: pack.subject,
+        }),
       };
     }
 
@@ -312,7 +367,10 @@ export function renderEmailTemplate(
       return {
         subject: pack.subject,
         text: pack.text,
-        html: wrapHtml(pack.subject, `${pack.body}${btn(accountUrl, pack.cta)}`, loc),
+        html: wrapHtml(pack.subject, `${pack.body}${btn(accountUrl, pack.cta)}`, loc === 'en' ? 'en' : loc, {
+          eyebrow,
+          preheader: pack.subject,
+        }),
       };
     }
 
@@ -340,7 +398,10 @@ export function renderEmailTemplate(
       return {
         subject: pack.subject,
         text: pack.text,
-        html: wrapHtml(pack.subject, `${pack.body}${btn(homeUrl, pack.cta)}`, loc),
+        html: wrapHtml(pack.subject, `${pack.body}${btn(homeUrl, pack.cta)}`, loc === 'en' ? 'en' : loc, {
+          eyebrow,
+          preheader: pack.subject,
+        }),
       };
     }
 
@@ -348,7 +409,9 @@ export function renderEmailTemplate(
       return {
         subject: 'JETVINA',
         text: `${greet}\n\n— JETVINA`,
-        html: wrapHtml('JETVINA', `<p>${greet}</p>`, loc),
+        html: wrapHtml('JETVINA', `<p>${greet}</p>`, loc === 'en' ? 'en' : loc, {
+          eyebrow,
+        }),
       };
   }
 }

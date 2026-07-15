@@ -2,6 +2,13 @@
 
 > **Updated:** 2026-07-15 · **Status:** CURRENT (Mailpit catcher OK · real inbox still Owner)
 
+## Templates (HTML)
+
+- Shared chrome: `apps/api/src/services/customer-care/email-layout.ts` — charcoal + gold JETVINA, detail card, CTA.
+- Campaign copy: `email-templates.ts` (vi / zh-cn / en + greeting fallthrough).
+- Ops / sales + Jet Card / Travel Credit: `ops-email-templates.ts`.
+- Locale: UI `locale` trên quote / enquiry DTO; fallback `inferLocaleFromPhone` (`+84` → vi, `+86` → zh-cn…).
+
 ## Flow
 
 ```text

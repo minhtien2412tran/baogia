@@ -36,12 +36,12 @@
 
 > **Plan:** [NEXT_SPRINT_PLAN.md](./NEXT_SPRINT_PLAN.md) · [GD2_ROADMAP.md](./GD2_ROADMAP.md) · [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md) · [OWNER_ACTION_ITEMS.md](./OWNER_ACTION_ITEMS.md) · [TEST_MATRIX.md](./TEST_MATRIX.md)
 
-**Trạng thái phiên 15/07:** **GĐ2 Dev complete · Order email automation patched · Waiting Owner SMTP thật**
+**Trạng thái phiên 15/07:** **GĐ2 Dev complete · HTML email redesign (localized) · Waiting Owner SMTP thật**
 
 1. **P0 Owner** — SMTP provider thật ([OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)); Mailpit catcher chỉ ops  
-2. **Order mail** — [ORDER_EMAIL_AUTOMATION.md](./ORDER_EMAIL_AUTOMATION.md): nhận quote → auto khách + sales; offer admin → mail khách; cancel → notify  
+2. **Order mail HTML** — [ORDER_EMAIL_AUTOMATION.md](./ORDER_EMAIL_AUTOMATION.md): layout charcoal/gold; copy theo `locale` / SĐT; **chưa redeploy** template mới nếu chưa bảo  
 3. **P1 Owner** — UAT · CMS · G4 keys  
-4. **Git** — `jetvina` có commits GĐ2 + Mailpit; order-mail patch mới (deployed API) — commit khi bảo  
+4. **Git** — email redesign trên working tree — commit / deploy khi bảo  
 5. **Sau unlock** — [GD4_SANDBOX_READINESS.md](./GD4_SANDBOX_READINESS.md)
 
 ### Đã deploy — Nhánh tổng hợp `jetvina` (2026-07-13)
@@ -87,6 +87,7 @@
 - **FINDSTR fix** — `pnpm smoke:html-probe`
 - **Quote evidence** — `#37` prior · `#38`/`#39` earlier 15/07 · chốt `#40` quote-ui · `#41` smoke-web-api
 - **Owner handoff** — [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)
+- **HTML email redesign** (2026-07-15) — layout charcoal/gold · ops + campaign templates localize (vi/zh-cn/en) · `locale` từ quote/JC/TC form · phone fallback · Jest email-templates PASS · **chưa deploy**
 
 **VƯỚNG (Owner):** O4 SMTP · UAT · CMS · G4 keys · media decision — xem [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)  
 **Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **SMTP:** [SMTP_SETUP_GUIDE.md](./SMTP_SETUP_GUIDE.md)

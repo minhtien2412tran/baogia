@@ -111,7 +111,7 @@ export default async function JetCardPage({ params }: { params: Promise<{ locale
         </div>
       </section>
 
-      <JetCardEnquiryForm />
+      <JetCardEnquiryForm locale={locale} />
     </div>
   );
 }

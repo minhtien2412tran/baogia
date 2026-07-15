@@ -369,6 +369,8 @@ export class QuoteService {
       email: body.email,
       firstName: body.firstName,
       userId: opts?.userId,
+      locale: body.locale,
+      tripSummary,
     });
     // Auto: sales/admin inbox (semi-auto ops review continues in Admin → Quotes)
     void this.enquiryMail.notifyNewQuote({
@@ -380,6 +382,7 @@ export class QuoteService {
       message: body.message,
       tripSummary,
       sourcePage: opts?.sourcePage ?? 'WEB_QUOTE_FORM',
+      locale: body.locale,
     });
     return {
       requestId: quote.id,

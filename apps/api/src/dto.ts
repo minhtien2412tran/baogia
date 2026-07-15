@@ -217,6 +217,14 @@ export class RequestQuoteDto {
   @ApiProperty({ example: true })
   @IsBoolean()
   isConsentAccepted: boolean;
+
+  @ApiPropertyOptional({
+    example: 'vi',
+    description: 'UI locale for transactional emails (vi, en-us, zh-cn, …)',
+  })
+  @IsOptional()
+  @IsString()
+  locale?: string;
 }
 
 // --- FIXED PRICE DTOS ---
@@ -283,6 +291,14 @@ export class JetCardEnquiryDto {
   @IsArray()
   @IsString({ each: true })
   attachmentUrls?: string[];
+
+  @ApiPropertyOptional({
+    example: 'vi',
+    description: 'UI locale for transactional emails',
+  })
+  @IsOptional()
+  @IsString()
+  locale?: string;
 
   @ApiProperty({ example: true })
   @IsBoolean()
@@ -827,6 +843,14 @@ export class TravelCreditEnquiryDto {
   @IsArray()
   @IsString({ each: true })
   attachmentUrls?: string[];
+
+  @ApiPropertyOptional({
+    example: 'vi',
+    description: 'UI locale for transactional emails',
+  })
+  @IsOptional()
+  @IsString()
+  locale?: string;
 
   @ApiProperty({ example: true })
   @IsBoolean()

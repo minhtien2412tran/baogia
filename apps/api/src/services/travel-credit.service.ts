@@ -148,6 +148,7 @@ export class TravelCreditService {
       message: body.message,
       packageName: pkg.name,
       attachmentUrls: body.attachmentUrls,
+      locale: body.locale,
     });
 
     return {

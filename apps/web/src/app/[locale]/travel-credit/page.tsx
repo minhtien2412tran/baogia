@@ -58,7 +58,7 @@ export default async function TravelCreditPage({ params }: { params: Promise<{ l
           </div>
         </section>
       </SubPageLayout>
-      <TravelCreditEnquiryForm packages={packages} />
+      <TravelCreditEnquiryForm packages={packages} locale={locale} />
     </>
   );
 }

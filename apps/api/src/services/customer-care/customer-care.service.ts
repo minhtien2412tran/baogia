@@ -133,8 +133,13 @@ export class CustomerCareService implements OnModuleInit, OnModuleDestroy {
     firstName: string;
     userId?: number;
     locale?: string;
+    tripSummary?: string;
   }) {
-    const meta = { requestId: opts.quoteId, firstName: opts.firstName };
+    const meta = {
+      requestId: opts.quoteId,
+      firstName: opts.firstName,
+      tripSummary: opts.tripSummary,
+    };
     await this.scheduleCampaign({
       campaignKey: 'quote_received',
       email: opts.email,

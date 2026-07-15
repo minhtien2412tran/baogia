@@ -82,6 +82,8 @@ export type RequestQuotePayload = {
   tripType: 'ONE_WAY' | 'ROUND_TRIP' | 'MULTI_CITY';
   isConsentAccepted: boolean;
   message?: string;
+  /** UI locale for localized transactional emails */
+  locale?: string;
 };
 
 /** Parse Nest validation / API error JSON for user-facing forms */

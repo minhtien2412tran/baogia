@@ -3,7 +3,13 @@
 import { useRef, useState } from 'react';
 import { api, parseApiErrorMessage } from '../../lib/api';
 
-export function JetCardEnquiryForm({ planName }: { planName?: string }) {
+export function JetCardEnquiryForm({
+  planName,
+  locale,
+}: {
+  planName?: string;
+  locale?: string;
+}) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -33,6 +39,7 @@ export function JetCardEnquiryForm({ planName }: { planName?: string }) {
         message,
         attachmentUrls,
         isConsentAccepted: true,
+        locale,
       });
       setResult(res.message);
       setStatus('done');

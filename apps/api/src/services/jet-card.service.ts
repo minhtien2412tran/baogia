@@ -75,6 +75,7 @@ export class JetCardService {
       phone: body.phone,
       message: body.message,
       attachmentUrls: body.attachmentUrls,
+      locale: body.locale,
     });
 
     return {
