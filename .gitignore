@@ -63,8 +63,12 @@ pnpm-debug.log*
 # Ops / secrets (keep out of docs)
 docs/DKIM_*.txt
 
-# IDE
-.cursor/
+# Cursor — ignore local IDE state; keep Spec Kit skills + project rules tracked
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
+!.cursor/skills/
+!.cursor/skills/**
 
 # Local JetVina media mirrors (UNVERIFIED — regenerate via pnpm sync:jetvina-media)
 /apps/web/public/assets/jetvina/mirror/**

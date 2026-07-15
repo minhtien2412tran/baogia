@@ -36,13 +36,26 @@
 
 > **Plan:** [NEXT_SPRINT_PLAN.md](./NEXT_SPRINT_PLAN.md) · [GD2_ROADMAP.md](./GD2_ROADMAP.md) · [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md) · [OWNER_ACTION_ITEMS.md](./OWNER_ACTION_ITEMS.md) · [TEST_MATRIX.md](./TEST_MATRIX.md)
 
-**Trạng thái phiên 15/07:** **GĐ2 Dev complete · HTML email redesign (localized) · Waiting Owner SMTP thật**
+**Trạng thái phiên 15/07 (evening audit):** **GĐ2 Dev complete · Repository pack committed · Waiting for Owner SMTP**
 
-1. **P0 Owner** — SMTP provider thật ([OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)); Mailpit catcher chỉ ops  
-2. **Order mail HTML** — [ORDER_EMAIL_AUTOMATION.md](./ORDER_EMAIL_AUTOMATION.md): layout charcoal/gold · **API deployed** 2026-07-15 · web `locale` form chưa deploy (phone `+84` vẫn → vi)  
-3. **P1 Owner** — UAT · CMS · G4 keys  
-4. **Git** — email redesign trên working tree — commit khi bảo  
-5. **Sau unlock** — [GD4_SANDBOX_READINESS.md](./GD4_SANDBOX_READINESS.md)
+```text
+Current phase: GĐ2 Dev complete
+Current mode: Waiting for Owner
+Next technical phase after Owner unlock:
+1. SMTP inbox verification
+2. Payment sandbox
+3. OAuth sandbox
+4. SMS sandbox
+5. Integration health checks
+6. End-to-end UAT
+7. Production readiness review
+```
+
+1. **P0 Owner** — SMTP provider thật ([OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)); Mailpit catcher chỉ ops (`smtp=false` · `smtpCatcher=true`)  
+2. **P1 Owner** — UAT · CMS · G4 keys  
+3. **Git residual** — `package.json` html-probe default + `gd2-prod-recheck.sh` (+ docs surface map) — commit khi bảo · [COMMIT_PLAN_GD2.md](./COMMIT_PLAN_GD2.md)  
+4. **Optional deploy web** — locale form / EmptyLegAlertsForm parse (API empty-leg fix đã live)  
+5. **Sau unlock** — [GD4_SANDBOX_READINESS.md](./GD4_SANDBOX_READINESS.md) · **không** bật fake production integration
 
 ### Đã deploy — Nhánh tổng hợp `jetvina` (2026-07-13)
 
@@ -85,10 +98,12 @@
 - **T-S4-01 SMTP** (canonical): Dev implementation **PASS** · Production SMTP configuration **BLOCKED_OWNER_SMTP** · Inbox delivery **NOT RUN** · Overall **BLOCKED_OWNER**
 - **Production API sync** — PASS **173=173** (VPS) · Local Basic: **NEEDS_LOCAL_ENV_REFRESH** nếu stale — [API_SYNC_SMOKE.md](./API_SYNC_SMOKE.md)
 - **FINDSTR fix** — `pnpm smoke:html-probe`
-- **Quote evidence** — `#37` prior · `#38`/`#39` earlier 15/07 · chốt `#40` quote-ui · `#41` smoke-web-api
+- **Quote evidence** — `#37` prior · `#38`/`#39` earlier 15/07 · `#40` quote-ui · `#41` web-api · **latest audit** `smoke:quote-ui` **#46** (2026-07-15 evening)
 - **Owner handoff** — [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)
-- **HTML email redesign** (2026-07-15) — layout charcoal/gold · ops + campaign templates localize (vi/zh-cn/en) · `locale` từ quote/JC/TC form · phone fallback · Jest PASS · **API deployed** (`jetbay-be` backup `/root/backups/jetbay-be-20260715-144402`) · web form `locale` chưa sync
-- **Empty-leg alert 400** (2026-07-15) — `EmptyLegAlertSubscribeDto` thiếu `class-validator` → `forbidNonWhitelisted` chặn mọi field · đã thêm decorator + redeploy · smoke `POST /empty-legs/alerts/subscribe` **201**
+- **HTML email redesign** (2026-07-15) — layout charcoal/gold · localize · API deployed · commits `7faace3`…`98ccdec`
+- **Empty-leg alert 400** (2026-07-15) — DTO validators · redeploy · smoke **201** · commit `b9dce75`
+- **GĐ2 closure audit** (2026-07-15 evening) — tree was clean at `b9dce75` · SMTP still LOOPBACK/catcher · tests PASS · residual: html-probe default + prod-recheck script — [COMMIT_PLAN_GD2.md](./COMMIT_PLAN_GD2.md)
+- **Spec Kit** (2026-07-15) — CLI `specify` **v0.12.15** (uv tool, GitHub) · `specify init --here --integration cursor-agent --script ps` · constitution JetBay · [SPEC_KIT.md](./SPEC_KIT.md)
 
 **VƯỚNG (Owner):** O4 SMTP · UAT · CMS · G4 keys · media decision — xem [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)  
 **Kế hoạch:** [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md) · **SMTP:** [SMTP_SETUP_GUIDE.md](./SMTP_SETUP_GUIDE.md)

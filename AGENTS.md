@@ -25,6 +25,7 @@ Chat sessions do **not** remember progress. Before coding, read and update the f
 | [docs/BE_TEST.md](./docs/BE_TEST.md) | **Backend test** — smoke scripts, ma trận case ↔ domain |
 | [docs/BE_ARCHITECTURE.md](./docs/BE_ARCHITECTURE.md) | Nest module target layout + refactor phases |
 | [docs/ONBOARDING_NHAN_VIEN.md](./docs/ONBOARDING_NHAN_VIEN.md) | Full clone + setup for new teammates |
+| [docs/SPEC_KIT.md](./docs/SPEC_KIT.md) | **Spec Kit** — `specify` CLI + Cursor `/speckit-*` skills |
 | [docs/JETBAY_PRODUCT_MAP.md](./docs/JETBAY_PRODUCT_MAP.md) | Product vs báo giá — architecture map |
 | [docs/JETBAY_WEB_PAGE_DOD.md](./docs/JETBAY_WEB_PAGE_DOD.md) | Clone page DoD |
 | [docs/JETBAY_DELIVERY_CHECKLIST.md](./docs/JETBAY_DELIVERY_CHECKLIST.md) | Delivery DoD G0–G4 + App gate |
