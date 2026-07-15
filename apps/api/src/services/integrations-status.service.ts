@@ -75,6 +75,11 @@ export class IntegrationsStatusService {
           present('TWILIO_ACCOUNT_SID') ||
           present('ESMS_API_KEY') ||
           present('SMS_API_URL'),
+        salesInboxConfigured:
+          present('SMTP_ENQUIRY_TO') ||
+          present('SALES_INBOX') ||
+          present('SMTP_USER'),
+        customerCareEnabled: process.env.CUSTOMER_CARE_ENABLED !== 'false',
       },
       notes: {
         jwt: 'Required for auth. Set JWT_SECRET + REFRESH_TOKEN_SECRET.',

@@ -2,8 +2,10 @@ export type CampaignKey =
   | 'welcome_register'
   | 'quote_received'
   | 'quote_followup_24h'
+  | 'quote_offered'
   | 'newsletter_welcome'
   | 'booking_created'
+  | 'booking_cancelled'
   | 'payment_confirmed'
   | 'nurture_day3';
 
@@ -156,6 +158,38 @@ export function renderEmailTemplate(
       };
     }
 
+    case 'quote_offered': {
+      const requestId = meta.requestId ?? '';
+      const price = meta.price ?? '';
+      const currency = meta.currency ?? 'USD';
+      const aircraft = meta.aircraft ?? '';
+      const pack = pickPack(loc, {
+        vi: {
+          subject: `JETVINA đã gửi báo giá #${requestId}`,
+          text: `${greet}\n\nChúng tôi đã chuẩn bị offer cho yêu cầu #${requestId}${aircraft ? ` (${aircraft})` : ''}${price ? `: ${price} ${currency}` : ''}. Xem chi tiết: ${quoteUrl}\n\n— JETVINA`,
+          body: `<p>${greet}</p><p>Báo giá <strong>#${requestId}</strong> đã sẵn sàng${aircraft ? ` — <strong>${aircraft}</strong>` : ''}${price ? ` với mức <strong>${price} ${currency}</strong>` : ''}. Vui lòng đăng nhập My Account để xem và tiếp tục đặt chỗ.</p>`,
+          cta: 'Xem báo giá',
+        },
+        'zh-cn': {
+          subject: `JETVINA 报价已就绪 #${requestId}`,
+          text: `${greet}\n\n报价请求 #${requestId} 已生成方案${aircraft ? `（${aircraft}）` : ''}${price ? `：${price} ${currency}` : ''}。查看：${quoteUrl}\n\n— JETVINA`,
+          body: `<p>${greet}</p><p>报价 <strong>#${requestId}</strong> 已就绪${aircraft ? ` — <strong>${aircraft}</strong>` : ''}${price ? `，金额 <strong>${price} ${currency}</strong>` : ''}。请登录账户查看并继续预订。</p>`,
+          cta: '查看报价',
+        },
+        en: {
+          subject: `JETVINA Quote Offer #${requestId} Ready`,
+          text: `${greet}\n\nWe've prepared an offer for quote #${requestId}${aircraft ? ` (${aircraft})` : ''}${price ? `: ${price} ${currency}` : ''}. View details: ${quoteUrl}\n\n— JETVINA`,
+          body: `<p>${greet}</p><p>Your quote <strong>#${requestId}</strong> now has an offer${aircraft ? ` — <strong>${aircraft}</strong>` : ''}${price ? ` at <strong>${price} ${currency}</strong>` : ''}. Please sign in to My Account to review and continue booking.</p>`,
+          cta: 'View My Quotes',
+        },
+      });
+      return {
+        subject: pack.subject,
+        text: pack.text,
+        html: wrapHtml(pack.subject, `${pack.body}${btn(quoteUrl, pack.cta)}`, loc),
+      };
+    }
+
     case 'quote_followup_24h': {
       const requestId = meta.requestId ?? '';
       const pack = pickPack(loc, {
@@ -233,6 +267,35 @@ export function renderEmailTemplate(
           text: `${greet}\n\nBooking #${bookingId} has been created. Complete payment and sign charter documents at: ${accountUrl}\n\n— JETVINA`,
           body: `<p>${greet}</p><p>Booking <strong>#${bookingId}</strong> is ready. Please complete payment and sign your charter agreement in My Account.</p>`,
           cta: 'Manage booking',
+        },
+      });
+      return {
+        subject: pack.subject,
+        text: pack.text,
+        html: wrapHtml(pack.subject, `${pack.body}${btn(accountUrl, pack.cta)}`, loc),
+      };
+    }
+
+    case 'booking_cancelled': {
+      const bookingId = meta.bookingId ?? '';
+      const pack = pickPack(loc, {
+        vi: {
+          subject: `Booking #${bookingId} đã hủy — JETVINA`,
+          text: `${greet}\n\nBooking #${bookingId} đã được hủy. Liên hệ đội ngũ JETVINA nếu bạn cần hỗ trợ khác.\n\n— JETVINA`,
+          body: `<p>${greet}</p><p>Booking <strong>#${bookingId}</strong> đã được hủy theo yêu cầu. Nếu đây là nhầm lẫn hoặc bạn cần đặt lại, vui lòng liên hệ chúng tôi.</p>`,
+          cta: 'Vào My Account',
+        },
+        'zh-cn': {
+          subject: `订单 #${bookingId} 已取消 — JETVINA`,
+          text: `${greet}\n\n订单 #${bookingId} 已取消。如需协助请联系 JETVINA。\n\n— JETVINA`,
+          body: `<p>${greet}</p><p>订单 <strong>#${bookingId}</strong> 已取消。如需重新安排，请联系我们的顾问。</p>`,
+          cta: '进入我的账户',
+        },
+        en: {
+          subject: `Booking #${bookingId} cancelled — JETVINA`,
+          text: `${greet}\n\nBooking #${bookingId} has been cancelled. Contact JETVINA if you need further assistance.\n\n— JETVINA`,
+          body: `<p>${greet}</p><p>Booking <strong>#${bookingId}</strong> has been cancelled. If this was a mistake or you need to rebook, please contact our team.</p>`,
+          cta: 'Go to My Account',
         },
       });
       return {

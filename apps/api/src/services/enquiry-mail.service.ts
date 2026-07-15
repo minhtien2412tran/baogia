@@ -84,7 +84,7 @@ export class EnquiryMailService {
       const sales = await this.email.sendMail({
         to: salesTo,
         replyTo: payload.email,
-        subject: `[JetVina ${label}] ${name} — #${payload.enquiryId}`,
+        subject: `[JetVina ${label}] ${name} - #${payload.enquiryId}`,
         text: salesText,
         html: salesText.replace(/\n/g, '<br>'),
       });
@@ -96,5 +96,52 @@ export class EnquiryMailService {
     }
 
     return { customerSent: customer.sent, salesSent };
+  }
+
+  /** Sales/admin alert for new charter quote (customer ACK is CustomerCare). */
+  async notifyNewQuote(payload: {
+    quoteId: number;
+    email: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    message?: string | null;
+    tripSummary?: string;
+    sourcePage?: string;
+  }): Promise<{ salesSent: boolean }> {
+    const salesTo = this.salesInbox();
+    if (!salesTo) {
+      this.logger.warn(
+        `Sales inbox not configured — skipped staff notification for quote #${payload.quoteId}`,
+      );
+      return { salesSent: false };
+    }
+
+    const name = [payload.firstName, payload.lastName]
+      .filter(Boolean)
+      .join(' ');
+    const salesText = [
+      `[Quote] New charter request #${payload.quoteId}`,
+      '',
+      `Name: ${name}`,
+      `Email: ${payload.email}`,
+      `Phone: ${payload.phone}`,
+      payload.tripSummary ? `Route: ${payload.tripSummary}` : '',
+      payload.sourcePage ? `Source: ${payload.sourcePage}` : '',
+      payload.message ? `Message: ${payload.message}` : '',
+      '',
+      'Admin → Quotes to review / create offer.',
+    ]
+      .filter(Boolean)
+      .join('\n');
+
+    const sales = await this.email.sendMail({
+      to: salesTo,
+      replyTo: payload.email,
+      subject: `[JetVina Quote] ${name} - #${payload.quoteId}`,
+      text: salesText,
+      html: salesText.replace(/\n/g, '<br>'),
+    });
+    return { salesSent: sales.sent };
   }
 }

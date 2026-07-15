@@ -15,6 +15,7 @@ Chat sessions do **not** remember progress. Before coding, read and update the f
 | [docs/OWNER_ACTION_ITEMS.md](./docs/OWNER_ACTION_ITEMS.md) | Việc chủ dự án phải làm |
 | [docs/OWNER_NEXT_ACTIONS.md](./docs/OWNER_NEXT_ACTIONS.md) | **Owner handoff pack** (P0 SMTP → UAT/CMS/G4) |
 | [docs/GD4_SANDBOX_READINESS.md](./docs/GD4_SANDBOX_READINESS.md) | GĐ4 sandbox gap checklist (prep only) |
+| [docs/ORDER_EMAIL_AUTOMATION.md](./docs/ORDER_EMAIL_AUTOMATION.md) | Nhận đơn / gửi mail auto·bán tự động |
 | [docs/COMMIT_PLAN_GD2.md](./docs/COMMIT_PLAN_GD2.md) | GĐ2 dirty-tree commit plan |
 | [docs/GD2_ROADMAP.md](./docs/GD2_ROADMAP.md) | GĐ2 tasks P0–P3 + page priority |
 | [docs/CHARTER_CMS_MAP.md](./docs/CHARTER_CMS_MAP.md) | Charter ×6 static vs CMS slugs |

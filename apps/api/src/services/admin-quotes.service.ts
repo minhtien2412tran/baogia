@@ -6,6 +6,7 @@ import {
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
+import { CustomerCareService } from './customer-care/customer-care.service';
 import { CreateQuoteOfferDto } from '../dto';
 
 @Injectable()
@@ -13,6 +14,7 @@ export class AdminQuotesService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
+    private readonly customerCare: CustomerCareService,
   ) {}
 
   async listQuotes(filters?: {
@@ -198,13 +200,25 @@ export class AdminQuotesService {
       adminUserId,
     );
 
+    const aircraftLabel = `${offer.aircraftModel.manufacturer} ${offer.aircraftModel.model}`;
+    void this.customerCare.onQuoteOffered({
+      quoteId,
+      offerId: offer.id,
+      email: quote.email,
+      firstName: quote.firstName,
+      userId: quote.userId,
+      price: Number(offer.price),
+      currency: 'USD',
+      aircraft: aircraftLabel,
+    });
+
     return {
       id: offer.id,
       quoteRequestId: quoteId,
       price: Number(offer.price),
       status: offer.status,
       expiresAt: offer.expiresAt.toISOString(),
-      aircraft: `${offer.aircraftModel.manufacturer} ${offer.aircraftModel.model}`,
+      aircraft: aircraftLabel,
       operator: offer.operator.name,
       quoteStatus: 'OFFERED',
       message: `Offer #${offer.id} created for quote #${quoteId}`,

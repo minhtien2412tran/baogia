@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
 import { CustomerCareService } from './customer-care/customer-care.service';
+import { EnquiryMailService } from './enquiry-mail.service';
 import { PaymentService } from './payment.service';
 import { OnepayService } from './onepay.service';
 import { NinepayService } from './ninepay.service';
@@ -61,6 +62,7 @@ export class QuoteService {
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
     private readonly customerCare: CustomerCareService,
+    private readonly enquiryMail: EnquiryMailService,
     private readonly payments: PaymentService,
     private readonly onepay: OnepayService,
     private readonly ninepay: NinepayService,
@@ -355,11 +357,29 @@ export class QuoteService {
       { quoteId: quote.id, email: body.email },
       opts?.userId,
     );
+    const tripSummary = body.legs
+      .map(
+        (l) =>
+          `${String(l.fromAirport).toUpperCase()}→${String(l.toAirport).toUpperCase()}`,
+      )
+      .join(' · ');
+
     void this.customerCare.onQuoteReceived({
       quoteId: quote.id,
       email: body.email,
       firstName: body.firstName,
       userId: opts?.userId,
+    });
+    // Auto: sales/admin inbox (semi-auto ops review continues in Admin → Quotes)
+    void this.enquiryMail.notifyNewQuote({
+      quoteId: quote.id,
+      email: body.email,
+      firstName: body.firstName,
+      lastName: body.lastName,
+      phone: body.phone,
+      message: body.message,
+      tripSummary,
+      sourcePage: opts?.sourcePage ?? 'WEB_QUOTE_FORM',
     });
     return {
       requestId: quote.id,

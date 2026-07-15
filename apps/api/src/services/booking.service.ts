@@ -335,6 +335,16 @@ export class BookingService {
       ipAddress,
     );
 
+    if (updated.user?.email) {
+      void this.customerCare.onBookingCancelled({
+        bookingId: id,
+        email: updated.user.email,
+        userId: updated.userId,
+        firstName: updated.user.firstName,
+      });
+    }
+    void this.flightNotify.notifyOperatorAndAdmin(id, 'cancelled');
+
     return this.formatBooking(updated);
   }
 

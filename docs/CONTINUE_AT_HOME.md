@@ -36,14 +36,13 @@
 
 > **Plan:** [NEXT_SPRINT_PLAN.md](./NEXT_SPRINT_PLAN.md) · [GD2_ROADMAP.md](./GD2_ROADMAP.md) · [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md) · [OWNER_ACTION_ITEMS.md](./OWNER_ACTION_ITEMS.md) · [TEST_MATRIX.md](./TEST_MATRIX.md)
 
-**Trạng thái phiên 15/07:** **GĐ2 Dev complete · Waiting for Owner** · pack **ready to commit** ([COMMIT_PLAN_GD2.md](./COMMIT_PLAN_GD2.md))
+**Trạng thái phiên 15/07:** **GĐ2 Dev complete · Order email automation patched · Waiting Owner SMTP thật**
 
-1. **P0 Owner** — [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md): O4 **SMTP thật** (Mailpit catcher đã ON VPS — `smtpCatcher=true`, vẫn **không** PASS T-S4-01) · inbox khách  
- 
-2. **P1 Owner** — UAT · CMS · G4 sandbox keys · media decision  
-3. **O3** — v3.1 **DEPLOYED / OPTIONAL_OWNER_REVIEW**  
-4. **Git** — `jetvina` đã commit GĐ2 pack (4 commits · base `a15b270`) · chưa push trừ khi Owner bảo  
-5. **Sau unlock** — [GD4_SANDBOX_READINESS.md](./GD4_SANDBOX_READINESS.md) (prep only · không bật prod giả) 
+1. **P0 Owner** — SMTP provider thật ([OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)); Mailpit catcher chỉ ops  
+2. **Order mail** — [ORDER_EMAIL_AUTOMATION.md](./ORDER_EMAIL_AUTOMATION.md): nhận quote → auto khách + sales; offer admin → mail khách; cancel → notify  
+3. **P1 Owner** — UAT · CMS · G4 keys  
+4. **Git** — `jetvina` có commits GĐ2 + Mailpit; order-mail patch mới (deployed API) — commit khi bảo  
+5. **Sau unlock** — [GD4_SANDBOX_READINESS.md](./GD4_SANDBOX_READINESS.md)
 
 ### Đã deploy — Nhánh tổng hợp `jetvina` (2026-07-13)
 

@@ -127,22 +127,4 @@ export class EmailService {
     }
   }
 
-  async sendQuoteConfirmation(opts: {
-    email: string;
-    firstName: string;
-    requestId: number;
-  }) {
-    return this.sendMail({
-      to: opts.email,
-      subject: `JetVina Quote Request #${opts.requestId} Received`,
-      text: [
-        `Dear ${opts.firstName},`,
-        '',
-        `Thank you for your private jet charter quote request (#${opts.requestId}).`,
-        'Our charter specialists will contact you within 3 hours.',
-        '',
-        '— JetVina Private Jet Charter',
-      ].join('\n'),
-    });
-  }
 }

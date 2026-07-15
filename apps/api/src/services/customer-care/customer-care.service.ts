@@ -158,6 +158,57 @@ export class CustomerCareService implements OnModuleInit, OnModuleDestroy {
     });
   }
 
+  /** Semi-auto: admin created an offer → email customer. */
+  async onQuoteOffered(opts: {
+    quoteId: number;
+    offerId: number;
+    email: string;
+    firstName: string;
+    userId?: number | null;
+    locale?: string;
+    price: number;
+    currency?: string;
+    aircraft?: string;
+  }) {
+    await this.scheduleCampaign({
+      campaignKey: 'quote_offered',
+      email: opts.email,
+      userId: opts.userId ?? undefined,
+      locale: opts.locale,
+      referenceId: `offer-${opts.offerId}`,
+      meta: {
+        requestId: opts.quoteId,
+        offerId: opts.offerId,
+        firstName: opts.firstName,
+        price: opts.price,
+        currency: opts.currency ?? 'USD',
+        aircraft: opts.aircraft,
+      },
+      immediate: true,
+    });
+  }
+
+  async onBookingCancelled(opts: {
+    bookingId: number;
+    email: string;
+    userId?: number;
+    firstName?: string | null;
+    locale?: string;
+  }) {
+    await this.scheduleCampaign({
+      campaignKey: 'booking_cancelled',
+      email: opts.email,
+      userId: opts.userId,
+      locale: opts.locale,
+      referenceId: String(opts.bookingId),
+      meta: {
+        bookingId: opts.bookingId,
+        firstName: opts.firstName ?? undefined,
+      },
+      immediate: true,
+    });
+  }
+
   async onNewsletterSubscribe(email: string, locale?: string) {
     const normalized = email.toLowerCase();
     await this.prisma.emailSubscriber.upsert({
