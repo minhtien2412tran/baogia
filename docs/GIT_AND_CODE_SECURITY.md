@@ -89,4 +89,5 @@ If a secret was ever committed: follow [SECURITY_SECRETS.md](./SECURITY_SECRETS.
 ### 2026-07-15 — baocaotiendo credentials
 
 Public page previously embedded rotated demo + Swagger Basic passwords in `apps/web/.../progress-report.ts` (also live on www).  
-**Remediation:** stripped from Git source (placeholders only). **Owner should rotate** demo users + Swagger Basic again (treat as exposed) and keep plaintext only under `/root/backups/jetbay-security-ops-*/` — never recommit to the repo.
+**Remediation:** stripped from Git + web redeployed. **Rotated 2026-07-15** via `rotate-demo-swagger.sh` → `/root/backups/jetbay-security-ops-20260715-165745/demo-passwords.txt`.  
+PM2 pitfall fixed: export `SWAGGER_BASIC_*` before `pm2 restart --update-env` (`fix-swagger-pm2-env.sh`). Never recommit plaintext passwords.

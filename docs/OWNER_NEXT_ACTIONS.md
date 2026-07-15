@@ -6,6 +6,25 @@
 
 ---
 
+## Done 2026-07-15 — Demo + Swagger Basic rotated
+
+After public exposure on `/baocaotiendo` (now redacted), Dev rotated:
+
+- `admin@jetbay.local` / `demo@jetbay.local` password hashes  
+- `SWAGGER_BASIC_*` on VPS  
+
+**Owner:** đọc mật khẩu mới **chỉ trên VPS** (không chat/email):
+
+```bash
+sudo less /root/backups/jetbay-security-ops-20260715-165745/demo-passwords.txt
+# chmod 600 — do not copy into Git / baocaotiendo
+```
+
+Script tái dùng: `bash /var/www/jetbay-be/deploy/rotate-demo-swagger.sh`  
+Lưu ý PM2: restart phải `export SWAGGER_BASIC_*` rồi `pm2 restart jetbay-be --update-env` (dotenv không ghi đè env PM2 cũ).
+
+---
+
 ## P0 — SMTP production
 
 ### Required variables (VPS `/var/www/jetbay-be/.env`)
