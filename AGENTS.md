@@ -2,8 +2,8 @@
 
 Chat sessions do **not** remember progress. Before coding, read and update the files below.
 
-**Product first:** the main deliverable is the **jetbay.com clone** in `apps/web` — prod https://www.minhtien.online/en-us · local `:3000`.  
-`m-tien.com/jet-bay` and `m-tien.com/app-jetbay` are **sales/quote landings only** — not the product UI. See [docs/JETBAY_PRODUCT_MAP.md](./docs/JETBAY_PRODUCT_MAP.md).
+**Product first:** official KH site = **[https://jetvina.com/](https://jetvina.com/)** (JetVina). Demo/platform code lives in `apps/web` — prod https://www.minhtien.online/en-us · local `:3000`.  
+`m-tien.com/jet-bay` and `m-tien.com/app-jetbay` are **sales/quote landings only** — not the KH site. See [docs/JETBAY_PRODUCT_MAP.md](./docs/JETBAY_PRODUCT_MAP.md).
 
 ## Progress board (source of truth)
 

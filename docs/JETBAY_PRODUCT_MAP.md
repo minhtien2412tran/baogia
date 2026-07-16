@@ -1,53 +1,77 @@
 # JETBAY — Bản đồ sản phẩm vs báo giá
 
-> **Chốt:** Trang chính cần làm / demo sản phẩm = **clone jetbay.com** trong `apps/web`.  
-> Trang `m-tien.com/jet-bay` và `m-tien.com/app-jetbay` chỉ là **mô tả báo giá** (bán hàng), không phải app clone.
+> **Chốt (2026-07-12):** Web **chính thức của khách hàng** = **[https://jetvina.com/](https://jetvina.com/)** (JetVina — Vietnam Private Jet & Air Charter).  
+> Code sản phẩm demo/clone nằm trong `apps/web` (hiện brand JetBay trên `minhtien.online`).  
+> `m-tien.com/jet-bay` chỉ là **báo giá bán hàng**, không phải trang chính thức của KH.
 
 ---
 
-## 1. Hai lớp — đừng lẫn
+## 1. Ba lớp — đừng lẫn
 
 ```mermaid
 flowchart LR
+  subgraph official [KH chính thức]
+    JV[jetvina.com]
+  end
   subgraph sales [Báo giá - collateral]
     QW[m-tien.com/jet-bay]
     QA[m-tien.com/app-jetbay]
     QD[docs/JETBAY_BAO_GIA.md]
   end
-  subgraph product [Sản phẩm JETBAY - clone jetbay.com]
+  subgraph product [Sản phẩm demo - monorepo]
     WEB[apps/web Next.js]
     API[apps/api NestJS]
     ADM[apps/admin]
   end
-  subgraph ref [Tham chiếu clone]
-    SCR[scratch HTML jet-bay.com]
+  subgraph ref [Tham chiếu UI]
+    SCR[scratch HTML]
   end
-  sales -.->|mô tả phạm vi / giá| product
-  SCR -->|parity UI| WEB
+  JV -->|nội dung / IA / nghiệp vụ thật| product
+  sales -.->|phạm vi / giá HĐ| product
+  SCR -->|parity layout cũ| WEB
   WEB --> API
   ADM --> API
 ```
 
 | Lớp | Là gì | URL / path | Việc cần làm |
 |-----|--------|------------|--------------|
-| **Sản phẩm** | Clone jetbay.com | Code: `apps/web` · Prod: https://www.minhtien.online/en-us · Local: `:3000` | Polish UI vs `scratch/` |
+| **Chính thức KH** | JetVina live | https://jetvina.com/ | **Nguồn truth** IA, dịch vụ, Empty Legs, membership, liên hệ |
+| **Sản phẩm demo** | Clone/platform trong monorepo | Code: `apps/web` · Prod: https://www.minhtien.online/en-us · Local `:3000` | Polish theo JetVina + CR; brand code có thể còn “JetBay” đến khi rebrand |
 | **API / Admin** | Backend + CMS | `api.minhtien.online` · `admin.minhtien.online` | Đã live |
-| **Báo giá** | Pitch / giá gói | `m-tien.com/jet-bay` · `m-tien.com/app-jetbay` · `docs/JETBAY_BAO_GIA.md` | Chỉ đọc / cập nhật số tiền — **không** coi là trang chính |
-| **Scratch** | HTML gốc để so | `scratch/` | Tham chiếu clone, không ship |
+| **Báo giá** | Pitch / giá gói | `m-tien.com/jet-bay` · `docs/JETBAY_BAO_GIA.md` | Chỉ đọc số tiền — **không** coi là web KH |
+| **Scratch** | HTML tham chiếu cũ | `scratch/` | So layout; ưu tiên JetVina khi lệch |
 
 ---
 
-## 2. Trang chính (product) ở đâu?
+## 1b. JetVina — thông tin chính thức (rút gọn)
+
+Nguồn: [jetvina.com](https://jetvina.com/)
+
+| Hạng mục | Nội dung |
+|----------|----------|
+| Brand | **JetVina** — Vietnam-based private jet / air charter |
+| Slogan / focus | Flying private in Vietnam and Asia Pacific |
+| Nav chính | Air Charter · Aircrafts (Bombardier, Gulfstream, Embraer, Cessna, Dassault, Beechcraft, Helicopter) · Empty Legs · Experience (Hotel/Villa, Yacht) · Private Life / Events · Membership (JetVina25, Corporate) · About · News · Contact |
+| Locale | en · vi · ru · zh-hans · ko |
+| Contact | +84 396 919 611 · flights@jetvina.com |
+| VP | Phu Quoc · TSN Terminal 03 (Bay Hien) |
+| Pháp lý | Coral Mountain Travel Services And Trading Co., Ltd · MST 1702247183 |
+
+**Không** dùng `jetbay.com` làm nguồn “web chính thức KH” khi nói với Anh Tuấn Anh / nội bộ sau ngày chốt này.
+
+---
+
+## 2. Trang chính (product demo) ở đâu?
 
 | | |
 |--|--|
 | **Home clone** | [`apps/web/src/app/[locale]/page.tsx`](../apps/web/src/app/[locale]/page.tsx) |
 | **Sections** | [`apps/web/src/components/home/`](../apps/web/src/components/home/) |
 | **Các trang con** | [`apps/web/src/app/[locale]/`](../apps/web/src/app/[locale]/) |
-| **Mẫu HTML** | [`scratch/`](../scratch/) (so với jet-bay.com) |
+| **Mẫu HTML cũ** | [`scratch/`](../scratch/) |
 | **Chạy local** | `pnpm --filter @jetbay/web dev` → http://localhost:3000/en-us |
 
-**Không** mở `m-tien.com/jet-bay` khi muốn xem / sửa clone.
+**Không** mở `m-tien.com/jet-bay` khi muốn xem / sửa sản phẩm. So nội dung với **jetvina.com**.
 
 ---
 

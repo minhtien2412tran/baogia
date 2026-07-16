@@ -3,8 +3,8 @@
 > Chat Cursor không nhớ — mở file này sau `git pull`.  
 > Bản đồ đầy đủ: [JETBAY_PRODUCT_MAP.md](./JETBAY_PRODUCT_MAP.md)
 
-**Dự án:** JETBAY — **sản phẩm chính = clone jetbay.com** (`apps/web`)  
-**Báo giá** (`m-tien.com/jet-bay`) chỉ là mô tả bán hàng — không phải trang chính.  
+**Dự án:** JETBAY (monorepo) — **web chính thức KH = [jetvina.com](https://jetvina.com/)** · demo code = `apps/web`  
+**Báo giá** (`m-tien.com/jet-bay`) chỉ là mô tả bán hàng — không phải trang chính thức.  
 **Repo:** https://github.com/minhtien2412tran/baogia.git  
 **Nhánh:** `main` · `feat/web-*` | `feat/api-*` | `feat/admin-*`
 
@@ -14,7 +14,8 @@
 
 | Vai trò | URL | Ghi chú |
 |---------|-----|---------|
-| **Web clone (chính)** | https://www.minhtien.online/en-us | ✅ PM2 `jetbay-web` `:3012` · local vẫn `:3000` |
+| **Web chính thức KH** | https://jetvina.com/ | JetVina — nguồn truth IA / nội dung / liên hệ |
+| **Web demo (clone)** | https://www.minhtien.online/en-us | ✅ PM2 `jetbay-web` `:3012` · local `:3000` |
 | **Báo cáo tiến độ KH** | https://www.minhtien.online/baocaotiendo | ✅ trang nội bộ gửi Anh Tuấn Anh |
 | API | https://api.minhtien.online | ✅ |
 | Admin | https://admin.minhtien.online/login | ✅ |
@@ -34,7 +35,14 @@
 
 ## Việc tiếp theo (ưu tiên sản phẩm)
 
+<<<<<<< Updated upstream
 > **Plan:** [NEXT_SPRINT_PLAN.md](./NEXT_SPRINT_PLAN.md) · [GD2_ROADMAP.md](./GD2_ROADMAP.md) · [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md) · [OWNER_ACTION_ITEMS.md](./OWNER_ACTION_ITEMS.md) · [TEST_MATRIX.md](./TEST_MATRIX.md)
+=======
+1. **CR Wave1–5 BE + Empty Leg FE filter (2026-07-12)** — nhánh `feat/api-cr-wave3-contracts-rbac-docusign`: fleet/pricing/HĐ/RBAC/DocuSign mock · web `/empty-leg` lọc continent/IATA/date · smoke `smoke-cr-wave1/3` — live DocuSign/Admin UI chờ phụ lục  
+2. **CR sau họp** — biên bản [JETBAY_CR_2026_01.md](./JETBAY_CR_2026_01.md) · kịch bản [KH_KICH_BAN_SAU_HOP_CR.md](./KH_KICH_BAN_SAU_HOP_CR.md) · báo cáo tiến độ **không** ghi CR = đã hoàn thành GĐ  
+3. **Polish theo JetVina** (ongoing) — so [jetvina.com](https://jetvina.com/) (+ `scratch/` khi cần layout)  
+4. **G4 keys** — SMTP / OAuth / payment / SMS **chờ KH** → [KH_G4_KEYS_CHECKLIST.md](./KH_G4_KEYS_CHECKLIST.md)  
+>>>>>>> Stashed changes
 
 **Trạng thái phiên 15/07 (evening audit):** **GĐ2 Dev complete · Repository pack committed · Waiting for Owner SMTP**
 
