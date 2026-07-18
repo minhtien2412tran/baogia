@@ -46,14 +46,6 @@
     "openapi:client": "node scripts/openapi/generate-client.mjs",
     "openapi:client:prod": "node scripts/openapi/generate-client.mjs"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "prisma",
-      "@prisma/client",
-      "@prisma/engines",
-      "sharp"
-    ]
-  },
   "devDependencies": {
     "@playwright/test": "^1.45.0",
     "openapi-typescript-codegen": "^0.29.0",

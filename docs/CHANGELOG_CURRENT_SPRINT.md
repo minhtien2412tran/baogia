@@ -1,6 +1,6 @@
 # Changelog — current sprint
 
-> **Updated:** 2026-07-15 · **Commits on `jetvina`:** SMTP · ops smokes · web-admin · docs — [COMMIT_PLAN_GD2.md](./COMMIT_PLAN_GD2.md)
+> **Updated:** 2026-07-18 · **Commits on `jetvina`:** SMTP · ops smokes · web-admin · docs — [COMMIT_PLAN_GD2.md](./COMMIT_PLAN_GD2.md)
 
 ## Status
 
@@ -25,6 +25,9 @@ SMTP: BLOCKED_OWNER_SMTP (LOOPBACK)
 
 ## Session notes
 
+- Re-audit BE local: API typecheck PASS; integration tests blocked by Docker/Postgres local.
+- Re-matrix Admin/RBAC: [ADMIN_RBAC_FUNCTION_MATRIX.md](./ADMIN_RBAC_FUNCTION_MATRIX.md) là SoT mới cho roles, permission catalog, guard coverage, Admin UI và migration R1–R5.
+- Gap P0 xác nhận thêm: login Admin chỉ nhận `ADMIN`; `403` bị coi session expired; Aircraft UI read-only; orphan content_* keys; `StaffGuard` dead.
 - Added `host.docker.internal` to SMTP loopback denylist + env probe READY meta for real hosts.  
 - `pnpm smoke:newsletter-smtp` wired in package.json.  
 - Secret scan: SAFE (env key **names** in docs/scripts only).
