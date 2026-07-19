@@ -48,11 +48,13 @@ With `APP_ENV=production`, API refuses to start if JWT/refresh/API_KEY/PAYMENT_S
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | `admin@jetbay.local` | **rotated 2026-07-15** — VPS `/root/backups/jetbay-security-ops-20260715-165745/demo-passwords.txt` |
-| User | `demo@jetbay.local` | **rotated 2026-07-15** — same file |
-| Swagger Basic | `SWAGGER_BASIC_USER` | **rotated 2026-07-15** — same file · script `deploy/rotate-demo-swagger.sh` |
+| Admin | `admin@jetbay.local` | **rotated 2026-07-16 22:12** — VPS `/root/backups/jetbay-security-ops-20260716-221238/demo-passwords.txt` |
+| User | `demo@jetbay.local` | **same backup** |
+| Swagger Basic | `SWAGGER_BASIC_USER` | **same backup** · `fe-dev-handoff.txt` · script `deploy/rotate-demo-swagger.sh` |
 
 Seed defaults `Admin123!` / `Demo123!` **no longer valid** on prod after rotation.
+
+**One-file owner vault (pass + paths):** see [OWNER_CREDS_VAULT.md](./OWNER_CREDS_VAULT.md) — local copy under `.secrets/` (gitignored). Script: `deploy/assemble-owner-vault.sh`.
 
 ## Git hooks & CI
 

@@ -1,0 +1,4 @@
+# Keep deploy/shell scripts Unix LF so bash `set -o pipefail` works on VPS.
+*.sh text eol=lf
+*.mjs text eol=lf
+*.bash text eol=lf

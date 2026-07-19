@@ -23,6 +23,16 @@ sudo less /root/backups/jetbay-security-ops-20260715-165745/demo-passwords.txt
 Script tái dùng: `bash /var/www/jetbay-be/deploy/rotate-demo-swagger.sh`  
 Lưu ý PM2: restart phải `export SWAGGER_BASIC_*` rồi `pm2 restart jetbay-be --update-env` (dotenv không ghi đè env PM2 cũ).
 
+**Reset lại để gửi FE KH:** xem [FE_DEV_HANDOFF_CREDS.md](./FE_DEV_HANDOFF_CREDS.md) — chạy rotate trên VPS → gửi `fe-dev-handoff.txt` + `API_KEY` qua kênh private.
+
+### Checklist sau upload script (2026-07-16)
+
+- [x] `scp …/rotate-demo-swagger.sh` → VPS `/var/www/jetbay-be/deploy/` (+ `sed` strip CRLF)
+- [x] Prod probe: docs/api swagger **401 Basic** · `/health` **200** · web/admin **200**
+- [x] Rotate 2026-07-16 22:12 → backup `jetbay-security-ops-20260716-221238` · smoke swagger_auth 200 · admin/demo login 201 · `fe-dev-handoff.txt` OK
+- [ ] `sudo less …/221238/fe-dev-handoff.txt` + `grep API_KEY=.env` → gửi FE private
+- [ ] FE xác nhận: Basic docs → X-API-Key → login demo JWT
+
 ---
 
 ## P0 — SMTP production
