@@ -39,7 +39,7 @@ Already initialized:
 Verify:
 
 ```powershell
-cd c:\tien\tien\baogia
+cd c:\tien\webclonejetbay
 specify integration status
 # expect: Integration status: OK · Default: cursor-agent
 ```

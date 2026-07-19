@@ -6,7 +6,8 @@
 ## Core Principles
 
 ### I. Product boundary
-The main product is the **jetbay.com clone** in `apps/web` (prod www.minhtien.online).  
+**Official KH site** = [https://jetvina.com/](https://jetvina.com/) (JetVina).  
+Demo / platform product code lives in **`apps/web`** (prod https://www.minhtien.online · local `:3000`).  
 `m-tien.com/jet-bay` and `m-tien.com/app-jetbay` are sales/quote landings only — not the product UI.
 
 ### II. Feature scope

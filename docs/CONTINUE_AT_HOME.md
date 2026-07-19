@@ -38,7 +38,7 @@
 > **Plan:** [NEXT_SPRINT_PLAN.md](./NEXT_SPRINT_PLAN.md) · [GD2_ROADMAP.md](./GD2_ROADMAP.md) · [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md) · [OWNER_ACTION_ITEMS.md](./OWNER_ACTION_ITEMS.md) · [TEST_MATRIX.md](./TEST_MATRIX.md)
 
 1. **CR Wave1–5 BE + Empty Leg FE filter (2026-07-12)** — nhánh `feat/api-cr-wave3-contracts-rbac-docusign`: fleet/pricing/HĐ/RBAC/DocuSign mock · web `/empty-leg` lọc continent/IATA/date · smoke `smoke-cr-wave1/3` — live DocuSign/Admin UI chờ phụ lục
-2. **CR sau họp** — biên bản `JETBAY_CR_2026_01` · kịch bản `KH_KICH_BAN_SAU_HOP_CR` *(chưa commit vào repo — bổ sung khi có file)* · báo cáo tiến độ **không** ghi CR = đã hoàn thành GĐ
+2. **CR sau họp** — kịch bản họp tiến độ: [KH_KICH_BAN_HOP_TIENDO.md](./KH_KICH_BAN_HOP_TIENDO.md) (đã gộp từ `main` 19/07) · biên bản `JETBAY_CR_2026_01` / `KH_KICH_BAN_SAU_HOP_CR` *(bổ sung khi có file)* · báo cáo tiến độ **không** ghi CR = đã hoàn thành GĐ
 3. **Polish theo JetVina** (ongoing) — so [jetvina.com](https://jetvina.com/) (+ `scratch/` khi cần layout)
 4. **G4 keys** — SMTP / OAuth / payment / SMS **chờ KH** → [KH_G4_KEYS_CHECKLIST.md](./KH_G4_KEYS_CHECKLIST.md)
 
@@ -46,9 +46,12 @@
 
 **Bổ sung audit 18/07:** BE typecheck PASS; local runtime còn blocked bởi Docker/Postgres. Admin/RBAC đã re-matrix tại [ADMIN_RBAC_FUNCTION_MATRIX.md](./ADMIN_RBAC_FUNCTION_MATRIX.md): menu Admin chưa permission-aware, controller còn trộn `AdminGuard`/`PermissionGuard`, triển khai theo waves R1–R5.
 
+**Audit 19/07 (sync + AI hygiene):** working tree clean trên `jetvina` · merge `main` → `jetvina` (giữ [KH_KICH_BAN_HOP_TIENDO.md](./KH_KICH_BAN_HOP_TIENDO.md)) · `main` ↔ `jetvina` aligned · residual GĐ2 (`b243bc8`+) **đã commit** · agent SoT refresh ([AGENTS.md](../AGENTS.md) · [GIT_WORKFLOW.md](./GIT_WORKFLOW.md))
+
 ```text
 Current phase: GĐ2 Dev complete
 Current mode: Waiting for Owner
+Active branch: jetvina (deploy / integration SoT; main = mirror after sync)
 Next technical phase after Owner unlock:
 1. SMTP inbox verification
 2. Payment sandbox
@@ -61,9 +64,8 @@ Next technical phase after Owner unlock:
 
 1. **P0 Owner** — SMTP provider thật ([OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)); Mailpit catcher chỉ ops (`smtp=false` · `smtpCatcher=true`)  
 2. **P1 Owner** — UAT · CMS · G4 keys  
-3. **Git residual** — `package.json` html-probe default + `gd2-prod-recheck.sh` (+ docs surface map) — commit khi bảo · [COMMIT_PLAN_GD2.md](./COMMIT_PLAN_GD2.md)  
-4. **Optional deploy web** — locale form / EmptyLegAlertsForm parse (API empty-leg fix đã live)  
-5. **Sau unlock** — [GD4_SANDBOX_READINESS.md](./GD4_SANDBOX_READINESS.md) · **không** bật fake production integration
+3. **Optional deploy web** — locale form / EmptyLegAlertsForm parse (API empty-leg fix đã live)  
+4. **Sau unlock** — [GD4_SANDBOX_READINESS.md](./GD4_SANDBOX_READINESS.md) · **không** bật fake production integration
 
 ### Đã deploy — Nhánh tổng hợp `jetvina` (2026-07-13)
 
@@ -72,7 +74,7 @@ Next technical phase after Owner unlock:
 - Gộp: nearby airports + quote search dùng pricing engine (positioning + round-trip + về base)
 - Branch: `jetvina` · **API + Admin + Web đã deploy VPS** · migrate + seed OK
 - Smoke BE: `/health` 200 · `/airports/nearby` 200 (SGN) · `POST /quotes/search-aircraft` 201 (3 options, POSITIONING) · admin `/dashboard/operators` + `/email-templates` 200 · web `/en-us` 200
-- Fix deploy web: khôi phục `formatNumber` trong `apps/web/src/config/locales.ts` (local, chưa commit nếu chưa push)
+- Fix deploy web: `formatNumber` trong `apps/web/src/config/locales.ts` — **đã có trong repo** (`jetvina`)
 - **Footer payment chips** (2026-07-13) — bỏ remap JetBay CDN → ảnh JetVina; dùng `/placeholders/payment/*.svg` gốc (Visa/MC/Amex/UnionPay/Discover)
 - **API sync + security plan** (2026-07-13) — local `:4000` ↔ prod ↔ docs **173 paths đồng bộ**; web local/prod cùng prod API · [JETBAY_API_SYNC_SECURITY_PLAN.md](./JETBAY_API_SYNC_SECURITY_PLAN.md)
 - **Fleet slider + Phase A security** (2026-07-13) — aircraft showcase → FlightScrollRail + dots · placeholder ảnh · throttle quotes · `pnpm smoke:api-sync` · onboarding topology
@@ -110,7 +112,7 @@ Next technical phase after Owner unlock:
 - **Owner handoff** — [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)
 - **HTML email redesign** (2026-07-15) — layout charcoal/gold · localize · API deployed · commits `7faace3`…`98ccdec`
 - **Empty-leg alert 400** (2026-07-15) — DTO validators · redeploy · smoke **201** · commit `b9dce75`
-- **GĐ2 closure audit** (2026-07-15 evening) — tree was clean at `b9dce75` · SMTP still LOOPBACK/catcher · tests PASS · residual: html-probe default + prod-recheck script — [COMMIT_PLAN_GD2.md](./COMMIT_PLAN_GD2.md)
+- **GĐ2 closure audit** (2026-07-15 evening) — tree was clean at `b9dce75` · SMTP still LOOPBACK/catcher · tests PASS · residual html-probe + prod-recheck **committed** `b243bc8` — [COMMIT_PLAN_GD2.md](./COMMIT_PLAN_GD2.md)
 - **Spec Kit** (2026-07-15) — CLI `specify` **v0.12.15** (uv tool, GitHub) · `specify init --here --integration cursor-agent --script ps` · constitution JetBay · [SPEC_KIT.md](./SPEC_KIT.md)
 - **Git/code security** (2026-07-15) — `pnpm security:scan` + pre-commit hooks · CI secret job · Dependabot · [GIT_AND_CODE_SECURITY.md](./GIT_AND_CODE_SECURITY.md) · commit `76a7d78` · web redeployed · **demo+Swagger rotated** → VPS `/root/backups/jetbay-security-ops-20260715-165745/demo-passwords.txt` · push `jetvina` OK
 

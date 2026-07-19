@@ -5,6 +5,15 @@ Chat sessions do **not** remember progress. Before coding, read and update the f
 **Product first:** official KH site = **[https://jetvina.com/](https://jetvina.com/)** (JetVina). Demo/platform code lives in `apps/web` — prod https://www.minhtien.online/en-us · local `:3000`.  
 `m-tien.com/jet-bay` and `m-tien.com/app-jetbay` are **sales/quote landings only** — not the KH site. See [docs/JETBAY_PRODUCT_MAP.md](./docs/JETBAY_PRODUCT_MAP.md).
 
+## Session start (agents)
+
+1. Read [docs/CONTINUE_AT_HOME.md](./docs/CONTINUE_AT_HOME.md) — progress SoT (do **not** invent status from chat).
+2. Default working branch: **`jetvina`** — `git checkout jetvina && git pull origin jetvina`. `main` is a sync mirror after alignment (see [docs/GIT_WORKFLOW.md](./docs/GIT_WORKFLOW.md)).
+3. Never commit `.env` / secrets; never paste production passwords into chat or `/baocaotiendo`.
+4. When touching API contracts: run `SYNC_MODE=prod-docs pnpm smoke:api-sync` (Basic auth from VPS `.env` only — see [docs/API_SYNC_SMOKE.md](./docs/API_SYNC_SMOKE.md)).
+5. Before claiming “uncommitted / residual”: run `git status` (do not trust stale doc lines).
+6. After meaningful work: update `docs/CONTINUE_AT_HOME.md` (+ surface map if the API/FE contract changed).
+
 ## Progress board (source of truth)
 
 | Doc | Purpose |
@@ -15,6 +24,7 @@ Chat sessions do **not** remember progress. Before coding, read and update the f
 | [docs/ADMIN_RBAC_FUNCTION_MATRIX.md](./docs/ADMIN_RBAC_FUNCTION_MATRIX.md) | **Admin/RBAC SoT** — roles · permissions · guards · UI · migration waves |
 | [docs/OWNER_ACTION_ITEMS.md](./docs/OWNER_ACTION_ITEMS.md) | Việc chủ dự án phải làm |
 | [docs/OWNER_NEXT_ACTIONS.md](./docs/OWNER_NEXT_ACTIONS.md) | **Owner handoff pack** (P0 SMTP → UAT/CMS/G4) |
+| [docs/KH_KICH_BAN_HOP_TIENDO.md](./docs/KH_KICH_BAN_HOP_TIENDO.md) | **Kịch bản họp tiến độ KH** (Anh Tuấn Anh) |
 | [docs/GD4_SANDBOX_READINESS.md](./docs/GD4_SANDBOX_READINESS.md) | GĐ4 sandbox gap checklist (prep only) |
 | [docs/ORDER_EMAIL_AUTOMATION.md](./docs/ORDER_EMAIL_AUTOMATION.md) | Nhận đơn / gửi mail auto·bán tự động |
 | [docs/COMMIT_PLAN_GD2.md](./docs/COMMIT_PLAN_GD2.md) | GĐ2 dirty-tree commit plan |
@@ -35,7 +45,7 @@ Chat sessions do **not** remember progress. Before coding, read and update the f
 | [docs/JETBAY_DANH_GIA_KY_THUAT.md](./docs/JETBAY_DANH_GIA_KY_THUAT.md) | Feature tree & ma trận kỹ thuật |
 | [docs/JETBAY_SECURITY_VS_FEATURES.md](./docs/JETBAY_SECURITY_VS_FEATURES.md) | Security from HomeFix patterns × features from báo giá only |
 | [docs/SECURITY_SECRETS.md](./docs/SECURITY_SECRETS.md) | Env / rotate secrets (never commit real `.env`) |
-| [docs/GIT_WORKFLOW.md](./docs/GIT_WORKFLOW.md) | Branches: `web` / `api` / `admin` |
+| [docs/GIT_WORKFLOW.md](./docs/GIT_WORKFLOW.md) | Branches: `jetvina` (active) · `web` / `api` / `admin` |
 
 ## Monorepo map (do not mix)
 
@@ -59,7 +69,7 @@ Chat sessions do **not** remember progress. Before coding, read and update the f
 ## Local env (new machine)
 
 ```bash
-git pull
+git pull origin jetvina
 pnpm install
 node scripts/generate-local-env.mjs
 node scripts/sync-frontend-api-key.mjs

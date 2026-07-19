@@ -44,7 +44,7 @@ Legend — Data status: `DONE` | `PARTIAL` | `MOCK` | `BLOCKED` | `NOT_STARTED` 
 | World Cup | WC pages | — | `/campaigns/world-cup/*` | GET/POST | API key | forms | PARTIAL | — | — | hide empty | NEEDS_VERIFY | — | IATA raw inputs |
 | Partners | partnership page | partners | `/partners/*` | GET/POST | API key | forms | PARTIAL | — | hide empty | — | NEEDS_VERIFY | — | |
 | Pricing estimate | — | bookings | `/pricing/estimate` | POST | API key | **none in web** | NOT_STARTED | — | — | — | — | API exists | Dead FE client `estimatePricing` |
-| Progress report | `/baocaotiendo` | — | — | — | — | static TS | DONE | — | — | — | visual | PROD v3.0 | Update to 3.1 |
+| Progress report | `/baocaotiendo` | — | — | — | — | static TS | DONE | — | — | — | visual | PROD v3.1 | Live `3.1` / `14/07` |
 
 ---
 

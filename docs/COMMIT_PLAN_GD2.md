@@ -41,3 +41,5 @@ chore(ops): default html-probe args and GĐ2 prod recheck script
 ```text
 Residual + Spec Kit: committing on explicit Owner/Dev instruction (2026-07-15).
 ```
+
+**Verified 2026-07-19:** residual files present on HEAD after `b243bc8` (html-probe defaults, `gd2-prod-recheck.sh`, secret-scan meta) — no further residual commit needed.
