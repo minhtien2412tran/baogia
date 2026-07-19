@@ -10,6 +10,6 @@
 | Production hotlink | **Forbidden** |
 | Production local publish | **Blocked** until OWNED\|LICENSED\|CLIENT_PROVIDED + approvedForProduction |
 
-Synced: 2026-07-13T04:41:06.642Z
+Synced: 2026-07-18T04:00:41.002Z
 Records: 42
-Mirrored this run: 5
+Mirrored this run: 42

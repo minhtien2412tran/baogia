@@ -1,10 +1,27 @@
 # Backend Audit — JetBay API
 
-**Canonical BE audit.** Cập nhật: **2026-07-10**  
+**Canonical BE audit.** Cập nhật: **2026-07-18** (re-matrix vs code nhánh `jetvina`; trước đó 2026-07-10)
 **Code:** `apps/api` · **Prod:** https://api.minhtien.online · **Swagger:** https://docs.minhtien.online/swagger  
 **Kiến trúc mục tiêu:** [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md)
 
 Mỗi phần dùng cùng template: Mục tiêu · Routes · Models · Status · Gaps · Smoke.
+
+---
+
+## Local run status (2026-07-18, máy Windows nhánh `jetvina`)
+
+| Bước | Kết quả |
+|------|---------|
+| `pnpm install` (+ prisma/sharp builds) | ✅ |
+| `pnpm --filter @jetbay/i18n build` (bắt buộc trước API — API import `@jetbay/i18n`) | ✅ |
+| `pnpm --filter @jetbay/api exec tsc --noEmit` | ✅ 0 error (sau khi build i18n) |
+| `pnpm --filter @jetbay/api test` (jest) | ⚠️ **52 pass / 18 fail** — 18 fail đều do **thiếu Postgres `127.0.0.1:5432`** (integration spec content-sync/media/permissions), không phải lỗi code |
+| `pnpm db:up` (docker) | ❌ Docker Desktop engine trả 500 (WSL2 chưa lên) — chưa migrate/seed/run được API |
+| `prisma migrate deploy` / `seed` / API `:4000` | ⛔ blocked bởi Docker |
+
+**Kết luận:** code **build & typecheck chuẩn**; chưa xác nhận runtime `:4000` vì DB local chưa lên. Cần Docker Desktop chạy (hoặc Postgres ngoài) rồi: `pnpm db:up` → `prisma migrate deploy` → `prisma:seed` → `start:dev`.
+
+> ⚠️ **Gap tài liệu:** các domain §11–§15 dưới đây có trong code nhưng **thiếu** ở bản audit 2026-07-10. Ma trận test [BE_TEST.md](./BE_TEST.md) chưa phủ RBAC / Contracts / Content-Sync / Pricing / i18n.
 
 ---
 
@@ -148,16 +165,83 @@ Throttle: login 10/min · register/OTP/refresh 5/min (tier `auth`).
 
 ---
 
+## 11. RBAC / Permissions *(mới — chưa có ở audit 2026-07-10)*
+
+| | |
+|--|--|
+| **Mục tiêu** | Phân quyền chi tiết theo permission thay cho boolean admin |
+| **Routes** | `/admin/permissions/*` (`AdminPermissionsController`) · guard `PermissionGuard` + `@RequirePermissions(...)` + `permission.catalog.ts` |
+| **Models** | `RolePermission`, `UserPermissionOverride`, `UserAirportScope` |
+| **Status** | **partial** — engine + catalog + guard OK; **chỉ áp cho** `admin/airports`, `contracts`, `content-sync` |
+| **Gaps** | ⚠️ **Guard không đồng nhất:** phần lớn `admin/*` vẫn dùng `AdminGuard` (boolean) — content/partner/users/operator/fixed-price/jet-card/empty-leg/dashboard/aircraft/quotes/travel-credit. Cần migrate dần sang `PermissionGuard`. |
+| **Smoke** | `permission.service.spec.ts` (unit) · chưa có smoke HTTP |
+
+---
+
+## 12. Contracts & e-signature *(mới)*
+
+| | |
+|--|--|
+| **Mục tiêu** | Hợp đồng operator: draft → approve workflow → DocuSign |
+| **Routes** | `GET/POST /admin/contracts[/templates][/:id]` · `POST /admin/contracts/:id/{submit,approve,reject,request-changes,send-docusign}` · `@Public POST /webhooks/docusign` (HMAC) — tất cả admin dùng `PermissionGuard` (`contract.*`) |
+| **Models** | `ContractTemplate`, `OperatorContract`, `ContractApprovalHistory`, `SignatureWebhookEvent` |
+| **Status** | **solid** code · DocuSign **mock** (`SIGNATURE_PROVIDER=mock`) |
+| **Gaps** | Live DocuSign chờ keys KH (`DOCUSIGN_*`). Chưa smoke HTTP. |
+| **Smoke** | — (chỉ mock provider) |
+
+---
+
+## 13. Content-Sync & Media pipeline *(mới)*
+
+| | |
+|--|--|
+| **Mục tiêu** | Nguồn nội dung → discover → review → publish/rollback + rights + media asset lifecycle |
+| **Routes** | `@Public GET /content/brand`, `/content/media-assets` · admin (`PermissionGuard`): `/admin/content-sources/*`, `/admin/content-sync/{discover,jobs,items,publish,rollback}`, `/admin/content-rights/*`, `/admin/media-assets/*` (approve-staging/production/block/import-manifest), `/admin/site-settings/brand`, `/admin/content-cleanup/jetbay` |
+| **Models** | `ContentSource`, `ContentSourceRecord`, `ContentProvenance`, `ContentRights`, `ContentSyncJob`, `ContentSyncItem`, `ContentVersion`, `MediaAsset`, `SiteSetting` |
+| **Status** | **solid** code (flag-gated: `CONTENT_SYNC_*`, `EXTERNAL_MEDIA_IMPORT_ENABLED`) · **SAFE_REFERENCE_MODE** |
+| **Gaps** | Integration spec cần Postgres (18 jest fail hiện tại nằm đây). Production publish chờ rights `OWNED\|LICENSED\|CLIENT_PROVIDED`. |
+| **Smoke** | `media-*.integration.spec.ts`, `content-sync-{publish,rollback}.integration.spec.ts` (cần DB) |
+
+---
+
+## 14. Pricing engine *(mới — tách khỏi §3)*
+
+| | |
+|--|--|
+| **Mục tiêu** | Ước tính giá charter (positioning + round-trip + về base) độc lập `BASE_PRICE_BY_CATEGORY` |
+| **Routes** | `@Public POST /pricing/estimate` · JWT: `GET /pricing/bookings/:id/breakdown`, `POST /pricing/bookings/:id/recalculate`, `POST /pricing/bookings/:bookingId/attach/:estimateId` |
+| **Models** | `PricingEstimate`, `Aircraft`, `AircraftLocationHistory`, `BookingFlightLeg` |
+| **Status** | **solid** — `pricing.engine.spec.ts` pass (unit) |
+| **Gaps** | `/quotes/search-aircraft` vẫn nên chuyển hẳn sang engine (audit cũ ghi v1). |
+| **Smoke** | `pricing.engine.spec.ts` (unit) · chưa có smoke HTTP |
+
+---
+
+## 15. i18n / Account / Ops-mail *(mới)*
+
+| | |
+|--|--|
+| **Mục tiêu** | Locale API · account dashboard KH · operator users + email templates |
+| **Routes** | `/i18n/*` (`I18nController` + `LocaleService`, `@jetbay/i18n`) · JWT `GET /account/dashboard` · admin `/admin/operators`, `/admin/email-templates` |
+| **Models** | `OperatorUser`, `EmailTemplate`, `EmailSubscriber`, `EmailCampaignLog` |
+| **Status** | **solid** |
+| **Gaps** | Email templates gửi thật vẫn chờ SMTP provider (P0 Owner). |
+| **Smoke** | `email-template.service.spec.ts`, `flight-notify.service.spec.ts` (unit) |
+
+---
+
 ## 10. Priority backlog
 
 | Pri | Item | Notes |
 |-----|------|-------|
 | **P1** | ~~Set prod `APP_ENV=production`~~ | ✅ 2026-07-10 |
 | **P1** | G4 keys từ KH | SMTP, OAuth, Stripe/OnePay/9Pay, SMS |
-| **P2** | Nest feature modules | Auth + Quotes (phase 1) → xem BE_ARCHITECTURE |
+| **P1** | ⚠️ **Đồng nhất guard admin** | Migrate `AdminGuard` → `PermissionGuard` cho các `admin/*` còn lại (§11) |
+| **P2** | Smoke HTTP cho domain mới | RBAC / Contracts / Content-Sync / Pricing chưa có smoke (chỉ unit) — cập nhật [BE_TEST.md](./BE_TEST.md) |
+| **P2** | Nest feature modules | Auth + Quotes (phase 1) → xem BE_ARCHITECTURE; Commercial/Bookings/Content/Admin còn phẳng |
 | **P2** | Split `dto.ts` theo module | Sau khi modules ổn định |
 | **P2** | ~~Admin FP options UI~~ | ✅ 2026-07-10 |
-| **P3** | Company / SavedSearch APIs | Schema sẵn, ngoài DoD G1 |
+| **P3** | Company / SavedSearch APIs | Schema sẵn (`Company`, `SavedSearch`), chưa có API |
 
 **Đã đóng (2026-07-10):** booking JWT spoof · OTP CSPRNG · SMS APP_ENV · CORS admin · FP DTO validators · QuoteOffer admin · Redis connect-once.
 
@@ -180,6 +264,7 @@ Mọi body DTO dùng với `ValidationPipe` **phải** có decorator `class-vali
 
 | Doc | Vai trò |
 |-----|---------|
+| [ADMIN_RBAC_FUNCTION_MATRIX.md](./ADMIN_RBAC_FUNCTION_MATRIX.md) | **Admin/RBAC SoT** — role × permission × UI × API guard |
 | [BE_TEST.md](./BE_TEST.md) | **Smoke / unit / ma trận test ↔ domain** |
 | [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md) | Target modules + phase refactor |
 | [API.md](./API.md) | URL / endpoint cheat sheet |

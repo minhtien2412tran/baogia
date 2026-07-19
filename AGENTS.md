@@ -12,6 +12,7 @@ Chat sessions do **not** remember progress. Before coding, read and update the f
 | [docs/CONTINUE_AT_HOME.md](./docs/CONTINUE_AT_HOME.md) | **Where we left off** — start here on a new machine |
 | [docs/NEXT_SPRINT_PLAN.md](./docs/NEXT_SPRINT_PLAN.md) | **Sprint plan** — Web↔API · sync · docs · việc KH |
 | [docs/WEB_API_SURFACE_MAP.md](./docs/WEB_API_SURFACE_MAP.md) | Web/Admin ↔ API status matrix |
+| [docs/ADMIN_RBAC_FUNCTION_MATRIX.md](./docs/ADMIN_RBAC_FUNCTION_MATRIX.md) | **Admin/RBAC SoT** — roles · permissions · guards · UI · migration waves |
 | [docs/OWNER_ACTION_ITEMS.md](./docs/OWNER_ACTION_ITEMS.md) | Việc chủ dự án phải làm |
 | [docs/OWNER_NEXT_ACTIONS.md](./docs/OWNER_NEXT_ACTIONS.md) | **Owner handoff pack** (P0 SMTP → UAT/CMS/G4) |
 | [docs/GD4_SANDBOX_READINESS.md](./docs/GD4_SANDBOX_READINESS.md) | GĐ4 sandbox gap checklist (prep only) |

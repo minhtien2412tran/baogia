@@ -1,8 +1,9 @@
 # Feature Matrix
 
-**Cập nhật:** 2026-07-09  
+**Cập nhật:** 2026-07-18
 **Prod API:** https://api.minhtien.online · **Admin:** https://admin.minhtien.online/login  
 **Checklist:** [JETBAY_DELIVERY_CHECKLIST.md](./JETBAY_DELIVERY_CHECKLIST.md)
+**Admin/RBAC SoT:** [ADMIN_RBAC_FUNCTION_MATRIX.md](./ADMIN_RBAC_FUNCTION_MATRIX.md)
 
 | Feature | Web UI | API | Database | Status |
 |---------|--------|-----|----------|--------|
@@ -21,7 +22,8 @@
 | Media library | — | ✅ MinIO | — | Needs MINIO_ENDPOINT |
 | Partner | ✅ Form | ✅ DB | ✅ PartnerApplication | Production-ready |
 | World Cup | ✅ Form | ✅ DB | ✅ QuoteRequest | Production-ready |
-| Aircraft admin | ✅ CRUD | ✅ DB | ✅ AircraftModel | Production-ready |
+| Aircraft admin | 🟡 UI read-only list | ✅ CRUD API | ✅ AircraftModel / Aircraft | Partial — expose fleet CRUD in Admin |
+| Admin RBAC | 🟡 Permissions/scopes UI; login only `ADMIN` | 🟡 Mixed `PermissionGuard` / `AdminGuard` | ✅ RolePermission + overrides + scopes | Partial — migration R1–R5 |
 | i18n | 🟡 Nav/account only | ✅ locale param | — | Partial |
 | Redis cache | — | 🟡 Service only | — | Optional next |
 | VPS deploy API/Admin | — | ✅ PM2 3010/3011 | ✅ jetbay_db | Live |

@@ -62,8 +62,8 @@ Legend — Data status: `DONE` | `PARTIAL` | `MOCK` | `BLOCKED` | `NOT_STARTED` 
 | Media | — | media / media-review | `/admin/media*` `/admin/media-assets*` | CRUD | Admin | adminApi | PARTIAL | — | — | — | media tests | PROD | Hotlink JetVina staging |
 | Operators / Templates | — | operators / email-templates | `/admin/operators` `/admin/email-templates` | CRUD | Admin | adminApi | DONE | — | — | — | hist 200 | PROD | Samples seeded |
 | Audit | — | audit-logs | `/admin/audit-logs` | GET | Admin | adminApi | DONE | — | — | — | NEEDS_VERIFY | PROD | |
-| Permissions | — | permissions | `/admin/permissions*` | GET/PUT | Admin | adminApi | PARTIAL | — | — | — | NEEDS_VERIFY | PROD | |
-| Contracts | — | contracts | `/admin/contracts*` | workflow | Admin | adminApi | PARTIAL | — | — | — | — | DocuSign mock | GĐ4 |
+| Permissions | — | permissions | `/admin/permissions*` | GET/PUT | Admin JWT + `permission.manage` | adminApi | PARTIAL | — | 403 currently treated as logout | — | NEEDS_VERIFY | PROD | Login UI hard-blocks non-ADMIN; staff RBAC unused |
+| Contracts | — | contracts | `/admin/contracts*` | workflow | PermissionGuard | adminApi | PARTIAL | — | — | — | — | DocuSign mock | GĐ4 · UI thiếu create/detail/request-changes |
 | Settings / brand | — | settings | `/admin/site-settings/brand` | GET/PATCH | Admin | adminApi | PARTIAL | — | — | — | — | PROD | |
 | Revenue demo | — | dashboard | `/admin/dashboard/revenue-demo` | GET | Admin | adminApi | MOCK | — | — | — | — | Demo metric | Labelled demo |
 

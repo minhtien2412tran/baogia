@@ -41,6 +41,13 @@
 | §7 | Content & media | `smoke-prod.sh`, `smoke-admin-crud.mjs` | news, destinations, videos, pages |
 | §8 | Admin ops | `smoke-prod.sh`, `smoke-admin-crud.mjs` | dashboard stats, airports CRUD |
 | §9 | Integrations | `smoke-docs.sh` | integrations status, MinIO/pay flags |
+| §11 | RBAC / Permissions | `permission.service.spec.ts` (unit) | ⚠️ **chưa có smoke HTTP** |
+| §12 | Contracts / e-sign | *(chưa auto)* | DocuSign mock; webhook HMAC — chưa smoke |
+| §13 | Content-Sync / Media | `media-*.integration.spec.ts`, `content-sync-*.spec.ts` | ⚠️ **cần Postgres** (18 jest fail hiện tại) |
+| §14 | Pricing engine | `pricing.engine.spec.ts` (unit) | `POST /pricing/estimate` — chưa smoke HTTP |
+| §15 | i18n / Account / Ops-mail | `email-template.service.spec.ts`, `flight-notify.service.spec.ts` | `/i18n`, `/account/dashboard` — chưa smoke |
+
+> **Cập nhật 2026-07-18:** §11–§15 là domain mới so với audit 2026-07-10, chưa nằm trong bộ smoke `smoke-*.mjs`. Cần bổ sung. Xem [BE_AUDIT.md](./BE_AUDIT.md) §11–§15.
 
 ---
 
