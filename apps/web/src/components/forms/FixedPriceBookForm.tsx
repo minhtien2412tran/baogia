@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { api, parseApiErrorMessage } from '../../lib/api';
+import { formatNumber } from '../../config/locales';
 import { t } from '../../lib/i18n';
 import { DateField } from '../ui/DateField';
 
@@ -62,7 +63,7 @@ export function FixedPriceBookForm({
         <h2 className="jb-fp-book-card__title">{t(locale, 'bookRoute')}</h2>
         {selectedTier ? (
           <p className="jb-fp-book-card__price">
-            USD {selectedTier.price.toLocaleString()}
+            USD {formatNumber(selectedTier.price, locale)}
             <span>{selectedTier.categoryLabel ?? selectedTier.category}</span>
           </p>
         ) : null}
@@ -79,7 +80,7 @@ export function FixedPriceBookForm({
               <option key={tier.category} value={tier.category}>
                 {t(locale, 'tierOption', {
                   category: tier.categoryLabel ?? tier.category,
-                  price: tier.price.toLocaleString(),
+                  price: formatNumber(tier.price, locale),
                   pax: t(locale, 'upToPax', { n: tier.paxLimit }),
                 })}
               </option>
