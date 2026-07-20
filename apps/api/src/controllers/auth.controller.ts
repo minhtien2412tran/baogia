@@ -1,4 +1,15 @@
-import { Controller, Post, Get, Body, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import {
   ApiTags,
@@ -14,6 +25,7 @@ import {
   RefreshTokenDto,
   OtpSendDto,
   OtpVerifyDto,
+  UpdateProfileDto,
 } from '../dto';
 import { AuthService } from '../services/auth.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -104,5 +116,34 @@ export class AuthController {
   @ApiOperation({ summary: 'Get current user profile' })
   getProfile(@CurrentUser() user: AuthUser) {
     return this.authService.getProfile(user.userId);
+  }
+
+  @Patch('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
+  @ApiOperation({ summary: 'Update current user profile' })
+  updateProfile(
+    @Body() body: UpdateProfileDto,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.authService.updateProfile(user.userId, body);
+  }
+
+  @Post('me/avatar')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
+  @UseInterceptors(
+    FileInterceptor('file', { limits: { fileSize: 5 * 1024 * 1024 } }),
+  )
+  @ApiOperation({ summary: 'Upload current user avatar' })
+  async updateAvatar(
+    @UploadedFile() file: Express.Multer.File | undefined,
+    @CurrentUser() user: AuthUser,
+  ) {
+    if (!file) throw new BadRequestException('file is required');
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.mimetype)) {
+      throw new BadRequestException('Avatar must be JPEG, PNG, or WebP');
+    }
+    return this.authService.updateAvatar(user.userId, file);
   }
 }

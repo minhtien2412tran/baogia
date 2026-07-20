@@ -45,6 +45,30 @@ export class RegisterDto {
   locale?: string;
 }
 
+export class UpdateProfileDto {
+  @ApiPropertyOptional({ example: 'Minh' })
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  firstName?: string;
+
+  @ApiPropertyOptional({ example: 'Tien' })
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  lastName?: string;
+
+  @ApiPropertyOptional({ example: '+84901234567' })
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
+  @ApiPropertyOptional({ example: 'COMPANY' })
+  @IsOptional()
+  @IsIn(['INDIVIDUAL', 'COMPANY'])
+  accountType?: string;
+}
+
 export class LoginDto {
   @ApiProperty({ example: 'user@example.com' })
   @IsEmail()

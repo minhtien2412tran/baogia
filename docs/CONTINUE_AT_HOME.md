@@ -58,6 +58,8 @@
 
 **CRM/Dashboard verification (20/07 late):** API/Admin/Web production builds PASS · `audit:docs PASS` · `security:scan:all` findings=0 · permission unit 5/5 PASS · `audit:i18n` fail=0, warn=10 tourism nav partial. Full API Jest vẫn có 18 integration failures do local Postgres credentials, không phải compile failure.
 
+**Account profile + booking sync (20/07):** `/en-us/account` hiện đọc dashboard chung từ BE và cho user sửa tên, họ, phone, loại tài khoản; upload avatar JPEG/PNG/WebP vào shared storage và lưu `User.avatarUrl`. Quote/booking flow tự prefill profile khi có JWT; booking contact cùng email đăng nhập sẽ cập nhật lại hồ sơ user để đồng bộ các kênh. Đã thêm API `PATCH /me`, `POST /me/avatar`, migration `20260720235000_user_profile_avatar`. Cần chạy migration trên prod và UAT upload avatar/profile + booking.
+
 **I18N polish (20/07 evening):** metadata theo locale · about-us overlay · cookie zh-cn · `dir=rtl` cho `ar` · xóa `getHomeOverlay` chết · offer/booking email dùng `quote.locale` · PJC highlight bodies `t()` · tourism title overlay cho `/private-jet-charter`.
 
 **I18N 100% gate (20/07):** SoT [I18N_VERIFICATION_MATRIX.md](./I18N_VERIFICATION_MATRIX.md) + `pnpm audit:i18n`. **I18N-1/2 core done**. Còn tourism nav WARN · welcome SMS OTP · SMTP Owner · RBAC.

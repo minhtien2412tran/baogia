@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { use } from 'react';
+import { use, useState } from 'react';
 import { api } from '../../../lib/api';
 import { useAccount } from '../../../components/account/AccountContext';
 import {
@@ -15,7 +15,7 @@ import { navHref } from '../../../config/navigation';
 import { navigateExternal } from '../../../lib/browser';
 
 function OverviewContent({ locale }: { locale: string }) {
-  const { data, token } = useAccount();
+  const { data, token, refresh } = useAccount();
   if (!data) return null;
 
   async function payBooking(bookingId: number, gateway: 'onepay' | '9pay') {
@@ -28,9 +28,24 @@ function OverviewContent({ locale }: { locale: string }) {
   return (
     <>
       <header className="jb-account-hero">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          {data.profile.avatarUrl ? (
+            <img
+              src={data.profile.avatarUrl}
+              alt=""
+              width={64}
+              height={64}
+              style={{ borderRadius: '50%', objectFit: 'cover' }}
+            />
+          ) : null}
+          <div>
         <h1>{t(locale, 'myAccount')}</h1>
         <p>Welcome back, {data.profile.firstName || data.profile.email}</p>
+          </div>
+        </div>
       </header>
+
+      <ProfileEditor token={token} profile={data.profile} onSaved={refresh} />
 
       <AccountStatGrid stats={data.stats} />
 
@@ -123,6 +138,101 @@ function OverviewContent({ locale }: { locale: string }) {
         </AccountPanel>
       )}
     </>
+  );
+}
+
+function ProfileEditor({
+  token,
+  profile,
+  onSaved,
+}: {
+  token: string | null;
+  profile: {
+    firstName?: string | null;
+    lastName?: string | null;
+    phone?: string | null;
+    accountType?: string | null;
+    avatarUrl?: string | null;
+  };
+  onSaved: () => Promise<void>;
+}) {
+  const [firstName, setFirstName] = useState(profile.firstName ?? '');
+  const [lastName, setLastName] = useState(profile.lastName ?? '');
+  const [phone, setPhone] = useState(profile.phone ?? '');
+  const [accountType, setAccountType] = useState(profile.accountType ?? 'INDIVIDUAL');
+  const [message, setMessage] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  async function save(e: React.FormEvent) {
+    e.preventDefault();
+    if (!token) return;
+    setBusy(true);
+    setMessage('');
+    try {
+      await api.updateProfile(token, {
+        firstName,
+        lastName,
+        phone,
+        accountType: accountType === 'COMPANY' ? 'COMPANY' : 'INDIVIDUAL',
+      });
+      await onSaved();
+      setMessage('Profile updated.');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Unable to update profile.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function avatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !token) return;
+    setBusy(true);
+    setMessage('');
+    try {
+      await api.uploadAvatar(token, file);
+      await onSaved();
+      setMessage('Avatar updated.');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Unable to update avatar.');
+    } finally {
+      setBusy(false);
+      e.target.value = '';
+    }
+  }
+
+  return (
+    <AccountPanel title="Personal information" subtitle="Update the details used for quotes, bookings, and notifications">
+      <form onSubmit={save} style={{ display: 'grid', gap: 12, maxWidth: 680 }}>
+        <label>
+          First name
+          <input value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
+        </label>
+        <label>
+          Last name
+          <input value={lastName} onChange={(e) => setLastName(e.target.value)} required />
+        </label>
+        <label>
+          Phone
+          <input value={phone} onChange={(e) => setPhone(e.target.value)} />
+        </label>
+        <label>
+          Account type
+          <select value={accountType} onChange={(e) => setAccountType(e.target.value)}>
+            <option value="INDIVIDUAL">Individual</option>
+            <option value="COMPANY">Company</option>
+          </select>
+        </label>
+        <label>
+          Avatar
+          <input type="file" accept="image/jpeg,image/png,image/webp" onChange={avatarChange} disabled={busy} />
+        </label>
+        <button type="submit" className="jb-btn-primary" disabled={busy}>
+          {busy ? 'Saving…' : 'Save profile'}
+        </button>
+        {message ? <p role="status">{message}</p> : null}
+      </form>
+    </AccountPanel>
   );
 }
 

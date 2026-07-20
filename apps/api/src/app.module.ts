@@ -61,6 +61,7 @@ import {
   AdminEmailTemplateController,
 } from './controllers/admin-operator.controller';
 import { OperatorService } from './services/operator.service';
+import { RealtimeModule } from './realtime/realtime.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { OperatorService } from './services/operator.service';
     PermissionsModule,
     ContractsModule,
     ContentSyncModule,
+    RealtimeModule,
     ThrottlerModule.forRoot([
       { name: 'default', ttl: 60_000, limit: 120 },
       { name: 'auth', ttl: 60_000, limit: 20 },

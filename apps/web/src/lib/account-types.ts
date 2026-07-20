@@ -4,6 +4,7 @@ export type AccountProfile = {
   firstName?: string | null;
   lastName?: string | null;
   phone?: string | null;
+  avatarUrl?: string | null;
   accountType?: string | null;
   role?: string;
   status?: string;

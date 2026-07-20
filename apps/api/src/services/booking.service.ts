@@ -170,10 +170,20 @@ export class BookingService {
 
     const userExists = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true },
+      select: { id: true, email: true },
     });
     if (!userExists) {
       throw new BadRequestException('Authenticated user not found');
+    }
+    if (dto.contact.email.toLowerCase() === userExists.email.toLowerCase()) {
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          firstName: dto.contact.firstName,
+          lastName: dto.contact.lastName,
+          phone: dto.contact.phone,
+        },
+      });
     }
 
     let quoteRequestId = dto.quoteId;

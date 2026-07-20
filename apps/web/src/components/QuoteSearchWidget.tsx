@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { api, parseApiErrorMessage, type AircraftSearchOption } from '../lib/api';
 import { formatNumber } from '../config/locales';
 import { t } from '../lib/i18n';
@@ -8,6 +8,7 @@ import { AircraftRowSkeleton } from './ui/Skeleton';
 import { AirportInput } from './AirportInput';
 import { FlightScrollRail } from './ui/FlightScrollRail';
 import { AviationMotionIcon } from './ui/AviationMotionIcon';
+import { getAuthToken } from '../lib/auth-session';
 
 type TripType = 'ONE_WAY' | 'ROUND_TRIP' | 'MULTI_CITY';
 
@@ -44,6 +45,8 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
   });
   const [passengers, setPassengers] = useState(4);
   const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
   const [consent, setConsent] = useState(false);
   const [searching, setSearching] = useState(false);
@@ -53,6 +56,21 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [authToken, setAuthToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = getAuthToken();
+    setAuthToken(token);
+    if (!token) return;
+    void api.getMe(token).then((profile) => {
+      setEmail((value) => value || profile.email);
+      setPhone((value) => value || profile.phone || '');
+      setFirstName((value) => value || profile.firstName || '');
+      setLastName((value) => value || profile.lastName || '');
+    }).catch(() => {
+      /* Guest form remains usable when the session is stale. */
+    });
+  }, []);
 
   function buildApiLegs() {
     const base = legs.map((leg) => ({
@@ -155,13 +173,13 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
     }
 
     const selected = options.find((o) => o.categoryId === selectedId);
-    const { firstName, lastName } = splitNameFromEmail(email.trim());
+    const inferred = splitNameFromEmail(email.trim());
 
     setQuoting(true);
     try {
       const quote = await api.requestQuote({
-        firstName,
-        lastName,
+        firstName: firstName.trim() || inferred.firstName,
+        lastName: lastName.trim() || inferred.lastName,
         email: email.trim(),
         phone: phone.trim(),
         tripType,
@@ -173,7 +191,7 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
           : searchId
             ? `searchId=${searchId}`
             : undefined,
-      });
+      }, authToken ?? undefined);
       setResult(
         t(locale, 'quoteSuccessWithId', {
           message: quote.message,
@@ -401,6 +419,16 @@ export function QuoteSearchWidget({ locale = 'en-us', currency = 'USD' }: { loca
 
         {options && options.length > 0 && (
           <div className="jb-quote-request-block">
+            <div className="jb-contact-row">
+              <div className="jb-field">
+                <label htmlFor="first-name">First name</label>
+                <input id="first-name" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
+              </div>
+              <div className="jb-field">
+                <label htmlFor="last-name">Last name</label>
+                <input id="last-name" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
+              </div>
+            </div>
             <div className="jb-contact-row">
               <div className="jb-field">
                 <label htmlFor="email">{t(locale, 'emailPlaceholder')}</label>

@@ -15,6 +15,7 @@ export type AuthUser = {
   email: string;
   firstName?: string;
   lastName?: string;
+  avatarUrl?: string;
   accountType?: string;
 };
 
@@ -39,6 +40,7 @@ export function useAuthSession() {
         email: me.email,
         firstName: me.firstName ?? undefined,
         lastName: me.lastName ?? undefined,
+        avatarUrl: me.avatarUrl ?? undefined,
         accountType: me.accountType ?? undefined,
       });
     } catch {

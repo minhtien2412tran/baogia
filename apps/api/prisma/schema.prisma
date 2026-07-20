@@ -16,6 +16,7 @@ model User {
   firstName            String?
   lastName             String?
   phone                String?
+  avatarUrl            String?
   accountType          String                @default("INDIVIDUAL") // INDIVIDUAL, COMPANY
   role                 String                @default("USER") // USER, ADMIN, SALES, CONTRACT_APPROVER
   companyId            Int?
@@ -42,6 +43,10 @@ model User {
   contractsCreated     OperatorContract[]    @relation("ContractCreatedBy")
   contractsApproved    OperatorContract[]    @relation("ContractApprovedBy")
   operatorMemberships  OperatorUser[]
+  conversationsCreated Conversation[]       @relation("ConversationCreatedBy")
+  conversationMembers  ConversationMember[]
+  chatMessages         ChatMessage[]
+  chatMessageReads     ChatMessageRead[]
 }
 
 model UserAuthProvider {
@@ -174,6 +179,7 @@ model Booking {
   flightLegs      BookingFlightLeg[]
   pricingEstimates PricingEstimate[]
   operatorContracts OperatorContract[]
+  conversations      Conversation[]
 }
 
 model BookingPassenger {
@@ -186,6 +192,69 @@ model BookingPassenger {
   nationality    String?
   
   booking        Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id          Int      @id @default(autoincrement())
+  publicId    String   @unique @default(uuid())
+  bookingId   Int?
+  createdById Int
+  subject     String?
+  status      String   @default("OPEN")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  booking     Booking? @relation(fields: [bookingId], references: [id])
+  createdBy   User     @relation("ConversationCreatedBy", fields: [createdById], references: [id])
+  members     ConversationMember[]
+  messages    ChatMessage[]
+
+  @@index([bookingId])
+  @@index([createdById, updatedAt])
+}
+
+model ConversationMember {
+  id             Int          @id @default(autoincrement())
+  conversationId Int
+  userId         Int
+  role           String       @default("MEMBER")
+  joinedAt       DateTime     @default(now())
+  lastReadAt     DateTime?
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+}
+
+model ChatMessage {
+  id             Int          @id @default(autoincrement())
+  conversationId Int
+  senderId       Int
+  content        String
+  createdAt      DateTime     @default(now())
+  editedAt       DateTime?
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User         @relation(fields: [senderId], references: [id])
+  reads          ChatMessageRead[]
+
+  @@index([conversationId, createdAt])
+  @@index([senderId, createdAt])
+}
+
+model ChatMessageRead {
+  id        Int      @id @default(autoincrement())
+  messageId Int
+  userId    Int
+  readAt    DateTime @default(now())
+
+  message   ChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId])
+  @@index([userId, readAt])
 }
 
 model Payment {

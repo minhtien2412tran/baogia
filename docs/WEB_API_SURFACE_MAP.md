@@ -38,7 +38,7 @@ Legend — Data status: `DONE` | `PARTIAL` | `MOCK` | `BLOCKED` | `NOT_STARTED` 
 | Auth login/register | `/login` `/register` | — | `/auth/*` | POST | public+key | pages | DONE | form | form | — | smoke-auth-booking | PROD | OTP/OAuth env-gated |
 | OAuth Google/Apple | login buttons | — | `/auth/oauth/*` | POST | — | buttons | BLOCKED | — | NOT_CONFIGURED | — | — | integrations false | Need client IDs |
 | OTP SMS | login/register | — | `/auth/otp/*` | POST | — | pages | BLOCKED | — | — | — | — | sms=false | Dev logs code |
-| Account dashboard | `/account/*` | users | `/account/dashboard` | GET | JWT | `AccountContext` | DONE | skeleton | retry + 401→login | AccountEmpty CTA i18n | auth-booking | PROD | T-S3-02 |
+| Account dashboard/profile | `/account/*` | users | `/account/dashboard`, `/me`, `/me/avatar` | GET/PATCH/POST | JWT | `AccountContext` + profile editor | DONE | skeleton | retry + 401→login | editable profile + avatar + booking prefill | auth-booking | migration/UAT pending | T-S3-02 |
 | Account payments | `/account/payments` | — | `/payments/gateway` | POST | JWT + booking ownership | pay button | BLOCKED | — | not configured | — | — | pay keys missing | OnePay/9Pay/Stripe; ownership guard added 20/07 |
 | News/Blogs/Videos | `/news` `/blogs` `/video-centre` | content/* | `/content/*` | GET | API key | list/detail | PARTIAL | — | silent empty | blank | smoke news | PROD thin content | |
 | World Cup | WC pages | — | `/campaigns/world-cup/*` | GET/POST | API key | forms | PARTIAL | — | — | hide empty | NEEDS_VERIFY | — | IATA raw inputs |

@@ -11,7 +11,8 @@ import { AuditService } from './audit.service';
 import { CustomerCareService } from './customer-care/customer-care.service';
 import { OAuthService, type OAuthProfile } from './oauth.service';
 import { OtpService } from './otp.service';
-import { LoginDto, RegisterDto } from '../dto';
+import { LoginDto, RegisterDto, UpdateProfileDto } from '../dto';
+import { StorageService } from './storage.service';
 import type { JwtPayload } from '../auth/auth.types';
 
 @Injectable()
@@ -23,6 +24,7 @@ export class AuthService {
     private readonly oauth: OAuthService,
     private readonly otp: OtpService,
     private readonly customerCare: CustomerCareService,
+    private readonly storage: StorageService,
   ) {}
 
   private hashRefreshToken(token: string) {
@@ -187,6 +189,62 @@ export class AuthService {
       firstName: user.firstName,
       lastName: user.lastName,
       phone: user.phone,
+      avatarUrl: user.avatarUrl,
+      accountType: user.accountType,
+      role: user.role,
+      companyId: user.companyId,
+      status: user.status,
+    };
+  }
+
+  async updateProfile(userId: number, body: UpdateProfileDto) {
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        firstName: body.firstName,
+        lastName: body.lastName,
+        phone: body.phone,
+        accountType: body.accountType,
+      },
+    });
+    await this.audit.log('USER_PROFILE_UPDATED', { fields: Object.keys(body) }, userId);
+    return this.getProfile(user.id);
+  }
+
+  async updateAvatar(userId: number, file: Express.Multer.File) {
+    const stored = await this.storage.upload(
+      file.buffer,
+      file.originalname,
+      file.mimetype,
+      `avatars/${userId}`,
+    );
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: { avatarUrl: stored.url },
+    });
+    await this.audit.log('USER_AVATAR_UPDATED', { key: stored.key }, userId);
+    return { ...this.getProfileResult(user), avatarUrl: stored.url };
+  }
+
+  private getProfileResult(user: {
+    id: number;
+    email: string;
+    firstName: string | null;
+    lastName: string | null;
+    phone: string | null;
+    accountType: string;
+    role: string;
+    companyId: number | null;
+    status: string;
+    avatarUrl: string | null;
+  }) {
+    return {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phone: user.phone,
+      avatarUrl: user.avatarUrl,
       accountType: user.accountType,
       role: user.role,
       companyId: user.companyId,

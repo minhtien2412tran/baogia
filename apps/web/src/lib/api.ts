@@ -243,9 +243,10 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(body),
     }),
-  requestQuote: (body: RequestQuotePayload) =>
+  requestQuote: (body: RequestQuotePayload, token?: string) =>
     request<{ requestId: number; status: string; message: string }>('/quotes/request', {
       method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       body: JSON.stringify(body),
     }),
   login: (email: string, password: string) =>
@@ -358,10 +359,31 @@ export const api = {
       firstName?: string | null;
       lastName?: string | null;
       phone?: string | null;
+      avatarUrl?: string | null;
       accountType?: string | null;
       role?: string;
       status?: string;
     }>('/me', { headers: { Authorization: `Bearer ${token}` } }),
+  updateProfile: (token: string, body: {
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    accountType?: 'INDIVIDUAL' | 'COMPANY';
+  }) =>
+    request<Record<string, unknown>>('/me', {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(body),
+    }),
+  uploadAvatar: (token: string, file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    return request<Record<string, unknown>>('/me/avatar', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: form,
+    });
+  },
   getAccountDashboard: (token: string) =>
     request<import('./account-types').AccountDashboard>('/account/dashboard', {
       headers: { Authorization: `Bearer ${token}` },
