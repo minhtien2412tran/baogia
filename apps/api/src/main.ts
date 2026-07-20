@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { stringify as yamlStringify } from 'yaml';
 import helmet from 'helmet';
@@ -14,6 +14,7 @@ import { normalizeSwaggerLang } from './swagger/swagger-locales';
 import { SWAGGER_THEME_CSS } from './swagger/swagger-theme.css';
 import { buildSwaggerI18nJs } from './swagger/swagger-i18n.client';
 import { installSwaggerBasicAuth } from './swagger/swagger-basic-auth';
+import type { NextFunction, Request, Response } from 'express';
 
 function assertProductionSecrets() {
   const env = process.env.APP_ENV ?? process.env.NODE_ENV;
@@ -66,6 +67,7 @@ function langFromRequest(req: { query?: Record<string, unknown>; headers?: Recor
 }
 
 async function bootstrap() {
+  const logger = new Logger('Bootstrap');
   assertProductionSecrets();
 
   const app = await NestFactory.create(AppModule, { rawBody: true });
@@ -117,6 +119,31 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
     }),
+  );
+
+  // Keep the JSON body limit intentionally low. Return a clean 413 for
+  // oversized probes/uploads instead of logging a full parser stack trace.
+  app.use(
+    (
+      error: unknown,
+      _req: Request,
+      res: Response,
+      next: NextFunction,
+    ) => {
+      if (
+        error &&
+        typeof error === 'object' &&
+        'type' in error &&
+        error.type === 'entity.too.large'
+      ) {
+        res.status(413).json({
+          statusCode: 413,
+          message: 'Request body too large',
+        });
+        return;
+      }
+      next(error);
+    },
   );
 
   const isProd =
@@ -235,8 +262,8 @@ async function bootstrap() {
   const host = process.env.HOST ?? '127.0.0.1';
   const port = Number(process.env.PORT ?? 4000);
   await app.listen(port, host);
-  console.log(`Jet-Bay API listening on http://${host}:${port}`);
-  console.log(`Swagger: http://${host}:${port}/swagger?lang=vi`);
-  console.log(`OpenAPI JSON: http://${host}:${port}/openapi.json?lang=vi`);
+  logger.log(`Jet-Bay API listening on http://${host}:${port}`);
+  logger.log(`Swagger: http://${host}:${port}/swagger?lang=vi`);
+  logger.log(`OpenAPI JSON: http://${host}:${port}/openapi.json?lang=vi`);
 }
 bootstrap();

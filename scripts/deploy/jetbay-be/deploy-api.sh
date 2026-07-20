@@ -23,6 +23,7 @@ npx tsc -p tsconfig.json
 cd "${APP_ROOT}"
 
 echo "[api] npm install..."
+rm -rf "${APP_ROOT}/node_modules"
 npm install --legacy-peer-deps
 
 echo "[api] prisma generate..."
