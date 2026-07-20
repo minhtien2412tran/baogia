@@ -587,3 +587,218 @@
     transform: none;
   }
 }
+
+/* ── Profile editor ── */
+.jb-profile-public-id {
+  display: inline-block;
+  max-width: min(100%, 360px);
+  margin-top: 7px;
+  color: rgba(184, 151, 90, 0.78);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jb-profile-form {
+  display: grid;
+  gap: 18px;
+}
+
+.jb-profile-form__section {
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.jb-profile-form__section-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.jb-profile-form__section-head > span {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  place-items: center;
+  border: 1px solid rgba(184, 151, 90, 0.35);
+  border-radius: 9px;
+  color: var(--jb-gold, #b8975a);
+  background: rgba(184, 151, 90, 0.1);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.jb-profile-form__section-head h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 14px;
+}
+
+.jb-profile-form__section-head p {
+  margin: 4px 0 0;
+  color: var(--jb-text-muted);
+  font-size: 12px;
+}
+
+.jb-profile-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.jb-profile-field {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  min-width: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.jb-profile-field--wide {
+  grid-column: 1 / -1;
+}
+
+.jb-profile-field input,
+.jb-profile-field select {
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0 13px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  outline: none;
+  color: #fff;
+  background: rgba(7, 9, 13, 0.72);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.jb-profile-field input[type='file'] {
+  height: auto;
+  min-height: 44px;
+  padding: 8px 10px;
+  color: var(--jb-text-muted);
+}
+
+.jb-profile-field input[type='file']::file-selector-button {
+  margin-right: 10px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 7px;
+  color: #101216;
+  background: var(--jb-gold, #b8975a);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.jb-profile-field input:focus,
+.jb-profile-field select:focus {
+  border-color: rgba(184, 151, 90, 0.75);
+  background: rgba(13, 16, 22, 0.92);
+  box-shadow: 0 0 0 3px rgba(184, 151, 90, 0.12);
+}
+
+.jb-profile-field input[readonly] {
+  color: rgba(255, 255, 255, 0.52);
+  background: rgba(255, 255, 255, 0.035);
+  cursor: not-allowed;
+}
+
+.jb-profile-field small {
+  color: var(--jb-text-muted);
+  font-size: 10px;
+  font-weight: 400;
+}
+
+.jb-profile-field select option {
+  color: #fff;
+  background: #11151d;
+}
+
+.jb-profile-form__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px 18px;
+  border: 1px solid rgba(184, 151, 90, 0.2);
+  border-radius: 14px;
+  background: linear-gradient(100deg, rgba(184, 151, 90, 0.1), rgba(255, 255, 255, 0.025));
+}
+
+.jb-profile-form__footer > div {
+  min-width: 0;
+}
+
+.jb-profile-form__footer strong,
+.jb-profile-form__footer code {
+  display: block;
+}
+
+.jb-profile-form__footer strong {
+  margin-bottom: 4px;
+  color: var(--jb-text-muted);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.jb-profile-form__footer code {
+  max-width: 420px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jb-profile-form__footer .jb-btn-primary {
+  min-width: 150px;
+}
+
+.jb-profile-message {
+  margin: -4px 0 0;
+  padding: 11px 13px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.jb-profile-message.is-success {
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.11);
+}
+
+.jb-profile-message.is-error {
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.11);
+}
+
+@media (max-width: 640px) {
+  .jb-profile-form__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .jb-profile-field--wide {
+    grid-column: auto;
+  }
+
+  .jb-profile-form__footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .jb-profile-form__footer .jb-btn-primary {
+    width: 100%;
+  }
+}

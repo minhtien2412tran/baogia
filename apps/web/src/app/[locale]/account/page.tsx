@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { use, useState } from 'react';
 import { api } from '../../../lib/api';
 import { useAccount } from '../../../components/account/AccountContext';
@@ -30,11 +31,12 @@ function OverviewContent({ locale }: { locale: string }) {
       <header className="jb-account-hero">
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           {data.profile.avatarUrl ? (
-            <img
+            <Image
               src={data.profile.avatarUrl}
               alt=""
               width={64}
               height={64}
+              unoptimized
               style={{ borderRadius: '50%', objectFit: 'cover' }}
             />
           ) : null}
@@ -236,100 +238,131 @@ function ProfileEditor({
 
   return (
     <AccountPanel title="Personal information" subtitle="Update the details used for quotes, bookings, and notifications">
-      <form onSubmit={save} style={{ display: 'grid', gap: 12, maxWidth: 680 }}>
-        <label>
-          Email
-          <input value={profile.email ?? ''} readOnly disabled />
-        </label>
-        <label>
-          First name
-          <input value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
-        </label>
-        <label>
-          Last name
-          <input value={lastName} onChange={(e) => setLastName(e.target.value)} required />
-        </label>
-        <label>
-          Phone
-          <input value={phone} onChange={(e) => setPhone(e.target.value)} />
-        </label>
-        <label>
-          WhatsApp
-          <input value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} />
-        </label>
-        <label>
-          Zalo
-          <input value={zalo} onChange={(e) => setZalo(e.target.value)} />
-        </label>
-        <label>
-          Address
-          <input value={address} onChange={(e) => setAddress(e.target.value)} />
-        </label>
-        <label>
-          City
-          <input value={city} onChange={(e) => setCity(e.target.value)} />
-        </label>
-        <label>
-          Country
-          <input value={country} onChange={(e) => setCountry(e.target.value)} />
-        </label>
-        <label>
-          Preferred language
-          <select value={preferredLocale} onChange={(e) => setPreferredLocale(e.target.value)}>
-            <option value="">Use website language</option>
-            <option value="en-us">English</option>
-            <option value="vi">Tiếng Việt</option>
-            <option value="zh-cn">简体中文</option>
-          </select>
-        </label>
-        <label>
-          Account type
-          <select value={accountType} onChange={(e) => setAccountType(e.target.value)}>
-            <option value="INDIVIDUAL">Individual</option>
-            <option value="COMPANY">Company</option>
-          </select>
-        </label>
-        <label>
-          Avatar
-          <input type="file" accept="image/jpeg,image/png,image/webp" onChange={avatarChange} disabled={busy} />
-        </label>
-        <label>
-          Facebook URL
-          <input
-            type="text"
-            inputMode="url"
-            autoComplete="url"
-            value={facebookUrl}
-            onChange={(e) => setFacebookUrl(e.target.value)}
-            placeholder="https://facebook.com/... (optional)"
-          />
-        </label>
-        <label>
-          Instagram URL
-          <input
-            type="text"
-            inputMode="url"
-            autoComplete="url"
-            value={instagramUrl}
-            onChange={(e) => setInstagramUrl(e.target.value)}
-            placeholder="https://instagram.com/... (optional)"
-          />
-        </label>
-        <label>
-          LinkedIn URL
-          <input
-            type="text"
-            inputMode="url"
-            autoComplete="url"
-            value={linkedinUrl}
-            onChange={(e) => setLinkedinUrl(e.target.value)}
-            placeholder="https://linkedin.com/in/... (optional)"
-          />
-        </label>
-        <button type="submit" className="jb-btn-primary" disabled={busy}>
-          {busy ? 'Saving…' : 'Save profile'}
-        </button>
-        {message ? <p role="status">{message}</p> : null}
+      <form onSubmit={save} className="jb-profile-form">
+        <section className="jb-profile-form__section">
+          <div className="jb-profile-form__section-head">
+            <span>01</span>
+            <div>
+              <h3>Identity & contact</h3>
+              <p>Used for your quotes and flight documents.</p>
+            </div>
+          </div>
+          <div className="jb-profile-form__grid">
+            <label className="jb-profile-field jb-profile-field--wide">
+              <span>Email address</span>
+              <input value={profile.email ?? ''} readOnly aria-readonly="true" />
+              <small>Verified account email cannot be changed here.</small>
+            </label>
+            <label className="jb-profile-field">
+              <span>First name</span>
+              <input value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
+            </label>
+            <label className="jb-profile-field">
+              <span>Last name</span>
+              <input value={lastName} onChange={(e) => setLastName(e.target.value)} required />
+            </label>
+            <label className="jb-profile-field">
+              <span>Phone</span>
+              <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            </label>
+            <label className="jb-profile-field">
+              <span>WhatsApp</span>
+              <input type="tel" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} />
+            </label>
+            <label className="jb-profile-field">
+              <span>Zalo</span>
+              <input type="tel" value={zalo} onChange={(e) => setZalo(e.target.value)} />
+            </label>
+            <label className="jb-profile-field">
+              <span>Account type</span>
+              <select value={accountType} onChange={(e) => setAccountType(e.target.value)}>
+                <option value="INDIVIDUAL">Individual</option>
+                <option value="COMPANY">Company</option>
+              </select>
+            </label>
+          </div>
+        </section>
+
+        <section className="jb-profile-form__section">
+          <div className="jb-profile-form__section-head">
+            <span>02</span>
+            <div>
+              <h3>Travel preferences</h3>
+              <p>Keep itinerary communication consistent across JetVina.</p>
+            </div>
+          </div>
+          <div className="jb-profile-form__grid">
+            <label className="jb-profile-field jb-profile-field--wide">
+              <span>Address</span>
+              <input value={address} onChange={(e) => setAddress(e.target.value)} />
+            </label>
+            <label className="jb-profile-field">
+              <span>City</span>
+              <input value={city} onChange={(e) => setCity(e.target.value)} />
+            </label>
+            <label className="jb-profile-field">
+              <span>Country</span>
+              <input value={country} onChange={(e) => setCountry(e.target.value)} />
+            </label>
+            <label className="jb-profile-field">
+              <span>Preferred language</span>
+              <select value={preferredLocale} onChange={(e) => setPreferredLocale(e.target.value)}>
+                <option value="">Use website language</option>
+                <option value="en-us">English</option>
+                <option value="vi">Tiếng Việt</option>
+                <option value="zh-cn">简体中文</option>
+              </select>
+            </label>
+            <label className="jb-profile-field">
+              <span>Profile photo</span>
+              <input type="file" accept="image/jpeg,image/png,image/webp" onChange={avatarChange} disabled={busy} />
+            </label>
+          </div>
+        </section>
+
+        <section className="jb-profile-form__section">
+          <div className="jb-profile-form__section-head">
+            <span>03</span>
+            <div>
+              <h3>Social profiles</h3>
+              <p>Optional links. We automatically add https:// when needed.</p>
+            </div>
+          </div>
+          <div className="jb-profile-form__grid">
+            {[
+              ['Facebook URL', facebookUrl, setFacebookUrl, 'facebook.com/your-profile'],
+              ['Instagram URL', instagramUrl, setInstagramUrl, 'instagram.com/your-profile'],
+              ['LinkedIn URL', linkedinUrl, setLinkedinUrl, 'linkedin.com/in/your-profile'],
+            ].map(([label, value, setter, placeholder]) => (
+              <label className="jb-profile-field jb-profile-field--wide" key={label as string}>
+                <span>{label as string}</span>
+                <input
+                  type="text"
+                  inputMode="url"
+                  autoComplete="url"
+                  value={value as string}
+                  onChange={(e) => (setter as React.Dispatch<React.SetStateAction<string>>)(e.target.value)}
+                  placeholder={placeholder as string}
+                />
+              </label>
+            ))}
+          </div>
+        </section>
+
+        <div className="jb-profile-form__footer">
+          <div>
+            <strong>JetVina ID</strong>
+            <code>{profile.publicId}</code>
+          </div>
+          <button type="submit" className="jb-btn-primary" disabled={busy}>
+            {busy ? 'Saving…' : 'Save profile'}
+          </button>
+        </div>
+        {message ? (
+          <p className={`jb-profile-message${message.includes('updated') ? ' is-success' : ' is-error'}`} role="status">
+            {message}
+          </p>
+        ) : null}
       </form>
     </AccountPanel>
   );

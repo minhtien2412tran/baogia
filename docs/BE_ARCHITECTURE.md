@@ -5,6 +5,10 @@
 
 ---
 
+## Public identity boundary
+
+`User.id` là khóa số nội bộ cho Prisma relations, JWT `sub`, audit và ownership checks. API hồ sơ khách hàng (`GET/PATCH /me`, `/account/dashboard`) trả `User.publicId` UUID làm định danh ổn định cho Web/App; không dùng numeric ID làm định danh profile phía client. Auth response tạm giữ cả `id` để tương thích client cũ nhưng client mới lưu/hiển thị `publicId`.
+
 ## 1. Nguyên tắc
 
 1. **Feature modules** theo domain báo giá — không 1 `AppModule` phẳng lâu dài.

@@ -258,29 +258,29 @@ export const api = {
       body: JSON.stringify(body),
     }),
   login: (email: string, password: string) =>
-    request<{ user: { id: number }; tokens: { accessToken: string } }>('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) }),
+    request<{ user: { id: number; publicId: string }; tokens: { accessToken: string } }>('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) }),
   sendOtp: (phone: string, purpose: 'LOGIN' | 'REGISTER') =>
     request<{ sent: boolean; devCode?: string }>('/auth/otp/send', {
       method: 'POST',
       body: JSON.stringify({ phone, purpose }),
     }),
   verifyOtpLogin: (phone: string, code: string) =>
-    request<{ user: { id: number }; tokens: { accessToken: string } }>('/auth/otp/verify-login', {
+    request<{ user: { id: number; publicId: string }; tokens: { accessToken: string } }>('/auth/otp/verify-login', {
       method: 'POST',
       body: JSON.stringify({ phone, code }),
     }),
   verifyOtpRegister: (phone: string, code: string, email?: string) =>
-    request<{ user: { id: number }; tokens: { accessToken: string } }>('/auth/otp/verify-register', {
+    request<{ user: { id: number; publicId: string }; tokens: { accessToken: string } }>('/auth/otp/verify-register', {
       method: 'POST',
       body: JSON.stringify({ phone, code, email }),
     }),
   oauthGoogle: (token: string) =>
-    request<{ user: { id: number }; tokens: { accessToken: string } }>('/auth/oauth/google', {
+    request<{ user: { id: number; publicId: string }; tokens: { accessToken: string } }>('/auth/oauth/google', {
       method: 'POST',
       body: JSON.stringify({ token }),
     }),
   oauthApple: (token: string) =>
-    request<{ user: { id: number }; tokens: { accessToken: string; refreshToken?: string } }>(
+    request<{ user: { id: number; publicId: string }; tokens: { accessToken: string; refreshToken?: string } }>(
       '/auth/oauth/apple',
       { method: 'POST', body: JSON.stringify({ token }) },
     ),
@@ -299,7 +299,7 @@ export const api = {
       body: JSON.stringify(body),
     }),
   register: (email: string, password: string, locale?: string) =>
-    request<{ user: { id: number }; tokens: { accessToken: string } }>(
+    request<{ user: { id: number; publicId: string }; tokens: { accessToken: string } }>(
       '/auth/register',
       {
         method: 'POST',

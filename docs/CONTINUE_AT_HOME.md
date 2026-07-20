@@ -72,6 +72,8 @@ Postman collection: `docs/postman/JETVINA_REALTIME.postman_collection.json`. Pro
 
 **Profile social URL validation fix (21/07):** `PATCH /me` chấp nhận Facebook/Instagram/LinkedIn trống (→ `null`) và tự thêm `https://` khi thiếu protocol; trống không còn bị 400 `must be a URL address`.
 
+**Profile UX + stable public identity (21/07):** Form account được chia 3 nhóm identity/contact, travel preferences, social; input/select/file có dark-theme CSS, responsive mobile, focus/error/success states. `User.publicId` UUID được thêm qua migration `20260721005500_user_public_id` và trả nhất quán từ auth + `/me` + account dashboard; profile FE không dùng numeric DB ID. API client đổi lỗi mạng thô `Failed to fetch` thành thông báo kết nối rõ ràng. CORS preflight `PATCH /me` từ `www.minhtien.online` đã probe PASS.
+
 **I18N polish (20/07 evening):** metadata theo locale · about-us overlay · cookie zh-cn · `dir=rtl` cho `ar` · xóa `getHomeOverlay` chết · offer/booking email dùng `quote.locale` · PJC highlight bodies `t()` · tourism title overlay cho `/private-jet-charter`.
 
 **I18N 100% gate (20/07):** SoT [I18N_VERIFICATION_MATRIX.md](./I18N_VERIFICATION_MATRIX.md) + `pnpm audit:i18n`. **I18N-1/2 core done**. Còn tourism nav WARN · welcome SMS OTP · SMTP Owner · RBAC.
