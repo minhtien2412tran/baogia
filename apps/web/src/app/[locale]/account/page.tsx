@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { use, useState } from 'react';
-import { api } from '../../../lib/api';
+import { api, parseApiErrorMessage } from '../../../lib/api';
 import { useAccount } from '../../../components/account/AccountContext';
 import {
   AccountEmpty,
@@ -146,6 +146,41 @@ function OverviewContent({ locale }: { locale: string }) {
   );
 }
 
+const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
+const AVATAR_RESIZE_THRESHOLD = 4 * 1024 * 1024;
+
+async function prepareAvatar(file: File): Promise<File> {
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+    throw new Error('Avatar must be a JPEG, PNG, or WebP image.');
+  }
+  if (file.size <= AVATAR_RESIZE_THRESHOLD) return file;
+
+  const bitmap = await createImageBitmap(file);
+  try {
+    const maxEdge = 1_600;
+    const scale = Math.min(1, maxEdge / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('Unable to resize this image.');
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, 'image/webp', 0.84),
+    );
+    if (!blob || blob.size > MAX_AVATAR_BYTES) {
+      throw new Error('Avatar is too large. Please choose an image under 5 MB.');
+    }
+    const baseName = file.name.replace(/\.[^.]+$/, '') || 'avatar';
+    return new File([blob], `${baseName}.webp`, {
+      type: 'image/webp',
+      lastModified: Date.now(),
+    });
+  } finally {
+    bitmap.close();
+  }
+}
+
 function ProfileEditor({
   token,
   profile,
@@ -225,11 +260,17 @@ function ProfileEditor({
     setBusy(true);
     setMessage('');
     try {
-      await api.uploadAvatar(token, file);
+      const prepared = await prepareAvatar(file);
+      await api.uploadAvatar(token, prepared);
       await onSaved();
       setMessage('Avatar updated.');
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Unable to update avatar.');
+      setMessage(
+        parseApiErrorMessage(
+          error,
+          error instanceof Error ? error.message : 'Unable to update avatar.',
+        ),
+      );
     } finally {
       setBusy(false);
       e.target.value = '';
@@ -316,6 +357,7 @@ function ProfileEditor({
             <label className="jb-profile-field">
               <span>Profile photo</span>
               <input type="file" accept="image/jpeg,image/png,image/webp" onChange={avatarChange} disabled={busy} />
+              <small>JPEG, PNG or WebP. Large photos are optimized automatically.</small>
             </label>
           </div>
         </section>

@@ -75,6 +75,28 @@ async function bootstrap() {
     bodyParser: false,
   });
 
+  const corsOrigins = (
+    process.env.CORS_ORIGIN ??
+    'http://localhost:3000,http://localhost:3001,http://localhost:3011,http://127.0.0.1:3000,http://127.0.0.1:3001,http://127.0.0.1:3011'
+  )
+    .split(',')
+    .map((s) => s.trim().replace(/^["']|["']$/g, ''))
+    .filter(Boolean);
+
+  // CORS must run before parsers so 413/invalid-body responses remain readable
+  // by the Web client instead of surfacing as a misleading browser CORS error.
+  app.enableCors({
+    origin: (origin, callback) => {
+      if (!origin || corsOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(null, false);
+    },
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'Accept'],
+  });
+
   app.use(
     express.json({
       limit: '100kb',
@@ -125,26 +147,6 @@ async function bootstrap() {
   );
 
   installSwaggerBasicAuth(app);
-
-  const corsOrigins = (
-    process.env.CORS_ORIGIN ??
-    'http://localhost:3000,http://localhost:3001,http://localhost:3011,http://127.0.0.1:3000,http://127.0.0.1:3001,http://127.0.0.1:3011'
-  )
-    .split(',')
-    .map((s) => s.trim().replace(/^["']|["']$/g, ''))
-    .filter(Boolean);
-
-  app.enableCors({
-    origin: (origin, callback) => {
-      if (!origin || corsOrigins.includes(origin)) {
-        callback(null, true);
-        return;
-      }
-      callback(null, false);
-    },
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'Accept'],
-  });
 
   app.useGlobalPipes(
     new ValidationPipe({

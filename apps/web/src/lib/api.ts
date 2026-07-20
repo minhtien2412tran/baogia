@@ -127,10 +127,18 @@ function apiHeaders(extra?: HeadersInit): HeadersInit {
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   let res: Response;
+  const isFormData =
+    typeof FormData !== 'undefined' && options?.body instanceof FormData;
+  const headers: HeadersInit = isFormData
+    ? {
+        ...(API_KEY ? { 'X-API-Key': API_KEY } : {}),
+        ...options?.headers,
+      }
+    : apiHeaders(options?.headers);
   try {
     res = await fetch(`${API_URL}${path}`, {
       ...options,
-      headers: apiHeaders(options?.headers),
+      headers,
       next: options?.method && options.method !== 'GET' ? undefined : { revalidate: 30 },
     });
   } catch {

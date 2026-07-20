@@ -74,6 +74,8 @@ Postman collection: `docs/postman/JETVINA_REALTIME.postman_collection.json`. Pro
 
 **Profile UX + stable public identity (21/07):** Form account được chia 3 nhóm identity/contact, travel preferences, social; input/select/file có dark-theme CSS, responsive mobile, focus/error/success states. `User.publicId` UUID được thêm qua migration `20260721005500_user_public_id` và trả nhất quán từ auth + `/me` + account dashboard; profile FE không dùng numeric DB ID. API client đổi lỗi mạng thô `Failed to fetch` thành thông báo kết nối rõ ràng. CORS preflight `PATCH /me` từ `www.minhtien.online` đã probe PASS.
 
+**Avatar multipart/CORS fix (21/07):** API client không còn gắn sai `Content-Type: application/json` cho `FormData` (nguyên nhân avatar >100 KB bị JSON parser trả 413 rồi trình duyệt báo CORS). CORS middleware chạy trước parser để response lỗi vẫn có ACAO; FE tự resize ảnh lớn về WebP tối đa 1600px/5 MB và hiện lỗi upload rõ ràng. API Multer tiếp tục giới hạn 5 MB, Nginx giữ 32 MB.
+
 **I18N polish (20/07 evening):** metadata theo locale · about-us overlay · cookie zh-cn · `dir=rtl` cho `ar` · xóa `getHomeOverlay` chết · offer/booking email dùng `quote.locale` · PJC highlight bodies `t()` · tourism title overlay cho `/private-jet-charter`.
 
 **I18N 100% gate (20/07):** SoT [I18N_VERIFICATION_MATRIX.md](./I18N_VERIFICATION_MATRIX.md) + `pnpm audit:i18n`. **I18N-1/2 core done**. Còn tourism nav WARN · welcome SMS OTP · SMTP Owner · RBAC.
