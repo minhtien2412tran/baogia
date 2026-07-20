@@ -157,7 +157,7 @@ Later (offer, booking, pay, follow-up) ──► thiếu locale ──► defaul
 
 | Wave | Việc | Owner |
 |------|------|-------|
-| **I18N-1** | Đưa hardcode `ServicePage` + home sections → keys/overlays; metadata theo locale; wire hoặc xóa `getHomeOverlay` | Dev |
+| **I18N-1** | Đưa hardcode `ServicePage` + home sections → keys/overlays; metadata theo locale; wire hoặc xóa `getHomeOverlay` | Dev · **DONE 2026-07-20** (ServicePage/Why/Stats → `t()`; audit fail=0) |
 | **I18N-2** | Page overlays tourism (ja…ar) + `about-us`; RTL `ar` | Dev |
 | **I18N-3** | CMS: dịch article/destination/page theo locale | Owner + Admin |
 | **I18N-4a** | Persist `QuoteRequest.locale` (+ optional `User.preferredLocale`); pass vào offer/booking/payment/follow-up | Dev |

@@ -200,7 +200,60 @@ export type MessageKey =
   | 'labelAircraft'
   | 'labelDeparture'
   | 'labelPrice'
-  | 'labelDiscount';
+  | 'labelDiscount'
+  | 'pjcIntroTitle'
+  | 'pjcIntroDesc'
+  | 'pjcAircraftAvailable'
+  | 'pjcConciergeService'
+  | 'pjcNetworkAccess'
+  | 'privateJetPromotion'
+  | 'pjcServicesTitle'
+  | 'pjcExceptionalTitle'
+  | 'pjcExceptionalSubtitle'
+  | 'pjcProcessTitle'
+  | 'pjcProcessSubtitle'
+  | 'pjcFaqTitle'
+  | 'howItWorks'
+  | 'howItWorksSubtitle'
+  | 'whyJetvinaSection'
+  | 'whyJetvinaSubtitle'
+  | 'whyCharterTitle'
+  | 'whyCharterDesc'
+  | 'whyCharterItem1'
+  | 'whyCharterItem2'
+  | 'whyCharterItem3'
+  | 'whyCharterItem4'
+  | 'learnMoreAboutJetvina'
+  | 'aboutUsTag'
+  | 'whatSetsUsApart'
+  | 'whyChooseJetvina'
+  | 'excellenceDetail'
+  | 'featureAvailTitle'
+  | 'featureAvailDesc'
+  | 'featureSafeTitle'
+  | 'featureSafeDesc'
+  | 'featureLuxuryTitle'
+  | 'featureLuxuryDesc'
+  | 'featureDedicatedTitle'
+  | 'featureDedicatedDesc'
+  | 'featureGlobalTitle'
+  | 'featureGlobalDesc'
+  | 'featureFlexibleTitle'
+  | 'featureFlexibleDesc'
+  | 'statsTrustedPill'
+  | 'statsLeadingTitle'
+  | 'statsClientsLabel'
+  | 'statsClientsDesc'
+  | 'statsAsiaLabel'
+  | 'statsAsiaDesc'
+  | 'statsAsiaDescLong'
+  | 'statsCountriesLabel'
+  | 'statsCountriesDesc'
+  | 'statsCountriesDescLong'
+  | 'statsFlightsLabel'
+  | 'statsFlightsDesc'
+  | 'statsFlightsDescLong'
+  | 'statsAriaLabel';
 
 type Catalog = Record<MessageKey, string>;
 
@@ -404,6 +457,65 @@ const en: Catalog = {
   labelDeparture: 'Departure',
   labelPrice: 'Price',
   labelDiscount: 'discount',
+  pjcIntroTitle: 'Global Private Air Charter Service, Simplified.',
+  pjcIntroDesc:
+    "JetVina's private air charter service combines luxury, efficiency, and safety at the best value.",
+  pjcAircraftAvailable: 'Aircraft Available',
+  pjcConciergeService: 'Concierge Service',
+  pjcNetworkAccess: 'Network Access',
+  privateJetPromotion: 'Private Jet Promotion',
+  pjcServicesTitle: 'Our Private Air Charter Services',
+  pjcExceptionalTitle: 'What Makes Our Private Air Charter Service Exceptional',
+  pjcExceptionalSubtitle: 'Trusted standards on every flight.',
+  pjcProcessTitle: 'The JetVina Charter Process',
+  pjcProcessSubtitle: 'Your Journey, Effortlessly Arranged.',
+  pjcFaqTitle: 'Frequently Asked Questions About Our Private Jet Charter Services',
+  howItWorks: 'How it works',
+  howItWorksSubtitle: 'Your journey from search to wheels-up.',
+  whyJetvinaSection: 'Why JetVina',
+  whyJetvinaSubtitle: 'Trusted standards on every flight.',
+  whyCharterTitle: 'Why Charter with JetVina?',
+  whyCharterDesc:
+    'JetVina offers bespoke charter solutions, connecting you to a global fleet.',
+  whyCharterItem1: 'Access a global aircraft network across 1,000+ operators',
+  whyCharterItem2: '24/7 global concierge support',
+  whyCharterItem3: 'AI-driven aircraft matching',
+  whyCharterItem4: 'Transparent end-to-end booking support',
+  learnMoreAboutJetvina: 'Learn More About JetVina',
+  aboutUsTag: 'About Us',
+  whatSetsUsApart: 'What Sets Us Apart',
+  whyChooseJetvina: 'Why choose JetVina?',
+  excellenceDetail: 'Excellence in Every Detail',
+  featureAvailTitle: '24/7 Availability',
+  featureAvailDesc: 'Support is available whenever you need to fly.',
+  featureSafeTitle: 'Trusted Safety',
+  featureSafeDesc: 'Flights arranged with vetted operators and high standards.',
+  featureLuxuryTitle: 'Luxury Experience',
+  featureLuxuryDesc: 'Enjoy premium comfort, privacy, and flexibility onboard.',
+  featureDedicatedTitle: 'Dedicated Service',
+  featureDedicatedDesc: 'Receive attentive support throughout your journey.',
+  featureGlobalTitle: 'Global Network',
+  featureGlobalDesc: 'Fly across major cities and destinations worldwide.',
+  featureFlexibleTitle: 'Flexible & Tailored',
+  featureFlexibleDesc: 'Choose flight solutions built around your travel plans.',
+  statsTrustedPill: 'Trusted Worldwide',
+  statsLeadingTitle: 'A leading global private jet charter platform',
+  statsClientsLabel: 'Clients Served Worldwide',
+  statsClientsDesc: 'Serving clients across 190+ countries with seamless global access.',
+  statsAsiaLabel: "Asia's Transaction Volume",
+  statsAsiaDesc:
+    'JetVina connects private aviation travellers across Asia — claim pending client verification.',
+  statsAsiaDescLong:
+    'JetVina connects private aviation travellers across Asia — claim pending client verification. A platform for time-critical flights.',
+  statsCountriesLabel: 'Countries Flown',
+  statsCountriesDesc: 'Coverage across major cities and remote destinations worldwide.',
+  statsCountriesDescLong:
+    'Our global network spans over 190 countries, providing seamless access to major cities and remote destinations.',
+  statsFlightsLabel: 'Annual Flights',
+  statsFlightsDesc: 'A trusted network supporting thousands of flights each year.',
+  statsFlightsDescLong:
+    'A trusted network supporting thousands of flights each year across business and leisure missions.',
+  statsAriaLabel: 'Platform statistics',
 };
 
 const vi: Catalog = {
@@ -605,6 +717,65 @@ const vi: Catalog = {
   labelDeparture: 'Khởi hành',
   labelPrice: 'Giá',
   labelDiscount: 'giảm giá',
+  pjcIntroTitle: 'Dịch vụ thuê máy bay riêng toàn cầu, đơn giản hơn.',
+  pjcIntroDesc:
+    'Dịch vụ charter của JetVina kết hợp sang trọng, hiệu quả và an toàn với giá trị tốt nhất.',
+  pjcAircraftAvailable: 'Máy bay sẵn sàng',
+  pjcConciergeService: 'Dịch vụ concierge',
+  pjcNetworkAccess: 'Mạng lưới toàn cầu',
+  privateJetPromotion: 'Ưu đãi máy bay riêng',
+  pjcServicesTitle: 'Dịch vụ thuê chuyến bay riêng của chúng tôi',
+  pjcExceptionalTitle: 'Điều gì làm dịch vụ charter của chúng tôi khác biệt',
+  pjcExceptionalSubtitle: 'Tiêu chuẩn tin cậy trên mọi chuyến bay.',
+  pjcProcessTitle: 'Quy trình charter JetVina',
+  pjcProcessSubtitle: 'Hành trình của bạn, được sắp xếp dễ dàng.',
+  pjcFaqTitle: 'Câu hỏi thường gặp về dịch vụ thuê máy bay riêng',
+  howItWorks: 'Cách hoạt động',
+  howItWorksSubtitle: 'Từ tìm kiếm đến lúc cất cánh.',
+  whyJetvinaSection: 'Vì sao JetVina',
+  whyJetvinaSubtitle: 'Tiêu chuẩn tin cậy trên mọi chuyến bay.',
+  whyCharterTitle: 'Vì sao thuê chuyến với JetVina?',
+  whyCharterDesc:
+    'JetVina cung cấp giải pháp charter riêng, kết nối bạn với đội bay toàn cầu.',
+  whyCharterItem1: 'Truy cập mạng lưới máy bay toàn cầu với hơn 1.000 nhà khai thác',
+  whyCharterItem2: 'Hỗ trợ concierge toàn cầu 24/7',
+  whyCharterItem3: 'Ghép máy bay bằng AI',
+  whyCharterItem4: 'Hỗ trợ đặt chỗ minh bạch từ đầu đến cuối',
+  learnMoreAboutJetvina: 'Tìm hiểu thêm về JetVina',
+  aboutUsTag: 'Về chúng tôi',
+  whatSetsUsApart: 'Điều làm chúng tôi khác biệt',
+  whyChooseJetvina: 'Vì sao chọn JetVina?',
+  excellenceDetail: 'Xuất sắc trong từng chi tiết',
+  featureAvailTitle: 'Sẵn sàng 24/7',
+  featureAvailDesc: 'Hỗ trợ bất cứ khi nào bạn cần bay.',
+  featureSafeTitle: 'An toàn tin cậy',
+  featureSafeDesc: 'Chuyến bay với nhà khai thác đã thẩm định và tiêu chuẩn cao.',
+  featureLuxuryTitle: 'Trải nghiệm sang trọng',
+  featureLuxuryDesc: 'Thoải mái, riêng tư và linh hoạt trên khoang.',
+  featureDedicatedTitle: 'Dịch vụ tận tâm',
+  featureDedicatedDesc: 'Đồng hành hỗ trợ xuyên suốt hành trình.',
+  featureGlobalTitle: 'Mạng lưới toàn cầu',
+  featureGlobalDesc: 'Bay giữa các thành phố và điểm đến lớn trên thế giới.',
+  featureFlexibleTitle: 'Linh hoạt & cá nhân hóa',
+  featureFlexibleDesc: 'Giải pháp bay phù hợp kế hoạch của bạn.',
+  statsTrustedPill: 'Tin cậy toàn cầu',
+  statsLeadingTitle: 'Nền tảng thuê máy bay riêng hàng đầu toàn cầu',
+  statsClientsLabel: 'Khách hàng trên toàn thế giới',
+  statsClientsDesc: 'Phục vụ khách hàng tại hơn 190 quốc gia với truy cập toàn cầu liền mạch.',
+  statsAsiaLabel: 'Khối lượng giao dịch châu Á',
+  statsAsiaDesc:
+    'JetVina kết nối hành khách hàng không tư nhân tại châu Á — số liệu chờ khách hàng xác nhận.',
+  statsAsiaDescLong:
+    'JetVina kết nối hành khách hàng không tư nhân tại châu Á — số liệu chờ xác nhận. Nền tảng cho chuyến bay cấp thiết.',
+  statsCountriesLabel: 'Quốc gia đã bay',
+  statsCountriesDesc: 'Phủ sóng thành phố lớn và điểm đến xa trên toàn cầu.',
+  statsCountriesDescLong:
+    'Mạng lưới toàn cầu phủ hơn 190 quốc gia, tiếp cận thành phố lớn và điểm đến xa.',
+  statsFlightsLabel: 'Chuyến bay mỗi năm',
+  statsFlightsDesc: 'Mạng lưới tin cậy hỗ trợ hàng nghìn chuyến bay mỗi năm.',
+  statsFlightsDescLong:
+    'Mạng lưới tin cậy hỗ trợ hàng nghìn chuyến bay mỗi năm cho công việc và giải trí.',
+  statsAriaLabel: 'Thống kê nền tảng',
 };
 
 const zhCn: Catalog = {
@@ -805,6 +976,61 @@ const zhCn: Catalog = {
   labelDeparture: '出发',
   labelPrice: '价格',
   labelDiscount: '折扣',
+  pjcIntroTitle: '全球私人包机服务，更简单。',
+  pjcIntroDesc: 'JetVina 私人包机结合奢华、效率与安全，提供卓越价值。',
+  pjcAircraftAvailable: '可用飞机',
+  pjcConciergeService: '礼宾服务',
+  pjcNetworkAccess: '全球网络',
+  privateJetPromotion: '私人飞机优惠',
+  pjcServicesTitle: '我们的私人包机服务',
+  pjcExceptionalTitle: '私人包机服务为何卓越',
+  pjcExceptionalSubtitle: '每一次飞行都坚持可信标准。',
+  pjcProcessTitle: 'JetVina 包机流程',
+  pjcProcessSubtitle: '轻松安排您的旅程。',
+  pjcFaqTitle: '私人包机服务常见问题',
+  howItWorks: '如何运作',
+  howItWorksSubtitle: '从搜索到起飞的完整旅程。',
+  whyJetvinaSection: '为何选择 JetVina',
+  whyJetvinaSubtitle: '每一次飞行都坚持可信标准。',
+  whyCharterTitle: '为何选择 JetVina 包机？',
+  whyCharterDesc: 'JetVina 提供定制包机方案，连接全球机队。',
+  whyCharterItem1: '接入覆盖 1,000+ 运营商的全球机队网络',
+  whyCharterItem2: '24/7 全球礼宾支持',
+  whyCharterItem3: 'AI 智能匹配飞机',
+  whyCharterItem4: '端到端透明预订支持',
+  learnMoreAboutJetvina: '了解更多 JetVina',
+  aboutUsTag: '关于我们',
+  whatSetsUsApart: '我们的独特之处',
+  whyChooseJetvina: '为何选择 JetVina？',
+  excellenceDetail: '精益求精的每个细节',
+  featureAvailTitle: '全天候服务',
+  featureAvailDesc: '随时为您的飞行需求提供支持。',
+  featureSafeTitle: '可信安全',
+  featureSafeDesc: '与经过审核的运营商合作，坚持高标准。',
+  featureLuxuryTitle: '奢华体验',
+  featureLuxuryDesc: '享受机上舒适、私密与灵活。',
+  featureDedicatedTitle: '专属服务',
+  featureDedicatedDesc: '全程贴心支持您的旅程。',
+  featureGlobalTitle: '全球网络',
+  featureGlobalDesc: '穿梭世界主要城市与目的地。',
+  featureFlexibleTitle: '灵活定制',
+  featureFlexibleDesc: '围绕您的行程量身打造飞行方案。',
+  statsTrustedPill: '全球信赖',
+  statsLeadingTitle: '领先的全球私人包机平台',
+  statsClientsLabel: '全球服务客户',
+  statsClientsDesc: '服务覆盖 190+ 国家，畅享无缝全球接入。',
+  statsAsiaLabel: '亚洲交易量',
+  statsAsiaDesc: 'JetVina 连接亚洲私人航空旅客 — 数据待客户核实。',
+  statsAsiaDescLong:
+    'JetVina 连接亚洲私人航空旅客 — 数据待客户核实。面向时效关键飞行的平台。',
+  statsCountriesLabel: '飞越国家',
+  statsCountriesDesc: '覆盖全球主要城市与偏远目的地。',
+  statsCountriesDescLong:
+    '全球网络覆盖 190+ 国家，畅达主要城市与偏远目的地。',
+  statsFlightsLabel: '年航班量',
+  statsFlightsDesc: '值得信赖的网络每年支持数千次航班。',
+  statsFlightsDescLong: '值得信赖的网络每年支持数千次商务与休闲航班。',
+  statsAriaLabel: '平台数据',
 };
 
 const zhHk: Catalog = {

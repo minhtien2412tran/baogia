@@ -4,6 +4,7 @@ import { SHOW_UNVERIFIED_STATS } from '../../lib/brand';
 import { JB } from '../../config/jetbay-cdn';
 import { CdnImage } from '../ui/CdnImage';
 import { FlightScrollRail } from '../ui/FlightScrollRail';
+import { t } from '@jetbay/i18n';
 
 const STAT_COUNTERS: Record<string, { countTo?: number; suffix?: string }> = {
   '10K+': { countTo: 10, suffix: 'K+' },
@@ -15,117 +16,153 @@ function StatNum({ value }: { value: string }) {
   const cfg = STAT_COUNTERS[value];
   if (!cfg) return <div className="jb-stat-num">{value}</div>;
   return (
-    <div className="jb-stat-num" data-jb-count-to={cfg.countTo} data-jb-suffix={cfg.suffix}>
+    <div
+      className="jb-stat-num"
+      data-jb-count-to={cfg.countTo}
+      data-jb-suffix={cfg.suffix}
+    >
       0{cfg.suffix}
     </div>
   );
 }
-const STATS = [
-  {
-    num: '10K+',
-    label: 'Clients Served Worldwide',
-    desc: 'Serving clients across 190+ countries with seamless global access.',
-    variant: 'hero' as const,
-    bg: JB.stats.globalBgM,
-    icon: JB.stats.bigArrow,
-  },
-  {
-    num: 'No.1',
-    label: "Asia's Transaction Volume",
-    desc: 'JetVina connects private aviation travellers across Asia — claim pending client verification.',
-    variant: 'plain' as const,
-    icon: JB.stats.tab,
-  },
-  {
-    num: '190+',
-    label: 'Countries Flown',
-    desc: 'Coverage across major cities and remote destinations worldwide.',
-    variant: 'card' as const,
-    progress: 34,
-    plane: JB.stats.plane,
-  },
-  {
-    num: '5K+',
-    label: 'Annual Flights',
-    desc: 'A trusted network supporting thousands of flights each year.',
-    variant: 'card' as const,
-    icon: JB.stats.annual,
-    bg: JB.stats.annualBg,
-  },
-];
 
-const DESKTOP_STATS = [
-  {
-    num: 'No.1',
-    label: "Asia's Transaction Volume",
-    desc: 'JetVina connects private aviation travellers across Asia — claim pending client verification. A platform for time-critical flights.',
-    icon: JB.stats.tab,
-  },
-  {
-    num: '190+',
-    label: 'Countries Flown',
-    desc: 'Our global network spans over 190 countries, providing seamless access to major cities and remote destinations.',
-    progress: 45,
-    plane: JB.stats.plane,
-    variant: 'bordered' as const,
-  },
-  {
-    num: '5K+',
-    label: 'Annual Flights',
-    desc: 'A trusted network supporting thousands of flights each year across business and leisure missions.',
-    icon: JB.stats.annual,
-    bg: JB.stats.annualBg,
-  },
-  {
-    num: '10K+',
-    label: 'Clients Served Worldwide',
-    desc: 'Serving clients across 190+ countries with seamless global access and dedicated concierge support.',
-    bg: JB.stats.servedBg,
-    variant: 'featured' as const,
-  },
-];
-
-export function StatsSection() {
+export function StatsSection({ locale = 'en-us' }: { locale?: string }) {
   // Unverified marketing metrics (10K+, No.1, etc.) blocked until client provides approved figures.
   if (!SHOW_UNVERIFIED_STATS) return null;
+
+  const stats = [
+    {
+      num: '10K+',
+      label: t(locale, 'statsClientsLabel'),
+      desc: t(locale, 'statsClientsDesc'),
+      variant: 'hero' as const,
+      bg: JB.stats.globalBgM,
+      icon: JB.stats.bigArrow,
+    },
+    {
+      num: 'No.1',
+      label: t(locale, 'statsAsiaLabel'),
+      desc: t(locale, 'statsAsiaDesc'),
+      variant: 'plain' as const,
+      icon: JB.stats.tab,
+    },
+    {
+      num: '190+',
+      label: t(locale, 'statsCountriesLabel'),
+      desc: t(locale, 'statsCountriesDesc'),
+      variant: 'card' as const,
+      progress: 34,
+      plane: JB.stats.plane,
+    },
+    {
+      num: '5K+',
+      label: t(locale, 'statsFlightsLabel'),
+      desc: t(locale, 'statsFlightsDesc'),
+      variant: 'card' as const,
+      icon: JB.stats.annual,
+      bg: JB.stats.annualBg,
+    },
+  ];
+
+  const desktopStats = [
+    {
+      num: 'No.1',
+      label: t(locale, 'statsAsiaLabel'),
+      desc: t(locale, 'statsAsiaDescLong'),
+      icon: JB.stats.tab,
+    },
+    {
+      num: '190+',
+      label: t(locale, 'statsCountriesLabel'),
+      desc: t(locale, 'statsCountriesDescLong'),
+      progress: 45,
+      plane: JB.stats.plane,
+      variant: 'bordered' as const,
+    },
+    {
+      num: '5K+',
+      label: t(locale, 'statsFlightsLabel'),
+      desc: t(locale, 'statsFlightsDescLong'),
+      icon: JB.stats.annual,
+      bg: JB.stats.annualBg,
+    },
+    {
+      num: '10K+',
+      label: t(locale, 'statsClientsLabel'),
+      desc: t(locale, 'statsClientsDesc'),
+      bg: JB.stats.servedBg,
+      variant: 'featured' as const,
+    },
+  ];
 
   return (
     <section className="jb-stats jb-stats-light">
       <div className="jb-container">
         <div className="jb-stats-header">
-          <span className="jb-stats-pill">Trusted Worldwide</span>
-          <h2 className="jb-section-title jb-stats-title">A leading global private jet charter platform</h2>
+          <span className="jb-stats-pill">{t(locale, 'statsTrustedPill')}</span>
+          <h2 className="jb-section-title jb-stats-title">
+            {t(locale, 'statsLeadingTitle')}
+          </h2>
         </div>
 
         <FlightScrollRail
           className="jb-stats-rail-wrap"
           trackClassName="jb-stats-rail jb-stats-mobile-carousel"
-          ariaLabel="Platform statistics"
+          ariaLabel={t(locale, 'statsAriaLabel')}
         >
-          {STATS.map((s) => (
+          {stats.map((s) => (
             <article
               key={s.label}
               className={`jb-stat-mobile-card jb-stat-mobile-${s.variant}`}
             >
               {s.variant === 'hero' && s.bg && (
                 <div className="jb-stat-mobile-hero-bg" aria-hidden>
-                  <CdnImage src={s.bg} alt="" fill className="jb-cover-img" sizes="90vw" />
+                  <CdnImage
+                    src={s.bg}
+                    alt=""
+                    fill
+                    className="jb-cover-img"
+                    sizes="90vw"
+                  />
                 </div>
               )}
               <div className="jb-stat-mobile-content">
                 {s.variant === 'hero' && s.icon && (
-                  <CdnImage src={s.icon} alt="" width={41} height={60} className="jb-stat-mobile-arrow" />
+                  <CdnImage
+                    src={s.icon}
+                    alt=""
+                    width={41}
+                    height={60}
+                    className="jb-stat-mobile-arrow"
+                  />
                 )}
                 {s.icon && s.variant === 'plain' && (
-                  <CdnImage src={s.icon} alt="" width={230} height={118} className="jb-stat-mobile-icon" />
+                  <CdnImage
+                    src={s.icon}
+                    alt=""
+                    width={230}
+                    height={118}
+                    className="jb-stat-mobile-icon"
+                  />
                 )}
                 <StatNum value={s.num} />
                 <div className="jb-stat-label">{s.label}</div>
                 <p className="jb-stat-desc">{s.desc}</p>
                 {s.progress != null && s.plane && (
                   <div className="jb-stat-progress">
-                    <div className="jb-stat-progress-bar" data-jb-progress={`${s.progress}%`} style={{ width: `${s.progress}%` }} />
-                    <CdnImage src={s.plane} alt="" width={22} height={22} className="jb-stat-plane" style={{ left: '0%' }} />
+                    <div
+                      className="jb-stat-progress-bar"
+                      data-jb-progress={`${s.progress}%`}
+                      style={{ width: `${s.progress}%` }}
+                    />
+                    <CdnImage
+                      src={s.plane}
+                      alt=""
+                      width={22}
+                      height={22}
+                      className="jb-stat-plane"
+                      style={{ left: '0%' }}
+                    />
                   </div>
                 )}
               </div>
@@ -133,23 +170,50 @@ export function StatsSection() {
           ))}
         </FlightScrollRail>
 
-        {/* Desktop: 4-column rich grid */}
         <div className="jb-stats-desktop-grid">
-          {DESKTOP_STATS.map((s) => (
-            <article key={s.label} className={`jb-stat-desktop-card jb-stat-desktop-${s.variant ?? 'default'}`}>
+          {desktopStats.map((s) => (
+            <article
+              key={s.label}
+              className={`jb-stat-desktop-card jb-stat-desktop-${s.variant ?? 'default'}`}
+            >
               {s.bg && (
                 <div className="jb-stat-bg" aria-hidden>
-                  <CdnImage src={s.bg} alt="" fill className="jb-cover-img" sizes="25vw" />
+                  <CdnImage
+                    src={s.bg}
+                    alt=""
+                    fill
+                    className="jb-cover-img"
+                    sizes="25vw"
+                  />
                 </div>
               )}
-              {s.icon && <CdnImage src={s.icon} alt="" width={230} height={118} className="jb-stat-desktop-icon" />}
+              {s.icon && (
+                <CdnImage
+                  src={s.icon}
+                  alt=""
+                  width={230}
+                  height={118}
+                  className="jb-stat-desktop-icon"
+                />
+              )}
               <StatNum value={s.num} />
               <div className="jb-stat-label">{s.label}</div>
               <p className="jb-stat-desc">{s.desc}</p>
               {s.progress != null && s.plane && (
                 <div className="jb-stat-progress">
-                  <div className="jb-stat-progress-bar" data-jb-progress={`${s.progress}%`} style={{ width: `${s.progress}%` }} />
-                  <CdnImage src={s.plane} alt="" width={25} height={25} className="jb-stat-plane" style={{ left: '0%' }} />
+                  <div
+                    className="jb-stat-progress-bar"
+                    data-jb-progress={`${s.progress}%`}
+                    style={{ width: `${s.progress}%` }}
+                  />
+                  <CdnImage
+                    src={s.plane}
+                    alt=""
+                    width={25}
+                    height={25}
+                    className="jb-stat-plane"
+                    style={{ left: '0%' }}
+                  />
                 </div>
               )}
             </article>

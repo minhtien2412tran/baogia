@@ -62,7 +62,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <WhySections locale={locale} />
         </>
       ) : null}
-      <StatsSection />
+      <StatsSection locale={locale} />
       <NewsHomeSection locale={locale} />
       <NewsletterBand locale={locale} />
       <MediaSection locale={locale} />

@@ -1,42 +1,81 @@
 import { JB } from '../../config/jetbay-cdn';
 import { CdnImage } from '../ui/CdnImage';
-
-const WHY_CHARTER = [
-  'Access a global aircraft network across 1,000+ operators',
-  '24/7 global concierge support',
-  'AI-driven aircraft matching',
-  'Transparent end-to-end booking support',
-];
-
-const FEATURES = [
-  { icon: JB.features.time, title: '24/7 Availability', desc: 'Support is available whenever you need to fly.' },
-  { icon: JB.features.safe, title: 'Trusted Safety', desc: 'Flights arranged with vetted operators and high standards.' },
-  { icon: JB.features.luxury, title: 'Luxury Experience', desc: 'Enjoy premium comfort, privacy, and flexibility onboard.' },
-  { icon: JB.features.dedicated, title: 'Dedicated Service', desc: 'Receive attentive support throughout your journey.' },
-  { icon: JB.features.global, title: 'Global Network', desc: 'Fly across major cities and destinations worldwide.' },
-  { icon: JB.features.flexible, title: 'Flexible & Tailored', desc: 'Choose flight solutions built around your travel plans.' },
-];
+import { t } from '@jetbay/i18n';
 
 export function WhySections({ locale }: { locale: string }) {
   const p = `/${locale}`;
+  const whyItems = [
+    t(locale, 'whyCharterItem1'),
+    t(locale, 'whyCharterItem2'),
+    t(locale, 'whyCharterItem3'),
+    t(locale, 'whyCharterItem4'),
+  ];
+  const features = [
+    {
+      icon: JB.features.time,
+      title: t(locale, 'featureAvailTitle'),
+      desc: t(locale, 'featureAvailDesc'),
+    },
+    {
+      icon: JB.features.safe,
+      title: t(locale, 'featureSafeTitle'),
+      desc: t(locale, 'featureSafeDesc'),
+    },
+    {
+      icon: JB.features.luxury,
+      title: t(locale, 'featureLuxuryTitle'),
+      desc: t(locale, 'featureLuxuryDesc'),
+    },
+    {
+      icon: JB.features.dedicated,
+      title: t(locale, 'featureDedicatedTitle'),
+      desc: t(locale, 'featureDedicatedDesc'),
+    },
+    {
+      icon: JB.features.global,
+      title: t(locale, 'featureGlobalTitle'),
+      desc: t(locale, 'featureGlobalDesc'),
+    },
+    {
+      icon: JB.features.flexible,
+      title: t(locale, 'featureFlexibleTitle'),
+      desc: t(locale, 'featureFlexibleDesc'),
+    },
+  ];
+
   return (
     <>
       <section className="jb-section" style={{ background: 'var(--jb-bg-elevated)' }}>
         <div className="jb-container">
           <div className="jb-split">
             <div>
-              <span className="jb-tag">About Us</span>
-              <h2 className="jb-section-title">Why Charter with JetVina?</h2>
-              <p className="jb-section-desc">JetVina offers bespoke charter solutions, connecting you to a global fleet.</p>
-              <ul style={{ margin: '20px 0', paddingLeft: 20, color: 'var(--jb-text-muted)', lineHeight: 2 }}>
-                {WHY_CHARTER.map((item) => (
+              <span className="jb-tag">{t(locale, 'aboutUsTag')}</span>
+              <h2 className="jb-section-title">{t(locale, 'whyCharterTitle')}</h2>
+              <p className="jb-section-desc">{t(locale, 'whyCharterDesc')}</p>
+              <ul
+                style={{
+                  margin: '20px 0',
+                  paddingLeft: 20,
+                  color: 'var(--jb-text-muted)',
+                  lineHeight: 2,
+                }}
+              >
+                {whyItems.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
-              <a href={`${p}/about-us`} className="jb-btn-outline">Learn More About JetVina</a>
+              <a href={`${p}/about-us`} className="jb-btn-outline">
+                {t(locale, 'learnMoreAboutJetvina')}
+              </a>
             </div>
             <div className="jb-split-visual jb-split-visual-img">
-              <CdnImage src={JB.sections.whyCharter} alt="Private jet charter" fill className="jb-cover-img" sizes="(max-width: 768px) 100vw, 50vw" />
+              <CdnImage
+                src={JB.sections.whyCharter}
+                alt={t(locale, 'whyCharterTitle')}
+                fill
+                className="jb-cover-img"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
             </div>
           </div>
         </div>
@@ -45,15 +84,21 @@ export function WhySections({ locale }: { locale: string }) {
       <section className="jb-section">
         <div className="jb-container">
           <div style={{ textAlign: 'center', marginBottom: 40 }}>
-            <span className="jb-tag">What Sets Us Apart</span>
-            <h2 className="jb-section-title">Why choose JetVina?</h2>
-            <p className="jb-section-desc">Excellence in Every Detail</p>
+            <span className="jb-tag">{t(locale, 'whatSetsUsApart')}</span>
+            <h2 className="jb-section-title">{t(locale, 'whyChooseJetvina')}</h2>
+            <p className="jb-section-desc">{t(locale, 'excellenceDetail')}</p>
           </div>
           <div className="jb-features-grid">
-            {FEATURES.map((f) => (
+            {features.map((f) => (
               <div key={f.title} className="jb-feature">
                 <div className="jb-feature-icon">
-                  <CdnImage src={f.icon} alt="" width={40} height={40} className="jb-cdn-icon" />
+                  <CdnImage
+                    src={f.icon}
+                    alt=""
+                    width={40}
+                    height={40}
+                    className="jb-cdn-icon"
+                  />
                 </div>
                 <h3>{f.title}</h3>
                 <p>{f.desc}</p>
