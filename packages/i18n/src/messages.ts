@@ -271,7 +271,27 @@ export type MessageKey =
   | 'pjcHighlightGlobalTitle'
   | 'pjcHighlightAiTitle'
   | 'pjcHighlightSafetyTitle'
-  | 'pjcHighlightLeaderTitle';
+  | 'pjcHighlightLeaderTitle'
+  | 'pjcBlockBusinessTitle'
+  | 'pjcBlockBusinessBody'
+  | 'pjcBlockLeisureTitle'
+  | 'pjcBlockLeisureBody'
+  | 'pjcBlockMedicalTitle'
+  | 'pjcBlockMedicalBody'
+  | 'pjcBlockPetTitle'
+  | 'pjcBlockPetBody'
+  | 'pjcBlockEventsTitle'
+  | 'pjcBlockEventsBody'
+  | 'pjcStep1Title'
+  | 'pjcStep1Body'
+  | 'pjcStep2Title'
+  | 'pjcStep2Body'
+  | 'pjcStep3Title'
+  | 'pjcStep3Body'
+  | 'pjcStep4Title'
+  | 'pjcStep4Body'
+  | 'pjcStep5Title'
+  | 'pjcStep5Body';
 
 type Catalog = Record<MessageKey, string>;
 
@@ -561,6 +581,31 @@ const en: Catalog = {
   pjcHighlightAiTitle: 'AI-Powered Efficiency',
   pjcHighlightSafetyTitle: 'Uncompromised Safety',
   pjcHighlightLeaderTitle: 'Industry Leader',
+  pjcBlockBusinessTitle: 'Private Jet Charter for Business Travel',
+  pjcBlockBusinessBody:
+    'Optimise your business travel with our efficient and flexible private air charter services. We offer tailored solutions for executives and corporate teams, ensuring seamless and productive journeys.',
+  pjcBlockLeisureTitle: 'Private Jet Charter for Leisure Travel',
+  pjcBlockLeisureBody:
+    'Embark on unforgettable adventures with our private aircraft charters for leisure travel. Explore exotic destinations, escape to secluded retreats, or enjoy a luxurious getaway with family and friends.',
+  pjcBlockMedicalTitle: 'Private Jet Charter for Medical Transport',
+  pjcBlockMedicalBody:
+    'In times of medical urgency, our private jets provide swift and secure transportation for patients requiring critical care with experienced medical professionals onboard.',
+  pjcBlockPetTitle: 'Private Jet Charter for Pet Travel',
+  pjcBlockPetBody:
+    'Bring your beloved companions along on your journeys with our pet-friendly private jets. We prioritise the comfort and safety of your pets throughout their journey.',
+  pjcBlockEventsTitle: 'Private Jet Charter for Events',
+  pjcBlockEventsBody:
+    'Elevate your next event with specialised private jet charters for corporate gatherings, weddings, music festivals, and VIP groups of all sizes.',
+  pjcStep1Title: 'Share Your Itinerary',
+  pjcStep1Body: 'Share your travel requirements online.',
+  pjcStep2Title: 'Select Your Aircraft',
+  pjcStep2Body: 'Choose the ideal aircraft for your mission.',
+  pjcStep3Title: 'Quotation',
+  pjcStep3Body: 'Receive your tailored quotation.',
+  pjcStep4Title: 'Contract & Payment',
+  pjcStep4Body: 'Endorse & make payment.',
+  pjcStep5Title: 'Enjoy Your Trip',
+  pjcStep5Body: 'Relax and enjoy your journey.',
 };
 
 const vi: Catalog = {
@@ -848,6 +893,31 @@ const vi: Catalog = {
   pjcHighlightAiTitle: 'Hiệu quả nhờ AI',
   pjcHighlightSafetyTitle: 'An toàn không thỏa hiệp',
   pjcHighlightLeaderTitle: 'Dẫn đầu ngành',
+  pjcBlockBusinessTitle: 'Thuê máy bay riêng cho công tác',
+  pjcBlockBusinessBody:
+    'Tối ưu chuyến công tác với dịch vụ charter linh hoạt, hiệu quả. Giải pháp riêng cho lãnh đạo và đội ngũ doanh nghiệp, hành trình liền mạch và năng suất.',
+  pjcBlockLeisureTitle: 'Thuê máy bay riêng cho du lịch',
+  pjcBlockLeisureBody:
+    'Khám phá hành trình đáng nhớ với charter giải trí. Điểm đến độc đáo, nghỉ dưỡng riêng tư, hoặc kỳ nghỉ sang trọng cùng gia đình và bạn bè.',
+  pjcBlockMedicalTitle: 'Thuê máy bay riêng cho vận chuyển y tế',
+  pjcBlockMedicalBody:
+    'Khi cần cấp cứu, máy bay riêng đưa bệnh nhân an toàn, nhanh chóng với đội ngũ y tế chuyên nghiệp trên chuyến bay.',
+  pjcBlockPetTitle: 'Thuê máy bay riêng cùng thú cưng',
+  pjcBlockPetBody:
+    'Đưa thú cưng đi cùng trên máy bay thân thiện với vật nuôi. Chúng tôi ưu tiên sự thoải mái và an toàn của chúng xuyên suốt hành trình.',
+  pjcBlockEventsTitle: 'Thuê máy bay riêng cho sự kiện',
+  pjcBlockEventsBody:
+    'Nâng tầm sự kiện với charter chuyên biệt cho hội họp doanh nghiệp, đám cưới, lễ hội âm nhạc và nhóm VIP mọi quy mô.',
+  pjcStep1Title: 'Chia sẻ hành trình',
+  pjcStep1Body: 'Gửi yêu cầu chuyến bay trực tuyến.',
+  pjcStep2Title: 'Chọn máy bay',
+  pjcStep2Body: 'Chọn máy bay phù hợp nhiệm vụ của bạn.',
+  pjcStep3Title: 'Báo giá',
+  pjcStep3Body: 'Nhận báo giá được tùy chỉnh.',
+  pjcStep4Title: 'Hợp đồng & thanh toán',
+  pjcStep4Body: 'Ký xác nhận và thanh toán.',
+  pjcStep5Title: 'Tận hưởng chuyến bay',
+  pjcStep5Body: 'Thư giãn và tận hưởng hành trình.',
 };
 
 const zhCn: Catalog = {
@@ -1125,6 +1195,31 @@ const zhCn: Catalog = {
   pjcHighlightAiTitle: 'AI 高效匹配',
   pjcHighlightSafetyTitle: '安全毫不妥协',
   pjcHighlightLeaderTitle: '行业领先',
+  pjcBlockBusinessTitle: '商务出行私人包机',
+  pjcBlockBusinessBody:
+    '以高效灵活的私人包机优化商务出行。为高管与企业团队量身定制，确保旅程顺畅高效。',
+  pjcBlockLeisureTitle: '休闲旅行私人包机',
+  pjcBlockLeisureBody:
+    '开启难忘的私人飞机休闲之旅。探索异域目的地、隐秘度假地，或与亲友共享奢华假期。',
+  pjcBlockMedicalTitle: '医疗转运私人包机',
+  pjcBlockMedicalBody:
+    '在医疗紧急情况下，我们的私人飞机在专业医护人员陪同下，为危重患者提供快速安全的转运。',
+  pjcBlockPetTitle: '宠物出行私人包机',
+  pjcBlockPetBody:
+    '与挚爱宠物同行。我们的宠物友好私人飞机全程优先保障宠物的舒适与安全。',
+  pjcBlockEventsTitle: '活动私人包机',
+  pjcBlockEventsBody:
+    '为企业聚会、婚礼、音乐节及各类 VIP 团体提供专属私人包机，提升活动体验。',
+  pjcStep1Title: '分享行程',
+  pjcStep1Body: '在线提交您的出行需求。',
+  pjcStep2Title: '选择飞机',
+  pjcStep2Body: '为您的任务选择理想机型。',
+  pjcStep3Title: '报价',
+  pjcStep3Body: '获取为您定制的报价。',
+  pjcStep4Title: '合同与付款',
+  pjcStep4Body: '确认签署并完成付款。',
+  pjcStep5Title: '享受旅程',
+  pjcStep5Body: '放松身心，享受飞行。',
 };
 
 const zhHk: Catalog = {

@@ -95,7 +95,29 @@ export async function ServicePage({
                 <h2 className="jb-section-title">
                   {t(locale, 'pjcServicesTitle')}
                 </h2>
-                <ServiceBlocks items={pjc.serviceBlocks} />
+                <ServiceBlocks
+                  items={pjc.serviceBlocks.map((block, i) => {
+                    const titles = [
+                      t(locale, 'pjcBlockBusinessTitle'),
+                      t(locale, 'pjcBlockLeisureTitle'),
+                      t(locale, 'pjcBlockMedicalTitle'),
+                      t(locale, 'pjcBlockPetTitle'),
+                      t(locale, 'pjcBlockEventsTitle'),
+                    ] as const;
+                    const bodies = [
+                      t(locale, 'pjcBlockBusinessBody'),
+                      t(locale, 'pjcBlockLeisureBody'),
+                      t(locale, 'pjcBlockMedicalBody'),
+                      t(locale, 'pjcBlockPetBody'),
+                      t(locale, 'pjcBlockEventsBody'),
+                    ] as const;
+                    return {
+                      image: block.image,
+                      title: titles[i] ?? block.title,
+                      body: bodies[i] ?? block.body,
+                    };
+                  })}
+                />
               </section>
 
               <LightSection
@@ -174,10 +196,26 @@ export async function ServicePage({
             subtitle={t(locale, 'pjcProcessSubtitle')}
           >
             <StepsTimeline
-              steps={pjc.processSteps.map((s, i) => ({
-                title: `${i + 1}. ${s.title}`,
-                body: s.body,
-              }))}
+              steps={pjc.processSteps.map((s, i) => {
+                const titles = [
+                  t(locale, 'pjcStep1Title'),
+                  t(locale, 'pjcStep2Title'),
+                  t(locale, 'pjcStep3Title'),
+                  t(locale, 'pjcStep4Title'),
+                  t(locale, 'pjcStep5Title'),
+                ] as const;
+                const bodies = [
+                  t(locale, 'pjcStep1Body'),
+                  t(locale, 'pjcStep2Body'),
+                  t(locale, 'pjcStep3Body'),
+                  t(locale, 'pjcStep4Body'),
+                  t(locale, 'pjcStep5Body'),
+                ] as const;
+                return {
+                  title: titles[i] ?? s.title,
+                  body: bodies[i] ?? s.body,
+                };
+              })}
             />
           </LightSection>
 

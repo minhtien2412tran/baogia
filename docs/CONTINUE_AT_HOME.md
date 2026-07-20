@@ -50,7 +50,7 @@
 
 **BE báo giá/hợp đồng (20/07):** Deploy API + đóng gap 74TR: persist `QuoteRequest.locale`, xuất Word charter, smoke `smoke-bao-gia-contracts.mjs` **PASS** prod (quote→pricing→booking PDF/Word→contract DocuSign mock). SoT [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md). Tham chiếu scope: [m-tien.com/jet-bay](https://m-tien.com/jet-bay/) (collateral). Còn Owner: G4 keys · RBAC migrate · Company/SavedSearch.
 
-**I18N tiếp (20/07):** Tourism overlays **11/11** mọi locale · PJC FAQ/highlights `t()` · register+payment email locale. `audit:i18n` fail=0 · PAGE_OVERLAY_FULL toàn bộ.
+**I18N CDN blocks (20/07):** PJC `serviceBlocks` + `processSteps` → `t()` (en/vi/zh); CDN giữ ảnh.
 
 **I18N polish (20/07 evening):** metadata theo locale · about-us overlay · cookie zh-cn · `dir=rtl` cho `ar` · xóa `getHomeOverlay` chết · offer/booking email dùng `quote.locale` · PJC highlight bodies `t()` · tourism title overlay cho `/private-jet-charter`.
 
