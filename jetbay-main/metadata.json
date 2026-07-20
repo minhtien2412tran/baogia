@@ -1,0 +1,8 @@
+{
+  "name": "Jetbay Clone",
+  "description": "A high-fidelity clone of the Jetbay private jet charter website.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
