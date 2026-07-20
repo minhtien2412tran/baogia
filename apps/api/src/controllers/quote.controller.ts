@@ -81,13 +81,20 @@ export class QuoteController {
   }
 
   @Get('documents/charter-agreements/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Get details of a charter agreement document' })
   @ApiResponse({ status: 200, description: 'Agreement document details.' })
-  getCharterAgreement(@Param('id', ParseIntPipe) id: number) {
-    return this.quoteService.getCharterAgreement(id);
+  getCharterAgreement(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.quoteService.getCharterAgreement(id, user.userId);
   }
 
   @Get('documents/charter-agreements/:id/export')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({
     summary: 'Export charter agreement as HTML, PDF, or Word',
   })
@@ -100,10 +107,11 @@ export class QuoteController {
   async exportCharterAgreement(
     @Param('id', ParseIntPipe) id: number,
     @Query('format') format: string,
+    @CurrentUser() user: AuthUser,
     @Res() res: Response,
   ) {
     if (format === 'pdf') {
-      const buffer = await this.documentService.generateCharterAgreementPdf(id);
+      const buffer = await this.documentService.generateCharterAgreementPdf(id, user.userId);
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader(
         'Content-Disposition',
@@ -114,7 +122,7 @@ export class QuoteController {
 
     if (format === 'word' || format === 'doc' || format === 'docx') {
       const buffer =
-        await this.documentService.generateCharterAgreementWord(id);
+        await this.documentService.generateCharterAgreementWord(id, user.userId);
       res.setHeader('Content-Type', 'application/msword');
       res.setHeader(
         'Content-Disposition',
@@ -123,7 +131,7 @@ export class QuoteController {
       return res.send(buffer);
     }
 
-    const html = await this.documentService.getCharterAgreementHtml(id);
+    const html = await this.documentService.getCharterAgreementHtml(id, user.userId);
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     if (format === 'html') {
       res.setHeader(
@@ -161,30 +169,47 @@ export class QuoteController {
   }
 
   @Post('payments/intent')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Create a payment intent' })
   @ApiResponse({ status: 201, description: 'Payment intent created.' })
-  createPaymentIntent(@Body() body: PaymentIntentDto) {
-    return this.quoteService.createPaymentIntent(body);
+  createPaymentIntent(
+    @Body() body: PaymentIntentDto,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.quoteService.createPaymentIntent(body, user.userId);
   }
 
   @Post('payments/confirm')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Confirm a payment transaction' })
   @ApiResponse({ status: 200, description: 'Payment confirmed.' })
-  confirmPayment(@Body() body: ConfirmPaymentDto) {
-    return this.quoteService.confirmPayment(body);
+  confirmPayment(
+    @Body() body: ConfirmPaymentDto,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.quoteService.confirmPayment(body, user.userId);
   }
 
   @Post('payments/hold')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Place a payment hold' })
   @ApiResponse({ status: 201, description: 'Hold placed.' })
-  placeHold(@Body() body: PaymentIntentDto) {
-    return this.quoteService.placeHold(body);
+  placeHold(@Body() body: PaymentIntentDto, @CurrentUser() user: AuthUser) {
+    return this.quoteService.placeHold(body, user.userId);
   }
 
   @Post('payments/gateway')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Create OnePay or 9Pay redirect payment URL' })
-  createGatewayPayment(@Body() body: CreateGatewayPaymentDto) {
-    return this.quoteService.createGatewayPayment(body);
+  createGatewayPayment(
+    @Body() body: CreateGatewayPaymentDto,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.quoteService.createGatewayPayment(body, user.userId);
   }
 
   @Public()

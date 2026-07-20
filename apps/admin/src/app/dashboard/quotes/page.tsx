@@ -115,7 +115,11 @@ export default function QuotesPage() {
   }
 
   const rows = quotes.map((q) => ({
-    id: String(q.id),
+    id: (
+      <a href={`/dashboard/quotes/${q.id}`} style={{ color: '#e6c76a' }}>
+        {q.id}
+      </a>
+    ),
     name: q.name,
     email: q.email,
     route: q.route,
@@ -206,6 +210,8 @@ export default function QuotesPage() {
 
       {loading ? (
         <Muted>Loading quotes...</Muted>
+      ) : !quotes.length ? (
+        <Muted>No quote requests found.</Muted>
       ) : (
         <DataTable
           columns={[

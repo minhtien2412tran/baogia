@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import PDFDocument from 'pdfkit';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -6,7 +10,7 @@ import { PrismaService } from '../prisma/prisma.service';
 export class DocumentService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getCharterAgreementHtml(id: number): Promise<string> {
+  private async findOwnedDocument(id: number, userId: number) {
     const doc = await this.prisma.document.findUnique({
       where: { id },
       include: {
@@ -19,6 +23,14 @@ export class DocumentService {
       },
     });
     if (!doc) throw new NotFoundException(`Document ${id} not found`);
+    if (doc.booking.userId !== userId) {
+      throw new ForbiddenException('You do not own this document');
+    }
+    return doc;
+  }
+
+  async getCharterAgreementHtml(id: number, userId: number): Promise<string> {
+    const doc = await this.findOwnedDocument(id, userId);
 
     const user = doc.booking.user;
     const signer =
@@ -59,12 +71,8 @@ export class DocumentService {
 </html>`;
   }
 
-  async generateCharterAgreementPdf(id: number): Promise<Buffer> {
-    const doc = await this.prisma.document.findUnique({
-      where: { id },
-      include: { booking: { include: { user: true } } },
-    });
-    if (!doc) throw new NotFoundException(`Document ${id} not found`);
+  async generateCharterAgreementPdf(id: number, userId: number): Promise<Buffer> {
+    const doc = await this.findOwnedDocument(id, userId);
 
     const user = doc.booking.user;
     const signer =
@@ -117,12 +125,8 @@ export class DocumentService {
    * Word 2003 XML flat document — opens in Microsoft Word / LibreOffice
    * without adding a DOCX zip dependency (báo giá DoD: xuất Word/PDF).
    */
-  async generateCharterAgreementWord(id: number): Promise<Buffer> {
-    const doc = await this.prisma.document.findUnique({
-      where: { id },
-      include: { booking: { include: { user: true } } },
-    });
-    if (!doc) throw new NotFoundException(`Document ${id} not found`);
+  async generateCharterAgreementWord(id: number, userId: number): Promise<Buffer> {
+    const doc = await this.findOwnedDocument(id, userId);
 
     const user = doc.booking.user;
     const signer =

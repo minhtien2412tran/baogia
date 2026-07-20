@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -440,12 +441,15 @@ export class QuoteService {
     };
   }
 
-  async getCharterAgreement(id: number) {
+  async getCharterAgreement(id: number, userId: number) {
     const doc = await this.prisma.document.findUnique({
       where: { id },
       include: { booking: { include: { user: true } } },
     });
     if (!doc) throw new NotFoundException(`Document ${id} not found`);
+    if (doc.booking.userId !== userId) {
+      throw new ForbiddenException('You do not own this document');
+    }
 
     return {
       id: doc.id,
@@ -459,13 +463,23 @@ export class QuoteService {
     };
   }
 
-  async createPaymentIntent(body: PaymentIntentDto) {
+  private assertBookingOwner(
+    booking: { userId: number },
+    userId: number,
+  ): void {
+    if (booking.userId !== userId) {
+      throw new ForbiddenException('You do not own this booking');
+    }
+  }
+
+  async createPaymentIntent(body: PaymentIntentDto, userId: number) {
     const booking = await this.prisma.booking.findUnique({
       where: { id: body.bookingId },
       include: { quoteOffer: true },
     });
     if (!booking)
       throw new NotFoundException(`Booking ${body.bookingId} not found`);
+    this.assertBookingOwner(booking, userId);
 
     const amount = booking.quoteOffer
       ? Number(booking.quoteOffer.price)
@@ -514,7 +528,7 @@ export class QuoteService {
     };
   }
 
-  async confirmPayment(body: ConfirmPaymentDto) {
+  async confirmPayment(body: ConfirmPaymentDto, userId: number) {
     const paymentId = Number(body.paymentIntentId);
     if (Number.isNaN(paymentId)) {
       throw new BadRequestException('Invalid payment intent ID');
@@ -524,6 +538,12 @@ export class QuoteService {
       where: { id: paymentId },
     });
     if (!payment) throw new NotFoundException('Payment not found');
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: payment.bookingId },
+      select: { userId: true },
+    });
+    if (!booking) throw new NotFoundException('Booking not found');
+    this.assertBookingOwner(booking, userId);
 
     if (
       this.payments.isStripeEnabled() &&
@@ -552,13 +572,14 @@ export class QuoteService {
     };
   }
 
-  async placeHold(body: PaymentIntentDto) {
+  async placeHold(body: PaymentIntentDto, userId: number) {
     const booking = await this.prisma.booking.findUnique({
       where: { id: body.bookingId },
       include: { quoteOffer: true },
     });
     if (!booking)
       throw new NotFoundException(`Booking ${body.bookingId} not found`);
+    this.assertBookingOwner(booking, userId);
 
     const amount = booking.quoteOffer
       ? Number(booking.quoteOffer.price)
@@ -585,13 +606,14 @@ export class QuoteService {
     };
   }
 
-  async createGatewayPayment(body: CreateGatewayPaymentDto) {
+  async createGatewayPayment(body: CreateGatewayPaymentDto, userId: number) {
     const booking = await this.prisma.booking.findUnique({
       where: { id: body.bookingId },
       include: { quoteOffer: true },
     });
     if (!booking)
       throw new NotFoundException(`Booking ${body.bookingId} not found`);
+    this.assertBookingOwner(booking, userId);
 
     const amount = booking.quoteOffer
       ? Number(booking.quoteOffer.price)

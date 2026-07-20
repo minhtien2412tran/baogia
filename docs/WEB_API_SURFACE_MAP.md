@@ -39,7 +39,7 @@ Legend — Data status: `DONE` | `PARTIAL` | `MOCK` | `BLOCKED` | `NOT_STARTED` 
 | OAuth Google/Apple | login buttons | — | `/auth/oauth/*` | POST | — | buttons | BLOCKED | — | NOT_CONFIGURED | — | — | integrations false | Need client IDs |
 | OTP SMS | login/register | — | `/auth/otp/*` | POST | — | pages | BLOCKED | — | — | — | — | sms=false | Dev logs code |
 | Account dashboard | `/account/*` | users | `/account/dashboard` | GET | JWT | `AccountContext` | DONE | skeleton | retry + 401→login | AccountEmpty CTA i18n | auth-booking | PROD | T-S3-02 |
-| Account payments | `/account/payments` | — | `/payments/gateway` | POST | JWT | pay button | BLOCKED | — | not configured | — | — | pay keys missing | OnePay/9Pay/Stripe |
+| Account payments | `/account/payments` | — | `/payments/gateway` | POST | JWT + booking ownership | pay button | BLOCKED | — | not configured | — | — | pay keys missing | OnePay/9Pay/Stripe; ownership guard added 20/07 |
 | News/Blogs/Videos | `/news` `/blogs` `/video-centre` | content/* | `/content/*` | GET | API key | list/detail | PARTIAL | — | silent empty | blank | smoke news | PROD thin content | |
 | World Cup | WC pages | — | `/campaigns/world-cup/*` | GET/POST | API key | forms | PARTIAL | — | — | hide empty | NEEDS_VERIFY | — | IATA raw inputs |
 | Partners | partnership page | partners | `/partners/*` | GET/POST | API key | forms | PARTIAL | — | hide empty | — | NEEDS_VERIFY | — | |
@@ -62,7 +62,7 @@ Legend — Data status: `DONE` | `PARTIAL` | `MOCK` | `BLOCKED` | `NOT_STARTED` 
 | Media | — | media / media-review | `/admin/media*` `/admin/media-assets*` | CRUD | Admin | adminApi | PARTIAL | — | — | — | media tests | PROD | Hotlink JetVina staging |
 | Operators / Templates | — | operators / email-templates | `/admin/operators` `/admin/email-templates` | CRUD | Admin | adminApi | DONE | — | — | — | hist 200 | PROD | Samples seeded |
 | Audit | — | audit-logs | `/admin/audit-logs` | GET | Admin | adminApi | DONE | — | — | — | NEEDS_VERIFY | PROD | |
-| Permissions | — | permissions | `/admin/permissions*` | GET/PUT | Admin JWT + `permission.manage` | adminApi | PARTIAL | — | 403 currently treated as logout | — | NEEDS_VERIFY | PROD | Login UI hard-blocks non-ADMIN; staff RBAC unused |
+| Permissions | — | permissions | `/admin/permissions*` | GET/PUT | Staff JWT + `permission.manage` where required | adminApi | PARTIAL | — | 403 stays in-session | — | NEEDS_VERIFY | PROD | Staff login + permission-aware nav added; legacy controller migration remains |
 | Contracts | — | contracts | `/admin/contracts*` | workflow | PermissionGuard | adminApi | PARTIAL | — | — | — | — | DocuSign mock | GĐ4 · UI thiếu create/detail/request-changes |
 | Settings / brand | — | settings | `/admin/site-settings/brand` | GET/PATCH | Admin | adminApi | PARTIAL | — | — | — | — | PROD | |
 | Revenue demo | — | dashboard | `/admin/dashboard/revenue-demo` | GET | Admin | adminApi | MOCK | — | — | — | — | Demo metric | Labelled demo |

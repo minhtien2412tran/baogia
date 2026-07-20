@@ -18,19 +18,22 @@ import {
 import { AdminQuotesService } from '../services/admin-quotes.service';
 import { CreateQuoteOfferDto } from '../dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { AdminGuard } from '../auth/admin.guard';
+import { StaffGuard } from '../auth/staff.guard';
+import { PermissionGuard } from '../permissions/permission.guard';
+import { RequirePermissions } from '../permissions/require-permissions.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 
 @ApiTags('Admin Quotes')
 @ApiSecurity('X-API-Key')
 @Controller('admin')
-@UseGuards(JwtAuthGuard, AdminGuard)
+@UseGuards(JwtAuthGuard, StaffGuard, PermissionGuard)
 @ApiBearerAuth('bearer')
 export class AdminQuotesController {
   constructor(private readonly quotes: AdminQuotesService) {}
 
   @Get('quotes')
+  @RequirePermissions('quote.view')
   @ApiOperation({ summary: 'List quote requests (paginated)' })
   @ApiQuery({ name: 'status', required: false })
   @ApiQuery({ name: 'page', required: false })
@@ -48,18 +51,14 @@ export class AdminQuotesController {
   }
 
   @Get('quotes/:id')
+  @RequirePermissions('quote.view')
   @ApiOperation({ summary: 'Get quote request detail with offers' })
   getOne(@Param('id', ParseIntPipe) id: number) {
     return this.quotes.getQuote(id);
   }
 
-  @Get('operators')
-  @ApiOperation({ summary: 'List active operators for offer forms' })
-  listOperators() {
-    return this.quotes.listOperators();
-  }
-
   @Post('quotes/:id/offers')
+  @RequirePermissions('quote.create')
   @ApiOperation({ summary: 'Create a quote offer and mark request OFFERED' })
   createOffer(
     @Param('id', ParseIntPipe) id: number,

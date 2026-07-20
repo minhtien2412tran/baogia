@@ -70,7 +70,11 @@ export default function BookingsPage() {
   }
 
   const rows = bookings.map((b) => ({
-    id: String(b.id),
+    id: (
+      <a href={`/dashboard/bookings/${b.id}`} style={{ color: '#e6c76a' }}>
+        {b.id}
+      </a>
+    ),
     email: b.email,
     type: b.type,
     route: b.route,
@@ -93,6 +97,8 @@ export default function BookingsPage() {
       <SectionTitle>Manage Bookings</SectionTitle>
       {loading ? (
         <Muted>Loading bookings...</Muted>
+      ) : !bookings.length ? (
+        <Muted>No bookings found.</Muted>
       ) : (
         <DataTable
           columns={[

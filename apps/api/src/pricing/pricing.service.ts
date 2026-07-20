@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -25,6 +26,18 @@ export class PricingService {
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
   ) {}
+
+  private async assertBookingOwner(bookingId: number, userId: number) {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+      select: { userId: true },
+    });
+    if (!booking) throw new NotFoundException(`Booking ${bookingId} not found`);
+    if (booking.userId !== userId) {
+      throw new ForbiddenException('You do not own this booking');
+    }
+    return booking;
+  }
 
   private toAirportFees(a: {
     id: number;
@@ -98,6 +111,12 @@ export class PricingService {
   }> {
     if (params.fromAirportId === params.toAirportId) {
       throw new BadRequestException('From and to airports must differ');
+    }
+    if (params.bookingId) {
+      if (!params.userId) {
+        throw new ForbiddenException('Authenticated user required');
+      }
+      await this.assertBookingOwner(params.bookingId, params.userId);
     }
 
     const aircraft = await this.prisma.aircraft.findUnique({
@@ -184,10 +203,7 @@ export class PricingService {
     estimateId: number,
     userId?: number,
   ) {
-    const booking = await this.prisma.booking.findUnique({
-      where: { id: bookingId },
-    });
-    if (!booking) throw new NotFoundException(`Booking ${bookingId} not found`);
+    await this.assertBookingOwner(bookingId, userId ?? 0);
     const estimate = await this.prisma.pricingEstimate.findUnique({
       where: { id: estimateId },
     });
@@ -247,10 +263,12 @@ export class PricingService {
       userId,
     });
 
-    return this.getBookingBreakdown(bookingId);
+    return this.getBookingBreakdown(bookingId, userId);
   }
 
   async recalculateBooking(bookingId: number, userId?: number) {
+    if (!userId) throw new ForbiddenException('Authenticated user required');
+    await this.assertBookingOwner(bookingId, userId);
     const booking = await this.prisma.booking.findUnique({
       where: { id: bookingId },
       include: {
@@ -289,7 +307,9 @@ export class PricingService {
     return { estimate, estimateId, label: 'Giá ước tính' };
   }
 
-  async getBookingBreakdown(bookingId: number) {
+  async getBookingBreakdown(bookingId: number, userId?: number) {
+    if (!userId) throw new ForbiddenException('Authenticated user required');
+    await this.assertBookingOwner(bookingId, userId);
     const booking = await this.prisma.booking.findUnique({
       where: { id: bookingId },
       include: {

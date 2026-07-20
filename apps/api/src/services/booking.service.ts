@@ -176,12 +176,38 @@ export class BookingService {
       throw new BadRequestException('Authenticated user not found');
     }
 
+    let quoteRequestId = dto.quoteId;
+    let quoteOfferId: number | undefined;
+    let offerPrice: number | undefined;
+    if (dto.quoteOfferId) {
+      const offer = await this.prisma.quoteOffer.findUnique({
+        where: { id: dto.quoteOfferId },
+        include: { quoteRequest: { select: { id: true, userId: true, email: true } } },
+      });
+      if (!offer) throw new BadRequestException('Quote offer not found');
+      if (
+        offer.quoteRequest.userId !== userId &&
+        offer.quoteRequest.email !== (await this.prisma.user.findUnique({
+          where: { id: userId },
+          select: { email: true },
+        }))?.email
+      ) {
+        throw new BadRequestException('Quote offer does not belong to this account');
+      }
+      quoteOfferId = offer.id;
+      quoteRequestId = offer.quoteRequest.id;
+      offerPrice = Number(offer.price);
+    }
+
     const booking = await this.prisma.booking.create({
       data: {
         userId,
-        quoteRequestId: dto.quoteId ?? undefined,
+        quoteRequestId: quoteRequestId ?? undefined,
+        quoteOfferId,
         bookingType: dto.bookingType ?? 'CHARTER',
         bookingStatus: STATUS_TO_DB.pending,
+        estimatedPriceTotal: offerPrice,
+        estimatedPriceCurrency: offerPrice != null ? 'USD' : undefined,
         passengers: {
           create: dto.passengers.map((p) => ({
             firstName: p.firstName,
@@ -212,6 +238,19 @@ export class BookingService {
         },
       },
     });
+
+    if (quoteRequestId) {
+      await this.prisma.quoteRequest.update({
+        where: { id: quoteRequestId },
+        data: { status: 'CONVERTED' },
+      });
+    }
+    if (quoteOfferId) {
+      await this.prisma.quoteOffer.update({
+        where: { id: quoteOfferId },
+        data: { status: 'ACCEPTED' },
+      });
+    }
 
     await this.audit.log(
       'BOOKING_CREATED',

@@ -92,9 +92,9 @@ export class OtpVerifyDto {
 }
 
 export class UpdateAdminUserDto {
-  @ApiPropertyOptional({ enum: ['USER', 'ADMIN'] })
+  @ApiPropertyOptional({ enum: ['USER', 'ADMIN', 'SALES', 'CONTRACT_APPROVER'] })
   @IsOptional()
-  @IsIn(['USER', 'ADMIN'])
+  @IsIn(['USER', 'ADMIN', 'SALES', 'CONTRACT_APPROVER'])
   role?: string;
 
   @ApiPropertyOptional({ enum: ['ACTIVE', 'SUSPENDED'] })
@@ -476,6 +476,12 @@ export class CreateBookingDto {
   @Type(() => Number)
   @IsInt()
   quoteId?: number;
+
+  @ApiPropertyOptional({ example: 12, description: 'Accepted QuoteOffer ID' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  quoteOfferId?: number;
 
   @ApiPropertyOptional({ example: 'CHARTER' })
   @IsOptional()

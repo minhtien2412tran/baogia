@@ -49,8 +49,12 @@ export default function UsersAdminPage() {
   }
 
   const rows = users.map((u) => ({
-    id: String(u.id),
     email: u.email,
+    id: (
+      <a href={`/dashboard/users/${u.id}`} style={{ color: '#e6c76a' }}>
+        {u.id}
+      </a>
+    ),
     name: [u.firstName, u.lastName].filter(Boolean).join(' ') || '—',
     phone: u.phone ?? '—',
     role: u.role,
@@ -58,10 +62,16 @@ export default function UsersAdminPage() {
     actions: (
       <span style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
         {u.role === 'USER' && (
-          <ActionBtn onClick={() => void update(u.id, { role: 'ADMIN' })}>Make Admin</ActionBtn>
+          <>
+            <ActionBtn onClick={() => void update(u.id, { role: 'SALES' })}>Make Sales</ActionBtn>
+            <ActionBtn onClick={() => void update(u.id, { role: 'CONTRACT_APPROVER' })}>
+              Make Approver
+            </ActionBtn>
+            <ActionBtn onClick={() => void update(u.id, { role: 'ADMIN' })}>Make Admin</ActionBtn>
+          </>
         )}
-        {u.role === 'ADMIN' && u.email !== 'admin@jetbay.local' && (
-          <ActionBtn onClick={() => void update(u.id, { role: 'USER' })}>Remove Admin</ActionBtn>
+        {u.role !== 'USER' && u.email !== 'admin@jetbay.local' && (
+          <ActionBtn onClick={() => void update(u.id, { role: 'USER' })}>Set User</ActionBtn>
         )}
         {u.status === 'ACTIVE' ? (
           <IconButton

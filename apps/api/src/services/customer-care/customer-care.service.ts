@@ -321,7 +321,7 @@ export class CustomerCareService implements OnModuleInit, OnModuleDestroy {
       return;
     }
 
-    const meta = (log.meta as Record<string, unknown> | null) ?? {};
+    const meta = { ...((log.meta as Record<string, unknown> | null) ?? {}) };
     const template = renderEmailTemplate(
       log.campaignKey as CampaignKey,
       log.locale,
@@ -334,14 +334,30 @@ export class CustomerCareService implements OnModuleInit, OnModuleDestroy {
       html: template.html,
     });
 
+    if (result.sent) {
+      await this.prisma.emailCampaignLog.update({
+        where: { id: logId },
+        data: { status: 'SENT', sentAt: new Date(), error: null },
+      });
+      return;
+    }
+
+    const attempts = Number(meta.attempts ?? 0) + 1;
+    meta.attempts = attempts;
+    const retryable = attempts < 3;
+    const nextAttempt = new Date(Date.now() + 15 * 60 * 1000);
     await this.prisma.emailCampaignLog.update({
       where: { id: logId },
       data: {
-        status: result.sent ? 'SENT' : 'FAILED',
-        sentAt: result.sent ? new Date() : undefined,
-        error: result.reason ?? null,
+        status: retryable ? 'PENDING' : 'FAILED',
+        scheduledAt: retryable ? nextAttempt : log.scheduledAt,
+        error: result.reason ?? 'Email delivery failed',
+        meta: meta as Prisma.InputJsonValue,
       },
     });
+    this.logger.warn(
+      `Email campaign ${logId} ${retryable ? 'scheduled for retry' : 'failed permanently'} (attempt ${attempts})`,
+    );
   }
 
   private async scanQuoteFollowups(): Promise<void> {

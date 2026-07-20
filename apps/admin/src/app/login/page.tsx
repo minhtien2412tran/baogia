@@ -23,8 +23,8 @@ export default function AdminLoginPage() {
       if (!res.tokens?.accessToken) {
         throw new Error(res.message ?? 'Login failed');
       }
-      if (res.user?.role !== 'ADMIN') {
-        throw new Error('Admin access required. Use an ADMIN account.');
+      if (!['ADMIN', 'SALES', 'CONTRACT_APPROVER'].includes(res.user?.role ?? '')) {
+        throw new Error('Staff access required. Use an approved staff account.');
       }
       setToken(res.tokens.accessToken);
       router.push('/dashboard');

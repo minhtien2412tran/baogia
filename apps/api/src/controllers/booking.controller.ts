@@ -23,7 +23,7 @@ import type { Request } from 'express';
 import { BookingService } from '../services/booking.service';
 import { CreateBookingDto, UpdateBookingStatusDto } from '../dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { AdminGuard } from '../auth/admin.guard';
+import { StaffGuard } from '../auth/staff.guard';
 import { PermissionGuard } from '../permissions/permission.guard';
 import { RequirePermissions } from '../permissions/require-permissions.decorator';
 import { PermissionService } from '../permissions/permission.service';
@@ -123,12 +123,13 @@ export class BookingController {
 @ApiTags('Admin Bookings')
 @ApiSecurity('X-API-Key')
 @Controller('admin/bookings')
-@UseGuards(JwtAuthGuard, AdminGuard)
+@UseGuards(JwtAuthGuard, StaffGuard, PermissionGuard)
 @ApiBearerAuth('bearer')
 export class AdminBookingController {
   constructor(private readonly bookingService: BookingService) {}
 
   @Get()
+  @RequirePermissions('booking.view')
   @ApiQuery({ name: 'status', required: false, example: 'pending' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 20 })
@@ -147,6 +148,7 @@ export class AdminBookingController {
   }
 
   @Get(':id')
+  @RequirePermissions('booking.view')
   @ApiOperation({ summary: 'Get booking by ID (admin)' })
   @ApiResponse({ status: 200, description: 'Booking details.' })
   findOne(@Param('id', ParseIntPipe) id: number) {
@@ -154,6 +156,7 @@ export class AdminBookingController {
   }
 
   @Patch(':id/status')
+  @RequirePermissions('booking.update')
   @ApiOperation({ summary: 'Update booking status (admin)' })
   @ApiResponse({ status: 200, description: 'Status updated.' })
   updateStatus(

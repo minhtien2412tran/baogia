@@ -54,6 +54,10 @@
 
 **Fix Intl locale (20/07 night):** `RangeError: Incorrect locale information` trên home (empty-leg / news dates) — `formatDate`/`toIntlLocale` dùng `htmlLang` (`en-US`/`zh-CN`) thay vì route code `en-us`/`zh-cn`.
 
+**CRM/Dashboard audit + P0 pass (20/07 late):** CRM hiện dùng chung `apps/admin` + `/admin/*` API, chưa có app CRM riêng. Đã bảo vệ payment intent/confirm/hold/gateway, document export/detail và pricing booking operations bằng JWT + ownership; staff login nhận `SALES`/`CONTRACT_APPROVER`; Admin phân biệt 401/403 và nạp permission-aware navigation; role DTO hỗ trợ đủ 4 role; quote offer → booking nối `quoteOfferId`, giá offer và quote `CONVERTED`; email campaign retry tối đa 3 lần. API/Admin typecheck PASS. Còn Owner-blocked: SMTP thật/G4 keys; integration tests local bị chặn bởi DB credentials.
+
+**CRM/Dashboard verification (20/07 late):** API/Admin/Web production builds PASS · `audit:docs PASS` · `security:scan:all` findings=0 · permission unit 5/5 PASS · `audit:i18n` fail=0, warn=10 tourism nav partial. Full API Jest vẫn có 18 integration failures do local Postgres credentials, không phải compile failure.
+
 **I18N polish (20/07 evening):** metadata theo locale · about-us overlay · cookie zh-cn · `dir=rtl` cho `ar` · xóa `getHomeOverlay` chết · offer/booking email dùng `quote.locale` · PJC highlight bodies `t()` · tourism title overlay cho `/private-jet-charter`.
 
 **I18N 100% gate (20/07):** SoT [I18N_VERIFICATION_MATRIX.md](./I18N_VERIFICATION_MATRIX.md) + `pnpm audit:i18n`. **I18N-1/2 core done**. Còn tourism nav WARN · welcome SMS OTP · SMTP Owner · RBAC.

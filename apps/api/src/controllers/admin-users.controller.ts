@@ -41,6 +41,12 @@ export class AdminUsersController {
     );
   }
 
+  @Get(':id/360')
+  @ApiOperation({ summary: 'Get customer 360 summary' })
+  customer360(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.getCustomer360(id);
+  }
+
   @Patch(':id')
   @ApiOperation({ summary: 'Update user role/status (admin)' })
   update(

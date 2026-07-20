@@ -53,9 +53,12 @@ async function adminRequest<T>(path: string, options?: RequestInit): Promise<T> 
       ...options?.headers,
     }),
   });
-  if (res.status === 401 || res.status === 403) {
+  if (res.status === 401) {
     clearToken();
     throw new Error('Session expired — please sign in again');
+  }
+  if (res.status === 403) {
+    throw new Error('Forbidden — you do not have permission for this action');
   }
   if (!res.ok) throw new Error(`${res.status}: ${await res.text()}`);
   return res.json() as Promise<T>;
@@ -93,9 +96,14 @@ export const adminApi = {
   getRecentQuotes: (limit = 10) => adminRequest<unknown[]>(`/admin/dashboard/recent-quotes?limit=${limit}`),
   getRecentBookings: () => adminRequest<unknown[]>('/admin/dashboard/recent-bookings'),
   getRevenue: () => adminRequest<Record<string, unknown>>('/admin/dashboard/revenue-demo'),
+  getMyPermissions: () =>
+    adminRequest<{ userId: number; role: string; permissions: string[] }>(
+      '/admin/permissions/me',
+    ),
   getAuditLogs: () => adminRequest<{ data: unknown[] }>('/admin/audit-logs'),
   getHealth: () => adminRequest<Record<string, unknown>>('/admin/system-health'),
   getBookings: () => adminRequest<{ data: unknown[] }>('/admin/bookings'),
+  getBooking: (id: number) => adminRequest<Record<string, unknown>>(`/admin/bookings/${id}`),
   getFixedPriceRoutes: () => publicGet<{ routes: unknown[] }>('/fixed-price/routes'),
   getAdminFixedPriceRoutes: () => adminRequest<{ routes: unknown[] }>('/admin/fixed-price/routes'),
   createFixedPriceRoute: (body: unknown) =>
@@ -246,6 +254,7 @@ export const adminApi = {
       body: JSON.stringify({ status }),
     }),
   getUsers: () => adminRequest<{ data: unknown[] }>('/admin/users'),
+  getCustomer360: (id: number) => adminRequest<Record<string, unknown>>(`/admin/users/${id}/360`),
   updateUser: (id: number, body: unknown) =>
     adminRequest<unknown>(`/admin/users/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
   getTravelCreditTransactions: () => adminRequest<{ data: unknown[] }>('/admin/travel-credits/transactions'),
@@ -332,8 +341,6 @@ export const adminApi = {
     }),
   getPermissionCatalog: () =>
     adminRequest<{ permissions: string[] }>('/admin/permissions/catalog'),
-  getMyPermissions: () =>
-    adminRequest<{ permissions: string[]; role: string }>('/admin/permissions/me'),
   getUserPermissionDetail: (userId: number) =>
     adminRequest<{ scopes: unknown[]; overrides: unknown[] }>(`/admin/permissions/users/${userId}`),
   setUserPermissionOverrides: (

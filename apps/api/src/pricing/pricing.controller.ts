@@ -49,8 +49,11 @@ export class PricingController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Booking flight-leg + estimate breakdown' })
-  breakdown(@Param('id', ParseIntPipe) id: number) {
-    return this.pricing.getBookingBreakdown(id);
+  breakdown(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.pricing.getBookingBreakdown(id, user.userId);
   }
 
   @Post('bookings/:id/recalculate')

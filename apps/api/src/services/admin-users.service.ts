@@ -64,8 +64,13 @@ export class AdminUsersService {
     const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) throw new NotFoundException(`User #${id} not found`);
 
-    if (body.role && !['USER', 'ADMIN'].includes(body.role)) {
-      throw new BadRequestException('role must be USER or ADMIN');
+    if (
+      body.role &&
+      !['USER', 'ADMIN', 'SALES', 'CONTRACT_APPROVER'].includes(body.role)
+    ) {
+      throw new BadRequestException(
+        'role must be USER, ADMIN, SALES, or CONTRACT_APPROVER',
+      );
     }
     if (body.status && !['ACTIVE', 'SUSPENDED'].includes(body.status)) {
       throw new BadRequestException('status must be ACTIVE or SUSPENDED');
@@ -93,6 +98,67 @@ export class AdminUsersService {
       status: updated.status,
       firstName: updated.firstName,
       lastName: updated.lastName,
+    };
+  }
+
+  async getCustomer360(id: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        phone: true,
+        role: true,
+        status: true,
+        quoteRequests: {
+          orderBy: { createdAt: 'desc' },
+          take: 50,
+          select: {
+            id: true,
+            status: true,
+            email: true,
+            locale: true,
+            createdAt: true,
+            offers: { select: { id: true, price: true, status: true, expiresAt: true } },
+          },
+        },
+        bookings: {
+          orderBy: { createdAt: 'desc' },
+          take: 50,
+          select: {
+            id: true,
+            bookingCode: true,
+            bookingStatus: true,
+            estimatedPriceTotal: true,
+            estimatedPriceCurrency: true,
+            createdAt: true,
+            payments: { select: { id: true, status: true, amount: true, currency: true } },
+            documents: { select: { id: true, status: true, documentType: true } },
+          },
+        },
+      },
+    });
+    if (!user) throw new NotFoundException(`User #${id} not found`);
+    return {
+      ...user,
+      quotes: user.quoteRequests.map((q) => ({
+        ...q,
+        createdAt: q.createdAt.toISOString(),
+        offers: q.offers.map((o) => ({
+          ...o,
+          price: Number(o.price),
+          expiresAt: o.expiresAt.toISOString(),
+        })),
+      })),
+      bookings: user.bookings.map((b) => ({
+        ...b,
+        estimatedPriceTotal:
+          b.estimatedPriceTotal == null ? null : Number(b.estimatedPriceTotal),
+        createdAt: b.createdAt.toISOString(),
+        payments: b.payments.map((p) => ({ ...p, amount: Number(p.amount) })),
+      })),
     };
   }
 }

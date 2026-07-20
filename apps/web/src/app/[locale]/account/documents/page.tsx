@@ -1,13 +1,13 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState } from 'react';
 import Link from 'next/link';
 import { useAccount } from '../../../../components/account/AccountContext';
 import { AccountEmpty, AccountPanel, StatusBadge } from '../../../../components/account/AccountUI';
 import { t } from '../../../../lib/i18n';
 
 function DocumentsContent({ locale }: { locale: string }) {
-  const { data } = useAccount();
+  const { data, token } = useAccount();
   if (!data) return null;
 
   return (
@@ -41,14 +41,10 @@ function DocumentsContent({ locale }: { locale: string }) {
                 </div>
                 <div className="jb-account-doc-card__actions">
                   {d.fileUrl && (
-                    <a href={d.fileUrl} className="jb-btn-ghost" target="_blank" rel="noreferrer">
-                      PDF
-                    </a>
+                    <DocumentDownloadButton token={token} url={d.fileUrl} label="PDF" />
                   )}
                   {d.htmlUrl && (
-                    <a href={d.htmlUrl} className="jb-btn-ghost" target="_blank" rel="noreferrer">
-                      HTML
-                    </a>
+                    <DocumentDownloadButton token={token} url={d.htmlUrl} label="HTML" />
                   )}
                 </div>
               </article>
@@ -57,6 +53,43 @@ function DocumentsContent({ locale }: { locale: string }) {
         )}
       </AccountPanel>
     </>
+  );
+}
+
+function DocumentDownloadButton({
+  token,
+  url,
+  label,
+}: {
+  token: string | null;
+  url: string;
+  label: string;
+}) {
+  const [loading, setLoading] = useState(false);
+
+  async function download() {
+    if (!token || loading) return;
+    setLoading(true);
+    try {
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error('Unable to download document');
+      const blob = await response.blob();
+      const href = URL.createObjectURL(blob);
+      window.open(href, '_blank', 'noopener,noreferrer');
+      window.setTimeout(() => URL.revokeObjectURL(href), 60_000);
+    } catch {
+      window.alert('Unable to download document');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <button type="button" className="jb-btn-ghost" onClick={() => void download()} disabled={loading}>
+      {loading ? '…' : label}
+    </button>
   );
 }
 
