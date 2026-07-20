@@ -188,19 +188,20 @@ function ProfileEditor({
     setBusy(true);
     setMessage('');
     try {
+      const optionalUrl = (value: string) => value.trim();
       await api.updateProfile(token, {
-        firstName,
-        lastName,
-        phone,
-        whatsapp,
-        zalo,
-        address,
-        city,
-        country,
-        preferredLocale,
-        facebookUrl,
-        instagramUrl,
-        linkedinUrl,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        phone: phone.trim(),
+        whatsapp: whatsapp.trim(),
+        zalo: zalo.trim(),
+        address: address.trim(),
+        city: city.trim(),
+        country: country.trim(),
+        preferredLocale: preferredLocale.trim(),
+        facebookUrl: optionalUrl(facebookUrl),
+        instagramUrl: optionalUrl(instagramUrl),
+        linkedinUrl: optionalUrl(linkedinUrl),
         accountType: accountType === 'COMPANY' ? 'COMPANY' : 'INDIVIDUAL',
       });
       await onSaved();
@@ -290,15 +291,36 @@ function ProfileEditor({
         </label>
         <label>
           Facebook URL
-          <input type="url" value={facebookUrl} onChange={(e) => setFacebookUrl(e.target.value)} placeholder="https://facebook.com/..." />
+          <input
+            type="text"
+            inputMode="url"
+            autoComplete="url"
+            value={facebookUrl}
+            onChange={(e) => setFacebookUrl(e.target.value)}
+            placeholder="https://facebook.com/... (optional)"
+          />
         </label>
         <label>
           Instagram URL
-          <input type="url" value={instagramUrl} onChange={(e) => setInstagramUrl(e.target.value)} placeholder="https://instagram.com/..." />
+          <input
+            type="text"
+            inputMode="url"
+            autoComplete="url"
+            value={instagramUrl}
+            onChange={(e) => setInstagramUrl(e.target.value)}
+            placeholder="https://instagram.com/... (optional)"
+          />
         </label>
         <label>
           LinkedIn URL
-          <input type="url" value={linkedinUrl} onChange={(e) => setLinkedinUrl(e.target.value)} placeholder="https://linkedin.com/in/..." />
+          <input
+            type="text"
+            inputMode="url"
+            autoComplete="url"
+            value={linkedinUrl}
+            onChange={(e) => setLinkedinUrl(e.target.value)}
+            placeholder="https://linkedin.com/in/... (optional)"
+          />
         </label>
         <button type="submit" className="jb-btn-primary" disabled={busy}>
           {busy ? 'Saving…' : 'Save profile'}

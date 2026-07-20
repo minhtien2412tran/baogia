@@ -70,6 +70,8 @@ Postman collection: `docs/postman/JETVINA_REALTIME.postman_collection.json`. Pro
 
 **Account visual + trip dashboard (21/07):** Account sidebar hiển thị avatar thật, thêm `/account/bookings` để quản lý chuyến đi và CTA staff role-gated đến `admin.minhtien.online/dashboard`; hero/trip cards có gradient, hover, responsive mobile và reduced-motion fallback. Đã cập nhật [WEB_API_SURFACE_MAP.md](./WEB_API_SURFACE_MAP.md) và [JETBAY_WEB_PAGE_DOD.md](./JETBAY_WEB_PAGE_DOD.md).
 
+**Profile social URL validation fix (21/07):** `PATCH /me` chấp nhận Facebook/Instagram/LinkedIn trống (→ `null`) và tự thêm `https://` khi thiếu protocol; trống không còn bị 400 `must be a URL address`.
+
 **I18N polish (20/07 evening):** metadata theo locale · about-us overlay · cookie zh-cn · `dir=rtl` cho `ar` · xóa `getHomeOverlay` chết · offer/booking email dùng `quote.locale` · PJC highlight bodies `t()` · tourism title overlay cho `/private-jet-charter`.
 
 **I18N 100% gate (20/07):** SoT [I18N_VERIFICATION_MATRIX.md](./I18N_VERIFICATION_MATRIX.md) + `pnpm audit:i18n`. **I18N-1/2 core done**. Còn tourism nav WARN · welcome SMS OTP · SMTP Owner · RBAC.

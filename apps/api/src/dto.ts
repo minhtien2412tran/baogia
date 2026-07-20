@@ -13,10 +13,22 @@ import {
   MaxLength,
   Min,
   MinLength,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { DB_LOCALES } from '@jetbay/i18n';
+
+/** Empty social fields → null; add https:// when protocol is missing. */
+function normalizeOptionalUrl({ value }: { value: unknown }): string | null | undefined {
+  if (value === undefined) return undefined;
+  if (value === null) return null;
+  if (typeof value !== 'string') return value as string;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  if (!/^https?:\/\//i.test(trimmed)) return `https://${trimmed}`;
+  return trimmed;
+}
 
 // --- AUTH DTOS ---
 
@@ -101,23 +113,29 @@ export class UpdateProfileDto {
   @MaxLength(20)
   preferredLocale?: string;
 
-  @ApiPropertyOptional({ example: 'https://facebook.com/example' })
+  @ApiPropertyOptional({ example: 'https://facebook.com/example', nullable: true })
+  @Transform(normalizeOptionalUrl)
   @IsOptional()
+  @ValidateIf((_, v) => v != null)
   @IsUrl({ require_protocol: true })
   @MaxLength(240)
-  facebookUrl?: string;
+  facebookUrl?: string | null;
 
-  @ApiPropertyOptional({ example: 'https://instagram.com/example' })
+  @ApiPropertyOptional({ example: 'https://instagram.com/example', nullable: true })
+  @Transform(normalizeOptionalUrl)
   @IsOptional()
+  @ValidateIf((_, v) => v != null)
   @IsUrl({ require_protocol: true })
   @MaxLength(240)
-  instagramUrl?: string;
+  instagramUrl?: string | null;
 
-  @ApiPropertyOptional({ example: 'https://linkedin.com/in/example' })
+  @ApiPropertyOptional({ example: 'https://linkedin.com/in/example', nullable: true })
+  @Transform(normalizeOptionalUrl)
   @IsOptional()
+  @ValidateIf((_, v) => v != null)
   @IsUrl({ require_protocol: true })
   @MaxLength(240)
-  linkedinUrl?: string;
+  linkedinUrl?: string | null;
 
   @ApiPropertyOptional({ example: 'COMPANY' })
   @IsOptional()
