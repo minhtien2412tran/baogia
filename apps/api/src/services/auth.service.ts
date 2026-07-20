@@ -190,6 +190,15 @@ export class AuthService {
       lastName: user.lastName,
       phone: user.phone,
       avatarUrl: user.avatarUrl,
+      whatsapp: user.whatsapp,
+      zalo: user.zalo,
+      address: user.address,
+      city: user.city,
+      country: user.country,
+      preferredLocale: user.preferredLocale,
+      facebookUrl: user.facebookUrl,
+      instagramUrl: user.instagramUrl,
+      linkedinUrl: user.linkedinUrl,
       accountType: user.accountType,
       role: user.role,
       companyId: user.companyId,
@@ -204,6 +213,15 @@ export class AuthService {
         firstName: body.firstName,
         lastName: body.lastName,
         phone: body.phone,
+        whatsapp: body.whatsapp,
+        zalo: body.zalo,
+        address: body.address,
+        city: body.city,
+        country: body.country,
+        preferredLocale: body.preferredLocale,
+        facebookUrl: body.facebookUrl,
+        instagramUrl: body.instagramUrl,
+        linkedinUrl: body.linkedinUrl,
         accountType: body.accountType,
       },
     });
@@ -233,6 +251,15 @@ export class AuthService {
     lastName: string | null;
     phone: string | null;
     accountType: string;
+    whatsapp: string | null;
+    zalo: string | null;
+    address: string | null;
+    city: string | null;
+    country: string | null;
+    preferredLocale: string | null;
+    facebookUrl: string | null;
+    instagramUrl: string | null;
+    linkedinUrl: string | null;
     role: string;
     companyId: number | null;
     status: string;
@@ -245,6 +272,15 @@ export class AuthService {
       lastName: user.lastName,
       phone: user.phone,
       avatarUrl: user.avatarUrl,
+      whatsapp: user.whatsapp,
+      zalo: user.zalo,
+      address: user.address,
+      city: user.city,
+      country: user.country,
+      preferredLocale: user.preferredLocale,
+      facebookUrl: user.facebookUrl,
+      instagramUrl: user.instagramUrl,
+      linkedinUrl: user.linkedinUrl,
       accountType: user.accountType,
       role: user.role,
       companyId: user.companyId,

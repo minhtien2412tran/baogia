@@ -64,6 +64,8 @@
 
 Postman collection: `docs/postman/JETVINA_REALTIME.postman_collection.json`. Production smoke: `/health` 200; unauthenticated REST 401; Socket.IO polling 200; namespace without JWT rejected with `Authentication required`.
 
+**Account contact/social expansion (21/07):** Account profile bổ sung WhatsApp, Zalo, địa chỉ, thành phố, quốc gia, ngôn ngữ ưu tiên và URL Facebook/Instagram/LinkedIn; email chỉ đọc và avatar tiếp tục dùng shared storage. Migration `20260721003000_user_contact_social_fields` đã chạy production. API/Web build và public smoke `/en-us/account` PASS.
+
 **I18N polish (20/07 evening):** metadata theo locale · about-us overlay · cookie zh-cn · `dir=rtl` cho `ar` · xóa `getHomeOverlay` chết · offer/booking email dùng `quote.locale` · PJC highlight bodies `t()` · tourism title overlay cho `/private-jet-charter`.
 
 **I18N 100% gate (20/07):** SoT [I18N_VERIFICATION_MATRIX.md](./I18N_VERIFICATION_MATRIX.md) + `pnpm audit:i18n`. **I18N-1/2 core done**. Còn tourism nav WARN · welcome SMS OTP · SMTP Owner · RBAC.

@@ -360,6 +360,15 @@ export const api = {
       lastName?: string | null;
       phone?: string | null;
       avatarUrl?: string | null;
+      whatsapp?: string | null;
+      zalo?: string | null;
+      address?: string | null;
+      city?: string | null;
+      country?: string | null;
+      preferredLocale?: string | null;
+      facebookUrl?: string | null;
+      instagramUrl?: string | null;
+      linkedinUrl?: string | null;
       accountType?: string | null;
       role?: string;
       status?: string;
@@ -368,6 +377,15 @@ export const api = {
     firstName?: string;
     lastName?: string;
     phone?: string;
+    whatsapp?: string;
+    zalo?: string;
+    address?: string;
+    city?: string;
+    country?: string;
+    preferredLocale?: string;
+    facebookUrl?: string;
+    instagramUrl?: string;
+    linkedinUrl?: string;
     accountType?: 'INDIVIDUAL' | 'COMPANY';
   }) =>
     request<Record<string, unknown>>('/me', {

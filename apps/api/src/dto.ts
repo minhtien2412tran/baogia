@@ -9,6 +9,8 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUrl,
+  MaxLength,
   Min,
   MinLength,
   ValidateNested,
@@ -62,6 +64,60 @@ export class UpdateProfileDto {
   @IsOptional()
   @IsString()
   phone?: string;
+
+  @ApiPropertyOptional({ example: '+84901234567' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  whatsapp?: string;
+
+  @ApiPropertyOptional({ example: '0901234567' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  zalo?: string;
+
+  @ApiPropertyOptional({ example: '12 Nguyen Hue, District 1' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(240)
+  address?: string;
+
+  @ApiPropertyOptional({ example: 'Ho Chi Minh City' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  city?: string;
+
+  @ApiPropertyOptional({ example: 'Vietnam' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  country?: string;
+
+  @ApiPropertyOptional({ example: 'en-us' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  preferredLocale?: string;
+
+  @ApiPropertyOptional({ example: 'https://facebook.com/example' })
+  @IsOptional()
+  @IsUrl({ require_protocol: true })
+  @MaxLength(240)
+  facebookUrl?: string;
+
+  @ApiPropertyOptional({ example: 'https://instagram.com/example' })
+  @IsOptional()
+  @IsUrl({ require_protocol: true })
+  @MaxLength(240)
+  instagramUrl?: string;
+
+  @ApiPropertyOptional({ example: 'https://linkedin.com/in/example' })
+  @IsOptional()
+  @IsUrl({ require_protocol: true })
+  @MaxLength(240)
+  linkedinUrl?: string;
 
   @ApiPropertyOptional({ example: 'COMPANY' })
   @IsOptional()

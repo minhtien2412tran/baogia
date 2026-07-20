@@ -17,6 +17,15 @@ model User {
   lastName             String?
   phone                String?
   avatarUrl            String?
+  whatsapp             String?
+  zalo                 String?
+  address              String?
+  city                 String?
+  country              String?
+  preferredLocale      String?
+  facebookUrl          String?
+  instagramUrl         String?
+  linkedinUrl          String?
   accountType          String                @default("INDIVIDUAL") // INDIVIDUAL, COMPANY
   role                 String                @default("USER") // USER, ADMIN, SALES, CONTRACT_APPROVER
   companyId            Int?

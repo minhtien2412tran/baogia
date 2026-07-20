@@ -5,6 +5,15 @@ export type AccountProfile = {
   lastName?: string | null;
   phone?: string | null;
   avatarUrl?: string | null;
+  whatsapp?: string | null;
+  zalo?: string | null;
+  address?: string | null;
+  city?: string | null;
+  country?: string | null;
+  preferredLocale?: string | null;
+  facebookUrl?: string | null;
+  instagramUrl?: string | null;
+  linkedinUrl?: string | null;
   accountType?: string | null;
   role?: string;
   status?: string;

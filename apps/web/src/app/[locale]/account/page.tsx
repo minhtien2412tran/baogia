@@ -150,15 +150,34 @@ function ProfileEditor({
   profile: {
     firstName?: string | null;
     lastName?: string | null;
+    email?: string | null;
     phone?: string | null;
     accountType?: string | null;
     avatarUrl?: string | null;
+    whatsapp?: string | null;
+    zalo?: string | null;
+    address?: string | null;
+    city?: string | null;
+    country?: string | null;
+    preferredLocale?: string | null;
+    facebookUrl?: string | null;
+    instagramUrl?: string | null;
+    linkedinUrl?: string | null;
   };
   onSaved: () => Promise<void>;
 }) {
   const [firstName, setFirstName] = useState(profile.firstName ?? '');
   const [lastName, setLastName] = useState(profile.lastName ?? '');
   const [phone, setPhone] = useState(profile.phone ?? '');
+  const [whatsapp, setWhatsapp] = useState(profile.whatsapp ?? '');
+  const [zalo, setZalo] = useState(profile.zalo ?? '');
+  const [address, setAddress] = useState(profile.address ?? '');
+  const [city, setCity] = useState(profile.city ?? '');
+  const [country, setCountry] = useState(profile.country ?? '');
+  const [preferredLocale, setPreferredLocale] = useState(profile.preferredLocale ?? '');
+  const [facebookUrl, setFacebookUrl] = useState(profile.facebookUrl ?? '');
+  const [instagramUrl, setInstagramUrl] = useState(profile.instagramUrl ?? '');
+  const [linkedinUrl, setLinkedinUrl] = useState(profile.linkedinUrl ?? '');
   const [accountType, setAccountType] = useState(profile.accountType ?? 'INDIVIDUAL');
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
@@ -173,6 +192,15 @@ function ProfileEditor({
         firstName,
         lastName,
         phone,
+        whatsapp,
+        zalo,
+        address,
+        city,
+        country,
+        preferredLocale,
+        facebookUrl,
+        instagramUrl,
+        linkedinUrl,
         accountType: accountType === 'COMPANY' ? 'COMPANY' : 'INDIVIDUAL',
       });
       await onSaved();
@@ -205,6 +233,10 @@ function ProfileEditor({
     <AccountPanel title="Personal information" subtitle="Update the details used for quotes, bookings, and notifications">
       <form onSubmit={save} style={{ display: 'grid', gap: 12, maxWidth: 680 }}>
         <label>
+          Email
+          <input value={profile.email ?? ''} readOnly disabled />
+        </label>
+        <label>
           First name
           <input value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
         </label>
@@ -217,6 +249,35 @@ function ProfileEditor({
           <input value={phone} onChange={(e) => setPhone(e.target.value)} />
         </label>
         <label>
+          WhatsApp
+          <input value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} />
+        </label>
+        <label>
+          Zalo
+          <input value={zalo} onChange={(e) => setZalo(e.target.value)} />
+        </label>
+        <label>
+          Address
+          <input value={address} onChange={(e) => setAddress(e.target.value)} />
+        </label>
+        <label>
+          City
+          <input value={city} onChange={(e) => setCity(e.target.value)} />
+        </label>
+        <label>
+          Country
+          <input value={country} onChange={(e) => setCountry(e.target.value)} />
+        </label>
+        <label>
+          Preferred language
+          <select value={preferredLocale} onChange={(e) => setPreferredLocale(e.target.value)}>
+            <option value="">Use website language</option>
+            <option value="en-us">English</option>
+            <option value="vi">Tiếng Việt</option>
+            <option value="zh-cn">简体中文</option>
+          </select>
+        </label>
+        <label>
           Account type
           <select value={accountType} onChange={(e) => setAccountType(e.target.value)}>
             <option value="INDIVIDUAL">Individual</option>
@@ -226,6 +287,18 @@ function ProfileEditor({
         <label>
           Avatar
           <input type="file" accept="image/jpeg,image/png,image/webp" onChange={avatarChange} disabled={busy} />
+        </label>
+        <label>
+          Facebook URL
+          <input type="url" value={facebookUrl} onChange={(e) => setFacebookUrl(e.target.value)} placeholder="https://facebook.com/..." />
+        </label>
+        <label>
+          Instagram URL
+          <input type="url" value={instagramUrl} onChange={(e) => setInstagramUrl(e.target.value)} placeholder="https://instagram.com/..." />
+        </label>
+        <label>
+          LinkedIn URL
+          <input type="url" value={linkedinUrl} onChange={(e) => setLinkedinUrl(e.target.value)} placeholder="https://linkedin.com/in/..." />
         </label>
         <button type="submit" className="jb-btn-primary" disabled={busy}>
           {busy ? 'Saving…' : 'Save profile'}
