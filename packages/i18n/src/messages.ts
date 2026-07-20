@@ -16,6 +16,8 @@ export type MessageKey =
   | 'contactUs'
   | 'myAccount'
   | 'overview'
+  | 'manageTrips'
+  | 'systemDashboard'
   | 'myQuotes'
   | 'jetCard'
   | 'travelCredits'
@@ -307,6 +309,8 @@ const en: Catalog = {
   contactUs: 'Contact Us',
   myAccount: 'My Account',
   overview: 'Overview',
+  manageTrips: 'Manage trips',
+  systemDashboard: 'System dashboard',
   myQuotes: 'My Quotes',
   jetCard: 'Jet Card',
   travelCredits: 'Travel Credits',
@@ -621,6 +625,8 @@ const vi: Catalog = {
   contactUs: 'Liên hệ',
   myAccount: 'Tài khoản của tôi',
   overview: 'Tổng quan',
+  manageTrips: 'Quản lý chuyến đi',
+  systemDashboard: 'Dashboard hệ thống',
   myQuotes: 'Báo giá của tôi',
   payments: 'Thanh toán',
   documents: 'Tài liệu',

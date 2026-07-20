@@ -49,7 +49,10 @@ Parity visual vs scratch HTML: ongoing polish (không block API DoD).
 | Page | Status |
 |------|--------|
 | login / register | ✅ OAuth/OTP UI |
+| account profile/contact/social/avatar | ✅ shared BE + editable UI |
 | account quotes/bookings/payments/documents | ✅ routes |
+| account trip dashboard `/account/bookings` | ✅ route + responsive cards |
+| staff system dashboard link | ✅ role-gated → `admin.minhtien.online/dashboard` |
 
 ## Smoke command
 

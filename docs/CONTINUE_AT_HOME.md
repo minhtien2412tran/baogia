@@ -68,6 +68,8 @@ Postman collection: `docs/postman/JETVINA_REALTIME.postman_collection.json`. Pro
 
 **Warning/debug cleanup (21/07):** Security overrides đưa API/Web về `pnpm audit: No known vulnerabilities`; xóa `@types/bcryptjs` deprecated; `audit:debug PASS`; refresh token thêm `jti` chống trùng hash; Nginx stale aaPanel vhost được backup rồi disable, `nginx -t` PASS; body parser trả 413 sạch cho payload quá lớn thay vì stack trace. Còn warning không ảnh hưởng runtime: PM2 daemon cũ hơn binary local và một số dev-only transitive packages (`glob`/`inflight`/`node-domexception`) do Jest toolchain.
 
+**Account visual + trip dashboard (21/07):** Account sidebar hiển thị avatar thật, thêm `/account/bookings` để quản lý chuyến đi và CTA staff role-gated đến `admin.minhtien.online/dashboard`; hero/trip cards có gradient, hover, responsive mobile và reduced-motion fallback. Đã cập nhật [WEB_API_SURFACE_MAP.md](./WEB_API_SURFACE_MAP.md) và [JETBAY_WEB_PAGE_DOD.md](./JETBAY_WEB_PAGE_DOD.md).
+
 **I18N polish (20/07 evening):** metadata theo locale · about-us overlay · cookie zh-cn · `dir=rtl` cho `ar` · xóa `getHomeOverlay` chết · offer/booking email dùng `quote.locale` · PJC highlight bodies `t()` · tourism title overlay cho `/private-jet-charter`.
 
 **I18N 100% gate (20/07):** SoT [I18N_VERIFICATION_MATRIX.md](./I18N_VERIFICATION_MATRIX.md) + `pnpm audit:i18n`. **I18N-1/2 core done**. Còn tourism nav WARN · welcome SMS OTP · SMTP Owner · RBAC.

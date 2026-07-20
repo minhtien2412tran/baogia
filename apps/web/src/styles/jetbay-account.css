@@ -431,3 +431,159 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ── Account experience polish ── */
+.jb-account-hero--dashboard {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  padding: 24px;
+  border: 1px solid rgba(184, 151, 90, 0.22);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 90% 10%, rgba(184, 151, 90, 0.25), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.2);
+}
+
+.jb-account-kicker {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--jb-gold, #b8975a);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.jb-account-avatar--image {
+  object-fit: cover;
+  border: 2px solid rgba(184, 151, 90, 0.65);
+}
+
+.jb-account-system-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 12px;
+  border: 1px solid rgba(184, 151, 90, 0.25);
+  border-radius: 12px;
+  color: #fff;
+  text-decoration: none;
+  background: linear-gradient(135deg, rgba(184, 151, 90, 0.18), rgba(255, 255, 255, 0.03));
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.jb-account-system-link:hover {
+  transform: translateY(-2px);
+  border-color: rgba(184, 151, 90, 0.65);
+  background: linear-gradient(135deg, rgba(184, 151, 90, 0.3), rgba(255, 255, 255, 0.06));
+}
+
+.jb-account-system-link__icon {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 9px;
+  color: #101216;
+  background: var(--jb-gold, #b8975a);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.jb-account-system-link strong,
+.jb-account-system-link small {
+  display: block;
+}
+
+.jb-account-system-link strong {
+  font-size: 13px;
+}
+
+.jb-account-system-link small {
+  margin-top: 3px;
+  color: var(--jb-text-muted);
+  font-size: 11px;
+}
+
+.jb-trip-dashboard-list {
+  display: grid;
+  gap: 12px;
+}
+
+.jb-trip-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: linear-gradient(110deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015));
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.jb-trip-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(184, 151, 90, 0.4);
+}
+
+.jb-trip-card__route strong,
+.jb-trip-card__route time {
+  display: block;
+}
+
+.jb-trip-card__route strong {
+  color: #fff;
+  font-size: 1.05rem;
+}
+
+.jb-trip-card__route time {
+  margin-top: 5px;
+  color: var(--jb-text-muted);
+  font-size: 12px;
+}
+
+.jb-trip-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  color: var(--jb-text-muted);
+  font-size: 12px;
+  text-align: right;
+}
+
+@media (max-width: 640px) {
+  .jb-account-hero--dashboard,
+  .jb-trip-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .jb-account-hero--dashboard .jb-btn-primary {
+    width: 100%;
+    text-align: center;
+  }
+
+  .jb-trip-card__meta {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jb-account-system-link,
+  .jb-trip-card {
+    transition: none;
+  }
+
+  .jb-account-system-link:hover,
+  .jb-trip-card:hover {
+    transform: none;
+  }
+}

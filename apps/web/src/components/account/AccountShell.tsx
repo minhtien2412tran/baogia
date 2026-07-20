@@ -6,8 +6,9 @@ import { useAccount } from './AccountContext';
 import { AccountMotion, AccountSkeleton } from './AccountUI';
 import { t } from '../../lib/i18n';
 
-const links: { href: string; key: 'overview' | 'myQuotes' | 'jetCard' | 'travelCredits' | 'payments' | 'documents' }[] = [
+const links: { href: string; key: 'overview' | 'manageTrips' | 'myQuotes' | 'jetCard' | 'travelCredits' | 'payments' | 'documents' }[] = [
   { href: '', key: 'overview' },
+  { href: '/bookings', key: 'manageTrips' },
   { href: '/quotes', key: 'myQuotes' },
   { href: '/jet-card', key: 'jetCard' },
   { href: '/travel-credits', key: 'travelCredits' },
@@ -27,7 +28,11 @@ export function AccountLayoutInner({ locale, children }: { locale: string; child
         <div className="jb-account-layout">
           <aside className="jb-account-sidebar jb-motion-reveal">
             <div className="jb-account-user-card">
-              <span className="jb-account-avatar" aria-hidden>{initials}</span>
+              {data?.profile.avatarUrl ? (
+                <img className="jb-account-avatar jb-account-avatar--image" src={data.profile.avatarUrl} alt="" />
+              ) : (
+                <span className="jb-account-avatar" aria-hidden>{initials}</span>
+              )}
               <div className="jb-account-user-meta">
                 <strong>{displayName || t(locale, 'myAccount')}</strong>
                 {data?.profile.email && <span>{data.profile.email}</span>}
@@ -64,6 +69,21 @@ export function AccountLayoutInner({ locale, children }: { locale: string; child
                 );
               })}
             </nav>
+
+            {data?.profile.role && ['ADMIN', 'SALES', 'CONTRACT_APPROVER'].includes(data.profile.role) && (
+              <a
+                className="jb-account-system-link"
+                href="https://admin.minhtien.online/dashboard"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span className="jb-account-system-link__icon" aria-hidden>↗</span>
+                <span>
+                  <strong>{t(locale, 'systemDashboard')}</strong>
+                  <small>CRM, quotes and bookings</small>
+                </span>
+              </a>
+            )}
 
             <button type="button" className="jb-account-logout" onClick={() => void logout()}>
               {t(locale, 'logout')}
