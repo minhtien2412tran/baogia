@@ -226,6 +226,7 @@ export class BookingService {
         userId,
         email: booking.user.email,
         firstName: booking.user.firstName,
+        locale: booking.quoteRequest?.locale ?? undefined,
       });
     }
 
@@ -342,6 +343,7 @@ export class BookingService {
         email: updated.user.email,
         userId: updated.userId,
         firstName: updated.user.firstName,
+        locale: updated.quoteRequest?.locale ?? undefined,
       });
     }
     void this.flightNotify.notifyOperatorAndAdmin(id, 'cancelled');

@@ -254,6 +254,8 @@ const zhCn: NavCatalog = {
   pageUnavailable: '此页面不可用。',
   contentComingSoon: '页面内容即将发布。',
   cookieNotice: 'Cookie通知',
+  cookieConsent: '我们使用 Cookie 改善体验、分析流量并个性化内容。请参阅我们的',
+  cookieAnd: '和',
   privacyPolicyShort: '隐私政策',
   managePreferences: '管理偏好',
   acceptCookies: '接受',

@@ -108,12 +108,12 @@ export async function ServicePage({
                     title: h.title,
                     body:
                       h.title === 'Global Coverage'
-                        ? 'Available 24/7, our network spans 190+ countries with seamless connectivity.'
+                        ? t(locale, 'pjcHighlightGlobalBody')
                         : h.title === 'AI-Powered Efficiency'
-                          ? 'AI matches your needs, securing the best aircraft in 1–2 hours.'
+                          ? t(locale, 'pjcHighlightAiBody')
                           : h.title === 'Uncompromised Safety'
-                            ? 'Certified aircraft, experienced pilots, and trusted partners on every flight.'
-                            : 'Trusted private jet charter with dedicated specialists on every journey.',
+                            ? t(locale, 'pjcHighlightSafetyBody')
+                            : t(locale, 'pjcHighlightDefaultBody'),
                   }))}
                 />
               </LightSection>

@@ -253,7 +253,11 @@ export type MessageKey =
   | 'statsFlightsLabel'
   | 'statsFlightsDesc'
   | 'statsFlightsDescLong'
-  | 'statsAriaLabel';
+  | 'statsAriaLabel'
+  | 'pjcHighlightGlobalBody'
+  | 'pjcHighlightAiBody'
+  | 'pjcHighlightSafetyBody'
+  | 'pjcHighlightDefaultBody';
 
 type Catalog = Record<MessageKey, string>;
 
@@ -516,6 +520,14 @@ const en: Catalog = {
   statsFlightsDescLong:
     'A trusted network supporting thousands of flights each year across business and leisure missions.',
   statsAriaLabel: 'Platform statistics',
+  pjcHighlightGlobalBody:
+    'Available 24/7, our network spans 190+ countries with seamless connectivity.',
+  pjcHighlightAiBody:
+    'AI matches your needs, securing the best aircraft in 1–2 hours.',
+  pjcHighlightSafetyBody:
+    'Certified aircraft, experienced pilots, and trusted partners on every flight.',
+  pjcHighlightDefaultBody:
+    'Trusted private jet charter with dedicated specialists on every journey.',
 };
 
 const vi: Catalog = {
@@ -776,6 +788,14 @@ const vi: Catalog = {
   statsFlightsDescLong:
     'Mạng lưới tin cậy hỗ trợ hàng nghìn chuyến bay mỗi năm cho công việc và giải trí.',
   statsAriaLabel: 'Thống kê nền tảng',
+  pjcHighlightGlobalBody:
+    'Sẵn sàng 24/7, mạng lưới phủ 190+ quốc gia với kết nối liền mạch.',
+  pjcHighlightAiBody:
+    'AI khớp nhu cầu của bạn, tìm máy bay phù hợp trong 1–2 giờ.',
+  pjcHighlightSafetyBody:
+    'Máy bay được chứng nhận, phi công giàu kinh nghiệm và đối tác tin cậy trên mọi chuyến.',
+  pjcHighlightDefaultBody:
+    'Charter máy bay riêng đáng tin cậy với chuyên gia đồng hành trên mọi hành trình.',
 };
 
 const zhCn: Catalog = {
@@ -1031,6 +1051,11 @@ const zhCn: Catalog = {
   statsFlightsDesc: '值得信赖的网络每年支持数千次航班。',
   statsFlightsDescLong: '值得信赖的网络每年支持数千次商务与休闲航班。',
   statsAriaLabel: '平台数据',
+  pjcHighlightGlobalBody: '全天候服务，网络覆盖 190+ 国家，畅享无缝联通。',
+  pjcHighlightAiBody: 'AI 匹配您的需求，1–2 小时内锁定最佳飞机。',
+  pjcHighlightSafetyBody:
+    '认证飞机、经验丰富的飞行员与可信合作伙伴保障每一次飞行。',
+  pjcHighlightDefaultBody: '值得信赖的私人包机，专业团队全程陪伴。',
 };
 
 const zhHk: Catalog = {

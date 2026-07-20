@@ -4,16 +4,21 @@ import { parseAboutUsBody } from '../../../lib/about-us-default';
 import { rebrandText } from '../../../lib/brand';
 import { AboutUsPage } from '../../../components/pages/AboutUsPage';
 import { contentSeo, fetchContentPage } from '../../../lib/content-page';
+import { getPageContent } from '../../../lib/page-content';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const page = await fetchContentPage('about-us', apiLocale(locale));
   const seo = contentSeo(page);
+  const overlay = getPageContent('about-us', locale);
   return buildMetadata({
-    title: seo?.title ? rebrandText(seo.title) : 'About JetVina',
+    title: seo?.title
+      ? rebrandText(seo.title)
+      : overlay?.title ?? 'About JetVina',
     description: seo?.description
       ? rebrandText(seo.description)
-      : 'Learn About JetVina — your global private jet charter partner.',
+      : overlay?.description ??
+        'Learn About JetVina — your global private jet charter partner.',
     path: '/about-us',
   });
 }

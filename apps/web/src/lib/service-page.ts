@@ -17,8 +17,8 @@ export const PAGE_CMS_SLUG: Partial<Record<string, string>> = {
   'pet-travel': 'pet-travel',
 };
 
-export function servicePageMetadata(pageKey: string) {
-  const c = getPageContent(pageKey);
+export function servicePageMetadata(pageKey: string, locale?: string) {
+  const c = getPageContent(pageKey, locale);
   return buildMetadata({
     title: c?.title ?? 'JetVina',
     description: c?.description ?? 'Private jet charter',

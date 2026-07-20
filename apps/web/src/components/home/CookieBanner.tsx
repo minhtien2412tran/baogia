@@ -23,7 +23,7 @@ export function CookieBanner({ locale }: { locale: string }) {
   }
 
   return (
-    <div className="jb-cookie-banner" role="dialog" aria-label="Cookie consent">
+    <div className="jb-cookie-banner" role="dialog" aria-label={tn(locale, 'cookieNotice')}>
       <div className="jb-cookie-inner">
         <p>
           {tn(locale, 'cookieConsent')}{' '}

@@ -5,7 +5,9 @@ import { getLocaleConfig } from '../../config/locales';
 
 export function LocaleHtmlLang({ locale }: { locale: string }) {
   useEffect(() => {
-    document.documentElement.lang = getLocaleConfig(locale).htmlLang;
+    const cfg = getLocaleConfig(locale);
+    document.documentElement.lang = cfg.htmlLang;
+    document.documentElement.dir = locale === 'ar' ? 'rtl' : 'ltr';
   }, [locale]);
   return null;
 }

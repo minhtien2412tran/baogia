@@ -3,23 +3,45 @@ import { JB } from '../../config/jetbay-cdn';
 import { navHref } from '../../config/navigation';
 import { rebrandText } from '../../lib/brand';
 import type { AboutUsPageData } from '../../lib/about-us-default';
+import { DEFAULT_ABOUT_US } from '../../lib/about-us-default';
 import { CdnImage } from '../ui/CdnImage';
 import { PageHero } from '../layout/PageHero';
+import { t, tn } from '@jetbay/i18n';
+import { getPageContent } from '../../lib/page-content';
 
 function txt(value: string) {
   return rebrandText(value);
 }
 
-export function AboutUsPage({ locale, data }: { locale: string; data: AboutUsPageData }) {
+export function AboutUsPage({
+  locale,
+  data,
+}: {
+  locale: string;
+  data: AboutUsPageData;
+}) {
+  const overlay = getPageContent('about-us', locale);
+  const tag = overlay?.tag ?? t(locale, 'aboutUsTag');
+  const useOverlayHero = data.heroTitle === DEFAULT_ABOUT_US.heroTitle;
+  const title =
+    useOverlayHero && overlay?.title ? txt(overlay.title) : txt(data.heroTitle);
+  const description =
+    useOverlayHero && overlay?.hero
+      ? txt(overlay.hero)
+      : txt(data.heroSubtitle);
+
   return (
     <main className="jb-subpage jb-about-page">
       <PageHero
         locale={locale}
-        title={txt(data.heroTitle)}
-        description={txt(data.heroSubtitle)}
-        tag="About Us"
+        title={title}
+        description={description}
+        tag={tag}
         heroImage={JB.pages.about.hero}
-        breadcrumb={[{ label: 'Home', href: '' }, { label: 'About Us' }]}
+        breadcrumb={[
+          { label: tn(locale, 'home'), href: '' },
+          { label: tag },
+        ]}
       />
 
       <section className="jb-section">
@@ -36,10 +58,18 @@ export function AboutUsPage({ locale, data }: { locale: string; data: AboutUsPag
             {data.pillars.map((pillar) => (
               <article key={pillar.title} className="jb-about-pillar">
                 <div className="jb-about-pillar-img">
-                  <CdnImage src={pillar.image} alt={pillar.title} width={320} height={200} className="jb-about-pillar-photo" />
+                  <CdnImage
+                    src={pillar.image}
+                    alt={pillar.title}
+                    width={320}
+                    height={200}
+                    className="jb-about-pillar-photo"
+                  />
                 </div>
                 <h3>{txt(pillar.title)}</h3>
-                {pillar.subtitle && <p className="jb-about-pillar-sub">{txt(pillar.subtitle)}</p>}
+                {pillar.subtitle && (
+                  <p className="jb-about-pillar-sub">{txt(pillar.subtitle)}</p>
+                )}
                 <p>{txt(pillar.body)}</p>
               </article>
             ))}
@@ -52,23 +82,42 @@ export function AboutUsPage({ locale, data }: { locale: string; data: AboutUsPag
           <div>
             <h2 className="jb-section-title">{txt(data.flyAnywhereTitle)}</h2>
             <p className="jb-section-desc">{txt(data.flyAnywhereBody)}</p>
-            <Link href={navHref(locale, '/private-jet-charter')} className="jb-btn-primary" style={{ display: 'inline-block', marginTop: 20 }}>
-              Search Available Aircraft
+            <Link
+              href={navHref(locale, '/private-jet-charter')}
+              className="jb-btn-primary"
+              style={{ display: 'inline-block', marginTop: 20 }}
+            >
+              {t(locale, 'searchAircraft')}
             </Link>
           </div>
           <div className="jb-split-visual jb-split-visual-img">
-            <CdnImage src={data.flyAnywhereImage} alt="" fill className="jb-cover-img" sizes="50vw" />
+            <CdnImage
+              src={data.flyAnywhereImage}
+              alt=""
+              fill
+              className="jb-cover-img"
+              sizes="50vw"
+            />
           </div>
         </div>
       </section>
 
-      <section className="jb-section" style={{ background: 'var(--jb-bg-elevated)' }}>
+      <section
+        className="jb-section"
+        style={{ background: 'var(--jb-bg-elevated)' }}
+      >
         <div className="jb-container">
           <h2 className="jb-section-title">{txt(data.teamTitle)}</h2>
           <div className="jb-about-team-grid">
             {data.teamCards.map((card) => (
               <article key={card.title} className="jb-about-team-card">
-                <CdnImage src={card.image} alt="" width={280} height={180} className="jb-about-team-img" />
+                <CdnImage
+                  src={card.image}
+                  alt=""
+                  width={280}
+                  height={180}
+                  className="jb-about-team-img"
+                />
                 <h3>{txt(card.title)}</h3>
                 <p>{txt(card.body)}</p>
               </article>
@@ -83,7 +132,14 @@ export function AboutUsPage({ locale, data }: { locale: string; data: AboutUsPag
           <p className="jb-section-desc">{txt(data.awardsSubtitle)}</p>
           <div className="jb-about-awards">
             {data.awards.map((a) => (
-              <CdnImage key={a.alt} src={a.image} alt={a.alt} width={140} height={80} className="jb-about-award-img" />
+              <CdnImage
+                key={a.alt}
+                src={a.image}
+                alt={a.alt}
+                width={140}
+                height={80}
+                className="jb-about-award-img"
+              />
             ))}
           </div>
         </div>
@@ -111,7 +167,13 @@ export function AboutUsPage({ locale, data }: { locale: string; data: AboutUsPag
             {data.offices.map((office) => (
               <article key={office.city} className="jb-about-office">
                 <div className="jb-about-office-map">
-                  <CdnImage src={office.mapImage} alt={office.city} width={200} height={120} className="jb-about-office-img" />
+                  <CdnImage
+                    src={office.mapImage}
+                    alt={office.city}
+                    width={200}
+                    height={120}
+                    className="jb-about-office-img"
+                  />
                 </div>
                 <h3>{office.label}</h3>
                 <p>{office.city}</p>

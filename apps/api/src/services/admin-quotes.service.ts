@@ -209,6 +209,7 @@ export class AdminQuotesService {
       email: quote.email,
       firstName: quote.firstName,
       userId: quote.userId,
+      locale: quote.locale,
       price: Number(offer.price),
       currency: 'USD',
       aircraft: aircraftLabel,

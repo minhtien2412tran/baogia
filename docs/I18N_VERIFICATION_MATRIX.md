@@ -158,9 +158,9 @@ Later (offer, booking, pay, follow-up) ──► thiếu locale ──► defaul
 | Wave | Việc | Owner |
 |------|------|-------|
 | **I18N-1** | Đưa hardcode `ServicePage` + home sections → keys/overlays; metadata theo locale; wire hoặc xóa `getHomeOverlay` | Dev · **DONE 2026-07-20** (ServicePage/Why/Stats → `t()`; audit fail=0) |
-| **I18N-2** | Page overlays tourism (ja…ar) + `about-us`; RTL `ar` | Dev |
+| **I18N-2** | Page overlays tourism (ja…ar) + `about-us`; RTL `ar` | Dev · **PARTIAL 2026-07-20** (about-us + PJC tourism titles + `dir=rtl`) |
 | **I18N-3** | CMS: dịch article/destination/page theo locale | Owner + Admin |
-| **I18N-4a** | Persist `QuoteRequest.locale` (+ optional `User.preferredLocale`); pass vào offer/booking/payment/follow-up | Dev |
+| **I18N-4a** | Persist `QuoteRequest.locale` (+ optional `User.preferredLocale`); pass vào offer/booking/payment/follow-up | Dev · **PARTIAL** locale persist + offer/booking mail |
 | **I18N-4b** | Flight notify dùng locale; Admin email locale picker; thống nhất DB vs code packs | Dev |
 | **I18N-4c** | SMTP smoke E1–E9 × `{en,vi,zh-cn}` | Owner SMTP |
 | **I18N-5** | CI: `audit:i18n` + weekly `audit:i18n:live` | Dev |

@@ -63,11 +63,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const headerStore = await headers();
   const locale = headerStore.get('x-jb-locale') ?? DEFAULT_LOCALE;
   const htmlLang = getLocaleConfig(locale).htmlLang;
+  const htmlDir = locale === 'ar' ? 'rtl' : 'ltr';
 
   return (
     // Site ships its own i18n — block browser auto-translate (e.g. Chrome
     // mangling "Charter" → "Hiến chương" and "English (US)" → "Tiếng Anh (Mỹ)").
-    <html lang={htmlLang} translate="no" className="notranslate" data-scroll-behavior="smooth">
+    <html
+      lang={htmlLang}
+      dir={htmlDir}
+      translate="no"
+      className="notranslate"
+      data-scroll-behavior="smooth"
+    >
       <body className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${cormorant.variable}`}>{children}</body>
     </html>
   );

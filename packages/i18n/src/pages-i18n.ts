@@ -96,6 +96,77 @@ const privateJetCharter: PageOverlayMap = {
       },
     ],
   },
+  // Tourism: title/tag/cta only — bodies stay English until full content translation
+  ja: {
+    title: 'あらゆるニーズに応えるプライベートジェット',
+    description: 'オンデマンドのプライベートジェットチャーター。24時間コンシェルジュ。',
+    hero: 'ラグジュアリー、効率、安全を最適な価値で。',
+    tag: 'チャーター',
+    cta: { label: '利用可能な機体を検索' },
+  },
+  ko: {
+    title: '모든 니즈를 위한 프라이빗 제트',
+    description: '온디맨드 프라이빗 제트 전세기. 24시간 컨시어지.',
+    hero: '럭셔리, 효율, 안전을 최적의 가치로.',
+    tag: '전세기',
+    cta: { label: '이용 가능한 항공기 검색' },
+  },
+  fr: {
+    title: 'Jets privés pour tous les besoins',
+    description: 'Charter à la demande avec conciergerie 24h/24.',
+    hero: 'Luxe, efficacité et sécurité au meilleur rapport qualité-prix.',
+    tag: 'Charter',
+    cta: { label: 'Rechercher un appareil' },
+  },
+  de: {
+    title: 'Privatjets für jeden Bedarf',
+    description: 'On-Demand-Charter mit 24/7 Concierge.',
+    hero: 'Luxus, Effizienz und Sicherheit zum besten Preis-Leistungs-Verhältnis.',
+    tag: 'Charter',
+    cta: { label: 'Verfügbare Flugzeuge suchen' },
+  },
+  es: {
+    title: 'Jets privados para cada necesidad',
+    description: 'Chárter bajo demanda con conserjería 24/7.',
+    hero: 'Lujo, eficiencia y seguridad al mejor valor.',
+    tag: 'Chárter',
+    cta: { label: 'Buscar aeronaves' },
+  },
+  th: {
+    title: 'เจ็ตส่วนตัวสำหรับทุกความต้องการ',
+    description: 'เช่าเหมาลำตามความต้องการ พร้อมคอนเซียร์จ 24/7',
+    hero: 'หรูหรา มีประสิทธิภาพ และปลอดภัยในมูลค่าที่ดีที่สุด',
+    tag: 'เช่าเหมาลำ',
+    cta: { label: 'ค้นหาเครื่องบินว่าง' },
+  },
+  id: {
+    title: 'Jet pribadi untuk setiap kebutuhan',
+    description: 'Charter sesuai permintaan dengan concierge 24/7.',
+    hero: 'Kemewahan, efisiensi, dan keselamatan dengan nilai terbaik.',
+    tag: 'Charter',
+    cta: { label: 'Cari pesawat tersedia' },
+  },
+  it: {
+    title: 'Jet privati per ogni esigenza',
+    description: 'Charter on-demand con concierge 24/7.',
+    hero: 'Lusso, efficienza e sicurezza al miglior valore.',
+    tag: 'Charter',
+    cta: { label: 'Cerca aeromobili' },
+  },
+  ru: {
+    title: 'Частные самолёты для любых задач',
+    description: 'Чартер по запросу с консьержем 24/7.',
+    hero: 'Роскошь, эффективность и безопасность на лучших условиях.',
+    tag: 'Чартер',
+    cta: { label: 'Найти доступные самолёты' },
+  },
+  ar: {
+    title: 'طائرات خاصة لكل احتياج',
+    description: 'تأجير عند الطلب مع خدمة كونسيرج على مدار الساعة.',
+    hero: 'فخامة وكفاءة وأمان بأفضل قيمة.',
+    tag: 'تأجير',
+    cta: { label: 'البحث عن طائرات متاحة' },
+  },
 };
 
 function simpleOverlay(
@@ -281,38 +352,57 @@ const PAGE_OVERLAYS: Record<string, PageOverlayMap> = {
       cta: { label: '申请决赛报价' },
     },
   ),
+  'about-us': simpleOverlay(
+    {
+      title: 'Về JetVina',
+      description:
+        'Nền tảng thuê máy bay riêng kết nối khách hàng với mạng lưới máy bay toàn cầu.',
+      hero: 'Truy cập liền mạch, đáng tin cậy vào hàng không tư nhân trên toàn thế giới.',
+      tag: 'Công ty',
+      cta: { label: 'Bắt đầu hành trình' },
+      sections: [
+        {
+          heading: 'Sứ mệnh',
+          body: 'JetVina mở rộng tiếp cận hàng không tư nhân qua công nghệ, minh bạch và dịch vụ đẳng cấp.',
+          bullets: [
+            'Mạng lưới máy bay toàn cầu',
+            'Phục vụ 190+ quốc gia',
+            'Đối tác đạt chuẩn ngành',
+          ],
+        },
+        {
+          heading: 'Niềm tin của chúng tôi',
+          body: 'Mọi hành trình phải an toàn, kín đáo và phù hợp. Chúng tôi không thỏa hiệp về thẩm định nhà khai thác hay chăm sóc khách.',
+        },
+      ],
+    },
+    {
+      title: '关于 JetVina',
+      description: '连接客户与全球机队网络的领先私人包机平台。',
+      hero: '无缝、可信赖的全球私人航空接入。',
+      tag: '公司',
+      cta: { label: '开启旅程' },
+      sections: [
+        {
+          heading: '我们的使命',
+          body: 'JetVina 通过技术、透明与一流服务，让私人航空更易接近。',
+          bullets: ['全球机队网络', '服务 190+ 国家', '行业认证合作伙伴'],
+        },
+        {
+          heading: '我们的信念',
+          body: '每一次旅程都应安全、私密且量身定制。我们绝不在运营商审核与客户服务上妥协。',
+        },
+      ],
+    },
+  ),
 };
 
-/** Home hero & trust strip */
-const HOME_OVERLAYS: PageOverlayMap = {
-  vi: {
-    title: 'Thuê máy bay riêng toàn cầu: Truy cập 10.000+ máy bay',
-    hero: 'Truy cập liền mạch, đáng tin cậy vào hàng không tư nhân trên toàn thế giới.',
-  },
-  'zh-cn': {
-    title: '全球私人飞机包机：全球私人航空服务',
-    hero: '无缝、可信赖的全球私人航空接入。',
-  },
-  'zh-hk': {
-    title: '全球私人飛機包機：全球私人航空服務',
-    hero: '無縫、可信賴的全球私人航空接入。',
-  },
-  'zh-tw': {
-    title: '全球私人飛機包機：全球私人航空服務',
-    hero: '無縫、可信賴的全球私人航空接入。',
-  },
-};
+/** Home hero uses `t('heroTitle')` / `t('heroSubtitle')` — no separate overlay map. */
 
 export function getPageOverlay(pageKey: string, webLocale: string): PageTextOverlay | undefined {
   const db = toDbLocale(webLocale);
   if (db === 'en') return undefined;
   return PAGE_OVERLAYS[pageKey]?.[db];
-}
-
-export function getHomeOverlay(webLocale: string): PageTextOverlay | undefined {
-  const db = toDbLocale(webLocale);
-  if (db === 'en') return undefined;
-  return HOME_OVERLAYS[db];
 }
 
 export function mergePageOverlay<T extends PageTextOverlay>(base: T, overlay?: PageTextOverlay): T {
