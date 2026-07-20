@@ -30,7 +30,7 @@ export default function RegisterPage({ params }: { params: Promise<{ locale: str
     setLoading(true);
     setError(null);
     try {
-      const res = await api.register(email, password);
+      const res = await api.register(email, password, locale);
       storeAuthSession(res);
       goAccount();
     } catch {

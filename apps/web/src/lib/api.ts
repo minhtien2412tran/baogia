@@ -289,8 +289,18 @@ export const api = {
       headers: { Authorization: `Bearer ${token}` },
       body: JSON.stringify(body),
     }),
-  register: (email: string, password: string) =>
-    request<{ user: { id: number }; tokens: { accessToken: string } }>('/auth/register', { method: 'POST', body: JSON.stringify({ email, password }) }),
+  register: (email: string, password: string, locale?: string) =>
+    request<{ user: { id: number }; tokens: { accessToken: string } }>(
+      '/auth/register',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          email,
+          password,
+          ...(locale ? { locale } : {}),
+        }),
+      },
+    ),
   getMyBookings: (token: string) =>
     request<
       Array<{

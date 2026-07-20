@@ -257,7 +257,21 @@ export type MessageKey =
   | 'pjcHighlightGlobalBody'
   | 'pjcHighlightAiBody'
   | 'pjcHighlightSafetyBody'
-  | 'pjcHighlightDefaultBody';
+  | 'pjcHighlightDefaultBody'
+  | 'pjcFaq1Q'
+  | 'pjcFaq1A'
+  | 'pjcFaq2Q'
+  | 'pjcFaq2A'
+  | 'pjcFaq3Q'
+  | 'pjcFaq3A'
+  | 'pjcFaq4Q'
+  | 'pjcFaq4A'
+  | 'pjcFaq5Q'
+  | 'pjcFaq5A'
+  | 'pjcHighlightGlobalTitle'
+  | 'pjcHighlightAiTitle'
+  | 'pjcHighlightSafetyTitle'
+  | 'pjcHighlightLeaderTitle';
 
 type Catalog = Record<MessageKey, string>;
 
@@ -528,6 +542,25 @@ const en: Catalog = {
     'Certified aircraft, experienced pilots, and trusted partners on every flight.',
   pjcHighlightDefaultBody:
     'Trusted private jet charter with dedicated specialists on every journey.',
+  pjcFaq1Q: 'What is the cost of air charter services?',
+  pjcFaq1A:
+    'The cost ranges from 5,000–18,000 USD per hour depending on aircraft type, trip duration, and destination. Request a quote for a competitive price.',
+  pjcFaq2Q: 'Are charter flights safe for travel?',
+  pjcFaq2A:
+    'Absolutely. Safety is our top priority. We partner with experienced pilots and operators who adhere to strict regulations.',
+  pjcFaq3Q: 'What is the maximum passenger capacity?',
+  pjcFaq3A:
+    'Capacity varies by aircraft — from intimate groups to jets accommodating up to 19 passengers.',
+  pjcFaq4Q: 'How much luggage can I bring?',
+  pjcFaq4A:
+    'Private jets generally offer more generous baggage allowances than commercial airlines. We guide you on capacity for your chosen aircraft.',
+  pjcFaq5Q: 'What in-flight amenities are provided?',
+  pjcFaq5A:
+    'Spacious cabins, comfortable seating, Wi-Fi, in-flight entertainment, and tailored catering options.',
+  pjcHighlightGlobalTitle: 'Global Coverage',
+  pjcHighlightAiTitle: 'AI-Powered Efficiency',
+  pjcHighlightSafetyTitle: 'Uncompromised Safety',
+  pjcHighlightLeaderTitle: 'Industry Leader',
 };
 
 const vi: Catalog = {
@@ -796,6 +829,25 @@ const vi: Catalog = {
     'Máy bay được chứng nhận, phi công giàu kinh nghiệm và đối tác tin cậy trên mọi chuyến.',
   pjcHighlightDefaultBody:
     'Charter máy bay riêng đáng tin cậy với chuyên gia đồng hành trên mọi hành trình.',
+  pjcFaq1Q: 'Chi phí dịch vụ thuê chuyến là bao nhiêu?',
+  pjcFaq1A:
+    'Chi phí khoảng 5.000–18.000 USD/giờ tùy loại máy bay, thời gian và điểm đến. Hãy yêu cầu báo giá để nhận mức cạnh tranh.',
+  pjcFaq2Q: 'Chuyến bay charter có an toàn không?',
+  pjcFaq2A:
+    'Có. An toàn là ưu tiên hàng đầu. Chúng tôi hợp tác với phi công và nhà khai thác tuân thủ quy định nghiêm ngặt.',
+  pjcFaq3Q: 'Sức chứa hành khách tối đa là bao nhiêu?',
+  pjcFaq3A:
+    'Tùy máy bay — từ nhóm nhỏ đến máy bay chứa tới 19 hành khách.',
+  pjcFaq4Q: 'Tôi mang theo được bao nhiêu hành lý?',
+  pjcFaq4A:
+    'Máy bay riêng thường cho phép hành lý rộng rãi hơn thương mại. Chúng tôi hướng dẫn theo từng loại máy bay.',
+  pjcFaq5Q: 'Tiện nghi trên chuyến bay gồm những gì?',
+  pjcFaq5A:
+    'Cabin rộng, ghế ngồi thoải mái, Wi-Fi, giải trí và suất ăn theo yêu cầu.',
+  pjcHighlightGlobalTitle: 'Phủ sóng toàn cầu',
+  pjcHighlightAiTitle: 'Hiệu quả nhờ AI',
+  pjcHighlightSafetyTitle: 'An toàn không thỏa hiệp',
+  pjcHighlightLeaderTitle: 'Dẫn đầu ngành',
 };
 
 const zhCn: Catalog = {
@@ -1056,6 +1108,23 @@ const zhCn: Catalog = {
   pjcHighlightSafetyBody:
     '认证飞机、经验丰富的飞行员与可信合作伙伴保障每一次飞行。',
   pjcHighlightDefaultBody: '值得信赖的私人包机，专业团队全程陪伴。',
+  pjcFaq1Q: '包机服务费用是多少？',
+  pjcFaq1A:
+    '费用约为每小时 5,000–18,000 美元，取决于机型、航程与目的地。请索取报价以获得有竞争力的价格。',
+  pjcFaq2Q: '包机飞行安全吗？',
+  pjcFaq2A:
+    '当然。安全是我们的首要任务。我们与经验丰富、严格遵守法规的飞行员和运营商合作。',
+  pjcFaq3Q: '最大载客量是多少？',
+  pjcFaq3A: '载客量因机型而异 — 从小型团体到最多可载 19 名乘客的飞机。',
+  pjcFaq4Q: '可以携带多少行李？',
+  pjcFaq4A:
+    '私人飞机通常比商业航班行李额度更宽裕。我们会根据所选机型为您指导。',
+  pjcFaq5Q: '机上提供哪些设施？',
+  pjcFaq5A: '宽敞客舱、舒适座椅、Wi-Fi、机上娱乐以及定制餐饮。',
+  pjcHighlightGlobalTitle: '全球覆盖',
+  pjcHighlightAiTitle: 'AI 高效匹配',
+  pjcHighlightSafetyTitle: '安全毫不妥协',
+  pjcHighlightLeaderTitle: '行业领先',
 };
 
 const zhHk: Catalog = {

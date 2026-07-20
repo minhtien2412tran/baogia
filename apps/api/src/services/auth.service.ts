@@ -93,6 +93,7 @@ export class AuthService {
     void this.customerCare.onUserRegistered({
       userId: user.id,
       email: user.email,
+      locale: body.locale,
     });
     return {
       message: 'User successfully registered',

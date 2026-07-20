@@ -1,4 +1,5 @@
 import { toDbLocale, type DbLocale } from './registry';
+import { mergeTourismOverlays } from './tourism-page-overlays';
 
 /** Text overlay for static service pages — merged onto English base in apps/web */
 export type PageTextOverlay = {
@@ -178,9 +179,20 @@ function simpleOverlay(
   return { vi, 'zh-cn': cn, 'zh-hk': hk ?? cn, 'zh-tw': tw ?? hk ?? cn };
 }
 
+function pageOverlay(
+  pageKey: string,
+  vi: PageTextOverlay,
+  cn: PageTextOverlay,
+  hk?: PageTextOverlay,
+  tw?: PageTextOverlay,
+): PageOverlayMap {
+  return mergeTourismOverlays(pageKey, simpleOverlay(vi, cn, hk, tw));
+}
+
 const PAGE_OVERLAYS: Record<string, PageOverlayMap> = {
   'private-jet-charter': privateJetCharter,
-  'corporate-air-charter': simpleOverlay(
+  'corporate-air-charter': pageOverlay(
+    'corporate-air-charter',
     {
       title: 'Thuê chuyến bay doanh nghiệp',
       description: 'Hàng không tư nhân cho đội ngũ, roadshow và công tác khẩn.',
@@ -196,7 +208,8 @@ const PAGE_OVERLAYS: Record<string, PageOverlayMap> = {
       cta: { label: '申请企业报价' },
     },
   ),
-  'group-air-charter': simpleOverlay(
+  'group-air-charter': pageOverlay(
+    'group-air-charter',
     {
       title: 'Thuê chuyến bay nhóm',
       description: 'Máy bay riêng cho đội thể thao, đoàn, đám cưới và nhóm lớn.',
@@ -212,7 +225,8 @@ const PAGE_OVERLAYS: Record<string, PageOverlayMap> = {
       cta: { label: '规划团体包机' },
     },
   ),
-  'event-air-charter': simpleOverlay(
+  'event-air-charter': pageOverlay(
+    'event-air-charter',
     {
       title: 'Thuê chuyến bay sự kiện',
       description: 'Vận chuyển VIP cho concert, lễ hội, thể thao và sự kiện độc quyền.',
@@ -228,7 +242,8 @@ const PAGE_OVERLAYS: Record<string, PageOverlayMap> = {
       cta: { label: '为您的活动包机' },
     },
   ),
-  'pet-travel': simpleOverlay(
+  'pet-travel': pageOverlay(
+    'pet-travel',
     {
       title: 'Du lịch cùng thú cưng',
       description: 'Bay riêng an toàn, thoải mái cho bạn và thú cưng.',
@@ -244,7 +259,8 @@ const PAGE_OVERLAYS: Record<string, PageOverlayMap> = {
       cta: { label: '预订宠物友好航班' },
     },
   ),
-  'air-ambulance': simpleOverlay(
+  'air-ambulance': pageOverlay(
+    'air-ambulance',
     {
       title: 'Air Ambulance — Hỗ trợ y tế hàng không',
       description: 'Sơ tán y tế và cấp cứu hàng không phản ứng 24/7.',
@@ -260,7 +276,8 @@ const PAGE_OVERLAYS: Record<string, PageOverlayMap> = {
       cta: { label: '请求Air Ambulance' },
     },
   ),
-  'booking-process': simpleOverlay(
+  'booking-process': pageOverlay(
+    'booking-process',
     {
       title: 'Quy trình đặt chuyến',
       description: 'Hướng dẫn thuê máy bay riêng với JetVina.',
@@ -288,7 +305,8 @@ const PAGE_OVERLAYS: Record<string, PageOverlayMap> = {
       ],
     },
   ),
-  'global-partnership-program': simpleOverlay(
+  'global-partnership-program': pageOverlay(
+    'global-partnership-program',
     {
       title: 'Chương trình đối tác toàn cầu',
       description: 'Tham gia mạng giới thiệu JetVina — không cần kinh nghiệm hàng không.',
@@ -304,7 +322,8 @@ const PAGE_OVERLAYS: Record<string, PageOverlayMap> = {
       cta: { label: '成为合作伙伴' },
     },
   ),
-  'jetbay-private-jet-app': simpleOverlay(
+  'jetbay-private-jet-app': pageOverlay(
+    'jetbay-private-jet-app',
     {
       title: 'Ứng dụng Private Jet',
       description: 'Đặt và quản lý chuyến bay riêng trên di động.',
@@ -320,7 +339,8 @@ const PAGE_OVERLAYS: Record<string, PageOverlayMap> = {
       cta: { label: '在App Store下载' },
     },
   ),
-  'world-cup-2026-private-jet-booking': simpleOverlay(
+  'world-cup-2026-private-jet-booking': pageOverlay(
+    'world-cup-2026-private-jet-booking',
     {
       title: 'Đặt máy bay riêng World Cup 2026',
       description: 'Bay đến mọi trận FIFA World Cup 2026 bằng máy bay riêng.',
@@ -336,7 +356,8 @@ const PAGE_OVERLAYS: Record<string, PageOverlayMap> = {
       cta: { label: '规划世界杯出行' },
     },
   ),
-  'world-cup-final-2026-private-jet-charter': simpleOverlay(
+  'world-cup-final-2026-private-jet-charter': pageOverlay(
+    'world-cup-final-2026-private-jet-charter',
     {
       title: 'Chung kết World Cup 2026 — Thuê máy bay riêng',
       description: 'Đến chung kết FIFA World Cup 2026 đầy phong cách.',

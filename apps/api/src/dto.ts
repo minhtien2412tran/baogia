@@ -35,6 +35,14 @@ export class RegisterDto {
   @IsOptional()
   @IsIn(['INDIVIDUAL', 'COMPANY'])
   accountType?: string;
+
+  @ApiPropertyOptional({
+    example: 'vi',
+    description: 'UI locale for welcome email (vi, en-us, zh-cn, …)',
+  })
+  @IsOptional()
+  @IsString()
+  locale?: string;
 }
 
 export class LoginDto {

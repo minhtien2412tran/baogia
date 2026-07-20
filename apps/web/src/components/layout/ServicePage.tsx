@@ -103,18 +103,25 @@ export async function ServicePage({
                 subtitle={t(locale, 'pjcExceptionalSubtitle')}
               >
                 <FeatureGrid
-                  items={pjc.highlights.map((h) => ({
-                    icon: h.icon,
-                    title: h.title,
-                    body:
-                      h.title === 'Global Coverage'
-                        ? t(locale, 'pjcHighlightGlobalBody')
-                        : h.title === 'AI-Powered Efficiency'
-                          ? t(locale, 'pjcHighlightAiBody')
-                          : h.title === 'Uncompromised Safety'
-                            ? t(locale, 'pjcHighlightSafetyBody')
-                            : t(locale, 'pjcHighlightDefaultBody'),
-                  }))}
+                  items={pjc.highlights.map((h, i) => {
+                    const titles = [
+                      t(locale, 'pjcHighlightGlobalTitle'),
+                      t(locale, 'pjcHighlightAiTitle'),
+                      t(locale, 'pjcHighlightSafetyTitle'),
+                      t(locale, 'pjcHighlightLeaderTitle'),
+                    ] as const;
+                    const bodies = [
+                      t(locale, 'pjcHighlightGlobalBody'),
+                      t(locale, 'pjcHighlightAiBody'),
+                      t(locale, 'pjcHighlightSafetyBody'),
+                      t(locale, 'pjcHighlightDefaultBody'),
+                    ] as const;
+                    return {
+                      icon: h.icon,
+                      title: titles[i] ?? h.title,
+                      body: bodies[i] ?? t(locale, 'pjcHighlightDefaultBody'),
+                    };
+                  })}
                 />
               </LightSection>
 
@@ -177,7 +184,15 @@ export async function ServicePage({
           <section className="jb-section">
             <div className="jb-container">
               <h2 className="jb-section-title">{t(locale, 'pjcFaqTitle')}</h2>
-              <FaqAccordion items={pjc.faqs} />
+              <FaqAccordion
+                items={[
+                  { q: t(locale, 'pjcFaq1Q'), a: t(locale, 'pjcFaq1A') },
+                  { q: t(locale, 'pjcFaq2Q'), a: t(locale, 'pjcFaq2A') },
+                  { q: t(locale, 'pjcFaq3Q'), a: t(locale, 'pjcFaq3A') },
+                  { q: t(locale, 'pjcFaq4Q'), a: t(locale, 'pjcFaq4A') },
+                  { q: t(locale, 'pjcFaq5Q'), a: t(locale, 'pjcFaq5A') },
+                ]}
+              />
             </div>
           </section>
 

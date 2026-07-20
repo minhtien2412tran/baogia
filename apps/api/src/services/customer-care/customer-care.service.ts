@@ -259,7 +259,14 @@ export class CustomerCareService implements OnModuleInit, OnModuleDestroy {
   async onPaymentConfirmed(paymentId: number) {
     const payment = await this.prisma.payment.findUnique({
       where: { id: paymentId },
-      include: { booking: { include: { user: true } } },
+      include: {
+        booking: {
+          include: {
+            user: true,
+            quoteRequest: true,
+          },
+        },
+      },
     });
     const user = payment?.booking?.user;
     if (!payment || !user) return;
@@ -268,6 +275,7 @@ export class CustomerCareService implements OnModuleInit, OnModuleDestroy {
       campaignKey: 'payment_confirmed',
       email: user.email,
       userId: user.id,
+      locale: payment.booking.quoteRequest?.locale ?? undefined,
       referenceId: String(paymentId),
       meta: {
         bookingId: payment.bookingId,

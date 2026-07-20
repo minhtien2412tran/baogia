@@ -50,9 +50,11 @@
 
 **BE báo giá/hợp đồng (20/07):** Deploy API + đóng gap 74TR: persist `QuoteRequest.locale`, xuất Word charter, smoke `smoke-bao-gia-contracts.mjs` **PASS** prod (quote→pricing→booking PDF/Word→contract DocuSign mock). SoT [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md). Tham chiếu scope: [m-tien.com/jet-bay](https://m-tien.com/jet-bay/) (collateral). Còn Owner: G4 keys · RBAC migrate · Company/SavedSearch.
 
+**I18N tiếp (20/07):** Tourism overlays **11/11** mọi locale · PJC FAQ/highlights `t()` · register+payment email locale. `audit:i18n` fail=0 · PAGE_OVERLAY_FULL toàn bộ.
+
 **I18N polish (20/07 evening):** metadata theo locale · about-us overlay · cookie zh-cn · `dir=rtl` cho `ar` · xóa `getHomeOverlay` chết · offer/booking email dùng `quote.locale` · PJC highlight bodies `t()` · tourism title overlay cho `/private-jet-charter`.
 
-**I18N 100% gate (20/07):** SoT [I18N_VERIFICATION_MATRIX.md](./I18N_VERIFICATION_MATRIX.md) + `pnpm audit:i18n`. **I18N-1 done** — `ServicePage` / `WhySections` / `StatsSection` → `t()` (vi/zh); `audit:i18n` **fail=0**. Còn tourism overlays đầy đủ + CDN FAQ EN + email payment/welcome. Wave tiếp: **I18N-2** (overlays còn lại) / **I18N-4b**.
+**I18N 100% gate (20/07):** SoT [I18N_VERIFICATION_MATRIX.md](./I18N_VERIFICATION_MATRIX.md) + `pnpm audit:i18n`. **I18N-1/2 core done**. Còn CDN serviceBlocks/processSteps EN · welcome SMS OTP · SMTP Owner · RBAC.
 
 **Audit 19/07 (sync + AI hygiene):** working tree clean trên `jetvina` · merge `main` → `jetvina` (giữ [KH_KICH_BAN_HOP_TIENDO.md](./KH_KICH_BAN_HOP_TIENDO.md)) · `main` ↔ `jetvina` aligned · residual GĐ2 (`b243bc8`+) **đã commit** · agent SoT refresh ([AGENTS.md](../AGENTS.md) · [GIT_WORKFLOW.md](./GIT_WORKFLOW.md))
 
