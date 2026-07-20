@@ -97,7 +97,7 @@ export default function EditBookingProcessPage() {
           setCms({ ...EMPTY, introBody: body });
         }
       })
-      .catch(console.error);
+      .catch(() => undefined);
   }, []);
 
   function set<K extends keyof BookingCms>(key: K, value: BookingCms[K]) {

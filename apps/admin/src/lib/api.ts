@@ -76,6 +76,24 @@ export type LoginResponse = {
   tokens?: { accessToken: string; refreshToken?: string };
 };
 
+export type FlightScheduleEvent = {
+  id: string;
+  source: 'booking' | 'quote' | 'empty_leg';
+  bookingId?: number;
+  quoteId?: number;
+  bookingCode?: string | null;
+  route: string;
+  fromIata: string;
+  toIata: string;
+  departureAt: string;
+  arrivalAt?: string | null;
+  status: string;
+  customer?: string;
+  passengers?: number;
+  aircraft?: string | null;
+  href: string;
+};
+
 export const adminApi = {
   login: async (email: string, password: string): Promise<LoginResponse> => {
     let res: Response;
@@ -95,6 +113,19 @@ export const adminApi = {
   getStats: () => adminRequest<Record<string, number>>('/admin/dashboard/stats'),
   getRecentQuotes: (limit = 10) => adminRequest<unknown[]>(`/admin/dashboard/recent-quotes?limit=${limit}`),
   getRecentBookings: () => adminRequest<unknown[]>('/admin/dashboard/recent-bookings'),
+  getFlightSchedule: (from?: string, to?: string) => {
+    const q = new URLSearchParams();
+    if (from) q.set('from', from);
+    if (to) q.set('to', to);
+    const qs = q.toString();
+    return adminRequest<{
+      from: string;
+      to: string;
+      counts: Record<string, number>;
+      upcoming: FlightScheduleEvent[];
+      events: FlightScheduleEvent[];
+    }>(`/admin/dashboard/flight-schedule${qs ? `?${qs}` : ''}`);
+  },
   getRevenue: () => adminRequest<Record<string, unknown>>('/admin/dashboard/revenue-demo'),
   getMyPermissions: () =>
     adminRequest<{ userId: number; role: string; permissions: string[] }>(

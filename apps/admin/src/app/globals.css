@@ -872,3 +872,216 @@ a {
   align-items: center;
   font-size: 14px;
 }
+
+/* Flight calendar */
+.jb-cal {
+  display: grid;
+  gap: 14px;
+}
+
+.jb-cal__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.jb-cal__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.jb-cal__month {
+  min-width: 140px;
+  text-align: center;
+  color: #f6efe2;
+}
+
+.jb-cal__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  font-size: 12px;
+  color: #9fb3c0;
+}
+
+.jb-cal__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.jb-cal__dot.is-booking {
+  background: #34d399;
+}
+
+.jb-cal__dot.is-quote {
+  background: #60a5fa;
+}
+
+.jb-cal__dot.is-empty {
+  background: #fbbf24;
+}
+
+.jb-cal__more {
+  color: #7dd3fc;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.jb-cal__error {
+  color: #fca5a5;
+  margin: 0;
+}
+
+.jb-cal__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.jb-cal__dow {
+  text-align: center;
+  font-size: 11px;
+  color: #7a8b97;
+  padding: 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.jb-cal__cell {
+  min-height: 64px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(13, 26, 36, 0.45);
+  color: #f6efe2;
+  padding: 6px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.jb-cal__cell.is-empty {
+  background: transparent;
+  border-color: transparent;
+  cursor: default;
+  min-height: 24px;
+}
+
+.jb-cal__cell.is-today {
+  border-color: rgba(228, 197, 106, 0.55);
+}
+
+.jb-cal__cell.is-selected {
+  background: rgba(228, 197, 106, 0.12);
+  border-color: rgba(228, 197, 106, 0.65);
+}
+
+.jb-cal__cell:not(.is-empty):hover {
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.jb-cal__daynum {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.jb-cal__marks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  align-items: center;
+}
+
+.jb-cal__more-count {
+  font-size: 10px;
+  color: #9fb3c0;
+}
+
+.jb-cal__detail,
+.jb-cal__upcoming {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(13, 26, 36, 0.55);
+}
+
+.jb-cal__detail-title {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: #e4c56a;
+}
+
+.jb-cal__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.jb-cal__item {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border-left: 3px solid transparent;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.jb-cal__item.is-booking {
+  border-left-color: #34d399;
+}
+
+.jb-cal__item.is-quote {
+  border-left-color: #60a5fa;
+}
+
+.jb-cal__item.is-empty {
+  border-left-color: #fbbf24;
+}
+
+.jb-cal__time {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: #c7d2dc;
+}
+
+.jb-cal__route {
+  color: #7dd3fc;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.jb-cal__sub {
+  font-size: 12px;
+  color: #9fb3c0;
+  margin-top: 2px;
+}
+
+.jb-cal--compact .jb-cal__cell {
+  min-height: 52px;
+}
+
+@media (max-width: 700px) {
+  .jb-cal__item {
+    grid-template-columns: 1fr;
+  }
+
+  .jb-cal__cell {
+    min-height: 48px;
+    padding: 4px;
+  }
+}

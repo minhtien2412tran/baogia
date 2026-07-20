@@ -39,10 +39,10 @@
 
 **Admin ops waves (21/07 local — chưa deploy):** R1–R3 core + export + **RBAC/Settings/Audit UX**:
 - AuthGate + `PermissionContext`; nav + action `can()`; **kéo-thả reorder menu** + section toggles (Settings)
-- Permissions tabs: role transfer (grant/revoke) · group ticks · per-user ALLOW/DENY · airport scope · user picker
-- Audit: filter theo workflow (quotes/bookings/payments/contracts/…) + search + detail expand
-- Dashboard widgets kéo-thả; Settings brand tab
-- Còn R4 CMS AdminGuard · R5 scope · deploy API+Admin + re-seed SALES
+- Permissions tabs: role transfer · group ticks · per-user · scope; **menu cha–con** (Operations / Commercial / Fleet / Legal / Content / System); fix Next16 `params` + hydration console
+- **Flight calendar** trên Dashboard + `/dashboard/schedule` — API `GET /admin/dashboard/flight-schedule` (booking/quote/empty-leg giờ bay)
+- Audit workflow filters; Settings section toggles
+- Còn R4 CMS AdminGuard · deploy API+Admin + re-seed SALES
 
 1. **CR Wave1–5 BE + Empty Leg FE filter (2026-07-12)** — nhánh `feat/api-cr-wave3-contracts-rbac-docusign`: fleet/pricing/HĐ/RBAC/DocuSign mock · web `/empty-leg` lọc continent/IATA/date · smoke `smoke-cr-wave1/3` — live DocuSign/Admin UI chờ phụ lục
 2. **CR sau họp** — kịch bản họp tiến độ: [KH_KICH_BAN_HOP_TIENDO.md](./KH_KICH_BAN_HOP_TIENDO.md) (đã gộp từ `main` 19/07) · biên bản `JETBAY_CR_2026_01` / `KH_KICH_BAN_SAU_HOP_CR` *(bổ sung khi có file)* · báo cáo tiến độ **không** ghi CR = đã hoàn thành GĐ

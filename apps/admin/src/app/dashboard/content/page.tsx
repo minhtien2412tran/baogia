@@ -11,9 +11,11 @@ import { adminApi } from '../../../lib/api';
 export default function ContentPage() {
   const [rows, setRows] = useState<Record<string, React.ReactNode>[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   function load() {
     setLoading(true);
+    setError('');
     adminApi
       .getArticles()
       .then((res) => {
@@ -33,7 +35,7 @@ export default function ContentPage() {
           })),
         );
       })
-      .catch(console.error)
+      .catch((e) => setError(e instanceof Error ? e.message : 'Load failed'))
       .finally(() => setLoading(false));
   }
 
@@ -61,6 +63,7 @@ export default function ContentPage() {
         <Link href="/dashboard/content/booking-process" style={{ color: '#f1d99a' }}>Booking Process →</Link>
       </p>
       <SectionTitle>News &amp; Blog Articles</SectionTitle>
+      {error ? <p style={{ color: '#fca5a5' }}>{error}</p> : null}
       {loading ? (
         <Muted>Loading content...</Muted>
       ) : (

@@ -125,7 +125,7 @@ export default function EditAboutUsPage() {
       } catch {
         setCms({ ...EMPTY, introBody: body });
       }
-    }).catch(console.error);
+    }).catch(() => undefined);
   }, []);
 
   function set<K extends keyof AboutCms>(key: K, value: AboutCms[K]) {

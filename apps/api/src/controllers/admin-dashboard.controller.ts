@@ -41,6 +41,17 @@ export class AdminDashboardController {
     return this.dashboard.getRecentBookings(limit ? Number(limit) : 10);
   }
 
+  @Get('dashboard/flight-schedule')
+  @RequirePermissions('dashboard.view', 'booking.view', 'quote.view')
+  @ApiQuery({ name: 'from', required: false, description: 'ISO start (inclusive)' })
+  @ApiQuery({ name: 'to', required: false, description: 'ISO end (inclusive)' })
+  @ApiOperation({
+    summary: 'Flight calendar — bookings, quotes, empty legs by departure time',
+  })
+  getFlightSchedule(@Query('from') from?: string, @Query('to') to?: string) {
+    return this.dashboard.getFlightSchedule(from, to);
+  }
+
   @Get('dashboard/revenue-demo')
   @RequirePermissions('dashboard.view')
   @ApiOperation({ summary: 'Revenue demo calculation' })

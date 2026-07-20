@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Card, SectionTitle, DataTable, Muted, colors } from '@jetbay/ui';
 import { AdminShell } from '../../components/AdminShell';
 import { ActionBtn } from '../../components/AdminFormFields';
+import { FlightCalendar } from '../../components/FlightCalendar';
 import { adminApi } from '../../lib/api';
 import {
   DEFAULT_DASHBOARD_WIDGETS,
@@ -15,6 +16,7 @@ import {
 
 const WIDGET_LABELS: Record<DashboardWidgetId, string> = {
   stats: 'Stats',
+  schedule: 'Flight calendar',
   revenue: 'Revenue demo',
   quotes: 'Recent quotes',
   bookings: 'Recent bookings',
@@ -26,9 +28,7 @@ export default function DashboardPage() {
   const [bookings, setBookings] = useState<unknown[]>([]);
   const [revenue, setRevenue] = useState<Record<string, unknown> | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [widgets, setWidgets] = useState<DashboardWidgetId[]>([
-    ...DEFAULT_DASHBOARD_WIDGETS,
-  ]);
+  const [widgets, setWidgets] = useState<DashboardWidgetId[]>([...DEFAULT_DASHBOARD_WIDGETS]);
   const [dragId, setDragId] = useState<DashboardWidgetId | null>(null);
   const [reorderMode, setReorderMode] = useState(false);
 
@@ -87,6 +87,9 @@ export default function DashboardPage() {
       ) : (
         <Muted>Loading stats…</Muted>
       );
+    }
+    if (id === 'schedule') {
+      return <FlightCalendar compact />;
     }
     if (id === 'revenue') {
       return revenue ? (

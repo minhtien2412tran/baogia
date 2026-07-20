@@ -16,6 +16,7 @@ const OPEN_GROUPS_KEY = 'jetvina_admin_nav_open';
 
 export const DEFAULT_DASHBOARD_WIDGETS = [
   'stats',
+  'schedule',
   'revenue',
   'quotes',
   'bookings',

@@ -40,6 +40,7 @@ export const NAV_GROUPS: NavGroup[] = [
     label: 'Operations',
     permissions: ['quote.view', 'booking.view', 'payment.view', 'user.manage'],
     children: [
+      { href: '/dashboard/schedule', label: 'Flight calendar', permission: 'dashboard.view' },
       { href: '/dashboard/quotes', label: 'Quotes', permission: 'quote.view' },
       { href: '/dashboard/bookings', label: 'Bookings', permission: 'booking.view' },
       { href: '/dashboard/payments', label: 'Payments', permission: 'payment.view' },
