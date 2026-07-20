@@ -1,6 +1,6 @@
 # Backend Audit — JetBay API
 
-**Canonical BE audit.** Cập nhật: **2026-07-18** (re-matrix vs code nhánh `jetvina`; trước đó 2026-07-10)
+**Canonical BE audit.** Cập nhật: **2026-07-20** (báo giá/hợp đồng smoke + locale/Word; trước đó re-matrix 2026-07-18)
 **Code:** `apps/api` · **Prod:** https://api.minhtien.online · **Swagger:** https://docs.minhtien.online/swagger  
 **Kiến trúc mục tiêu:** [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md)
 
@@ -80,8 +80,8 @@ Throttle: login 10/min · register/OTP/refresh 5/min (tier `auth`).
 | **Routes** | Public: `POST /quotes/search-aircraft`, `POST /quotes/request` (optional JWT → `userId`) · JWT: `GET /quotes/my` · Campaign: `GET/POST /campaigns/world-cup/*` · Admin: `GET /admin/quotes`, `GET /admin/quotes/:id`, `PATCH /admin/quotes/:id/status`, `POST /admin/quotes/:id/offers`, `GET /admin/operators` |
 | **Models** | `QuoteRequest`, `QuoteLeg`, `QuoteOffer`, `Operator`, `WorldCupMatch`, `WorldCupItinerary`, `ConsentLog` |
 | **Status** | **solid** (offer workflow admin ✅) |
-| **Gaps** | `Company` / `SavedSearch` chưa có API. Search aircraft vẫn dùng `BASE_PRICE_BY_CATEGORY` (v1). |
-| **Smoke** | `smoke-admin-crud.mjs` (quotes list/detail/offer) · `POST /quotes/request` |
+| **Gaps** | `Company` / `SavedSearch` chưa có API. Search aircraft dùng pricing engine khi có fleet (`POSITIONING`); fallback `CATEGORY_FLAT`. |
+| **Smoke** | `smoke-admin-crud.mjs` · `POST /quotes/request` · **`smoke-bao-gia-contracts.mjs`** (locale persist + search) |
 
 ---
 
@@ -93,8 +93,8 @@ Throttle: login 10/min · register/OTP/refresh 5/min (tier `auth`).
 | **Routes** | `POST /bookings` (**JWT**, `userId` từ token) · `GET /bookings/my`, `GET /bookings/:id`, `PATCH /bookings/:id/cancel` · Admin bookings CRUD status · `GET /documents/charter-agreements/:id[/export]` |
 | **Models** | `Booking`, `BookingPassenger`, `Document` |
 | **Status** | **solid** |
-| **Gaps** | Document terms còn boilerplate. Guest booking không còn (bắt login). |
-| **Smoke** | Login → `POST /bookings` với Bearer |
+| **Gaps** | Document terms còn boilerplate. Guest booking không còn (bắt login). Word export ✅ (Word 2003 XML `.doc`). |
+| **Smoke** | Login → `POST /bookings` · `smoke-bao-gia-contracts.mjs` PDF/Word export |
 
 ---
 
@@ -186,8 +186,8 @@ Throttle: login 10/min · register/OTP/refresh 5/min (tier `auth`).
 | **Routes** | `GET/POST /admin/contracts[/templates][/:id]` · `POST /admin/contracts/:id/{submit,approve,reject,request-changes,send-docusign}` · `@Public POST /webhooks/docusign` (HMAC) — tất cả admin dùng `PermissionGuard` (`contract.*`) |
 | **Models** | `ContractTemplate`, `OperatorContract`, `ContractApprovalHistory`, `SignatureWebhookEvent` |
 | **Status** | **solid** code · DocuSign **mock** (`SIGNATURE_PROVIDER=mock`) |
-| **Gaps** | Live DocuSign chờ keys KH (`DOCUSIGN_*`). Chưa smoke HTTP. |
-| **Smoke** | — (chỉ mock provider) |
+| **Gaps** | Live DocuSign chờ keys KH (`DOCUSIGN_*`). |
+| **Smoke** | `smoke-bao-gia-contracts.mjs` — create→submit→approve→send-docusign→webhook **PASS** prod 2026-07-20 |
 
 ---
 
@@ -212,8 +212,8 @@ Throttle: login 10/min · register/OTP/refresh 5/min (tier `auth`).
 | **Routes** | `@Public POST /pricing/estimate` · JWT: `GET /pricing/bookings/:id/breakdown`, `POST /pricing/bookings/:id/recalculate`, `POST /pricing/bookings/:bookingId/attach/:estimateId` |
 | **Models** | `PricingEstimate`, `Aircraft`, `AircraftLocationHistory`, `BookingFlightLeg` |
 | **Status** | **solid** — `pricing.engine.spec.ts` pass (unit) |
-| **Gaps** | `/quotes/search-aircraft` vẫn nên chuyển hẳn sang engine (audit cũ ghi v1). |
-| **Smoke** | `pricing.engine.spec.ts` (unit) · chưa có smoke HTTP |
+| **Gaps** | — |
+| **Smoke** | `pricing.engine.spec.ts` (unit) · `smoke-bao-gia-contracts.mjs` `POST /pricing/estimate` |
 
 ---
 
@@ -237,13 +237,14 @@ Throttle: login 10/min · register/OTP/refresh 5/min (tier `auth`).
 | **P1** | ~~Set prod `APP_ENV=production`~~ | ✅ 2026-07-10 |
 | **P1** | G4 keys từ KH | SMTP, OAuth, Stripe/OnePay/9Pay, SMS |
 | **P1** | ⚠️ **Đồng nhất guard admin** | Migrate `AdminGuard` → `PermissionGuard` cho các `admin/*` còn lại (§11) |
-| **P2** | Smoke HTTP cho domain mới | RBAC / Contracts / Content-Sync / Pricing chưa có smoke (chỉ unit) — cập nhật [BE_TEST.md](./BE_TEST.md) |
+| **P2** | ~~Smoke HTTP domain mới~~ | ✅ 2026-07-20 `smoke-bao-gia-contracts.mjs` (quotes/locale · pricing · PDF/Word · contracts) |
 | **P2** | Nest feature modules | Auth + Quotes (phase 1) → xem BE_ARCHITECTURE; Commercial/Bookings/Content/Admin còn phẳng |
 | **P2** | Split `dto.ts` theo module | Sau khi modules ổn định |
 | **P2** | ~~Admin FP options UI~~ | ✅ 2026-07-10 |
 | **P3** | Company / SavedSearch APIs | Schema sẵn (`Company`, `SavedSearch`), chưa có API |
 
-**Đã đóng (2026-07-10):** booking JWT spoof · OTP CSPRNG · SMS APP_ENV · CORS admin · FP DTO validators · QuoteOffer admin · Redis connect-once.
+**Đã đóng (2026-07-10):** booking JWT spoof · OTP CSPRNG · SMS APP_ENV · CORS admin · FP DTO validators · QuoteOffer admin · Redis connect-once.  
+**Đã đóng (2026-07-20):** `QuoteRequest.locale` persist · Word export charter · smoke báo giá/hợp đồng prod PASS.
 
 ---
 

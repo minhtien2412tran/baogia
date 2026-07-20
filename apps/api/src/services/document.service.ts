@@ -112,4 +112,54 @@ export class DocumentService {
       pdf.end();
     });
   }
+
+  /**
+   * Word 2003 XML flat document — opens in Microsoft Word / LibreOffice
+   * without adding a DOCX zip dependency (báo giá DoD: xuất Word/PDF).
+   */
+  async generateCharterAgreementWord(id: number): Promise<Buffer> {
+    const doc = await this.prisma.document.findUnique({
+      where: { id },
+      include: { booking: { include: { user: true } } },
+    });
+    if (!doc) throw new NotFoundException(`Document ${id} not found`);
+
+    const user = doc.booking.user;
+    const signer =
+      [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email;
+    const esc = (s: string) =>
+      s
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+
+    const paragraphs = [
+      'Private Jet Charter Agreement',
+      `Document #${doc.id} · Booking #${doc.bookingId} · Policy ${doc.policyVersion}`,
+      `This Agreement is between JetVina Private Jet Charter and ${signer} (${user.email}) for booking #${doc.bookingId}.`,
+      `Status: ${doc.status}`,
+      'Terms & Conditions',
+      '1. Charter services are subject to aircraft availability and operational approval.',
+      '2. Payment must be received before departure unless otherwise agreed in writing.',
+      '3. Cancellation fees apply per the platform cancellation policy.',
+      '4. Passenger manifest must be provided 24 hours prior to departure.',
+      `Generated ${new Date().toISOString().slice(0, 10)} · JetVina Platform`,
+    ];
+
+    const body = paragraphs
+      .map(
+        (p, i) =>
+          `<w:p><w:r><w:rPr>${i === 0 || i === 4 ? '<w:b/>' : ''}<w:sz w:val="${i === 0 ? 28 : 22}"/></w:rPr><w:t>${esc(p)}</w:t></w:r></w:p>`,
+      )
+      .join('');
+
+    const xml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?mso-application progid="Word.Document"?>
+<w:wordDocument xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml">
+  <w:body>${body}</w:body>
+</w:wordDocument>`;
+
+    return Buffer.from(xml, 'utf8');
+  }
 }

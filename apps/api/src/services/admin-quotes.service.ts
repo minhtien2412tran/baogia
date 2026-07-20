@@ -95,6 +95,8 @@ export class AdminQuotesService {
       lastName: quote.lastName,
       tripType: quote.tripType,
       status: quote.status,
+      locale: quote.locale,
+      currency: quote.currency,
       message: quote.message,
       sourcePage: quote.sourcePage,
       campaign: quote.worldCupItinerary?.campaignCode ?? null,

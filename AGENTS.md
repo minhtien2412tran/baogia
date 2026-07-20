@@ -22,6 +22,7 @@ Chat sessions do **not** remember progress. Before coding, read and update the f
 | [docs/NEXT_SPRINT_PLAN.md](./docs/NEXT_SPRINT_PLAN.md) | **Sprint plan** — Web↔API · sync · docs · việc KH |
 | [docs/WEB_API_SURFACE_MAP.md](./docs/WEB_API_SURFACE_MAP.md) | Web/Admin ↔ API status matrix |
 | [docs/ADMIN_RBAC_FUNCTION_MATRIX.md](./docs/ADMIN_RBAC_FUNCTION_MATRIX.md) | **Admin/RBAC SoT** — roles · permissions · guards · UI · migration waves |
+| [docs/I18N_VERIFICATION_MATRIX.md](./docs/I18N_VERIFICATION_MATRIX.md) | **i18n SoT** — web/email locale checklist · `pnpm audit:i18n` |
 | [docs/OWNER_ACTION_ITEMS.md](./docs/OWNER_ACTION_ITEMS.md) | Việc chủ dự án phải làm |
 | [docs/OWNER_NEXT_ACTIONS.md](./docs/OWNER_NEXT_ACTIONS.md) | **Owner handoff pack** (P0 SMTP → UAT/CMS/G4) |
 | [docs/KH_KICH_BAN_HOP_TIENDO.md](./docs/KH_KICH_BAN_HOP_TIENDO.md) | **Kịch bản họp tiến độ KH** (Anh Tuấn Anh) |

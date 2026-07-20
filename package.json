@@ -19,6 +19,8 @@
     "audit:asset-references": "node scripts/audit-asset-references.mjs",
     "validate:jetvina-media-manifest": "node scripts/validate-jetvina-media-manifest.mjs",
     "audit:docs": "node scripts/audit-docs.mjs",
+    "audit:i18n": "node scripts/audit-i18n-coverage.mjs",
+    "audit:i18n:live": "node scripts/audit-i18n-coverage.mjs --live https://www.minhtien.online",
     "security:scan": "node scripts/security/scan-secrets.mjs --staged",
     "security:scan:all": "node scripts/security/scan-secrets.mjs --all",
     "security:hooks": "node scripts/security/install-git-hooks.mjs",

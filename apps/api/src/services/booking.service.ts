@@ -115,6 +115,7 @@ export class BookingService {
         status: doc.status,
         fileUrl: `${apiBase}/documents/charter-agreements/${doc.id}/export?format=pdf`,
         htmlUrl: `${apiBase}/documents/charter-agreements/${doc.id}/export?format=html`,
+        wordUrl: `${apiBase}/documents/charter-agreements/${doc.id}/export?format=word`,
         placeholder: false,
       })),
       createdAt: booking.createdAt.toISOString(),

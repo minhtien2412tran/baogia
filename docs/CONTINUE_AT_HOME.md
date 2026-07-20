@@ -48,6 +48,10 @@
 
 **Bản dịch / locale (20/07):** Prod `/en-us/*` trả **đúng English** (đã curl verify). Screenshot “en-us hiện tiếng Việt” là Chrome auto-translate (`Charter`→`Hiến chương`, `English (US)`→`Tiếng Anh (Mỹ)` — không khớp catalog `vi`). Fix FE: `<html lang>` theo locale + `translate="no"` / `google=notranslate` + language picker `translate="no"`.
 
+**BE báo giá/hợp đồng (20/07):** Deploy API + đóng gap 74TR: persist `QuoteRequest.locale`, xuất Word charter, smoke `smoke-bao-gia-contracts.mjs` **PASS** prod (quote→pricing→booking PDF/Word→contract DocuSign mock). SoT [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md). Tham chiếu scope: [m-tien.com/jet-bay](https://m-tien.com/jet-bay/) (collateral). Còn Owner: G4 keys · RBAC migrate · Company/SavedSearch.
+
+**I18N 100% gate (20/07):** SoT [I18N_VERIFICATION_MATRIX.md](./I18N_VERIFICATION_MATRIX.md) + `pnpm audit:i18n` / `audit:i18n:live`. Verdict **NOT 100%**. Deep audits merged: web (tourism ~35% stubs, `about-us`/metadata/CDN FAQ gaps) + email (ACK en/vi/zh OK; offer/booking/payment/welcome HARDCODED_EN). **`QuoteRequest.locale` đã persist** (2026-07-20). Wave tiếp: **I18N-1** (hardcode FE).
+
 **Audit 19/07 (sync + AI hygiene):** working tree clean trên `jetvina` · merge `main` → `jetvina` (giữ [KH_KICH_BAN_HOP_TIENDO.md](./KH_KICH_BAN_HOP_TIENDO.md)) · `main` ↔ `jetvina` aligned · residual GĐ2 (`b243bc8`+) **đã commit** · agent SoT refresh ([AGENTS.md](../AGENTS.md) · [GIT_WORKFLOW.md](./GIT_WORKFLOW.md))
 
 ```text

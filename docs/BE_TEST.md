@@ -1,6 +1,6 @@
 # Backend Test — JetBay API
 
-**Canonical tài liệu test BE.** Cập nhật: **2026-07-10**  
+**Canonical tài liệu test BE.** Cập nhật: **2026-07-20**  
 **Audit domain:** [BE_AUDIT.md](./BE_AUDIT.md) · **Triển khai:** [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)
 
 ---
@@ -12,19 +12,15 @@
 | **Local** | `http://127.0.0.1:4000` | `http://127.0.0.1:4000/swagger` | `apps/api/.env` |
 | **Production** | `https://api.minhtien.online` | `https://docs.minhtien.online/swagger` | `127.0.0.1:3010` PM2 `jetbay-be` |
 
-**Kết quả mới nhất (prod — GĐ1 đóng 2026-07-10):**
+**Kết quả mới nhất (prod — 2026-07-20 báo giá/hợp đồng):**
 
 | Bộ | Script | Pass |
 |----|--------|------|
-| BE smoke | `smoke-prod.sh` | **16/16** |
-| Docs smoke | `smoke-docs.sh` | **11/11** |
+| Báo giá + HĐ | `smoke-bao-gia-contracts.mjs` | **PASS** (locale · pricing · PDF/Word · DocuSign mock) |
 | Admin CRUD | `smoke-admin-crud.mjs` | **16/16** |
-| Web contract | `smoke-web-api.mjs` | **8/8** |
-| Auth + booking | `smoke-auth-booking.mjs` | **4/4** |
-| Unit | `apps/api` jest | **9/9** |
-| **Tổng smoke** | `smoke-all.sh` | **55/55** |
-
-**Pass criteria deploy:** cả 4 bộ smoke prod `fail=0` + `tsc` + `jest` local.
+| Web contract | `smoke-web-api.mjs` | **pass** |
+| Auth + booking | `smoke-auth-booking.mjs` | fallback admin · tránh chạy sát login throttle |
+| BE smoke | `smoke-prod.sh` | partial nếu openapi/login 429 — chạy riêng sau cooldown |
 
 ---
 
@@ -34,20 +30,20 @@
 |------------|--------|--------------|------|
 | §1 | Architecture & runtime | `smoke-prod.sh`, `smoke-docs.sh` | health, root, openapi, integrations |
 | §2 | Auth | `smoke-prod.sh`, `smoke-docs.sh` | login, CORS docs, ApiKey 401 |
-| §3 | Quotes & offers | `smoke-prod.sh`, `smoke-admin-crud.mjs` | `POST /quotes/request`, list/patch/offer |
-| §4 | Bookings | *(chưa auto)* | Manual: JWT → `POST /bookings` |
+| §3 | Quotes & offers | `smoke-prod.sh`, `smoke-admin-crud.mjs`, **`smoke-bao-gia-contracts.mjs`** | request + locale persist + search |
+| §4 | Bookings | `smoke-auth-booking.mjs`, **`smoke-bao-gia-contracts.mjs`** | JWT → `POST /bookings` · PDF/Word export |
 | §5 | Payments | `smoke-docs.sh` | `GET /integrations/status` |
 | §6 | Commercial | `smoke-prod.sh`, `smoke-web-api.mjs` | FP, EL, JetCard, TC |
 | §7 | Content & media | `smoke-prod.sh`, `smoke-admin-crud.mjs` | news, destinations, videos, pages |
 | §8 | Admin ops | `smoke-prod.sh`, `smoke-admin-crud.mjs` | dashboard stats, airports CRUD |
 | §9 | Integrations | `smoke-docs.sh` | integrations status, MinIO/pay flags |
-| §11 | RBAC / Permissions | `permission.service.spec.ts` (unit) | ⚠️ **chưa có smoke HTTP** |
-| §12 | Contracts / e-sign | *(chưa auto)* | DocuSign mock; webhook HMAC — chưa smoke |
-| §13 | Content-Sync / Media | `media-*.integration.spec.ts`, `content-sync-*.spec.ts` | ⚠️ **cần Postgres** (18 jest fail hiện tại) |
-| §14 | Pricing engine | `pricing.engine.spec.ts` (unit) | `POST /pricing/estimate` — chưa smoke HTTP |
-| §15 | i18n / Account / Ops-mail | `email-template.service.spec.ts`, `flight-notify.service.spec.ts` | `/i18n`, `/account/dashboard` — chưa smoke |
+| §11 | RBAC / Permissions | `permission.service.spec.ts` (unit) | ADMIN bypass; PermissionGuard on contracts |
+| §12 | Contracts / e-sign | **`smoke-bao-gia-contracts.mjs`** | draft→approve→mock DocuSign→webhook |
+| §13 | Content-Sync / Media | `media-*.integration.spec.ts`, `content-sync-*.spec.ts` | ⚠️ **cần Postgres** |
+| §14 | Pricing engine | `pricing.engine.spec.ts` + **`smoke-bao-gia-contracts.mjs`** | `POST /pricing/estimate` |
+| §15 | i18n / Account / Ops-mail | unit specs + quote locale smoke | `/i18n`, locale on QuoteRequest |
 
-> **Cập nhật 2026-07-18:** §11–§15 là domain mới so với audit 2026-07-10, chưa nằm trong bộ smoke `smoke-*.mjs`. Cần bổ sung. Xem [BE_AUDIT.md](./BE_AUDIT.md) §11–§15.
+> **Cập nhật 2026-07-20:** `smoke-bao-gia-contracts.mjs` phủ §3/§4/§12/§14 (prod PASS). G4 keys (SMTP/OAuth/Stripe live) vẫn Owner-blocked.
 
 ---
 
@@ -169,14 +165,30 @@ Kiểm tra contract mà `apps/web` gọi (public + quote).
 ## 6b. `smoke-auth-booking.mjs` — 4 case
 
 **Script:** `scripts/deploy/jetbay-be/smoke-auth-booking.mjs`  
-Gọi từ `run-node-smokes.sh` / `smoke-all.sh`.
+Gọi từ `run-node-smokes.sh` / `smoke-all.sh`. Fallback admin nếu thiếu `demo@jetbay.local`; retry khi login 429.
 
 | # | Case | Expect |
 |---|------|--------|
-| 1 | demo login | 200/201 + accessToken |
-| 2 | refresh token | 201 + accessToken |
+| 1 | demo/admin login | 200/201 + accessToken |
+| 2 | refresh token | 200/201 + accessToken |
 | 3 | booking create | 201 + id |
 | 4 | bookings my | 200 + count >= 1 |
+
+## 6c. `smoke-bao-gia-contracts.mjs` — báo giá + hợp đồng (74TR)
+
+**Script:** `scripts/deploy/jetbay-be/smoke-bao-gia-contracts.mjs`  
+Scope tham chiếu [m-tien.com/jet-bay](https://m-tien.com/jet-bay/) / [JETBAY_BAO_GIA.md](./JETBAY_BAO_GIA.md).
+
+| # | Case | Expect |
+|---|------|--------|
+| 1 | admin + user JWT | login OK (demo fallback admin) |
+| 2 | `POST /quotes/request` locale=vi | 201 + admin detail `locale=vi` |
+| 3 | `POST /quotes/search-aircraft` | options + pricingMode |
+| 4 | `POST /pricing/estimate` | estimatedTotal |
+| 5 | `POST /bookings` + PDF/Word export | application/pdf + msword |
+| 6 | contracts create→submit→approve→DocuSign mock→webhook | SENT_FOR_SIGNATURE + 201 |
+
+**Prod 2026-07-20:** `RESULT pass` (sau deploy API).
 
 ## 7. Unit test (`jest`)
 

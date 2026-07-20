@@ -19,6 +19,7 @@ import {
 } from '../dto';
 import { PricingService } from '../pricing/pricing.service';
 import { haversineKm } from '../pricing/flight-math';
+import { toDbLocale } from '@jetbay/i18n';
 
 const BASE_PRICE_BY_CATEGORY: Record<string, number> = {
   LIGHT: 12500,
@@ -320,6 +321,8 @@ export class QuoteService {
     const tripType =
       body.tripType ?? (body.legs.length > 1 ? 'MULTI_CITY' : 'ONE_WAY');
 
+    const locale = body.locale ? toDbLocale(body.locale) : 'en';
+
     const quote = await this.prisma.quoteRequest.create({
       data: {
         userId: opts?.userId,
@@ -331,6 +334,7 @@ export class QuoteService {
         message: body.message,
         isConsentAccepted: body.isConsentAccepted,
         sourcePage: opts?.sourcePage ?? 'WEB_QUOTE_FORM',
+        locale,
         legs: { create: legData },
         ...(opts?.campaignCode
           ? {
@@ -369,7 +373,7 @@ export class QuoteService {
       email: body.email,
       firstName: body.firstName,
       userId: opts?.userId,
-      locale: body.locale,
+      locale,
       tripSummary,
     });
     // Auto: sales/admin inbox (semi-auto ops review continues in Admin → Quotes)
@@ -382,7 +386,7 @@ export class QuoteService {
       message: body.message,
       tripSummary,
       sourcePage: opts?.sourcePage ?? 'WEB_QUOTE_FORM',
-      locale: body.locale,
+      locale,
     });
     return {
       requestId: quote.id,

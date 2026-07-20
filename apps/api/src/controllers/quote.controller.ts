@@ -88,9 +88,15 @@ export class QuoteController {
   }
 
   @Get('documents/charter-agreements/:id/export')
-  @ApiOperation({ summary: 'Export charter agreement as HTML or PDF' })
+  @ApiOperation({
+    summary: 'Export charter agreement as HTML, PDF, or Word',
+  })
   @ApiParam({ name: 'id', type: 'number' })
-  @ApiQuery({ name: 'format', required: false, enum: ['html', 'pdf'] })
+  @ApiQuery({
+    name: 'format',
+    required: false,
+    enum: ['html', 'pdf', 'word', 'doc', 'docx'],
+  })
   async exportCharterAgreement(
     @Param('id', ParseIntPipe) id: number,
     @Query('format') format: string,
@@ -102,6 +108,17 @@ export class QuoteController {
       res.setHeader(
         'Content-Disposition',
         `attachment; filename="charter-agreement-${id}.pdf"`,
+      );
+      return res.send(buffer);
+    }
+
+    if (format === 'word' || format === 'doc' || format === 'docx') {
+      const buffer =
+        await this.documentService.generateCharterAgreementWord(id);
+      res.setHeader('Content-Type', 'application/msword');
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="charter-agreement-${id}.doc"`,
       );
       return res.send(buffer);
     }

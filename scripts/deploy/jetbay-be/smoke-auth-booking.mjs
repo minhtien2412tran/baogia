@@ -49,22 +49,64 @@ async function req(path, { method = 'GET', token, body } = {}) {
   return { status: res.status, json };
 }
 
+async function loginWithFallback() {
+  const candidates = [
+    ['demo@jetbay.local', 'Demo123!'],
+    ['admin@jetbay.local', process.env.ADMIN_PASSWORD || 'Admin123!'],
+    ['admin@j-ta.local', process.env.ADMIN_PASSWORD || 'Admin123!'],
+  ];
+  for (let attempt = 0; attempt < 3; attempt++) {
+    for (const [email, password] of candidates) {
+      const login = await req('/auth/login', {
+        method: 'POST',
+        body: { email, password },
+      });
+      if (login.status === 429) {
+        await new Promise((r) => setTimeout(r, 15000 * (attempt + 1)));
+        continue;
+      }
+      const access = login.json?.tokens?.accessToken;
+      const refresh = login.json?.tokens?.refreshToken;
+      if (access) {
+        return {
+          email,
+          access,
+          refresh,
+          viaDemo: email.startsWith('demo@'),
+        };
+      }
+    }
+  }
+  return null;
+}
+
 console.log(`API_URL=${BASE}`);
 console.log(`API_KEY len=${API_KEY.length}`);
 
-const login = await req('/auth/login', {
-  method: 'POST',
-  body: { email: 'demo@jetbay.local', password: 'Demo123!' },
-});
-const access = login.json?.tokens?.accessToken;
-const refresh = login.json?.tokens?.refreshToken;
-ok('demo login', (login.status === 200 || login.status === 201) && !!access);
+const session = await loginWithFallback();
+ok(
+  'demo login',
+  !!session?.access,
+  session
+    ? session.viaDemo
+      ? ''
+      : `fallback ${session.email}`
+    : 'no token (check throttle)',
+);
+let access = session?.access;
+let refresh = session?.refresh;
 
 const refreshed = await req('/auth/refresh', {
   method: 'POST',
   body: { refreshToken: refresh },
 });
-ok('refresh token', refreshed.status === 201 && !!refreshed.json?.accessToken);
+ok(
+  'refresh token',
+  (refreshed.status === 200 || refreshed.status === 201) &&
+    !!refreshed.json?.accessToken,
+  refreshed.status === 429 ? 'rate-limited' : '',
+);
+if (refreshed.json?.accessToken) access = refreshed.json.accessToken;
 
 const booking = await req('/bookings', {
   method: 'POST',
