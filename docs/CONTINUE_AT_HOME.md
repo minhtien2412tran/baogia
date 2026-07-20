@@ -52,9 +52,11 @@
 
 **I18N CDN blocks (20/07):** PJC `serviceBlocks` + `processSteps` → `t()` (en/vi/zh); CDN giữ ảnh.
 
+**Fix Intl locale (20/07 night):** `RangeError: Incorrect locale information` trên home (empty-leg / news dates) — `formatDate`/`toIntlLocale` dùng `htmlLang` (`en-US`/`zh-CN`) thay vì route code `en-us`/`zh-cn`.
+
 **I18N polish (20/07 evening):** metadata theo locale · about-us overlay · cookie zh-cn · `dir=rtl` cho `ar` · xóa `getHomeOverlay` chết · offer/booking email dùng `quote.locale` · PJC highlight bodies `t()` · tourism title overlay cho `/private-jet-charter`.
 
-**I18N 100% gate (20/07):** SoT [I18N_VERIFICATION_MATRIX.md](./I18N_VERIFICATION_MATRIX.md) + `pnpm audit:i18n`. **I18N-1/2 core done**. Còn CDN serviceBlocks/processSteps EN · welcome SMS OTP · SMTP Owner · RBAC.
+**I18N 100% gate (20/07):** SoT [I18N_VERIFICATION_MATRIX.md](./I18N_VERIFICATION_MATRIX.md) + `pnpm audit:i18n`. **I18N-1/2 core done**. Còn tourism nav WARN · welcome SMS OTP · SMTP Owner · RBAC.
 
 **Audit 19/07 (sync + AI hygiene):** working tree clean trên `jetvina` · merge `main` → `jetvina` (giữ [KH_KICH_BAN_HOP_TIENDO.md](./KH_KICH_BAN_HOP_TIENDO.md)) · `main` ↔ `jetvina` aligned · residual GĐ2 (`b243bc8`+) **đã commit** · agent SoT refresh ([AGENTS.md](../AGENTS.md) · [GIT_WORKFLOW.md](./GIT_WORKFLOW.md))
 

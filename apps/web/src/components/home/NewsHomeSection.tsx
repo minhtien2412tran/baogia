@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { api, loadApi } from '../../lib/api';
-import { apiLocale } from '../../config/locales';
+import { apiLocale, formatDate } from '../../config/locales';
 import { navHref } from '../../config/navigation';
 import { JB } from '../../config/jetbay-cdn';
 import { rebrandText } from '../../lib/brand';
@@ -61,7 +61,7 @@ export async function NewsHomeSection({ locale }: { locale: string }) {
                     {excerpt ? <p>{excerpt}</p> : null}
                     {article.publishedAt ? (
                       <time className="jb-news-date" dateTime={String(article.publishedAt)}>
-                        {new Date(String(article.publishedAt)).toLocaleDateString(locale)}
+                        {formatDate(String(article.publishedAt), locale)}
                       </time>
                     ) : null}
                     <span className="jb-news-card-cta">{t(locale, 'readMore')} →</span>

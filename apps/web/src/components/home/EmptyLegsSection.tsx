@@ -1,4 +1,5 @@
 import { t } from '@jetbay/i18n';
+import { formatDate, formatNumber } from '../../config/locales';
 import { EmptyLegAlertsForm } from './EmptyLegAlertsForm';
 import { FlightScrollRail } from '../ui/FlightScrollRail';
 import { ApiLoadNotice } from '../ui/ApiLoadNotice';
@@ -56,10 +57,10 @@ export function EmptyLegsSection({
                   </div>
                   {departAt && !Number.isNaN(departAt.getTime()) ? (
                     <div className="jb-empty-leg-date">
-                      {t(locale, 'emptyLegDepartLabel')}: {departAt.toLocaleDateString(locale)}
+                      {t(locale, 'emptyLegDepartLabel')}: {formatDate(departAt, locale)}
                     </div>
                   ) : null}
-                  <div className="jb-price">USD {Number(el.price).toLocaleString()}</div>
+                  <div className="jb-price">USD {formatNumber(Number(el.price), locale)}</div>
                 </a>
               );
             })}
