@@ -4,6 +4,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { stringify as yamlStringify } from 'yaml';
 import helmet from 'helmet';
+import express from 'express';
 import { AppModule } from './app.module';
 import {
   SWAGGER_API_DESCRIPTION,
@@ -70,7 +71,39 @@ async function bootstrap() {
   const logger = new Logger('Bootstrap');
   assertProductionSecrets();
 
-  const app = await NestFactory.create(AppModule, { rawBody: true });
+  const app = await NestFactory.create(AppModule, {
+    bodyParser: false,
+  });
+
+  app.use(
+    express.json({
+      limit: '100kb',
+      verify: (req, _res, buffer) => {
+        (req as Request & { rawBody?: Buffer }).rawBody = Buffer.from(buffer);
+      },
+    }),
+    express.urlencoded({ extended: true, limit: '100kb' }),
+    (
+      error: unknown,
+      _req: Request,
+      res: Response,
+      next: NextFunction,
+    ) => {
+      if (
+        error &&
+        typeof error === 'object' &&
+        'type' in error &&
+        error.type === 'entity.too.large'
+      ) {
+        res.status(413).json({
+          statusCode: 413,
+          message: 'Request body too large',
+        });
+        return;
+      }
+      next(error);
+    },
+  );
 
   // Nginx owns X-Frame-Options / X-Content-Type-Options / Referrer-Policy on prod
   // (avoids duplicate header values e.g. SAMEORIGIN,DENY — see S4).
@@ -119,31 +152,6 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
     }),
-  );
-
-  // Keep the JSON body limit intentionally low. Return a clean 413 for
-  // oversized probes/uploads instead of logging a full parser stack trace.
-  app.use(
-    (
-      error: unknown,
-      _req: Request,
-      res: Response,
-      next: NextFunction,
-    ) => {
-      if (
-        error &&
-        typeof error === 'object' &&
-        'type' in error &&
-        error.type === 'entity.too.large'
-      ) {
-        res.status(413).json({
-          statusCode: 413,
-          message: 'Request body too large',
-        });
-        return;
-      }
-      next(error);
-    },
   );
 
   const isProd =

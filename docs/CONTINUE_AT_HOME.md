@@ -66,6 +66,8 @@ Postman collection: `docs/postman/JETVINA_REALTIME.postman_collection.json`. Pro
 
 **Account contact/social expansion (21/07):** Account profile bổ sung WhatsApp, Zalo, địa chỉ, thành phố, quốc gia, ngôn ngữ ưu tiên và URL Facebook/Instagram/LinkedIn; email chỉ đọc và avatar tiếp tục dùng shared storage. Migration `20260721003000_user_contact_social_fields` đã chạy production. API/Web build và public smoke `/en-us/account` PASS.
 
+**Warning/debug cleanup (21/07):** Security overrides đưa API/Web về `pnpm audit: No known vulnerabilities`; xóa `@types/bcryptjs` deprecated; `audit:debug PASS`; refresh token thêm `jti` chống trùng hash; Nginx stale aaPanel vhost được backup rồi disable, `nginx -t` PASS; body parser trả 413 sạch cho payload quá lớn thay vì stack trace. Còn warning không ảnh hưởng runtime: PM2 daemon cũ hơn binary local và một số dev-only transitive packages (`glob`/`inflight`/`node-domexception`) do Jest toolchain.
+
 **I18N polish (20/07 evening):** metadata theo locale · about-us overlay · cookie zh-cn · `dir=rtl` cho `ar` · xóa `getHomeOverlay` chết · offer/booking email dùng `quote.locale` · PJC highlight bodies `t()` · tourism title overlay cho `/private-jet-charter`.
 
 **I18N 100% gate (20/07):** SoT [I18N_VERIFICATION_MATRIX.md](./I18N_VERIFICATION_MATRIX.md) + `pnpm audit:i18n`. **I18N-1/2 core done**. Còn tourism nav WARN · welcome SMS OTP · SMTP Owner · RBAC.
