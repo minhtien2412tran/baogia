@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { createHash } from 'crypto';
+import { createHash, randomUUID } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
 import { CustomerCareService } from './customer-care/customer-care.service';
@@ -46,7 +46,7 @@ export class AuthService {
       role: user.role,
     };
     const refreshToken = this.jwt.sign(
-      { sub: user.id, type: 'refresh' },
+      { sub: user.id, type: 'refresh', jti: randomUUID() },
       { secret: this.refreshSecret(), expiresIn: '30d' },
     );
     const expiresAt = new Date();

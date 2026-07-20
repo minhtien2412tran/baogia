@@ -1,6 +1,11 @@
 packages:
   - 'apps/*'
   - 'packages/*'
+overrides:
+  js-yaml: 4.3.0
+  lodash: 4.18.1
+  multer: 2.2.0
+  postcss: 8.5.20
 allowBuilds:
   '@prisma/client': true
   '@prisma/engines': true

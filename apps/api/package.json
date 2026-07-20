@@ -91,6 +91,11 @@
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },
+  "overrides": {
+    "js-yaml": "4.3.0",
+    "lodash": "4.18.1",
+    "multer": "2.2.0"
+  },
   "jest": {
     "moduleFileExtensions": [
       "js",

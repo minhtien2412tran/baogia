@@ -1,4 +1,4 @@
-import type { INestApplication } from '@nestjs/common';
+import { Logger, type INestApplication } from '@nestjs/common';
 import { timingSafeEqual } from 'crypto';
 import type { Request, Response, NextFunction } from 'express';
 
@@ -30,6 +30,7 @@ function safeEqual(a: string, b: string): boolean {
 
 /** Protect /swagger + OpenAPI when SWAGGER_BASIC_USER + SWAGGER_BASIC_PASSWORD are set. */
 export function installSwaggerBasicAuth(app: INestApplication): void {
+  const logger = new Logger('SwaggerBasicAuth');
   const user = process.env.SWAGGER_BASIC_USER?.trim();
   const pass = process.env.SWAGGER_BASIC_PASSWORD?.trim();
   if (!user || !pass) return;
@@ -54,7 +55,7 @@ export function installSwaggerBasicAuth(app: INestApplication): void {
     return unauthorized(res);
   });
 
-  console.log(
+  logger.log(
     'Swagger/OpenAPI protected with HTTP Basic (SWAGGER_BASIC_USER set)',
   );
 }
