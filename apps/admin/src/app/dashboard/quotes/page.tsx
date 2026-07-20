@@ -5,6 +5,7 @@ import { scheduleUi } from '../../../lib/browser';
 import { SectionTitle, DataTable, Muted } from '@jetbay/ui';
 import { AdminShell } from '../../../components/AdminShell';
 import { ActionBtn, AdminField, AdminPanel, fieldStyle } from '../../../components/AdminFormFields';
+import { usePermissions } from '../../../components/PermissionContext';
 import { adminApi } from '../../../lib/api';
 
 const STATUSES = ['PENDING', 'OFFERED', 'EXPIRED', 'CONVERTED', 'CANCELLED'];
@@ -22,6 +23,7 @@ type QuoteRow = {
 };
 
 export default function QuotesPage() {
+  const { can } = usePermissions();
   const [quotes, setQuotes] = useState<QuoteRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState('');
@@ -128,19 +130,36 @@ export default function QuotesPage() {
     created: q.created,
     actions: (
       <span style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-        <ActionBtn onClick={() => void openOffer(q.id)}>Offer</ActionBtn>
-        {STATUSES.filter((s) => s !== q.status).map((s) => (
-          <ActionBtn key={s} onClick={() => void updateStatus(q.id, s)}>
-            → {s}
-          </ActionBtn>
-        ))}
+        {can('quote.create') ? (
+          <ActionBtn onClick={() => void openOffer(q.id)}>Offer</ActionBtn>
+        ) : null}
+        {can('quote.update')
+          ? STATUSES.filter((s) => s !== q.status).map((s) => (
+              <ActionBtn key={s} onClick={() => void updateStatus(q.id, s)}>
+                → {s}
+              </ActionBtn>
+            ))
+          : null}
       </span>
     ),
   }));
 
   return (
     <AdminShell active="/dashboard/quotes">
-      <SectionTitle>Quote Requests</SectionTitle>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+        <SectionTitle>Quote Requests</SectionTitle>
+        {can('quote.export') || can('quote.view') ? (
+          <ActionBtn
+            onClick={() =>
+              void adminApi.downloadExport('/admin/export/quotes?format=csv').catch((e: Error) =>
+                setMsg(e.message),
+              )
+            }
+          >
+            Export CSV
+          </ActionBtn>
+        ) : null}
+      </div>
 
       {offerFor !== null && (
         <AdminPanel title={`Create offer for quote #${offerFor}`} onClose={() => setOfferFor(null)}>

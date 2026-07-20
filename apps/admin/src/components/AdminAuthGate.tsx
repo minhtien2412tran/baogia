@@ -4,6 +4,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Muted } from '@jetbay/ui';
 import { getToken } from '../lib/api';
+import { PermissionProvider } from './PermissionContext';
 
 export function AdminAuthGate({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -11,7 +12,6 @@ export function AdminAuthGate({ children }: { children: ReactNode }) {
   const [hasToken, setHasToken] = useState<boolean | null>(null);
 
   useEffect(() => {
-    // Defer past effect body so setState is not flagged as sync-in-effect.
     const timer = window.setTimeout(() => {
       setHasToken(Boolean(getToken()));
     }, 0);
@@ -32,5 +32,5 @@ export function AdminAuthGate({ children }: { children: ReactNode }) {
     );
   }
 
-  return <>{children}</>;
+  return <PermissionProvider>{children}</PermissionProvider>;
 }

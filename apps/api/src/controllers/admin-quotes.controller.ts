@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -16,7 +17,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AdminQuotesService } from '../services/admin-quotes.service';
-import { CreateQuoteOfferDto } from '../dto';
+import { CreateQuoteOfferDto, UpdateQuoteStatusDto } from '../dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { StaffGuard } from '../auth/staff.guard';
 import { PermissionGuard } from '../permissions/permission.guard';
@@ -66,5 +67,15 @@ export class AdminQuotesController {
     @CurrentUser() user: AuthUser,
   ) {
     return this.quotes.createOffer(id, body, user.userId);
+  }
+
+  @Patch('quotes/:id/status')
+  @RequirePermissions('quote.update')
+  @ApiOperation({ summary: 'Update quote request status' })
+  updateStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateQuoteStatusDto,
+  ) {
+    return this.quotes.updateQuoteStatus(id, body.status);
   }
 }

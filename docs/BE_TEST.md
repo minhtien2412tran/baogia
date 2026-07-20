@@ -1,6 +1,6 @@
 # Backend Test — JetBay API
 
-**Canonical tài liệu test BE.** Cập nhật: **2026-07-20**  
+**Canonical tài liệu test BE.** Cập nhật: **2026-07-21**  
 **Audit domain:** [BE_AUDIT.md](./BE_AUDIT.md) · **Triển khai:** [JETBAY_DEPLOY_PLAN.md](./JETBAY_DEPLOY_PLAN.md)
 
 ---
@@ -22,6 +22,8 @@
 | Auth + booking | `smoke-auth-booking.mjs` | fallback admin · tránh chạy sát login throttle |
 | BE smoke | `smoke-prod.sh` | partial nếu openapi/login 429 — chạy riêng sau cooldown |
 
+**Local 21/07 (Admin ops waves):** API + Admin `tsc --noEmit` **PASS**. Chưa deploy — sau deploy cần smoke: `GET /admin/payments`, `GET /admin/export/quotes?format=csv`, `PATCH /admin/quotes/:id/status` với SALES JWT.
+
 ---
 
 ## 2. Ma trận test ↔ domain BE
@@ -36,8 +38,9 @@
 | §6 | Commercial | `smoke-prod.sh`, `smoke-web-api.mjs` | FP, EL, JetCard, TC |
 | §7 | Content & media | `smoke-prod.sh`, `smoke-admin-crud.mjs` | news, destinations, videos, pages |
 | §8 | Admin ops | `smoke-prod.sh`, `smoke-admin-crud.mjs` | dashboard stats, airports CRUD |
+| §8b | Admin payments/export | *(sau deploy)* curl JWT | `GET /admin/payments` · `/admin/export/*` |
 | §9 | Integrations | `smoke-docs.sh` | integrations status, MinIO/pay flags |
-| §11 | RBAC / Permissions | `permission.service.spec.ts` (unit) | ADMIN bypass; PermissionGuard on contracts |
+| §11 | RBAC / Permissions | `permission.service.spec.ts` (unit) | ADMIN bypass; StaffGuard ops controllers (21/07 local) |
 | §12 | Contracts / e-sign | **`smoke-bao-gia-contracts.mjs`** | draft→approve→mock DocuSign→webhook |
 | §13 | Content-Sync / Media | `media-*.integration.spec.ts`, `content-sync-*.spec.ts` | ⚠️ **cần Postgres** |
 | §14 | Pricing engine | `pricing.engine.spec.ts` + **`smoke-bao-gia-contracts.mjs`** | `POST /pricing/estimate` |

@@ -64,6 +64,12 @@ export class PermissionService {
     effect: PermissionEffect,
     updatedBy?: number,
   ) {
+    if (effect === 'INHERIT') {
+      await this.prisma.userPermissionOverride.deleteMany({
+        where: { userId, permission },
+      });
+      return { userId, permission, effect: 'INHERIT' as const };
+    }
     return this.prisma.userPermissionOverride.upsert({
       where: { userId_permission: { userId, permission } },
       update: { effect, updatedBy },
@@ -71,14 +77,27 @@ export class PermissionService {
     });
   }
 
+  async getRolePermissions(role: string) {
+    const rows = await this.prisma.rolePermission.findMany({
+      where: { role },
+      orderBy: { permission: 'asc' },
+    });
+    return {
+      role,
+      permissions: rows.map((r) => r.permission),
+    };
+  }
+
   async setRolePermissions(role: string, permissions: string[]) {
+    const allowed = new Set(PERMISSIONS as readonly string[]);
+    const cleaned = [...new Set(permissions)].filter((p) => allowed.has(p));
     await this.prisma.rolePermission.deleteMany({ where: { role } });
-    if (permissions.length === 0) return { role, permissions: [] };
+    if (cleaned.length === 0) return { role, permissions: [] as string[] };
     await this.prisma.rolePermission.createMany({
-      data: permissions.map((permission) => ({ role, permission })),
+      data: cleaned.map((permission) => ({ role, permission })),
       skipDuplicates: true,
     });
-    return { role, permissions };
+    return { role, permissions: cleaned };
   }
 
   async getUserScopes(userId: number) {

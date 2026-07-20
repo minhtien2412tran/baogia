@@ -14,6 +14,7 @@ import { PricingModule } from './pricing/pricing.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { ContractsModule } from './contracts/contracts.module';
 import { ContentSyncModule } from './content-sync/content-sync.module';
+import { AdminExportModule } from './export/admin-export.module';
 
 // Remaining domains (phase 2–5) — still registered on AppModule
 import { FixedPriceController } from './controllers/fixed-price.controller';
@@ -40,6 +41,7 @@ import { AirportController } from './controllers/airport.controller';
 import { AdminAirportController } from './controllers/admin-airport.controller';
 import { ApiGatewayController } from './controllers/api-gateway.controller';
 import { AdminAircraftController } from './controllers/admin-aircraft.controller';
+import { AdminPaymentsController } from './controllers/admin-payments.controller';
 import { MediaController } from './controllers/media.controller';
 import { EnquiryController } from './controllers/enquiry.controller';
 import { FixedPriceService } from './services/fixed-price.service';
@@ -52,6 +54,7 @@ import { AirportService } from './services/airport.service';
 import { PartnerService } from './services/partner.service';
 import { ApiGatewayService } from './services/api-gateway.service';
 import { AdminUsersService } from './services/admin-users.service';
+import { AdminPaymentsService } from './services/admin-payments.service';
 import { AircraftService } from './services/aircraft.service';
 import { IntegrationsStatusService } from './services/integrations-status.service';
 import { AccountController } from './controllers/account.controller';
@@ -74,6 +77,7 @@ import { RealtimeModule } from './realtime/realtime.module';
     PermissionsModule,
     ContractsModule,
     ContentSyncModule,
+    AdminExportModule,
     RealtimeModule,
     ThrottlerModule.forRoot([
       { name: 'default', ttl: 60_000, limit: 120 },
@@ -111,6 +115,7 @@ import { RealtimeModule } from './realtime/realtime.module';
     AdminDashboardController,
     AdminUsersController,
     AdminAircraftController,
+    AdminPaymentsController,
     ApiGatewayController,
     MediaController,
     EnquiryController,
@@ -130,6 +135,7 @@ import { RealtimeModule } from './realtime/realtime.module';
     AirportService,
     PartnerService,
     AdminUsersService,
+    AdminPaymentsService,
     AircraftService,
     IntegrationsStatusService,
     AccountService,

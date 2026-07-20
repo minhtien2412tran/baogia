@@ -111,6 +111,13 @@ export class AdminPermissionsController {
     );
   }
 
+  @Get('roles/:role')
+  @RequirePermissions('permission.manage')
+  @ApiOperation({ summary: 'List permissions assigned to a role template' })
+  getRole(@Param('role') role: string) {
+    return this.permissions.getRolePermissions(role);
+  }
+
   @Put('roles/:role')
   @RequirePermissions('permission.manage')
   @ApiOperation({ summary: 'Replace role permission set' })

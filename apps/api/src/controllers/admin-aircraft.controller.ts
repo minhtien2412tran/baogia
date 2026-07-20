@@ -19,23 +19,27 @@ import {
 } from '@nestjs/swagger';
 import { AircraftService } from '../services/aircraft.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { AdminGuard } from '../auth/admin.guard';
+import { StaffGuard } from '../auth/staff.guard';
+import { PermissionGuard } from '../permissions/permission.guard';
+import { RequirePermissions } from '../permissions/require-permissions.decorator';
 
 @ApiTags('Admin Aircraft')
 @ApiSecurity('X-API-Key')
 @Controller('admin/aircraft')
-@UseGuards(JwtAuthGuard, AdminGuard)
+@UseGuards(JwtAuthGuard, StaffGuard, PermissionGuard)
 @ApiBearerAuth('bearer')
 export class AdminAircraftController {
   constructor(private readonly aircraft: AircraftService) {}
 
   @Get('categories')
+  @RequirePermissions('aircraft.view')
   @ApiOperation({ summary: 'List aircraft categories with models' })
   listCategories() {
     return this.aircraft.listCategories();
   }
 
   @Post('categories')
+  @RequirePermissions('aircraft.view')
   @ApiOperation({ summary: 'Create aircraft category' })
   createCategory(
     @Body() body: { code: string; label: string; maxPassengers?: number },
@@ -44,6 +48,7 @@ export class AdminAircraftController {
   }
 
   @Patch('categories/:id')
+  @RequirePermissions('aircraft.view')
   @ApiOperation({ summary: 'Update aircraft category' })
   updateCategory(
     @Param('id', ParseIntPipe) id: number,
@@ -53,12 +58,14 @@ export class AdminAircraftController {
   }
 
   @Delete('categories/:id')
+  @RequirePermissions('aircraft.view')
   @ApiOperation({ summary: 'Delete aircraft category' })
   deleteCategory(@Param('id', ParseIntPipe) id: number) {
     return this.aircraft.deleteCategory(id);
   }
 
   @Get('models')
+  @RequirePermissions('aircraft.view')
   @ApiQuery({ name: 'categoryId', required: false })
   @ApiOperation({ summary: 'List aircraft models' })
   listModels(@Query('categoryId') categoryId?: string) {
@@ -68,6 +75,7 @@ export class AdminAircraftController {
   }
 
   @Post('models')
+  @RequirePermissions('aircraft.view')
   @ApiOperation({ summary: 'Create aircraft model' })
   createModel(
     @Body()
@@ -84,6 +92,7 @@ export class AdminAircraftController {
   }
 
   @Patch('models/:id')
+  @RequirePermissions('aircraft.view')
   @ApiOperation({ summary: 'Update aircraft model' })
   updateModel(
     @Param('id', ParseIntPipe) id: number,
@@ -101,12 +110,14 @@ export class AdminAircraftController {
   }
 
   @Delete('models/:id')
+  @RequirePermissions('aircraft.view')
   @ApiOperation({ summary: 'Delete aircraft model' })
   deleteModel(@Param('id', ParseIntPipe) id: number) {
     return this.aircraft.deleteModel(id);
   }
 
   @Get('fleet')
+  @RequirePermissions('aircraft.view')
   @ApiOperation({ summary: 'List aircraft instances (tail numbers)' })
   @ApiQuery({ name: 'availabilityStatus', required: false })
   @ApiQuery({ name: 'currentAirportId', required: false })
@@ -121,12 +132,14 @@ export class AdminAircraftController {
   }
 
   @Get('fleet/:id')
+  @RequirePermissions('aircraft.view')
   @ApiOperation({ summary: 'Aircraft instance detail + location history' })
   getFleet(@Param('id', ParseIntPipe) id: number) {
     return this.aircraft.getFleetItem(id);
   }
 
   @Post('fleet')
+  @RequirePermissions('aircraft.view')
   @ApiOperation({ summary: 'Create aircraft instance' })
   createFleet(
     @Body()
@@ -146,6 +159,7 @@ export class AdminAircraftController {
   }
 
   @Post('fleet/:id/location')
+  @RequirePermissions('aircraft.update_location')
   @ApiOperation({ summary: 'Update aircraft current airport + history' })
   updateLocation(
     @Param('id', ParseIntPipe) id: number,

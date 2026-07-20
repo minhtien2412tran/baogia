@@ -53,19 +53,22 @@ Legend — Data status: `DONE` | `PARTIAL` | `MOCK` | `BLOCKED` | `NOT_STARTED` 
 | Module | Web route | Admin route | API endpoint | Method | Auth | API client | Data status | Loading | Error | Empty | Test | Production status | Ghi chú |
 |--------|-----------|-------------|--------------|--------|------|------------|-------------|---------|-------|-------|------|-------------------|---------|
 | Login | — | `/login` | `/auth/login` | POST | — | adminApi | DONE | form | form | — | manual | PROD → api.minhtien.online | Fixed bake URL |
-| Dashboard | — | `/dashboard` | `/admin/dashboard/*` | GET | Admin JWT | adminApi | DONE | — | — | — | smoke-admin (hist) | PROD | |
-| Quotes | — | `/dashboard/quotes` | `/admin/quotes*` | GET/PATCH/POST | Admin | adminApi | DONE | — | — | — | NEEDS_VERIFY | PROD | Quote E2E end appears here |
-| Bookings | — | `/dashboard/bookings` | `/admin/bookings*` | GET/PATCH | Admin | adminApi | DONE | — | — | — | auth-booking | PROD | |
-| Airports/Aircraft | — | airports/aircraft | `/admin/airports` `/admin/aircraft/*` | CRUD | Admin | adminApi | DONE | — | — | — | smoke-admin-crud | PROD | |
-| FP / EL / JC / TC | — | commercial pages | `/admin/fixed-price|empty-legs|jet-card|travel-credits` | CRUD | Admin | adminApi | DONE | — | — | — | smoke-admin-crud | PROD | |
-| Content CMS | — | content/* | `/admin/content/*` | CRUD | Admin | adminApi | PARTIAL | — | — | — | NEEDS_VERIFY | PROD | Locale body thiếu |
-| Media | — | media / media-review | `/admin/media*` `/admin/media-assets*` | CRUD | Admin | adminApi | PARTIAL | — | — | — | media tests | PROD | Hotlink JetVina staging |
-| Operators / Templates | — | operators / email-templates | `/admin/operators` `/admin/email-templates` | CRUD | Admin | adminApi | DONE | — | — | — | hist 200 | PROD | Samples seeded |
-| Audit | — | audit-logs | `/admin/audit-logs` | GET | Admin | adminApi | DONE | — | — | — | NEEDS_VERIFY | PROD | |
-| Permissions | — | permissions | `/admin/permissions*` | GET/PUT | Staff JWT + `permission.manage` where required | adminApi | PARTIAL | — | 403 stays in-session | — | NEEDS_VERIFY | PROD | Staff login + permission-aware nav added; legacy controller migration remains |
-| Contracts | — | contracts | `/admin/contracts*` | workflow | PermissionGuard | adminApi | PARTIAL | — | — | — | — | DocuSign mock | GĐ4 · UI thiếu create/detail/request-changes |
+| Dashboard | — | `/dashboard` | `/admin/dashboard/*` | GET | Staff + `dashboard.view` | adminApi | DONE | — | — | — | smoke-admin (hist) | PROD · guard local 21/07 | |
+| Quotes | — | `/dashboard/quotes` `[id]` | `/admin/quotes*` · export | GET/PATCH/POST | Staff + `quote.*` | adminApi | DONE | — | — | — | NEEDS_VERIFY | PROD · detail+export local | status moved off dashboard |
+| Bookings | — | `/dashboard/bookings` `[id]` | `/admin/bookings*` · export PDF | GET/PATCH | Staff + `booking.*` | adminApi | DONE | — | — | — | auth-booking | PROD · structured detail local | |
+| Payments | — | `/dashboard/payments` | `/admin/payments` · export | GET | Staff + `payment.view` | adminApi | DONE | — | — | — | NEEDS_DEPLOY | local 21/07 | no refunds |
+| Users 360 | — | `/dashboard/users` `[id]` | `/admin/users*` | GET/PATCH | Staff + `user.manage` | adminApi | DONE | — | — | — | NEEDS_VERIFY | PROD · structured edit local | |
+| Airports/Aircraft | — | airports/aircraft | `/admin/airports` `/admin/aircraft/*` | CRUD | Staff + `aircraft.*` / `airport.*` | adminApi | DONE | — | — | — | smoke-admin-crud | PROD · fleet create/location UI | |
+| FP / EL / JC / TC | — | commercial pages | `/admin/fixed-price|empty-legs|jet-card|travel-credits` | CRUD | Staff + `*.view/manage` | adminApi | DONE | — | — | — | smoke-admin-crud | PROD · guards local 21/07 | |
+| Content CMS | — | content/* | `/admin/content/*` | CRUD | Admin | adminApi | PARTIAL | — | — | — | NEEDS_VERIFY | PROD | Locale body thiếu · R4 |
+| Media | — | media / media-review | `/admin/media*` `/admin/media-assets*` | CRUD | Admin | adminApi | PARTIAL | — | — | — | media tests | PROD | Hotlink JetVina staging · R4 |
+| Operators / Templates | — | operators / email-templates | `/admin/operators` `/admin/email-templates` | CRUD | Admin | adminApi | DONE | — | — | — | hist 200 | PROD | Samples seeded · R3 lag |
+| Audit | — | audit-logs | `/admin/audit-logs` | GET | Staff + `audit.view` | adminApi | DONE | — | — | — | NEEDS_VERIFY | PROD | dashboard controller |
+| Permissions | — | permissions | `/admin/permissions*` | GET/PUT | Staff JWT + `permission.manage` where required | adminApi | PARTIAL | — | 403 stays in-session | — | NEEDS_VERIFY | PROD | PermissionContext + AuthGate 21/07 |
+| Contracts | — | contracts `[id]` | `/admin/contracts*` · export | workflow | PermissionGuard `contract.*` | adminApi | DONE | — | — | — | bao-gia-contracts | DocuSign mock | create/detail UI local |
+| Export | — | (buttons on lists) | `/admin/export/*` | GET file | Staff + `*.export` | downloadExport | DONE | — | — | — | NEEDS_DEPLOY | local 21/07 | PDF + CSV |
 | Settings / brand | — | settings | `/admin/site-settings/brand` | GET/PATCH | Admin | adminApi | PARTIAL | — | — | — | — | PROD | |
-| Revenue demo | — | dashboard | `/admin/dashboard/revenue-demo` | GET | Admin | adminApi | MOCK | — | — | — | — | Demo metric | Labelled demo |
+| Revenue demo | — | dashboard | `/admin/dashboard/revenue-demo` | GET | Staff + `dashboard.view` | adminApi | MOCK | — | — | — | — | Demo metric | Labelled demo |
 
 ---
 

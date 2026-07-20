@@ -6,7 +6,7 @@
 **Dự án:** JETBAY (monorepo) — **web chính thức KH = [jetvina.com](https://jetvina.com/)** · demo code = `apps/web`  
 **Báo giá** (`m-tien.com/jet-bay`) chỉ là mô tả bán hàng — không phải trang chính thức.  
 **Repo:** https://github.com/minhtien2412tran/baogia.git  
-**Nhánh:** `main` · `feat/web-*` | `feat/api-*` | `feat/admin-*`
+**Nhánh:** `jetvina` (SoT) · `main` mirror · `feat/web-*` | `feat/api-*` | `feat/admin-*`
 
 ---
 
@@ -37,6 +37,13 @@
 
 > **Plan:** [NEXT_SPRINT_PLAN.md](./NEXT_SPRINT_PLAN.md) · [GD2_ROADMAP.md](./GD2_ROADMAP.md) · [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md) · [OWNER_ACTION_ITEMS.md](./OWNER_ACTION_ITEMS.md) · [TEST_MATRIX.md](./TEST_MATRIX.md)
 
+**Admin ops waves (21/07 local — chưa deploy):** R1–R3 core + export + **RBAC/Settings/Audit UX**:
+- AuthGate + `PermissionContext`; nav + action `can()`; **kéo-thả reorder menu** + section toggles (Settings)
+- Permissions tabs: role transfer (grant/revoke) · group ticks · per-user ALLOW/DENY · airport scope · user picker
+- Audit: filter theo workflow (quotes/bookings/payments/contracts/…) + search + detail expand
+- Dashboard widgets kéo-thả; Settings brand tab
+- Còn R4 CMS AdminGuard · R5 scope · deploy API+Admin + re-seed SALES
+
 1. **CR Wave1–5 BE + Empty Leg FE filter (2026-07-12)** — nhánh `feat/api-cr-wave3-contracts-rbac-docusign`: fleet/pricing/HĐ/RBAC/DocuSign mock · web `/empty-leg` lọc continent/IATA/date · smoke `smoke-cr-wave1/3` — live DocuSign/Admin UI chờ phụ lục
 2. **CR sau họp** — kịch bản họp tiến độ: [KH_KICH_BAN_HOP_TIENDO.md](./KH_KICH_BAN_HOP_TIENDO.md) (đã gộp từ `main` 19/07) · biên bản `JETBAY_CR_2026_01` / `KH_KICH_BAN_SAU_HOP_CR` *(bổ sung khi có file)* · báo cáo tiến độ **không** ghi CR = đã hoàn thành GĐ
 3. **Polish theo JetVina** (ongoing) — so [jetvina.com](https://jetvina.com/) (+ `scratch/` khi cần layout)
@@ -44,7 +51,7 @@
 
 **Trạng thái phiên 15/07 (evening audit):** **GĐ2 Dev complete · Repository pack committed · Waiting for Owner SMTP**
 
-**Bổ sung audit 18/07:** BE typecheck PASS; local runtime còn blocked bởi Docker/Postgres. Admin/RBAC đã re-matrix tại [ADMIN_RBAC_FUNCTION_MATRIX.md](./ADMIN_RBAC_FUNCTION_MATRIX.md): menu Admin chưa permission-aware, controller còn trộn `AdminGuard`/`PermissionGuard`, triển khai theo waves R1–R5.
+**Bổ sung audit 18/07:** BE typecheck PASS; local runtime còn blocked bởi Docker/Postgres. Admin/RBAC matrix: [ADMIN_RBAC_FUNCTION_MATRIX.md](./ADMIN_RBAC_FUNCTION_MATRIX.md) — **21/07:** R1–R3 ops-core + export coded local (AuthGate/PermissionContext, StaffGuard migrate, detail UI, payments, CSV/PDF); R4 CMS + R5 scope + deploy còn mở.
 
 **Bản dịch / locale (20/07):** Prod `/en-us/*` trả **đúng English** (đã curl verify). Screenshot “en-us hiện tiếng Việt” là Chrome auto-translate (`Charter`→`Hiến chương`, `English (US)`→`Tiếng Anh (Mỹ)` — không khớp catalog `vi`). Fix FE: `<html lang>` theo locale + `translate="no"` / `google=notranslate` + language picker `translate="no"`.
 

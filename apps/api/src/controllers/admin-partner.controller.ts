@@ -16,23 +16,27 @@ import {
 import { PartnerService } from '../services/partner.service';
 import { ReviewPartnerApplicationDto } from '../dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { AdminGuard } from '../auth/admin.guard';
+import { StaffGuard } from '../auth/staff.guard';
+import { PermissionGuard } from '../permissions/permission.guard';
+import { RequirePermissions } from '../permissions/require-permissions.decorator';
 
 @ApiTags('Admin Partners')
 @ApiSecurity('X-API-Key')
 @Controller('admin/partners')
-@UseGuards(JwtAuthGuard, AdminGuard)
+@UseGuards(JwtAuthGuard, StaffGuard, PermissionGuard)
 @ApiBearerAuth('bearer')
 export class AdminPartnerController {
   constructor(private readonly partnerService: PartnerService) {}
 
   @Get('applications')
+  @RequirePermissions('partner.view')
   @ApiOperation({ summary: 'List partner applications (admin)' })
   listApplications() {
     return this.partnerService.listApplicationsAdmin();
   }
 
   @Patch('applications/:id')
+  @RequirePermissions('partner.manage')
   @ApiOperation({ summary: 'Approve or reject a partner application' })
   reviewApplication(
     @Param('id', ParseIntPipe) id: number,

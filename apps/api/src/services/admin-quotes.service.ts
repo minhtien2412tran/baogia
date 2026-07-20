@@ -227,4 +227,33 @@ export class AdminQuotesService {
       message: `Offer #${offer.id} created for quote #${quoteId}`,
     };
   }
+
+  async updateQuoteStatus(id: number, status: string) {
+    const allowed = ['PENDING', 'OFFERED', 'EXPIRED', 'CONVERTED', 'CANCELLED'];
+    if (!allowed.includes(status)) {
+      throw new BadRequestException(
+        `Invalid status. Allowed: ${allowed.join(', ')}`,
+      );
+    }
+    const existing = await this.prisma.quoteRequest.findUnique({
+      where: { id },
+    });
+    if (!existing) throw new NotFoundException(`Quote #${id} not found`);
+
+    const updated = await this.prisma.quoteRequest.update({
+      where: { id },
+      data: { status },
+    });
+    await this.audit.log('QUOTE_STATUS_UPDATED', {
+      quoteId: id,
+      status,
+      previous: existing.status,
+    });
+    return {
+      id: updated.id,
+      status: updated.status,
+      email: updated.email,
+      message: `Quote #${id} → ${status}`,
+    };
+  }
 }

@@ -1,12 +1,38 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { StorageService } from './storage.service';
 import { RedisService } from './redis.service';
-import { AuditService } from './audit.service';
+
+function inferWorkflow(action: string): string {
+  if (action.startsWith('QUOTE_')) return 'quotes';
+  if (action.startsWith('BOOKING_')) return 'bookings';
+  if (
+    action.startsWith('PAYMENT_') ||
+    action.startsWith('GATEWAY_') ||
+    action.startsWith('STRIPE_')
+  ) {
+    return 'payments';
+  }
+  if (action.startsWith('CONTRACT_') || action.includes('DOCUSIGN')) {
+    return 'contracts';
+  }
+  if (action.startsWith('ADMIN_USER_') || action.startsWith('PERMISSION_')) {
+    return action.startsWith('PERMISSION_') ? 'permissions' : 'users';
+  }
+  if (action.startsWith('CONTENT_')) return 'content';
+  if (action.startsWith('AIRPORT_')) return 'airports';
+  if (
+    action.startsWith('FIXED_PRICE_') ||
+    action.startsWith('EMPTY_LEG_') ||
+    action.startsWith('JET_CARD_') ||
+    action.startsWith('TRAVEL_CREDIT') ||
+    action.startsWith('PARTNER_')
+  ) {
+    return 'commercial';
+  }
+  return 'other';
+}
 
 @Injectable()
 export class AdminDashboardService {
@@ -14,7 +40,6 @@ export class AdminDashboardService {
     private readonly prisma: PrismaService,
     private readonly storage: StorageService,
     private readonly redis: RedisService,
-    private readonly audit: AuditService,
   ) {}
 
   async getStats() {
@@ -56,35 +81,6 @@ export class AdminDashboardService {
         : null,
       createdAt: q.createdAt.toISOString(),
     }));
-  }
-
-  async updateQuoteStatus(id: number, status: string) {
-    const allowed = ['PENDING', 'OFFERED', 'EXPIRED', 'CONVERTED', 'CANCELLED'];
-    if (!allowed.includes(status)) {
-      throw new BadRequestException(
-        `Invalid status. Allowed: ${allowed.join(', ')}`,
-      );
-    }
-    const existing = await this.prisma.quoteRequest.findUnique({
-      where: { id },
-    });
-    if (!existing) throw new NotFoundException(`Quote #${id} not found`);
-
-    const updated = await this.prisma.quoteRequest.update({
-      where: { id },
-      data: { status },
-    });
-    await this.audit.log('QUOTE_STATUS_UPDATED', {
-      quoteId: id,
-      status,
-      previous: existing.status,
-    });
-    return {
-      id: updated.id,
-      status: updated.status,
-      email: updated.email,
-      message: `Quote #${id} → ${status}`,
-    };
   }
 
   async getRecentBookings(limit = 10) {
@@ -132,12 +128,77 @@ export class AdminDashboardService {
     };
   }
 
-  async getAuditLogs(page = 1, limit = 20) {
+  async getAuditLogs(
+    page = 1,
+    limit = 20,
+    filters?: { action?: string; workflow?: string; q?: string },
+  ) {
     const take = Math.min(limit, 100);
     const skip = (page - 1) * take;
+    const and: Prisma.AuditLogWhereInput[] = [];
+
+    if (filters?.action) {
+      and.push({ action: filters.action });
+    } else if (filters?.workflow) {
+      const wf = filters.workflow;
+      if (wf === 'commercial') {
+        and.push({
+          OR: [
+            { action: { startsWith: 'FIXED_PRICE_' } },
+            { action: { startsWith: 'EMPTY_LEG_' } },
+            { action: { startsWith: 'JET_CARD_' } },
+            { action: { startsWith: 'TRAVEL_CREDIT' } },
+            { action: { startsWith: 'PARTNER_' } },
+          ],
+        });
+      } else if (wf === 'payments') {
+        and.push({
+          OR: [
+            { action: { startsWith: 'PAYMENT_' } },
+            { action: { startsWith: 'GATEWAY_' } },
+            { action: { startsWith: 'STRIPE_' } },
+          ],
+        });
+      } else if (wf === 'quotes') {
+        and.push({ action: { startsWith: 'QUOTE_' } });
+      } else if (wf === 'bookings') {
+        and.push({ action: { startsWith: 'BOOKING_' } });
+      } else if (wf === 'contracts') {
+        and.push({
+          OR: [
+            { action: { startsWith: 'CONTRACT_' } },
+            { action: { contains: 'DOCUSIGN' } },
+          ],
+        });
+      } else if (wf === 'users') {
+        and.push({ action: { startsWith: 'ADMIN_USER_' } });
+      } else if (wf === 'permissions') {
+        and.push({ action: { startsWith: 'PERMISSION_' } });
+      } else if (wf === 'content') {
+        and.push({ action: { startsWith: 'CONTENT_' } });
+      } else if (wf === 'airports') {
+        and.push({ action: { startsWith: 'AIRPORT_' } });
+      }
+    }
+
+    if (filters?.q?.trim()) {
+      const q = filters.q.trim();
+      and.push({
+        OR: [
+          { action: { contains: q, mode: 'insensitive' } },
+          { ipAddress: { contains: q, mode: 'insensitive' } },
+          { user: { email: { contains: q, mode: 'insensitive' } } },
+        ],
+      });
+    }
+
+    const where: Prisma.AuditLogWhereInput =
+      and.length > 0 ? { AND: and } : {};
+
     const [total, logs] = await Promise.all([
-      this.prisma.auditLog.count(),
+      this.prisma.auditLog.count({ where }),
       this.prisma.auditLog.findMany({
+        where,
         orderBy: { createdAt: 'desc' },
         skip,
         take,
@@ -153,6 +214,7 @@ export class AdminDashboardService {
         details: l.details,
         ipAddress: l.ipAddress,
         createdAt: l.createdAt.toISOString(),
+        workflow: inferWorkflow(l.action),
       })),
       pagination: {
         page,
@@ -160,6 +222,17 @@ export class AdminDashboardService {
         total,
         totalPages: Math.ceil(total / take),
       },
+      workflows: [
+        'quotes',
+        'bookings',
+        'payments',
+        'contracts',
+        'users',
+        'content',
+        'commercial',
+        'airports',
+        'permissions',
+      ],
     };
   }
 

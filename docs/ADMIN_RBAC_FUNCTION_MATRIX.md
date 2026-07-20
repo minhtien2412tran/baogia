@@ -108,16 +108,18 @@ Legend: `A` admin bypass · `R` có trong role seed · `—` chưa cấp mặc �
 | Gap                  | Hiện trạng                                                                    | Priority |
 | -------------------- | ----------------------------------------------------------------------------- | -------- |
 | Login staff          | Đã mở cho `ADMIN` / `SALES` / `CONTRACT_APPROVER`; API legacy routes vẫn cần migration tiếp | DONE/P1 |
-| Auth gate            | `AdminAuthGate` chỉ check token localStorage                                  | P0       |
+| Auth gate            | `AdminAuthGate` + `PermissionProvider` load `/permissions/me` (21/07)         | DONE     |
 | 403 handling         | Admin client giữ session và hiển thị Forbidden; chỉ 401 mới clear token       | DONE     |
-| Quote/booking detail | List + status có; thiếu detail/offers history/cancel reason/pricing breakdown | P1       |
-| User 360             | Không link user → quotes/bookings/payments/documents                          | P1       |
-| Aircraft management  | Page read-only dù API có CRUD category/model/fleet/location                   | P1       |
+| Quote/booking detail | Structured detail + status edit + PDF export (21/07); list actions gated      | DONE/P2  |
+| User 360             | Structured 360 + edit role/status + quote/booking links (21/07)               | DONE     |
+| Aircraft management  | Create fleet + location update UI (21/07); category/model vẫn API-first        | DONE/P2  |
+| Payments admin       | `GET /admin/payments` + Admin page + CSV export (21/07); no refunds           | DONE/P1  |
+| Contracts UI         | Create + detail + action gating (21/07); DocuSign vẫn mock                    | DONE/P1  |
 | Content workflow UI  | Sync/rights/media API giàu hơn UI hiện tại                                    | P1       |
 | CMS i18n             | Hard-code locale `en` trên articles/pages/videos/destinations                 | P2       |
 | Web account ↔ Admin  | Account snapshot chỉ phục vụ KH; Admin chưa có customer support view          | P2       |
 
-**Audit update 20/07 late:** Admin có thêm quote/booking detail, user customer-360, dashboard retry/error và empty states cho dashboard/quotes/bookings/users. API role DTO/service hỗ trợ đủ bốn role. Các gap còn lại giữ trong backlog R2–R4: aircraft CRUD, contract create/detail, CMS workflow actions và permission namespaces theo domain.
+**Audit update 21/07:** Ops-first Admin waves R1–R3 (+ export) coded locally — typecheck API/Admin PASS. Deploy + seed role perms còn lại. R4 CMS/media `AdminGuard` + R5 scopes vẫn mở.
 
 ## 6. Public user function matrix
 
@@ -167,13 +169,15 @@ Legend: `A` admin bypass · `R` có trong role seed · `—` chưa cấp mặc �
 
 ## 8. Migration waves
 
-| Wave   | Scope                                                                                               | Exit gate                                                                      |
-| ------ | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| **R1** | Unlock staff login · 401≠403 · DTO/catalog validation · permission-aware nav from `/permissions/me` | Staff can enter Admin; denied actions show 403 UI, not logout; menu matches me |
-| **R2** | Quotes, bookings, pricing, aircraft, empty legs · drop class `AdminGuard` on those controllers      | SALES workflows usable without `ADMIN`; API 403 matrix green                   |
-| **R3** | Commercial modules, users (role enum), operators, partners, email templates                         | Every write has explicit `*.manage` permission                                 |
-| **R4** | CMS/media/settings/audit · wire or delete orphan content_* keys                                     | Content workflow separation (view/review/publish/rollback/approve production)  |
-| **R5** | Data scope defaults + quote/booking scope · operator portal decision · deprecate `AdminGuard`       | Scope enforcement documented/tested; `OperatorUser.role` boundary resolved     |
+| Wave   | Scope                                                                                               | Exit gate                                                                      | Status (21/07) |
+| ------ | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | -------------- |
+| **R1** | Unlock staff login · 401≠403 · DTO/catalog validation · permission-aware nav from `/permissions/me` | Staff can enter Admin; denied actions show 403 UI, not logout; menu matches me | **DONE** (local) |
+| **R2** | Quotes, bookings, pricing, aircraft, empty legs · drop class `AdminGuard` on those controllers      | SALES workflows usable without `ADMIN`; API 403 matrix green                   | **DONE** core (local; seed SALES perms) |
+| **R3** | Commercial modules, users (role enum), operators, partners, email templates                         | Every write has explicit `*.manage` permission                                 | **Partial** — FP/EL/jet-card/TC/partners/users done; operators/email may still lag |
+| **R4** | CMS/media/settings/audit · wire or delete orphan content_* keys                                     | Content workflow separation (view/review/publish/rollback/approve production)  | Open |
+| **R5** | Data scope defaults + quote/booking scope · operator portal decision · deprecate `AdminGuard`       | Scope enforcement documented/tested; `OperatorUser.role` boundary resolved     | Open |
+
+**Ops export (parallel):** `AdminExportModule` PDF/CSV for quotes/bookings/users/payments/contracts — local DONE; deploy pending.
 
 ## 9. Definition of Done
 

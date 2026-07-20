@@ -1,6 +1,6 @@
 # Test Matrix — JetBay
 
-> **Updated:** 2026-07-15 · **Status:** CURRENT · GĐ2 Dev complete · Waiting Owner
+> **Updated:** 2026-07-21 · **Status:** Admin ops waves coded local · deploy pending · Owner SMTP still blocked
 
 ## Latest evidence (prefer these)
 
@@ -11,6 +11,7 @@ Latest booking smoke: #7
 Production API sync: PASS — 173=173
 Remote VPS runner: PASS
 Local convenience credential: NEEDS_LOCAL_ENV_REFRESH
+Admin ops typecheck (21/07): API+Admin tsc PASS — not deployed yet
 ```
 
 | Test | Command | Environment | Result | PASS | FAIL | Ghi chú |

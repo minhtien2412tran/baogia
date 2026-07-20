@@ -172,9 +172,9 @@ Throttle: login 10/min · register/OTP/refresh 5/min (tier `auth`).
 | **Mục tiêu** | Phân quyền chi tiết theo permission thay cho boolean admin |
 | **Routes** | `/admin/permissions/*` (`AdminPermissionsController`) · guard `PermissionGuard` + `@RequirePermissions(...)` + `permission.catalog.ts` |
 | **Models** | `RolePermission`, `UserPermissionOverride`, `UserAirportScope` |
-| **Status** | **partial** — engine + catalog + guard OK; **chỉ áp cho** `admin/airports`, `contracts`, `content-sync` |
-| **Gaps** | ⚠️ **Guard không đồng nhất:** phần lớn `admin/*` vẫn dùng `AdminGuard` (boolean) — content/partner/users/operator/fixed-price/jet-card/empty-leg/dashboard/aircraft/quotes/travel-credit. Cần migrate dần sang `PermissionGuard`. |
-| **Smoke** | `permission.service.spec.ts` (unit) · chưa có smoke HTTP |
+| **Status** | **partial → ops-core migrated (21/07 local)** — engine + catalog + guard OK; **StaffGuard+PermissionGuard** trên dashboard, quotes (+status), bookings (đã có), users, aircraft, FP/EL/jet-card/travel-credit, partners; export `quote|booking|user|payment|contract.export` |
+| **Gaps** | ⚠️ Còn `AdminGuard` trên CMS/content/media/settings/audit/operator/email-template (R4). Data scope R5. Deploy + re-seed SALES perms. |
+| **Smoke** | `permission.service.spec.ts` (unit) · HTTP matrix SALES vs ADMIN — pending deploy |
 
 ---
 

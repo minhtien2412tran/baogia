@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -16,68 +7,71 @@ import {
   ApiSecurity,
 } from '@nestjs/swagger';
 import { AdminDashboardService } from '../services/admin-dashboard.service';
-import { UpdateQuoteStatusDto } from '../dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { AdminGuard } from '../auth/admin.guard';
+import { StaffGuard } from '../auth/staff.guard';
+import { PermissionGuard } from '../permissions/permission.guard';
+import { RequirePermissions } from '../permissions/require-permissions.decorator';
 
 @ApiTags('Admin Dashboard')
 @ApiSecurity('X-API-Key')
 @Controller('admin')
-@UseGuards(JwtAuthGuard, AdminGuard)
+@UseGuards(JwtAuthGuard, StaffGuard, PermissionGuard)
 @ApiBearerAuth('bearer')
 export class AdminDashboardController {
   constructor(private readonly dashboard: AdminDashboardService) {}
 
   @Get('dashboard/stats')
+  @RequirePermissions('dashboard.view')
   @ApiOperation({ summary: 'Dashboard overview stats' })
   getStats() {
     return this.dashboard.getStats();
   }
 
   @Get('dashboard/recent-quotes')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('dashboard.view', 'quote.view')
   @ApiOperation({ summary: 'Recent quote requests' })
   getRecentQuotes(@Query('limit') limit?: string) {
     return this.dashboard.getRecentQuotes(limit ? Number(limit) : 10);
   }
 
-  @Patch('quotes/:id/status')
-  @ApiOperation({ summary: 'Update quote request status' })
-  updateQuoteStatus(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() body: UpdateQuoteStatusDto,
-  ) {
-    return this.dashboard.updateQuoteStatus(id, body.status);
-  }
-
   @Get('dashboard/recent-bookings')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('dashboard.view', 'booking.view')
   @ApiOperation({ summary: 'Recent bookings' })
   getRecentBookings(@Query('limit') limit?: string) {
     return this.dashboard.getRecentBookings(limit ? Number(limit) : 10);
   }
 
   @Get('dashboard/revenue-demo')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('dashboard.view')
   @ApiOperation({ summary: 'Revenue demo calculation' })
   getRevenue() {
     return this.dashboard.getRevenueDemo();
   }
 
   @Get('audit-logs')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('audit.view')
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'limit', required: false })
-  @ApiOperation({ summary: 'Audit log listing' })
-  getAuditLogs(@Query('page') page?: string, @Query('limit') limit?: string) {
-    return this.dashboard.getAuditLogs(
-      page ? Number(page) : 1,
-      limit ? Number(limit) : 20,
-    );
+  @ApiQuery({ name: 'workflow', required: false })
+  @ApiQuery({ name: 'action', required: false })
+  @ApiQuery({ name: 'q', required: false })
+  @ApiOperation({ summary: 'Audit log listing (filter by workflow / action)' })
+  getAuditLogs(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('workflow') workflow?: string,
+    @Query('action') action?: string,
+    @Query('q') q?: string,
+  ) {
+    return this.dashboard.getAuditLogs(page ? Number(page) : 1, limit ? Number(limit) : 20, {
+      workflow,
+      action,
+      q,
+    });
   }
 
   @Get('system-health')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('settings.view', 'dashboard.view')
   @ApiOperation({ summary: 'System health check' })
   getHealth() {
     return this.dashboard.getSystemHealth();

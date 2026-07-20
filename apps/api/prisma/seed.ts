@@ -317,9 +317,17 @@ async function main() {
   // 3e. Role permissions
   console.log('Seeding role permissions...');
   const salesPerms = [
-    'booking.view', 'booking.create', 'booking.update', 'booking.cancel', 'quote.view', 'quote.create',
-    'pricing.estimate', 'pricing.view_cost', 'aircraft.view', 'aircraft.view_location',
-    'airport.view', 'contract.view', 'contract.create', 'contract.submit_approval',
+    'dashboard.view',
+    'booking.view', 'booking.create', 'booking.update', 'booking.cancel', 'booking.export',
+    'quote.view', 'quote.create', 'quote.update', 'quote.export',
+    'pricing.estimate', 'pricing.view_cost',
+    'aircraft.view', 'aircraft.view_location', 'aircraft.update_location',
+    'airport.view',
+    'empty_leg.view', 'fixed_price.view', 'jet_card.view', 'travel_credit.view',
+    'payment.view', 'payment.export',
+    'partner.view', 'operator.view',
+    'contract.view', 'contract.create', 'contract.submit_approval', 'contract.export',
+    'user.export',
   ];
   for (const permission of salesPerms) {
     await prisma.rolePermission.upsert({

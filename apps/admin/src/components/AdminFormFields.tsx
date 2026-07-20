@@ -90,18 +90,20 @@ export function ActionBtn({
   onClick,
   variant = 'ghost',
   disabled,
+  type = 'button',
 }: {
   children: React.ReactNode;
   onClick?: () => void;
   variant?: 'ghost' | 'danger' | 'primary';
   disabled?: boolean;
+  type?: 'button' | 'submit';
 }) {
   const bg =
     variant === 'danger' ? 'rgba(239,68,68,0.15)' : variant === 'primary' ? colors.accent : 'transparent';
   const color = variant === 'primary' ? '#0d1a24' : variant === 'danger' ? '#f87171' : colors.textMuted;
   return (
     <button
-      type="button"
+      type={type}
       onClick={onClick}
       disabled={disabled}
       style={{

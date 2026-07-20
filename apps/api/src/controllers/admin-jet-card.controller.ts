@@ -18,32 +18,34 @@ import {
 import { CreateJetCardPlanDto, UpdateJetCardPlanDto } from '../dto';
 import { JetCardService } from '../services/jet-card.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { AdminGuard } from '../auth/admin.guard';
+import { StaffGuard } from '../auth/staff.guard';
+import { PermissionGuard } from '../permissions/permission.guard';
+import { RequirePermissions } from '../permissions/require-permissions.decorator';
 
 @ApiTags('Admin Jet Card')
 @ApiSecurity('X-API-Key')
 @Controller('admin/jet-card/plans')
-@UseGuards(JwtAuthGuard, AdminGuard)
+@UseGuards(JwtAuthGuard, StaffGuard, PermissionGuard)
 @ApiBearerAuth('bearer')
 export class AdminJetCardController {
   constructor(private readonly jetCardService: JetCardService) {}
 
   @Get()
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('jet_card.view')
   @ApiOperation({ summary: 'List Jet Card plans (admin)' })
   list() {
     return this.jetCardService.getPlans();
   }
 
   @Post()
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('jet_card.manage')
   @ApiOperation({ summary: 'Create Jet Card plan (admin)' })
   create(@Body() body: CreateJetCardPlanDto) {
     return this.jetCardService.createPlan(body);
   }
 
   @Patch(':id')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('jet_card.manage')
   @ApiOperation({ summary: 'Update Jet Card plan (admin)' })
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -53,7 +55,7 @@ export class AdminJetCardController {
   }
 
   @Delete(':id')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('jet_card.manage')
   @ApiOperation({ summary: 'Delete Jet Card plan (admin)' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.jetCardService.deletePlan(id);

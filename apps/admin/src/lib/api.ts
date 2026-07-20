@@ -100,7 +100,70 @@ export const adminApi = {
     adminRequest<{ userId: number; role: string; permissions: string[] }>(
       '/admin/permissions/me',
     ),
-  getAuditLogs: () => adminRequest<{ data: unknown[] }>('/admin/audit-logs'),
+  getPayments: (params?: { status?: string; page?: number; limit?: number }) => {
+    const q = new URLSearchParams();
+    if (params?.status) q.set('status', params.status);
+    if (params?.page) q.set('page', String(params.page));
+    if (params?.limit) q.set('limit', String(params.limit));
+    const qs = q.toString();
+    return adminRequest<{ data: unknown[]; pagination: Record<string, number> }>(
+      `/admin/payments${qs ? `?${qs}` : ''}`,
+    );
+  },
+  getPayment: (id: number) => adminRequest<Record<string, unknown>>(`/admin/payments/${id}`),
+  createAircraftFleet: (body: unknown) =>
+    adminRequest<unknown>('/admin/aircraft/fleet', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  downloadExport: async (path: string) => {
+    const token = getToken();
+    if (!token) throw new Error('Not authenticated');
+    const res = await fetch(`${API_URL}${path}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        ...(API_KEY ? { 'X-API-Key': API_KEY } : {}),
+      },
+    });
+    if (res.status === 401) {
+      clearToken();
+      throw new Error('Session expired — please sign in again');
+    }
+    if (res.status === 403) {
+      throw new Error('Forbidden — you do not have permission for this action');
+    }
+    if (!res.ok) throw new Error(`${res.status}: ${await res.text()}`);
+    const blob = await res.blob();
+    const cd = res.headers.get('Content-Disposition') ?? '';
+    const match = /filename="?([^"]+)"?/i.exec(cd);
+    const filename = match?.[1] ?? 'jetvina-export.bin';
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  },
+  getAuditLogs: (params?: {
+    page?: number;
+    limit?: number;
+    workflow?: string;
+    action?: string;
+    q?: string;
+  }) => {
+    const q = new URLSearchParams();
+    if (params?.page) q.set('page', String(params.page));
+    if (params?.limit) q.set('limit', String(params.limit));
+    if (params?.workflow) q.set('workflow', params.workflow);
+    if (params?.action) q.set('action', params.action);
+    if (params?.q) q.set('q', params.q);
+    const qs = q.toString();
+    return adminRequest<{
+      data: unknown[];
+      pagination: Record<string, number>;
+      workflows?: string[];
+    }>(`/admin/audit-logs${qs ? `?${qs}` : ''}`);
+  },
   getHealth: () => adminRequest<Record<string, unknown>>('/admin/system-health'),
   getBookings: () => adminRequest<{ data: unknown[] }>('/admin/bookings'),
   getBooking: (id: number) => adminRequest<Record<string, unknown>>(`/admin/bookings/${id}`),
@@ -341,6 +404,15 @@ export const adminApi = {
     }),
   getPermissionCatalog: () =>
     adminRequest<{ permissions: string[] }>('/admin/permissions/catalog'),
+  getRolePermissions: (role: string) =>
+    adminRequest<{ role: string; permissions: string[] }>(
+      `/admin/permissions/roles/${encodeURIComponent(role)}`,
+    ),
+  setRolePermissions: (role: string, permissions: string[]) =>
+    adminRequest<unknown>(`/admin/permissions/roles/${encodeURIComponent(role)}`, {
+      method: 'PUT',
+      body: JSON.stringify({ permissions }),
+    }),
   getUserPermissionDetail: (userId: number) =>
     adminRequest<{ scopes: unknown[]; overrides: unknown[] }>(`/admin/permissions/users/${userId}`),
   setUserPermissionOverrides: (

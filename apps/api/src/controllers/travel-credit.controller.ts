@@ -26,7 +26,9 @@ import {
 } from '../dto';
 import { TravelCreditService } from '../services/travel-credit.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { AdminGuard } from '../auth/admin.guard';
+import { StaffGuard } from '../auth/staff.guard';
+import { PermissionGuard } from '../permissions/permission.guard';
+import { RequirePermissions } from '../permissions/require-permissions.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { AuthUser } from '../auth/auth.types';
 
@@ -72,24 +74,27 @@ export class TravelCreditController {
 @ApiTags('Admin Travel Credits')
 @ApiSecurity('X-API-Key')
 @Controller('admin/travel-credits')
-@UseGuards(JwtAuthGuard, AdminGuard)
+@UseGuards(JwtAuthGuard, StaffGuard, PermissionGuard)
 @ApiBearerAuth('bearer')
 export class AdminTravelCreditController {
   constructor(private readonly travelCreditService: TravelCreditService) {}
 
   @Get('packages')
+  @RequirePermissions('travel_credit.view')
   @ApiOperation({ summary: 'List all travel credit packages (admin)' })
   listPackages() {
     return this.travelCreditService.getPackages(true);
   }
 
   @Post('packages')
+  @RequirePermissions('travel_credit.manage')
   @ApiOperation({ summary: 'Create travel credit package' })
   createPackage(@Body() body: CreateTravelCreditPackageDto) {
     return this.travelCreditService.createPackage(body);
   }
 
   @Patch('packages/:id')
+  @RequirePermissions('travel_credit.manage')
   @ApiOperation({ summary: 'Update travel credit package' })
   updatePackage(
     @Param('id', ParseIntPipe) id: number,
@@ -99,12 +104,14 @@ export class AdminTravelCreditController {
   }
 
   @Delete('packages/:id')
+  @RequirePermissions('travel_credit.manage')
   @ApiOperation({ summary: 'Delete travel credit package' })
   deletePackage(@Param('id', ParseIntPipe) id: number) {
     return this.travelCreditService.deletePackage(id);
   }
 
   @Get('transactions')
+  @RequirePermissions('travel_credit.view')
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'limit', required: false })
   @ApiOperation({ summary: 'List travel credit transactions (admin)' })
