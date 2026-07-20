@@ -62,6 +62,8 @@
 
 **Realtime audit + implementation (21/07):** HomeFix được audit read-only: Socket.IO JWT gateway cho chat/call, WebRTC chỉ relay SDP/ICE. Đã port pattern vào JetVina bằng `RealtimeModule`: conversation/member/message lưu DB JetVina riêng; REST `/realtime/conversations`; Socket.IO namespace `/realtime`; kiểm tra JWT + membership cho room/message/WebRTC signal; staff có thể join conversation. Không copy dữ liệu, `.env`, uploads hoặc DB HomeFix. Migration `20260721001500_realtime_conversations`; cần migrate prod và test REST/Socket.IO/WebRTC signaling.
 
+Postman collection: `docs/postman/JETVINA_REALTIME.postman_collection.json`. Production smoke: `/health` 200; unauthenticated REST 401; Socket.IO polling 200; namespace without JWT rejected with `Authentication required`.
+
 **I18N polish (20/07 evening):** metadata theo locale · about-us overlay · cookie zh-cn · `dir=rtl` cho `ar` · xóa `getHomeOverlay` chết · offer/booking email dùng `quote.locale` · PJC highlight bodies `t()` · tourism title overlay cho `/private-jet-charter`.
 
 **I18N 100% gate (20/07):** SoT [I18N_VERIFICATION_MATRIX.md](./I18N_VERIFICATION_MATRIX.md) + `pnpm audit:i18n`. **I18N-1/2 core done**. Còn tourism nav WARN · welcome SMS OTP · SMTP Owner · RBAC.
