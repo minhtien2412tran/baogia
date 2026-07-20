@@ -101,6 +101,7 @@ export class AuthService {
       message: 'User successfully registered',
       user: {
         id: user.id,
+        publicId: user.publicId,
         email: user.email,
         accountType: user.accountType,
         role: user.role,
@@ -128,6 +129,7 @@ export class AuthService {
       message: 'Login successful',
       user: {
         id: user.id,
+        publicId: user.publicId,
         email: user.email,
         accountType: user.accountType,
         role: user.role,
@@ -184,7 +186,7 @@ export class AuthService {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new UnauthorizedException('User not found');
     return {
-      id: user.id,
+      publicId: user.publicId,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -246,6 +248,7 @@ export class AuthService {
 
   private getProfileResult(user: {
     id: number;
+    publicId: string;
     email: string;
     firstName: string | null;
     lastName: string | null;
@@ -266,7 +269,7 @@ export class AuthService {
     avatarUrl: string | null;
   }) {
     return {
-      id: user.id,
+      publicId: user.publicId,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -290,6 +293,7 @@ export class AuthService {
 
   private async authResponse(user: {
     id: number;
+    publicId: string;
     email: string;
     role: string;
     accountType: string;
@@ -298,6 +302,7 @@ export class AuthService {
       message: 'Authentication successful',
       user: {
         id: user.id,
+        publicId: user.publicId,
         email: user.email,
         accountType: user.accountType,
         role: user.role,
@@ -438,6 +443,7 @@ export class AuthService {
       message: 'User successfully registered',
       user: {
         id: user.id,
+        publicId: user.publicId,
         email: user.email,
         accountType: user.accountType,
         role: user.role,

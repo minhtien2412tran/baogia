@@ -11,7 +11,7 @@ import {
 import { scheduleUi } from '../../lib/browser';
 
 export type AuthUser = {
-  id: number;
+  publicId: string;
   email: string;
   firstName?: string;
   lastName?: string;
@@ -36,7 +36,7 @@ export function useAuthSession() {
     try {
       const me = await api.getMe(token);
       setUser({
-        id: me.id,
+        publicId: me.publicId,
         email: me.email,
         firstName: me.firstName ?? undefined,
         lastName: me.lastName ?? undefined,

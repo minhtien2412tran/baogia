@@ -1,5 +1,5 @@
 export type AccountProfile = {
-  id: number;
+  publicId: string;
   email: string;
   firstName?: string | null;
   lastName?: string | null;

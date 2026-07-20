@@ -126,11 +126,19 @@ function apiHeaders(extra?: HeadersInit): HeadersInit {
 }
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers: apiHeaders(options?.headers),
-    next: options?.method && options.method !== 'GET' ? undefined : { revalidate: 30 },
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_URL}${path}`, {
+      ...options,
+      headers: apiHeaders(options?.headers),
+      next: options?.method && options.method !== 'GET' ? undefined : { revalidate: 30 },
+    });
+  } catch {
+    throw new ApiError(
+      0,
+      'Unable to reach JetVina services. Check your connection and try again.',
+    );
+  }
   if (!res.ok) {
     const text = await res.text().catch(() => res.statusText);
     throw new ApiError(res.status, text);
@@ -354,7 +362,7 @@ export const api = {
     ),
   getMe: (token: string) =>
     request<{
-      id: number;
+      publicId: string;
       email: string;
       firstName?: string | null;
       lastName?: string | null;

@@ -7,10 +7,9 @@ export function getAuthToken(): string | null {
   return localStorage.getItem('jetbay_token');
 }
 
-export function getAuthUserId(): number | null {
+export function getAuthUserId(): string | null {
   if (typeof window === 'undefined') return null;
-  const id = localStorage.getItem('jetbay_user_id');
-  return id ? Number(id) : null;
+  return localStorage.getItem('jetbay_user_id');
 }
 
 export function isLoggedIn(): boolean {

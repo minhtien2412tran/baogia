@@ -41,6 +41,9 @@ function OverviewContent({ locale }: { locale: string }) {
           <div>
         <h1>{t(locale, 'myAccount')}</h1>
         <p>Welcome back, {data.profile.firstName || data.profile.email}</p>
+        <span className="jb-profile-public-id">
+          JetVina ID · {data.profile.publicId}
+        </span>
           </div>
         </div>
       </header>
@@ -148,6 +151,7 @@ function ProfileEditor({
 }: {
   token: string | null;
   profile: {
+    publicId: string;
     firstName?: string | null;
     lastName?: string | null;
     email?: string | null;

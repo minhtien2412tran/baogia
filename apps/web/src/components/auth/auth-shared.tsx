@@ -3,11 +3,11 @@
 import { notifyAuthChanged } from '../../lib/auth-session';
 
 export function storeAuthSession(res: {
-  user: { id: number };
+  user: { id: number; publicId?: string };
   tokens: { accessToken: string; refreshToken?: string };
 }) {
   localStorage.setItem('jetbay_token', res.tokens.accessToken);
-  localStorage.setItem('jetbay_user_id', String(res.user.id));
+  localStorage.setItem('jetbay_user_id', res.user.publicId ?? String(res.user.id));
   if (res.tokens.refreshToken) {
     localStorage.setItem('jetbay_refresh_token', res.tokens.refreshToken);
   }

@@ -88,7 +88,7 @@ export function AccountProvider({ locale, children }: { locale: string; children
     if (!data?.profile) return null;
     const p = data.profile;
     return {
-      id: p.id,
+      publicId: p.publicId,
       email: p.email,
       firstName: p.firstName ?? undefined,
       lastName: p.lastName ?? undefined,
