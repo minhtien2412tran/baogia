@@ -60,7 +60,9 @@ export function LanguagePicker({ locale, className = '' }: { locale: string; cla
         <span className="jb-lang-picker__globe" aria-hidden>
           <AppIcon name="globe" size="sm" />
         </span>
-        <span className="jb-lang-picker__label">{current.label}</span>
+        <span className="jb-lang-picker__label" translate="no">
+          {current.label}
+        </span>
         <span className="jb-lang-picker__chev" aria-hidden>
           <AppIcon name="chevronDown" size="xs" />
         </span>
@@ -86,8 +88,10 @@ export function LanguagePicker({ locale, className = '' }: { locale: string; cla
                   className={`jb-lang-picker__option${l.code === locale ? ' active' : ''}`}
                   onClick={() => changeLocale(l.code)}
                 >
-                  <span className="jb-lang-picker__option-label">{l.label}</span>
-                  <span className="jb-lang-picker__option-meta">
+                  <span className="jb-lang-picker__option-label" translate="no">
+                    {l.label}
+                  </span>
+                  <span className="jb-lang-picker__option-meta" translate="no">
                     {l.htmlLang} · {l.currency}
                   </span>
                 </button>

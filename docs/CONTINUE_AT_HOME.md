@@ -46,6 +46,8 @@
 
 **Bổ sung audit 18/07:** BE typecheck PASS; local runtime còn blocked bởi Docker/Postgres. Admin/RBAC đã re-matrix tại [ADMIN_RBAC_FUNCTION_MATRIX.md](./ADMIN_RBAC_FUNCTION_MATRIX.md): menu Admin chưa permission-aware, controller còn trộn `AdminGuard`/`PermissionGuard`, triển khai theo waves R1–R5.
 
+**Bản dịch / locale (20/07):** Prod `/en-us/*` trả **đúng English** (đã curl verify). Screenshot “en-us hiện tiếng Việt” là Chrome auto-translate (`Charter`→`Hiến chương`, `English (US)`→`Tiếng Anh (Mỹ)` — không khớp catalog `vi`). Fix FE: `<html lang>` theo locale + `translate="no"` / `google=notranslate` + language picker `translate="no"`.
+
 **Audit 19/07 (sync + AI hygiene):** working tree clean trên `jetvina` · merge `main` → `jetvina` (giữ [KH_KICH_BAN_HOP_TIENDO.md](./KH_KICH_BAN_HOP_TIENDO.md)) · `main` ↔ `jetvina` aligned · residual GĐ2 (`b243bc8`+) **đã commit** · agent SoT refresh ([AGENTS.md](../AGENTS.md) · [GIT_WORKFLOW.md](./GIT_WORKFLOW.md))
 
 ```text

@@ -34,7 +34,12 @@ export function middleware(request: NextRequest) {
     return redirect;
   }
 
-  const res = NextResponse.next();
+  // Pass locale on the *request* so RootLayout can set <html lang> server-side.
+  const requestHeaders = new Headers(request.headers);
+  if (hasLocalePrefix && segment) {
+    requestHeaders.set('x-jb-locale', segment);
+  }
+  const res = NextResponse.next({ request: { headers: requestHeaders } });
   if (hasLocalePrefix && segment) {
     res.cookies.set(LOCALE_COOKIE, segment, { path: '/', maxAge: 60 * 60 * 24 * 365, sameSite: 'lax' });
   }
