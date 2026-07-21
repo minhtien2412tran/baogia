@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { PlaneTakeoff, PlaneLanding, Users, Activity, Award, Tag, Trophy, Palmtree, Flag, Snowflake, CreditCard, Handshake, Smartphone } from 'lucide-react';
+import { PlaneTakeoff, PlaneLanding, Users, Activity, Award, Tag, Trophy, Palmtree, Flag, Snowflake, CreditCard, Handshake, Smartphone, Briefcase } from 'lucide-react';
 
 const SidebarItem = ({ icon: Icon, label, href, badge, active }: { icon: React.ElementType, label: string, href: string, badge?: string, active?: boolean }) => (
   <li>
@@ -36,6 +36,7 @@ export const Sidebar = () => {
             <SidebarItem icon={Tag} label="Fixed Price Charter" href="/fixed-price-charter" active={pathname === '/fixed-price-charter'} />
             <SidebarItem icon={PlaneLanding} label="Empty Legs" href="/empty-legs" active={pathname === '/empty-legs'} />
             <SidebarItem icon={Users} label="Group Charter" href="/group-charter" active={pathname === '/group-charter'} />
+            <SidebarItem icon={Briefcase} label="Corporate Charter" href="/corporate-charter" active={pathname === '/corporate-charter'} />
           </ul>
         </div>
 
@@ -56,7 +57,7 @@ export const Sidebar = () => {
             <SidebarItem icon={CreditCard} label="JETBAY Travel Credit" href="/" />
             <SidebarItem icon={CreditCard} label="JETBAY Jet Card" href="/jet-card" active={pathname === '/jet-card'} />
             <SidebarItem icon={Handshake} label="Partnership Program" href="/" />
-            <SidebarItem icon={Smartphone} label="JETBAY App" href="/" />
+            <SidebarItem icon={Smartphone} label="JETBAY App" href="/jetbay-app" active={pathname === '/jetbay-app'} />
           </ul>
         </div>
       </div>

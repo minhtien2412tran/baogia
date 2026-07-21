@@ -65,7 +65,7 @@ export const Footer = () => {
                    <li><a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">JETBAY Travel Credit</a></li>
                    <li><a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">JETBAY Jet Card</a></li>
                    <li><Link href="/partnership-program" className="hover:text-gray-900 dark:hover:text-white transition-colors">Partnership Program</Link></li>
-                   <li><a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">JETBAY App</a></li>
+                   <li><Link href="/jetbay-app" className="hover:text-gray-900 dark:hover:text-white transition-colors">JETBAY App</Link></li>
                 </ul>
                 <h4 className="font-bold text-gray-900 dark:text-white text-[14px] mb-5 mt-8">Company</h4>
                 <ul className="space-y-4 text-[13px] text-gray-500 dark:text-gray-400">
