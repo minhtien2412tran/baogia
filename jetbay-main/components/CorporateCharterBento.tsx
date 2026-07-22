@@ -29,6 +29,15 @@ export const CorporateCharterBento = () => {
 
   return (
     <div className="w-full max-w-[1440px] mx-auto px-4 lg:px-8 mb-24 font-sans">
+      
+      {/* Title block with gold left line */}
+      <div className="flex items-center gap-3 mb-8">
+        <div className="w-1.5 h-8 bg-[#D4A64A]"></div>
+        <h2 className="text-[26px] md:text-[32px] font-bold text-[#0B1F3A] dark:text-white tracking-tight">
+          Why Choose Business Jet by Jetbay
+        </h2>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {items.map((item, idx) => (
           <div 

@@ -36,9 +36,9 @@ export const Footer = () => {
                    <li><a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Empty Legs</a></li>
                    <li><a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Group Charter</a></li>
                    <li><a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Corporate Charter</a></li>
-                   <li><a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Air Ambulance</a></li>
-                   <li><a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Pet Travel</a></li>
-                   <li><a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Event Charter</a></li>
+                   <li><Link href="/air-ambulance" className="hover:text-gray-900 dark:hover:text-white transition-colors">Air Ambulance</Link></li>
+                   <li><Link href="/pet-travel" className="hover:text-gray-900 dark:hover:text-white transition-colors">Pet Travel</Link></li>
+                   <li><Link href="/event-charter" className="hover:text-gray-900 dark:hover:text-white transition-colors">Event Charter</Link></li>
                 </ul>
              </div>
              
@@ -52,10 +52,10 @@ export const Footer = () => {
                 </ul>
                 <h4 className="font-bold text-gray-900 dark:text-white text-[14px] mb-5 mt-8">Plan Your Flight</h4>
                 <ul className="space-y-4 text-[13px] text-gray-500 dark:text-gray-400">
-                   <li><a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">How to Book</a></li>
+                   <li><Link href="/how-to-book" className="hover:text-gray-900 dark:hover:text-white transition-colors">How to Book</Link></li>
                    <li><a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Empty Leg Recommendation</a></li>
-                   <li><a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Destinations</a></li>
-                   <li><a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Airports</a></li>
+                   <li><Link href="/destinations" className="hover:text-gray-900 dark:hover:text-white transition-colors">Destinations</Link></li>
+                   <li><Link href="/airports" className="hover:text-gray-900 dark:hover:text-white transition-colors">Airports</Link></li>
                 </ul>
              </div>
              
@@ -69,10 +69,10 @@ export const Footer = () => {
                 </ul>
                 <h4 className="font-bold text-gray-900 dark:text-white text-[14px] mb-5 mt-8">Company</h4>
                 <ul className="space-y-4 text-[13px] text-gray-500 dark:text-gray-400">
-                   <li><a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">About Us</a></li>
-                   <li><a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Blogs</a></li>
-                   <li><a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">News</a></li>
-                   <li><a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Video Centre</a></li>
+                   <li><Link href="/about-us" className="hover:text-gray-900 dark:hover:text-white transition-colors">About Us</Link></li>
+                   <li><Link href="/blogs" className="hover:text-gray-900 dark:hover:text-white transition-colors">Blogs</Link></li>
+                   <li><Link href="/news" className="hover:text-gray-900 dark:hover:text-white transition-colors">News</Link></li>
+                   <li><Link href="/video-centre" className="hover:text-gray-900 dark:hover:text-white transition-colors">Video Centre</Link></li>
                 </ul>
              </div>
 

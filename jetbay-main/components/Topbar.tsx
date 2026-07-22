@@ -9,14 +9,16 @@ import { ThemeToggle } from './ThemeToggle';
 export const Topbar = () => {
   const pathname = usePathname();
   const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [isPlanOpen, setIsPlanOpen] = useState(false);
+  const [isCompanyOpen, setIsCompanyOpen] = useState(false);
 
   const services = [
     { label: 'On-Demand Charter', href: '/on-demand-charter' },
     { label: 'Group Charter', href: '/group-charter' },
     { label: 'Corporate Charter', href: '/corporate-charter' },
-    { label: 'Air Ambulance', href: '#' },
-    { label: 'Pet Travel', href: '#' },
-    { label: 'Event Charter', href: '#' },
+    { label: 'Air Ambulance', href: '/air-ambulance' },
+    { label: 'Pet Travel', href: '/pet-travel' },
+    { label: 'Event Charter', href: '/event-charter' },
   ];
 
   return (
@@ -78,11 +80,115 @@ export const Topbar = () => {
           )}
         </div>
 
-        <div className="h-full flex items-center px-1 hover:text-gray-900 dark:hover:text-white transition-colors">
-          <Link href="#" className="font-semibold text-[14px]">Plan Your Flight</Link>
+        {/* Plan Your Flight Dropdown */}
+        <div 
+          className="h-full flex items-center relative cursor-pointer group"
+          onMouseEnter={() => setIsPlanOpen(true)}
+          onMouseLeave={() => setIsPlanOpen(false)}
+        >
+          <div className={`flex items-center gap-1 transition-colors py-3 h-full px-1 border-b-2 ${
+            pathname === '/how-to-book' || pathname === '/destinations' || pathname === '/airports'
+              ? 'text-[#13B2A6] dark:text-[#40DACD] border-[#40DACD]'
+              : 'text-gray-900 dark:text-white border-transparent hover:text-gray-900 dark:hover:text-white'
+          }`}>
+            <span className="font-semibold text-[14px]">Plan Your Flight</span>
+            <ChevronDown size={14} strokeWidth={2.5} className="text-gray-400 dark:text-gray-500 transition-transform duration-200 group-hover:rotate-180" />
+          </div>
+
+          {isPlanOpen && (
+            <div className="absolute top-[75px] left-[0px] w-[200px] bg-white dark:bg-[#152033] rounded-[16px] shadow-[0_10px_40px_rgba(0,0,0,0.08)] py-2.5 z-50 border border-gray-100 dark:border-gray-800 animate-fadeIn">
+              <Link 
+                href="/how-to-book" 
+                className={`block px-5 py-3 text-[14px] font-medium transition-colors ${
+                  pathname === '/how-to-book' 
+                    ? 'bg-[#EBF7F6] dark:bg-[#1A3B37] text-[#13B2A6] dark:text-[#40DACD]' 
+                    : 'text-[#0B1F3A] dark:text-gray-200 hover:bg-[#F4F9F9] dark:hover:bg-[#1C2A44] hover:text-[#13B2A6] dark:hover:text-[#40DACD]'
+                }`}
+              >
+                How to Book
+              </Link>
+              <Link 
+                href="/destinations" 
+                className={`block px-5 py-3 text-[14px] font-medium transition-colors ${
+                  pathname === '/destinations' 
+                    ? 'bg-[#EBF7F6] dark:bg-[#1A3B37] text-[#13B2A6] dark:text-[#40DACD]' 
+                    : 'text-[#0B1F3A] dark:text-gray-200 hover:bg-[#F4F9F9] dark:hover:bg-[#1C2A44] hover:text-[#13B2A6] dark:hover:text-[#40DACD]'
+                }`}
+              >
+                Destinations
+              </Link>
+              <Link 
+                href="/airports" 
+                className={`block px-5 py-3 text-[14px] font-medium transition-colors ${
+                  pathname === '/airports' 
+                    ? 'bg-[#EBF7F6] dark:bg-[#1A3B37] text-[#13B2A6] dark:text-[#40DACD]' 
+                    : 'text-[#0B1F3A] dark:text-gray-200 hover:bg-[#F4F9F9] dark:hover:bg-[#1C2A44] hover:text-[#13B2A6] dark:hover:text-[#40DACD]'
+                }`}
+              >
+                Airports
+              </Link>
+            </div>
+          )}
         </div>
-        <div className="h-full flex items-center px-1 hover:text-gray-900 dark:hover:text-white transition-colors">
-          <Link href="#" className="font-semibold text-[14px]">Company</Link>
+        {/* Company Dropdown */}
+        <div 
+          className="h-full flex items-center relative cursor-pointer group"
+          onMouseEnter={() => setIsCompanyOpen(true)}
+          onMouseLeave={() => setIsCompanyOpen(false)}
+        >
+          <div className={`flex items-center gap-1 transition-colors py-3 h-full px-1 border-b-2 ${
+            pathname.startsWith('/about-us')
+              ? 'text-[#13B2A6] dark:text-[#40DACD] border-[#40DACD]'
+              : 'text-gray-900 dark:text-white border-transparent hover:text-gray-900 dark:hover:text-white'
+          }`}>
+            <span className="font-semibold text-[14px]">Company</span>
+            <ChevronDown size={14} strokeWidth={2.5} className="text-gray-400 dark:text-gray-500 transition-transform duration-200 group-hover:rotate-180" />
+          </div>
+
+          {isCompanyOpen && (
+            <div className="absolute top-full left-0 w-[180px] bg-white dark:bg-[#152033] shadow-lg rounded-b-xl border border-gray-100 dark:border-gray-800 overflow-hidden py-2 animate-in slide-in-from-top-2">
+              <Link 
+                href="/about-us" 
+                className={`block px-5 py-3 text-[14px] font-medium transition-colors ${
+                  pathname === '/about-us' 
+                    ? 'bg-[#EBF7F6] dark:bg-[#1A3B37] text-[#13B2A6] dark:text-[#40DACD]' 
+                    : 'text-[#0B1F3A] dark:text-gray-200 hover:bg-[#F4F9F9] dark:hover:bg-[#1C2A44] hover:text-[#13B2A6] dark:hover:text-[#40DACD]'
+                }`}
+              >
+                About Us
+              </Link>
+              <Link 
+                href="/blogs" 
+                className={`block px-5 py-3 text-[14px] font-medium transition-colors ${
+                  pathname === '/blogs' 
+                    ? 'bg-[#EBF7F6] dark:bg-[#1A3B37] text-[#13B2A6] dark:text-[#40DACD]' 
+                    : 'text-[#0B1F3A] dark:text-gray-200 hover:bg-[#F4F9F9] dark:hover:bg-[#1C2A44] hover:text-[#13B2A6] dark:hover:text-[#40DACD]'
+                }`}
+              >
+                Blogs
+              </Link>
+              <Link 
+                href="/news" 
+                className={`block px-5 py-3 text-[14px] font-medium transition-colors ${
+                  pathname === '/news' 
+                    ? 'bg-[#EBF7F6] dark:bg-[#1A3B37] text-[#13B2A6] dark:text-[#40DACD]' 
+                    : 'text-[#0B1F3A] dark:text-gray-200 hover:bg-[#F4F9F9] dark:hover:bg-[#1C2A44] hover:text-[#13B2A6] dark:hover:text-[#40DACD]'
+                }`}
+              >
+                News
+              </Link>
+              <Link 
+                href="/video-centre" 
+                className={`block px-5 py-3 text-[14px] font-medium transition-colors ${
+                  pathname === '/video-centre' 
+                    ? 'bg-[#EBF7F6] dark:bg-[#1A3B37] text-[#13B2A6] dark:text-[#40DACD]' 
+                    : 'text-[#0B1F3A] dark:text-gray-200 hover:bg-[#F4F9F9] dark:hover:bg-[#1C2A44] hover:text-[#13B2A6] dark:hover:text-[#40DACD]'
+                }`}
+              >
+                Video Centre
+              </Link>
+            </div>
+          )}
         </div>
       </nav>
       

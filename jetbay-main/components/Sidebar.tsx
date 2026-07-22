@@ -32,7 +32,7 @@ export const Sidebar = () => {
           <h3 className="px-3 text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3">Private Jet Charter</h3>
           <ul className="space-y-1">
             <SidebarItem icon={PlaneTakeoff} label="On-Demand Charter" href="/on-demand-charter" active={isOnDemandActive} />
-            <SidebarItem icon={Activity} label="Jetbay SOS" href="/" badge="New" />
+            <SidebarItem icon={Activity} label="Jetbay SOS" href="/air-ambulance" active={pathname === '/air-ambulance'} badge="New" />
             <SidebarItem icon={Tag} label="Fixed Price Charter" href="/fixed-price-charter" active={pathname === '/fixed-price-charter'} />
             <SidebarItem icon={PlaneLanding} label="Empty Legs" href="/empty-legs" active={pathname === '/empty-legs'} />
             <SidebarItem icon={Users} label="Group Charter" href="/group-charter" active={pathname === '/group-charter'} />
