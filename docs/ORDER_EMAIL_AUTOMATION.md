@@ -1,9 +1,9 @@
 # JETVINA/JETBAY — MAIL AUTOMATION CHO QUOTE VÀ BOOKING
 
-> **Ngày cập nhật:** 24/07/2026 ~14:45 ICT  
+> **Ngày cập nhật:** 24/07/2026 ~15:55 ICT  
 > **SMTP production:** ENABLED (`smtp=true`, `catcher=false`)  
 > **Canonical SoT:** file này  
-> **Trạng thái nghiệm thu W5:** W5-10 **PASS** · datetime/tz **PASS** · W5-11 **PENDING_OWNER** · W5-12/12B **DEV_API PASS** (BK-000014) · W5-13 CODE_READY · W5-14 **BLOCKED** (cần W5-11)  
+> **Trạng thái nghiệm thu W5:** W5-10 **PASS** · datetime/tz **PASS** · W5-11 **PENDING_OWNER** · W5-12/12B/12C **DEV_API PASS** (BK-000014/015/016) · W5-13 CODE_READY · W5-14 **BLOCKED** (cần W5-11)  
 > **Operator Portal:** [OPERATOR_PORTAL_EPIC.md](./OPERATOR_PORTAL_EPIC.md) = **NOT STARTED**
 
 ## 1. Phạm vi nghiệp vụ đã triển khai
@@ -106,9 +106,9 @@ Trước vận hành thật: điền `contactEmail`, OperatorUser, active, gán 
 | W5-11 | **OWNER** | Xác nhận inbox/Spam Quote #61/#62 + screenshot che PII |
 | W5-12 | **DEV_API PASS** | BK-000014 · customer + operator (+fan-out) + sales **SENT** · `smoke-w5-12-booking-fanout.mjs` |
 | W5-12B | **DEV_API PASS** | cancel → `booking_cancelled:operator` + `:sales` SENT |
-| W5-12C | **PENDING** | thiếu Operator → `operator_unassigned` (smoke riêng khi cần) |
+| W5-12C | **DEV_API PASS** | BK-000016 · `operator_unassigned:sales` + `booking_created`/`booking_created:sales` · không leak `:operator` · `smoke-w5-12c-operator-unassigned.mjs` |
 | W5-13 | **CODE_READY** | idempotent SENT skip · E2E optional |
-| W5-14 | **BLOCKED** | Chỉ DONE khi W5-11 Owner + 12/12B evidence (12 đã có) |
+| W5-14 | **BLOCKED** | Chỉ DONE khi W5-11 Owner + 12/12B/12C evidence (12* đã có) |
 
 ## 10. Evidence checklist
 
@@ -119,7 +119,7 @@ W5-11 Quote #61 inbox: PENDING_OWNER
 W5-11 Quote #62 inbox: PENDING_OWNER
 W5-12 Booking customer/operator/sales mail: DEV_API PASS (BK-000014 · 24/07 ~14:45)
 W5-12B Cancel mail: DEV_API PASS
-W5-12C operator_unassigned: PENDING
+W5-12C operator_unassigned: DEV_API PASS (BK-000016 · 24/07 ~15:55)
 W5-13 Retry/log/idempotency: CODE_READY
 W5-14: BLOCKED until Owner W5-11
 Operator Portal: NOT STARTED — docs/OPERATOR_PORTAL_EPIC.md
@@ -127,9 +127,9 @@ Operator Portal: NOT STARTED — docs/OPERATOR_PORTAL_EPIC.md
 
 ## 11. Task tiếp theo
 
-**Owner:** W5-11 inbox (#61/#62) · (tuỳ chọn) xác nhận mail booking BK-000014 · OP-D1…D4 Portal · News/UX/ký GĐ1  
+**Owner:** W5-11 inbox (#61/#62) · (tuỳ chọn) xác nhận mail booking BK-000014/016 · OP-D1…D4 Portal · News/UX/ký GĐ1  
 
-**Dev:** W5-12C optional · sau W5-11 đóng W5-14 · **không** code Operator Portal trước Owner OP-D*
+**Dev:** sau W5-11 đóng W5-14 · **không** code Operator Portal trước Owner OP-D*
 
 ## 12. Phạm vi mở rộng — OPERATOR PORTAL
 

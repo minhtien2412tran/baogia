@@ -22,7 +22,22 @@ No internal leak: YES|NO
 Screenshot: (che PII) attached|link|none
 ```
 
-Sau khi Owner gửi block này → Dev chạy W5-12…13 rồi W5-14.
+Sau khi Owner gửi block này → Dev đóng W5-14 (W5-12/12B/12C đã **DEV_API PASS**).
+
+---
+
+## OP-D — Operator Portal (optional · trước khi code epic)
+
+SoT: [OPERATOR_PORTAL_EPIC.md](./OPERATOR_PORTAL_EPIC.md)
+
+```text
+OP-D PORTAL
+OP-D1 Host: operator.minhtien.online | admin/path /operator | app_rieng | DEFER
+OP-D2 Auth: JWT_OperatorUser | magic_link | SSO_later | DEFER
+OP-D3 Roles: OPERATOR_ADMIN+STAFF | DEFER
+OP-D4 Phase: GD3_prep | GD4 | CR_phu_luc | DEFER
+Ghi chú: 
+```
 
 ---
 

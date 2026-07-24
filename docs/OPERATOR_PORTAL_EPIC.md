@@ -66,7 +66,7 @@ Dev **không** tự chọn OP-D1…D4 — ghi Owner decision vào CONTINUE khi c
 
 ## 5. Việc Dev làm ngay (không chờ Portal)
 
-- Giữ mail SoT + W5-12 evidence.  
+- Giữ mail SoT + W5-12/12B/12C evidence.  
 - Đảm bảo mỗi Offer có `operatorId` + `contactEmail` / OperatorUser.  
 - Không scaffold app/route portal cho đến khi Owner chốt OP-D1.
 

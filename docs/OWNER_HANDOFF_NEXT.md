@@ -26,6 +26,7 @@
 * R4 settings/audit + brand `settings.*`: **DEPLOYED** · `jetbay-be-20260724-134852` · smoke PASS
 * R5 airport/quote/booking scope + remove `AdminGuard`: **DEPLOYED** · `jetbay-be-20260724-140317`
 * W5-12/12B booking fan-out: **DEV_API PASS** (BK-000014/015) — Owner W5-11 vẫn cần trước W5-14
+* W5-12C operator_unassigned: **DEV_API PASS** (BK-000016)
 * Operator Portal: **NOT STARTED** — [OPERATOR_PORTAL_EPIC.md](./OPERATOR_PORTAL_EPIC.md)
 * W5-11…14 — **W5-11 PENDING_OWNER** · W5-14 **BLOCKED**
 * W6-01 nháp biên bản GĐ1: **DONE**
@@ -53,7 +54,7 @@
 
 # 3. Task đang chờ Owner
 
-> **SMTP (W5-10) PASS** — W5-11 chờ Owner xác nhận inbox; W5-12…14 chưa DONE.  
+> **SMTP (W5-10) PASS** — W5-11 chờ Owner xác nhận inbox; W5-12/12B/12C **DEV_API PASS** · W5-14 chờ W5-11.  
 > Mail SoT: [ORDER_EMAIL_AUTOMATION.md](./ORDER_EMAIL_AUTOMATION.md) · Form: [OWNER_INPUT_FORMS.md](./OWNER_INPUT_FORMS.md)
 
 ## W6-02 — Đặt lịch họp ký GĐ1 (phương án A) — ưu tiên

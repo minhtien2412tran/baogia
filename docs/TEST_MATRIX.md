@@ -1,13 +1,14 @@
 # Test Matrix — JetBay
 
-> **Updated:** 2026-07-24 ~14:50 · Snapshot [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)
+> **Updated:** 2026-07-24 ~15:55 · Snapshot [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)
 
 ## Latest evidence (prefer these)
 
 ```text
-Session 24/07 ~14:50 ICT:
-W5-12/12B DEV_API PASS — smoke-w5-12-booking-fanout.mjs
-BK-000014/015: booking_created + :operator (+fan-out) + :sales SENT; cancel SENT
+Session 24/07 ~15:55 ICT:
+W5-12/12B DEV_API PASS — smoke-w5-12-booking-fanout.mjs · BK-000014/015
+W5-12C DEV_API PASS — smoke-w5-12c-operator-unassigned.mjs · BK-000016
+  keys: booking_created + booking_created:sales + operator_unassigned:sales (no :operator leak)
 Operator Portal: NOT STARTED — OPERATOR_PORTAL_EPIC.md
 W5-11 PENDING_OWNER · W5-14 BLOCKED
 R5 scope DEPLOYED · R4 DONE
@@ -46,8 +47,9 @@ Dev implementation: PASS
 Production SMTP configuration: PASS (Gmail 465 · catcher OFF · 24/07 ~10:51)
 API send logs quote #61/#62: PASS (EmailService sent)
 Owner inbox verification (W5-11): PENDING_OWNER — confirm Inbox/Spam + screenshot
-W5-12 booking fan-out / W5-13 retry E2E: PENDING (after W5-11)
-W5-14 docs close: BLOCKED until 11–13 evidence
+W5-12/12B/12C booking fan-out + unassigned: DEV_API PASS (after W5-11 for Owner inbox)
+W5-13 retry E2E: CODE_READY (optional after W5-11)
+W5-14 docs close: BLOCKED until W5-11 Owner
 Overall T-S4-01 config: PASS · full mail UAT: IN_PROGRESS
 Retry path (W5-13): code present — EmailCampaignLog attempts < 3 · idempotent skip SENT
 ```

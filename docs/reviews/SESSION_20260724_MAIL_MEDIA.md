@@ -15,10 +15,12 @@
 | Mail SoT (quote/booking/operator) | **CODE+DEPLOY** | [ORDER_EMAIL_AUTOMATION.md](../ORDER_EMAIL_AUTOMATION.md) |
 | Email datetime rõ (tz IANA) | **PASS** | `utils/email-datetime.ts` · deploy ~11:20 |
 | Idempotent mail SENT skip | **PASS** | unit + code |
-| operator_unassigned alert | **PASS** | code |
+| operator_unassigned alert | **PASS** | code + W5-12C DEV_API |
 | W5-11 Owner inbox confirm | **PENDING_OWNER** | form `W5-11 INBOX` |
-| W5-12 fan-out / 12B/C / W5-13 E2E | **PENDING** | sau W5-11 |
-| W5-14 | **BLOCKED** | cần 11–13 |
+| W5-12/12B fan-out | **DEV_API PASS** | BK-000014/015 |
+| W5-12C operator_unassigned | **DEV_API PASS** | BK-000016 · smoke-w5-12c |
+| W5-13 E2E | **CODE_READY** | sau W5-11 optional |
+| W5-14 | **BLOCKED** | cần W5-11 |
 | News / UX / ký GĐ1 | **PENDING_OWNER** | [OWNER_INPUT_FORMS.md](../OWNER_INPUT_FORMS.md) |
 | Admin Mail Ops UI / Operator Portal | **NOT STARTED** | epic riêng — không ghi DONE |
 | BE error harden (filter + safe notify) | **DEPLOYED** | backup `jetbay-be-20260724-113424` · envelope PASS |
@@ -26,6 +28,7 @@
 | R4 settings/audit + brand settings.* | **DEPLOYED** | backup `jetbay-be-20260724-134852` · smoke-r4-settings-audit PASS |
 | R5 quote/booking/airport scope · AdminGuard removed | **DEPLOYED** | backup `jetbay-be-20260724-140317` · unit 10/10 |
 | W5-12/12B booking fan-out | **DEV_API PASS** | BK-000014/015 · smoke-w5-12-booking-fanout |
+| W5-12C operator_unassigned | **DEV_API PASS** | BK-000016 · smoke-w5-12c-operator-unassigned |
 | Operator Portal | **NOT STARTED** | [OPERATOR_PORTAL_EPIC.md](../OPERATOR_PORTAL_EPIC.md) |
 
 ## Deploy refs (VPS)
