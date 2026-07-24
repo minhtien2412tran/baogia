@@ -22,6 +22,7 @@
 * Mail automation SoT (operator fan-out, idempotent SENT, unassigned alert): **DEPLOYED**
 * Email datetime rõ (không ISO cắt cụt): **PASS** · `utils/email-datetime.ts` · deploy ~11:20
 * BE error harden (filter · Prisma · fireAndForget): **DEPLOYED** · `jetbay-be-20260724-113424` · envelope smoke PASS
+* R4 CMS/media `PermissionGuard`: **DEPLOYED** · `jetbay-be-20260724-133626` · smoke-admin-crud 16/16
 * W5-11…14 — **chưa đóng** (chờ Owner inbox rồi Dev W5-12…)
 * W6-01 nháp biên bản GĐ1: **DONE**
 * W6-02 pack phương án A: **READY** (chờ lịch + ký)

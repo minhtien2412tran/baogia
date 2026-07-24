@@ -181,8 +181,8 @@ Throttle: login 10/min · register/OTP/refresh 5/min (tier `auth`).
 | **Routes** | `/admin/permissions/*` (`AdminPermissionsController`) · guard `PermissionGuard` + `@RequirePermissions(...)` + `permission.catalog.ts` |
 | **Models** | `RolePermission`, `UserPermissionOverride`, `UserAirportScope` |
 | **Status** | **partial → ops-core migrated (21/07 local)** — engine + catalog + guard OK; **StaffGuard+PermissionGuard** trên dashboard, quotes (+status), bookings (đã có), users, aircraft, FP/EL/jet-card/travel-credit, partners; export `quote|booking|user|payment|contract.export` |
-| **Gaps** | ⚠️ Còn `AdminGuard` trên CMS/content/media/settings/audit/operator/email-template (R4). Data scope R5. Deploy + re-seed SALES perms. |
-| **Smoke** | `permission.service.spec.ts` (unit) · HTTP matrix SALES vs ADMIN — pending deploy |
+| **Gaps** | ⚠️ Còn R4 settings/audit (nếu còn AdminGuard) · Data scope R5. Re-seed SALES `content.*` nếu staff CMS. |
+| **Smoke** | `permission.service.spec.ts` (unit) · `smoke-admin-crud.mjs` **16/16** prod 24/07 (CMS pages sau R4) |
 
 ---
 
@@ -244,7 +244,7 @@ Throttle: login 10/min · register/OTP/refresh 5/min (tier `auth`).
 |-----|------|-------|
 | **P1** | ~~Set prod `APP_ENV=production`~~ | ✅ 2026-07-10 |
 | **P1** | G4 keys từ KH | SMTP, OAuth, Stripe/OnePay/9Pay, SMS |
-| **P1** | ⚠️ **Đồng nhất guard admin** | Migrate `AdminGuard` → `PermissionGuard` cho các `admin/*` còn lại (§11) |
+| **P1** | ⚠️ **Đồng nhất guard admin** | ~~CMS/media R4~~ ✅ 24/07 · còn settings/audit nếu còn `AdminGuard` · R5 scope |
 | **P2** | ~~Smoke HTTP domain mới~~ | ✅ 2026-07-20 `smoke-bao-gia-contracts.mjs` (quotes/locale · pricing · PDF/Word · contracts) |
 | **P2** | Nest feature modules | Auth + Quotes (phase 1) → xem BE_ARCHITECTURE; Commercial/Bookings/Content/Admin còn phẳng |
 | **P2** | Split `dto.ts` theo module | Sau khi modules ổn định |

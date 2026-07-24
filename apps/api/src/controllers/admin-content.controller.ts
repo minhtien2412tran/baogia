@@ -29,12 +29,14 @@ import {
 } from '../dto';
 import { ContentService } from '../services/content.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { AdminGuard } from '../auth/admin.guard';
+import { StaffGuard } from '../auth/staff.guard';
+import { PermissionGuard } from '../permissions/permission.guard';
+import { RequirePermissions } from '../permissions/require-permissions.decorator';
 
 @ApiTags('Admin Content')
 @ApiSecurity('X-API-Key')
 @Controller('admin/content')
-@UseGuards(JwtAuthGuard, AdminGuard)
+@UseGuards(JwtAuthGuard, StaffGuard, PermissionGuard)
 @ApiBearerAuth('bearer')
 export class AdminContentController {
   constructor(private readonly contentService: ContentService) {}
@@ -42,7 +44,7 @@ export class AdminContentController {
   // --- PAGES ---
 
   @Get('pages')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('content.view')
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'limit', required: false })
   @ApiQuery({ name: 'status', required: false })
@@ -60,14 +62,14 @@ export class AdminContentController {
   }
 
   @Post('pages')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('content.manage')
   @ApiOperation({ summary: 'Create content page (admin)' })
   createPage(@Body() body: CreateContentPageDto) {
     return this.contentService.adminCreatePage(body);
   }
 
   @Get('pages/:id')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('content.view')
   @ApiOperation({ summary: 'Get content page by id (admin)' })
   getPage(
     @Param('id', ParseIntPipe) id: number,
@@ -77,7 +79,7 @@ export class AdminContentController {
   }
 
   @Patch('pages/:id')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('content.manage')
   @ApiOperation({ summary: 'Update content page (admin)' })
   updatePage(
     @Param('id', ParseIntPipe) id: number,
@@ -87,7 +89,7 @@ export class AdminContentController {
   }
 
   @Delete('pages/:id')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('content.manage')
   @ApiOperation({ summary: 'Delete content page (admin)' })
   deletePage(@Param('id', ParseIntPipe) id: number) {
     return this.contentService.adminDeletePage(id);
@@ -96,7 +98,7 @@ export class AdminContentController {
   // --- ARTICLES ---
 
   @Get('articles')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('content.view')
   @ApiQuery({ name: 'type', required: false, example: 'news' })
   @ApiQuery({ name: 'status', required: false })
   @ApiQuery({ name: 'page', required: false })
@@ -116,13 +118,14 @@ export class AdminContentController {
   }
 
   @Post('articles')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('content.manage')
   @ApiOperation({ summary: 'Create article (admin)' })
   createArticle(@Body() body: CreateContentArticleDto) {
     return this.contentService.adminCreateArticle(body);
   }
 
   @Get('articles/:id')
+  @RequirePermissions('content.view')
   @ApiOperation({ summary: 'Get article by ID (admin)' })
   getArticle(
     @Param('id', ParseIntPipe) id: number,
@@ -132,7 +135,7 @@ export class AdminContentController {
   }
 
   @Patch('articles/:id')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('content.manage')
   @ApiOperation({ summary: 'Update article (admin)' })
   updateArticle(
     @Param('id', ParseIntPipe) id: number,
@@ -142,7 +145,7 @@ export class AdminContentController {
   }
 
   @Delete('articles/:id')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('content.manage')
   @ApiOperation({ summary: 'Delete article (admin)' })
   deleteArticle(@Param('id', ParseIntPipe) id: number) {
     return this.contentService.adminDeleteArticle(id);
@@ -151,7 +154,7 @@ export class AdminContentController {
   // --- VIDEOS ---
 
   @Get('videos')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('content.view')
   @ApiQuery({ name: 'status', required: false })
   @ApiOperation({ summary: 'List videos (admin)' })
   listVideos(@Query('status') status?: string, @Query('page') page?: string) {
@@ -162,14 +165,14 @@ export class AdminContentController {
   }
 
   @Post('videos')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('content.manage')
   @ApiOperation({ summary: 'Create video (admin)' })
   createVideo(@Body() body: CreateVideoDto) {
     return this.contentService.adminCreateVideo(body);
   }
 
   @Patch('videos/:id')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('content.manage')
   @ApiOperation({ summary: 'Update video (admin)' })
   updateVideo(
     @Param('id', ParseIntPipe) id: number,
@@ -179,7 +182,7 @@ export class AdminContentController {
   }
 
   @Delete('videos/:id')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('content.manage')
   @ApiOperation({ summary: 'Delete video (admin)' })
   deleteVideo(@Param('id', ParseIntPipe) id: number) {
     return this.contentService.adminDeleteVideo(id);
@@ -188,7 +191,7 @@ export class AdminContentController {
   // --- DESTINATIONS ---
 
   @Get('destinations')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('content.view')
   @ApiQuery({ name: 'category', required: false })
   @ApiOperation({ summary: 'List destinations (admin)' })
   listDestinations(
@@ -204,14 +207,14 @@ export class AdminContentController {
   }
 
   @Post('destinations')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('content.manage')
   @ApiOperation({ summary: 'Create destination (admin)' })
   createDestination(@Body() body: CreateDestinationDto) {
     return this.contentService.adminCreateDestination(body);
   }
 
   @Patch('destinations/:id')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('content.manage')
   @ApiOperation({ summary: 'Update destination (admin)' })
   updateDestination(
     @Param('id', ParseIntPipe) id: number,
@@ -221,7 +224,7 @@ export class AdminContentController {
   }
 
   @Delete('destinations/:id')
-  @ApiBearerAuth('bearer')
+  @RequirePermissions('content.manage')
   @ApiOperation({ summary: 'Delete destination (admin)' })
   deleteDestination(@Param('id', ParseIntPipe) id: number) {
     return this.contentService.adminDeleteDestination(id);

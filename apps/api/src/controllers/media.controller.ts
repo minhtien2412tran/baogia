@@ -23,7 +23,9 @@ import {
 import type { Request, Response } from 'express';
 import { StorageService } from '../services/storage.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { AdminGuard } from '../auth/admin.guard';
+import { StaffGuard } from '../auth/staff.guard';
+import { PermissionGuard } from '../permissions/permission.guard';
+import { RequirePermissions } from '../permissions/require-permissions.decorator';
 import { Public } from '../auth/public.decorator';
 
 const ALLOWED_TYPES = new Set([
@@ -68,7 +70,8 @@ export class MediaController {
   constructor(private readonly storage: StorageService) {}
 
   @Get('admin/media')
-  @UseGuards(JwtAuthGuard, AdminGuard)
+  @UseGuards(JwtAuthGuard, StaffGuard, PermissionGuard)
+  @RequirePermissions('content_media.view', 'content.view')
   @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'List uploaded media objects' })
   async listMedia() {
@@ -80,7 +83,8 @@ export class MediaController {
   }
 
   @Post('admin/media/upload')
-  @UseGuards(JwtAuthGuard, AdminGuard)
+  @UseGuards(JwtAuthGuard, StaffGuard, PermissionGuard)
+  @RequirePermissions('content_media.approve', 'content.manage')
   @ApiBearerAuth('bearer')
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -107,7 +111,8 @@ export class MediaController {
   }
 
   @Delete('admin/media/*')
-  @UseGuards(JwtAuthGuard, AdminGuard)
+  @UseGuards(JwtAuthGuard, StaffGuard, PermissionGuard)
+  @RequirePermissions('content_media.approve', 'content.manage')
   @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Delete a media object' })
   async deleteMedia(@Req() req: Request) {

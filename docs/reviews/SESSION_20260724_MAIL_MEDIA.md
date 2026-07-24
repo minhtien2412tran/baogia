@@ -22,12 +22,14 @@
 | News / UX / ký GĐ1 | **PENDING_OWNER** | [OWNER_INPUT_FORMS.md](../OWNER_INPUT_FORMS.md) |
 | Admin Mail Ops UI / Operator Portal | **NOT STARTED** | epic riêng — không ghi DONE |
 | BE error harden (filter + safe notify) | **DEPLOYED** | backup `jetbay-be-20260724-113424` · envelope PASS |
+| R4 CMS/media PermissionGuard | **DEPLOYED** | backup `jetbay-be-20260724-133626` · smoke-admin-crud 16/16 |
 
 ## Deploy refs (VPS)
 
 - Web hotlink/Contact/i18n: backups `jetbay-web-20260724-10*`
 - API SMTP sourced + mail SoT + datetime: `jetbay-be-20260724-112005` (và trước đó `111559`, `110205`)
 - API error harden: `jetbay-be-20260724-113424`
+- API R4 CMS/media: `jetbay-be-20260724-133626`
 
 ## Quy tắc agent (Owner yêu cầu 24/07)
 
