@@ -42,7 +42,7 @@
 ## Việc tiếp theo (ưu tiên sản phẩm)
 
 > **Trạng thái GĐ:** GĐ1 `TECHNICALLY DONE — PENDING SIGN-OFF` · GĐ2 `PENDING CONTENT/POLISH/UAT` · SMTP = Owner unlock sau  
-> **Thực thi ngay:** [PLAN_GD1_GD2_EXECUTION.md](./PLAN_GD1_GD2_EXECUTION.md) — Wave 0–5a + **W4-05 hotlink scrub PASS** (24/07 ~10:05)  
+> **Thực thi ngay:** [PLAN_GD1_GD2_EXECUTION.md](./PLAN_GD1_GD2_EXECUTION.md) — Wave 0–5a + hotlink scrub + **bugfix 404/i18n PASS** (24/07 ~10:15)  
 > Evidence: [reviews/GD2_PAGE_WALK_20260724.md](./reviews/GD2_PAGE_WALK_20260724.md) · [CMS_INVENTORY_20260724](./reviews/CMS_INVENTORY_20260724.md) · [MEDIA_AUDIT_20260724](./reviews/MEDIA_AUDIT_20260724.md) · [TEST_MATRIX.md](./TEST_MATRIX.md)  
 > **Owner next:** News 3–5 · UX feedback · SMTP thật · họp ký GĐ1  
 > **Plan khác:** [NEXT_SPRINT_PLAN.md](./NEXT_SPRINT_PLAN.md) · [note.md](../note.md)

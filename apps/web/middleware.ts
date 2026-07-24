@@ -34,6 +34,30 @@ export function middleware(request: NextRequest) {
     return redirect;
   }
 
+  // Legacy / mistaken slugs → canonical routes (page walk P2 404s)
+  if (hasLocalePrefix && segment) {
+    const rest = pathname.slice(segment.length + 1); // e.g. /travel-credits
+    const aliases: Record<string, string> = {
+      '/travel-credits': '/travel-credit',
+      '/destinations': '/destination',
+      '/empty-leg-flights': '/empty-leg',
+      '/customer-care': '/contact',
+    };
+    const target = aliases[rest];
+    if (target) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${segment}${target}`;
+      return NextResponse.redirect(url, 308);
+    }
+    // Collapse accidental double locale: /en-us/en-us/contact → /en-us/contact
+    if (rest.startsWith(`/${segment}/`) || rest === `/${segment}`) {
+      const stripped = rest.replace(new RegExp(`^/${segment}(?=/|$)`), '') || '';
+      const url = request.nextUrl.clone();
+      url.pathname = `/${segment}${stripped}`;
+      return NextResponse.redirect(url, 308);
+    }
+  }
+
   // Pass locale on the *request* so RootLayout can set <html lang> server-side.
   const requestHeaders = new Headers(request.headers);
   if (hasLocalePrefix && segment) {

@@ -18,6 +18,7 @@
 * Wave 4-01…03 — Media audit và fallback: **DONE**
 * W4-04 / W4-05 — Option 2 mirror + approve + remote OFF: **DONE**
 * Hotlink scrub — `media-env` decouple + redeploy (~10:03 ICT): **PASS** (`jetvina.com` = 0 trên 8 trang ưu tiên)
+* Bugfix 24/07 ~10:15 — double-locale Contact · alias 308 · i18n warn=0: **DONE**
 * Wave 5-01…03 — Chuẩn bị SMTP: **DONE**
 * W6-01 — Nháp biên bản nghiệm thu GĐ1: **DONE**
 

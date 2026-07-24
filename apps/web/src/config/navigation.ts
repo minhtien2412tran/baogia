@@ -95,8 +95,21 @@ export const QUICK_LINKS: NavLink[] = [
   { href: '/account', label: 'My Account' },
 ];
 
+/** Join locale + path without double-prefixing (`/en-us` + `/en-us/x` → `/en-us/x`). */
 export function navHref(locale: string, href: string) {
-  return `/${locale}${href}`;
+  if (!href) return `/${locale}`;
+  if (/^https?:\/\//i.test(href)) return href;
+  if (href.startsWith('#')) return href;
+  const path = href.startsWith('/') ? href : `/${href}`;
+  if (path === `/${locale}` || path.startsWith(`/${locale}/`)) return path;
+  const first = path.split('/')[1];
+  // Already locale-prefixed with any known-looking segment (avoid /en-us/en-us/…)
+  if (first && /^[a-z]{2}(-[a-z]{2})?$/i.test(first) && first.toLowerCase() !== locale.toLowerCase()) {
+    // different locale in path — leave as-is
+    return path;
+  }
+  if (first && first.toLowerCase() === locale.toLowerCase()) return path;
+  return `/${locale}${path}`;
 }
 
 /** Menu link icon from JetVina CDN */

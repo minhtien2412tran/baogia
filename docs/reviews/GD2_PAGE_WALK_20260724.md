@@ -13,7 +13,7 @@
 | `integrations.smtp` | false · **catcher** (Mailpit) — T-S4-01 BLOCKED |
 | `smoke-web-api` (VPS + local after key sync) | **PASS** · quote id **59** (local) / **58** (VPS earlier) |
 | `smoke-auth-booking` | **PASS** · booking id 12 · demo login via `admin@j-ta.local` fallback |
-| `pnpm audit:i18n` | fail=0 · **warn=10** (nav partial EN for ja/ko/th/id/fr/de/es/it/ru/ar) · verdict PARTIAL |
+| `pnpm audit:i18n` | fail=0 · **warn=0** (24/07 ~10:15 — tourism nav cookie/more keys) · verdict **PASS** |
 
 **Fix ops:** Local `API_KEY` lệch prod → 401. Đã thêm `scripts/pull-prod-api-key.mjs` và sync (không commit secret).
 
@@ -46,12 +46,13 @@
 
 | URL thử (theo note cũ) | HTTP | Phân loại | Action |
 |------------------------|------|-----------|--------|
-| `/en-us/travel-credits` | 404 | P2 docs | Dùng `/travel-credit` |
-| `/en-us/destinations` | 404 | P2 docs | Dùng `/destination` |
-| `/en-us/contact` | 404 | **P1** | Không có route Contact riêng — cần trang hoặc redirect footer CTA |
-| `/en-us/customer-care` | 404 | P1/P2 | Xác nhận có trong scope JetVina không |
-| `/en-us/empty-leg-flights` | 404 | P2 | Alias sai — đúng `/empty-leg` |
+| `/en-us/travel-credits` | 404 → **308** `/travel-credit` | P2 fixed | Alias redirect |
+| `/en-us/destinations` | 404 → **308** `/destination` | P2 fixed | Alias redirect |
+| `/en-us/contact` | 404 | **P1** | → **200** (Wave 3a) |
+| `/en-us/customer-care` | 404 → **308** `/contact` | P2 fixed | Alias (JetVina cũng 404) |
+| `/en-us/empty-leg-flights` | 404 → **308** `/empty-leg` | P2 fixed | Alias redirect |
 | `/dashboard/news` | 404 | P2 docs | Dùng `/dashboard/content` |
+| `/en-us/en-us/contact` | **308** → `/en-us/contact` | P1 fixed | Double-locale breadcrumb bug |
 
 ## CMS inventory (API)
 
@@ -101,4 +102,10 @@ Deploy web: 24/07 · route `/[locale]/contact` in build output.
 
 - News n=1 (Owner content)  
 - SMTP catcher  
-- O5 media decision  
+
+### Bugfix 24/07 ~10:15 (Dev)
+
+- Contact breadcrumb double locale `/en-us/en-us/contact` → fixed (`href: '/contact'` + harden `navHref`)  
+- Alias 404 → 308 redirects in middleware  
+- `audit:i18n` warn 10 → **0** (tourism nav cookie/more)  
+- `next.config` remotePatterns không còn OR với `JETVINA_MEDIA_PRODUCTION_ENABLED`  

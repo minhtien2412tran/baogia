@@ -25,7 +25,8 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
       description={t(locale, 'contactPageDesc')}
       tag={t(locale, 'contactUs')}
       breadcrumb={[
-        { label: t(locale, 'contactUs'), href: navHref(locale, '/contact') },
+        // path only — PageHero applies navHref(locale, …)
+        { label: t(locale, 'contactUs'), href: '/contact' },
       ]}
       heroImage={JB.pages?.about?.hero ?? JB.sections?.sos}
       showQuoteWidget={false}

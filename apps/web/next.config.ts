@@ -4,13 +4,13 @@ import { fileURLToPath } from 'node:url';
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
 
-const allowJetvinaRemote =
-  process.env.NEXT_PUBLIC_ALLOW_JETVINA_REMOTE === 'true' ||
-  process.env.JETVINA_MEDIA_PRODUCTION_ENABLED === 'true';
+/** Hotlink jetvina.com — independent of JETVINA_MEDIA_PRODUCTION_ENABLED (local mirror). */
+const allowJetvinaRemote = process.env.NEXT_PUBLIC_ALLOW_JETVINA_REMOTE === 'true';
 
 const isProductionApp = (process.env.NEXT_PUBLIC_APP_ENV || process.env.APP_ENV || '') === 'production';
 const remoteReview =
   allowJetvinaRemote ||
+  process.env.JETVINA_MEDIA_REMOTE_REVIEW_ENABLED === 'true' ||
   (!isProductionApp && process.env.JETVINA_MEDIA_REMOTE_REVIEW_ENABLED !== 'false');
 
 const nextConfig: NextConfig = {
