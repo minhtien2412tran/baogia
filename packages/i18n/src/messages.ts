@@ -14,6 +14,21 @@ export type MessageKey =
   | 'bookNow'
   | 'searchFlights'
   | 'contactUs'
+  | 'contactPageTitle'
+  | 'contactPageDesc'
+  | 'contactFormTitle'
+  | 'contactFormIntro'
+  | 'contactFirstName'
+  | 'contactLastName'
+  | 'contactEmail'
+  | 'contactPhone'
+  | 'contactMessage'
+  | 'contactSubmit'
+  | 'contactSuccess'
+  | 'contactError'
+  | 'contactSendAnother'
+  | 'contactSmtpHint'
+  | 'contactAltQuote'
   | 'myAccount'
   | 'overview'
   | 'manageTrips'
@@ -307,6 +322,23 @@ const en: Catalog = {
   bookNow: 'Book now',
   searchFlights: 'Search flights',
   contactUs: 'Contact Us',
+  contactPageTitle: 'Contact JetVina',
+  contactPageDesc:
+    'Send a charter enquiry or question. Our team responds within one business day.',
+  contactFormTitle: 'Send a message',
+  contactFormIntro: 'Share your details and how we can help. You can also request a formal quote from any charter page.',
+  contactFirstName: 'First name',
+  contactLastName: 'Last name',
+  contactEmail: 'Email',
+  contactPhone: 'Phone',
+  contactMessage: 'How can we help?',
+  contactSubmit: 'Send message',
+  contactSuccess: 'Thank you — your enquiry was received. Reference',
+  contactError: 'Unable to send your message. Please try again.',
+  contactSendAnother: 'Send another message',
+  contactSmtpHint:
+    'Your enquiry is saved in our system immediately. Email confirmation is sent when production mail is configured.',
+  contactAltQuote: 'Prefer a full itinerary quote or office details?',
   myAccount: 'My Account',
   overview: 'Overview',
   manageTrips: 'Manage trips',
@@ -623,6 +655,24 @@ const vi: Catalog = {
   bookNow: 'Đặt ngay',
   searchFlights: 'Tìm chuyến bay',
   contactUs: 'Liên hệ',
+  contactPageTitle: 'Liên hệ JetVina',
+  contactPageDesc:
+    'Gửi yêu cầu charter hoặc câu hỏi. Đội ngũ phản hồi trong một ngày làm việc.',
+  contactFormTitle: 'Gửi tin nhắn',
+  contactFormIntro:
+    'Điền thông tin và nội dung cần hỗ trợ. Bạn cũng có thể yêu cầu báo giá đầy đủ từ các trang charter.',
+  contactFirstName: 'Họ',
+  contactLastName: 'Tên',
+  contactEmail: 'Email',
+  contactPhone: 'Điện thoại',
+  contactMessage: 'Chúng tôi có thể giúp gì?',
+  contactSubmit: 'Gửi tin nhắn',
+  contactSuccess: 'Cảm ơn — đã nhận yêu cầu. Mã tham chiếu',
+  contactError: 'Không gửi được tin nhắn. Vui lòng thử lại.',
+  contactSendAnother: 'Gửi thêm tin nhắn',
+  contactSmtpHint:
+    'Yêu cầu được lưu ngay trên hệ thống. Email xác nhận gửi khi đã cấu hình SMTP production.',
+  contactAltQuote: 'Muốn báo giá hành trình đầy đủ hoặc xem văn phòng?',
   myAccount: 'Tài khoản của tôi',
   overview: 'Tổng quan',
   manageTrips: 'Quản lý chuyến đi',
@@ -937,6 +987,21 @@ const zhCn: Catalog = {
   bookNow: '立即预订',
   searchFlights: '搜索航班',
   contactUs: '联系我们',
+  contactPageTitle: '联系 JetVina',
+  contactPageDesc: '发送包机咨询或问题。我们的团队将在一个工作日内回复。',
+  contactFormTitle: '发送消息',
+  contactFormIntro: '填写您的详细信息。您也可以从包机页面申请完整报价。',
+  contactFirstName: '名',
+  contactLastName: '姓',
+  contactEmail: '电子邮箱',
+  contactPhone: '电话',
+  contactMessage: '我们能如何帮助您？',
+  contactSubmit: '发送',
+  contactSuccess: '感谢 — 已收到您的询盘。参考编号',
+  contactError: '无法发送消息，请重试。',
+  contactSendAnother: '再发一条',
+  contactSmtpHint: '询盘会立即保存在系统中。配置生产邮件后将发送确认邮件。',
+  contactAltQuote: '需要完整行程报价或办公地址？',
   myAccount: '我的账户',
   overview: '概览',
   myQuotes: '我的报价',

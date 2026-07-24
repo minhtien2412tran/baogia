@@ -19,6 +19,7 @@ Chat sessions do **not** remember progress. Before coding, read and update the f
 | Doc | Purpose |
 |-----|---------|
 | [docs/CONTINUE_AT_HOME.md](./docs/CONTINUE_AT_HOME.md) | **Where we left off** — start here on a new machine |
+| [docs/OWNER_HANDOFF_NEXT.md](./docs/OWNER_HANDOFF_NEXT.md) | **Owner handoff** — W2-05 · W4-04 · W5 · W3-06 · NT GĐ1/GĐ2 (24/07) |
 | [docs/NEXT_SPRINT_PLAN.md](./docs/NEXT_SPRINT_PLAN.md) | **Sprint plan** — Web↔API · sync · docs · việc KH |
 | [docs/WEB_API_SURFACE_MAP.md](./docs/WEB_API_SURFACE_MAP.md) | Web/Admin ↔ API status matrix |
 | [docs/ADMIN_RBAC_FUNCTION_MATRIX.md](./docs/ADMIN_RBAC_FUNCTION_MATRIX.md) | **Admin/RBAC SoT** — roles · permissions · guards · UI · migration waves |

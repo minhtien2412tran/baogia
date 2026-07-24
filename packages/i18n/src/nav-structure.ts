@@ -81,6 +81,7 @@ export const FOOTER_SERVICES_DEF: NavLinkDef[] = [
 
 export const FOOTER_COMPANY_DEF: NavLinkDef[] = [
   { href: '/about-us', labelKey: 'aboutUs' },
+  { href: '/contact', labelKey: 'contactUs' },
   { href: '/booking-process', labelKey: 'bookingProcess' },
   { href: '/news', labelKey: 'news' },
   { href: '/blogs', labelKey: 'blogs' },

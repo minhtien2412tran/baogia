@@ -1,4 +1,7 @@
+'use client';
+
 import Image from 'next/image';
+import { useState } from 'react';
 
 type Props = {
   src: string;
@@ -28,12 +31,20 @@ export function ResponsiveImage({
   objectFit = 'cover',
   fallbackSrc = DEFAULT_FALLBACK,
 }: Props) {
-  const safeSrc = src || fallbackSrc;
+  const initial = src || fallbackSrc;
+  const [current, setCurrent] = useState(initial);
+  const [failed, setFailed] = useState(false);
+
+  function onError() {
+    if (failed) return;
+    setFailed(true);
+    setCurrent(fallbackSrc);
+  }
 
   if (fill) {
     return (
       <Image
-        src={safeSrc}
+        src={current}
         alt={alt}
         fill
         sizes={sizes}
@@ -41,13 +52,14 @@ export function ResponsiveImage({
         priority={priority}
         unoptimized
         style={{ objectFit }}
+        onError={onError}
       />
     );
   }
 
   return (
     <Image
-      src={safeSrc}
+      src={current}
       alt={alt}
       width={width ?? 800}
       height={height ?? 500}
@@ -56,6 +68,7 @@ export function ResponsiveImage({
       priority={priority}
       unoptimized
       style={{ objectFit, width: '100%', height: 'auto' }}
+      onError={onError}
     />
   );
 }

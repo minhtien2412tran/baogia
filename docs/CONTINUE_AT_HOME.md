@@ -16,7 +16,13 @@
 |---------|-----|---------|
 | **Web chính thức KH** | https://jetvina.com/ | JetVina — nguồn truth IA / nội dung / liên hệ |
 | **Web demo (clone)** | https://www.minhtien.online/en-us | ✅ PM2 `jetbay-web` `:3012` · local `:3000` |
-| **Báo cáo tiến độ KH** | https://www.minhtien.online/baocaotiendo | ✅ trang nội bộ gửi Anh Tuấn Anh |
+| **Báo cáo tiến độ KH** | https://www.minhtien.online/baocaotiendo | ✅ trang công khai rút gọn (v3.1) |
+| **Báo cáo đầy đủ GĐ1–GĐ4** | [BAO_CAO_TIEN_DO_DAY_DU.md](./BAO_CAO_TIEN_DO_DAY_DU.md) | ✅ 24/07 — §0 đóng GĐ1→GĐ2 · checklist còn thiếu |
+| **Gap backlog GĐ1/GĐ2** | [GAP_GD1_GD2_BACKLOG.md](./GAP_GD1_GD2_BACKLOG.md) | ✅ việc còn thiếu + hạn · Owner/Dev |
+| **Plan task GĐ1→GĐ2** | [PLAN_GD1_GD2_EXECUTION.md](./PLAN_GD1_GD2_EXECUTION.md) | ✅ Wave 0–7 · từ `note.md` · SMTP Owner sau |
+| **Owner handoff (tiếp theo)** | [OWNER_HANDOFF_NEXT.md](./OWNER_HANDOFF_NEXT.md) | ✅ **Canonical 24/07** — W2-05 · W4-04 · W5 · W3-06 · W6 |
+| **W6-02 signing pack** | [W6_02_GD1_SIGNING_PACK.md](./W6_02_GD1_SIGNING_PACK.md) | ✅ đề xuất lịch · residual SMTP khuyến nghị |
+| **Media W4-04** | [OWNER_MEDIA_DECISION.md](./OWNER_MEDIA_DECISION.md) | ✅ **Option 2** · local mirror · remote OFF |
 | API | https://api.minhtien.online | ✅ |
 | Admin | https://admin.minhtien.online/login | ✅ |
 | Swagger | https://docs.minhtien.online/swagger | ✅ |
@@ -35,7 +41,11 @@
 
 ## Việc tiếp theo (ưu tiên sản phẩm)
 
-> **Plan:** [NEXT_SPRINT_PLAN.md](./NEXT_SPRINT_PLAN.md) · [GD2_ROADMAP.md](./GD2_ROADMAP.md) · [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md) · [OWNER_ACTION_ITEMS.md](./OWNER_ACTION_ITEMS.md) · [TEST_MATRIX.md](./TEST_MATRIX.md)
+> **Trạng thái GĐ:** GĐ1 `TECHNICALLY DONE — PENDING SIGN-OFF` · GĐ2 `PENDING CONTENT/POLISH/UAT` · SMTP = Owner unlock sau  
+> **Thực thi ngay:** [PLAN_GD1_GD2_EXECUTION.md](./PLAN_GD1_GD2_EXECUTION.md) — Wave 0–5a + **W4-05 hotlink scrub PASS** (24/07 ~10:05)  
+> Evidence: [reviews/GD2_PAGE_WALK_20260724.md](./reviews/GD2_PAGE_WALK_20260724.md) · [CMS_INVENTORY_20260724](./reviews/CMS_INVENTORY_20260724.md) · [MEDIA_AUDIT_20260724](./reviews/MEDIA_AUDIT_20260724.md) · [TEST_MATRIX.md](./TEST_MATRIX.md)  
+> **Owner next:** News 3–5 · UX feedback · SMTP thật · họp ký GĐ1  
+> **Plan khác:** [NEXT_SPRINT_PLAN.md](./NEXT_SPRINT_PLAN.md) · [note.md](../note.md)
 
 **Admin ops waves (21/07 local — chưa deploy):** R1–R3 core + export + **RBAC/Settings/Audit UX**:
 - AuthGate + `PermissionContext`; nav + action `can()`; **kéo-thả reorder menu** + section toggles (Settings)
@@ -91,17 +101,16 @@ Postman collection: `docs/postman/JETVINA_REALTIME.postman_collection.json`. Pro
 **Audit 19/07 (sync + AI hygiene):** working tree clean trên `jetvina` · merge `main` → `jetvina` (giữ [KH_KICH_BAN_HOP_TIENDO.md](./KH_KICH_BAN_HOP_TIENDO.md)) · `main` ↔ `jetvina` aligned · residual GĐ2 (`b243bc8`+) **đã commit** · agent SoT refresh ([AGENTS.md](../AGENTS.md) · [GIT_WORKFLOW.md](./GIT_WORKFLOW.md))
 
 ```text
-Current phase: GĐ2 Dev complete
-Current mode: Waiting for Owner
-Active branch: jetvina (deploy / integration SoT; main = mirror after sync)
-Next technical phase after Owner unlock:
-1. SMTP inbox verification
-2. Payment sandbox
-3. OAuth sandbox
-4. SMS sandbox
-5. Integration health checks
-6. End-to-end UAT
-7. Production readiness review
+Current phase: GĐ1 TECHNICALLY DONE — PENDING SIGN-OFF
+GĐ2: DEV BASELINE DONE — PENDING OWNER INPUT, SMTP, POLISH AND UAT
+Current mode: Waiting Owner (W2-05 · W4-04 · W5-10 · W3-06 · W6-02)
+Active branch: jetvina
+Owner handoff SoT: docs/OWNER_HANDOFF_NEXT.md
+Execution plan: docs/PLAN_GD1_GD2_EXECUTION.md (+ note.md)
+Next after Owner unlock:
+1. W2-05 publish News / W4-05 mirror if chosen / W3-07…11 polish / W5-11…14 inbox
+2. W6-02 ký GĐ1 (SMTP PASS hoặc residual)
+3. W6-03…09 UAT + NT GĐ2
 ```
 
 1. **P0 Owner** — SMTP provider thật ([OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)); Mailpit catcher chỉ ops (`smtp=false` · `smtpCatcher=true`)  

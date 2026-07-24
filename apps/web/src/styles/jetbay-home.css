@@ -2473,6 +2473,48 @@
   gap: 12px;
 }
 
+.jb-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.jb-enquiry-consent {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: var(--jb-text-muted);
+  line-height: 1.4;
+}
+
+.jb-enquiry-consent input {
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.jb-form-error {
+  color: #b42318;
+  font-size: 13px;
+  margin: 0;
+}
+
+.jb-contact-form .jb-contact-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.jb-contact-form .jb-contact-row > input {
+  flex: 1 1 180px;
+}
+
 .jb-enquiry-form textarea,
 .jb-enquiry-form select {
   padding: 12px 14px;

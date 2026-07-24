@@ -1,8 +1,21 @@
 # Owner Action Items — chủ dự án
 
-> **Updated:** 2026-07-15 · **Status:** CURRENT  
+> **Updated:** 2026-07-24 · **Status:** CURRENT · khớp [`note.md`](../note.md) / plan Wave 0  
 > **Handoff pack:** [OWNER_NEXT_ACTIONS.md](./OWNER_NEXT_ACTIONS.md)  
-> **Related:** [BLOCKERS_AND_DEPENDENCIES.md](./BLOCKERS_AND_DEPENDENCIES.md) · [KH_G4_KEYS_CHECKLIST.md](./KH_G4_KEYS_CHECKLIST.md)
+> **Related:** [BLOCKERS_AND_DEPENDENCIES.md](./BLOCKERS_AND_DEPENDENCIES.md) · [KH_G4_KEYS_CHECKLIST.md](./KH_G4_KEYS_CHECKLIST.md) · [PLAN_GD1_GD2_EXECUTION.md](./PLAN_GD1_GD2_EXECUTION.md)
+
+---
+
+## Snapshot O1–O5 (Wave 0 — không mâu thuẫn)
+
+| ID | Trạng thái 24/07 | Ghi chú |
+|----|------------------|---------|
+| O1 | **OPEN** | Chờ Anh chốt thứ tự polish |
+| O2 | **OPEN** | Chờ feedback UI ≤10 điểm |
+| O3 | **DEPLOYED / OPTIONAL_OWNER_REVIEW** | `/baocaotiendo` v3.1 live — không chặn kỹ thuật |
+| O4 | **OPEN / BLOCKED_OWNER_SMTP** | Owner thêm SMTP_* trên VPS sau; Dev Wave 5a sẵn sàng |
+| O5 | **OPEN** — form quyết định: [OWNER_MEDIA_DECISION.md](./OWNER_MEDIA_DECISION.md) · audit [MEDIA_AUDIT_20260724](./reviews/MEDIA_AUDIT_20260724.md) |
+| O17 | **OPEN** | Slot họp NT GĐ1 |
 
 ---
 
@@ -10,11 +23,11 @@
 
 | ID | Việc cần làm | Vì sao cần | Đầu vào cần cung cấp | Hạn phụ thuộc | Nếu chưa làm sẽ ảnh hưởng gì | Trạng thái |
 |----|--------------|------------|----------------------|----------------|------------------------------|------------|
-| O1 | Xác nhận thứ tự polish GĐ2: **Commercial → Home → Charter → Account** (đề xuất Dev) hoặc chọn khác | Khóa backlog | Email/chat 1 dòng: ưu tiên 1→4 | Tuần này | Scope thảo luận | OPEN |
-| O2 | Duyệt UI live web + charter; gửi feedback ưu tiên (max 10 điểm) | Tránh polish mù | Link + screenshot ghi chú | Tuần này | Làm lại visual sau | OPEN |
+| O1 | Xác nhận thứ tự polish GĐ2: **Commercial → Home → Charter → Account** (đề xuất Dev) hoặc chọn khác | Khóa backlog | Email/chat 1 dòng: ưu tiên 1→4 | Tuần này | Scope thảo luận | **OPEN** |
+| O2 | Duyệt UI live web + charter; gửi feedback ưu tiên (max 10 điểm) | Tránh polish mù | Link + screenshot ghi chú | Tuần này | Làm lại visual sau | **OPEN** |
 | O3 | Báo cáo tiến độ **v3.1** | Đã live tại `/baocaotiendo` | Review tùy chọn; chỉnh wording nếu cần | — | Không chặn kỹ thuật | **DEPLOYED / OPTIONAL_OWNER_REVIEW** |
 | O4 | **Configure production SMTP** (xem chi tiết dưới) | Mail quote/newsletter/admin | Biến SMTP trên VPS `.env` — **không** gửi password qua chat | ASAP — **P0** | Form 201 nhưng không có inbox | **OPEN / BLOCKED_OWNER_SMTP** |
-| O5 | Xác nhận hotlink ảnh `jetvina.com` tạm thời được phép | Rights media | Có/không + deadline mirror | Tuần này | Phải tắt remote → placeholder | OPEN |
+| O5 | Xác nhận hotlink ảnh `jetvina.com` tạm thời được phép | Rights media | Có/không + deadline mirror | Tuần này | Phải tắt remote → placeholder | **OPEN** |
 
 ### O4 — Configure production SMTP (canonical)
 

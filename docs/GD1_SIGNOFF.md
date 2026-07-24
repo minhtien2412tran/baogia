@@ -65,4 +65,33 @@ Thực hiện: `APP_ENV=production`, clear MinIO broken endpoint, `prisma migrat
 | Dev (Minh Tiến Solutions) | ✅ Đóng GĐ1 kỹ thuật | 2026-07-10 |
 | Khách hàng (Anh Tuấn Anh) | ⬜ Chờ ký biên bản | — |
 
+**Trạng thái chuẩn (24/07):** `TECHNICALLY DONE — PENDING CONTRACTUAL SIGN-OFF`
+
 *GĐ1 kỹ thuật đạt — mở GĐ2 web polish theo [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md).*
+
+---
+
+## Phụ lục — Residual SMTP (phương án B · copy vào biên bản họp)
+
+> Dùng khi Owner **chưa** cấu hình SMTP production nhưng hai bên vẫn muốn ký đóng GĐ1.
+
+```text
+RESIDUAL — SMTP PRODUCTION (không chặn đóng GĐ1)
+
+1. Tình trạng hiện tại: SMTP_HOST trên VPS đang loopback/catcher;
+   mail quote/newsletter chưa vào inbox khách thật.
+2. Hai bên thống nhất: hạng mục này KHÔNG chặn nghiệm thu kỹ thuật GĐ1.
+3. Người chịu trách nhiệm cung cấp: Anh Tuấn Anh (Owner) — biến SMTP_* trên VPS
+   (không gửi mật khẩu qua chat/Git). Hướng dẫn: docs/OWNER_NEXT_ACTIONS.md · docs/SMTP_SETUP_GUIDE.md
+4. Điều kiện cần: SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASSWORD, SMTP_FROM
+   (+ optional SMTP_ENQUIRY_TO). Sau cấu hình: pm2 restart jetbay-be --update-env
+   và /integrations/status → smtp=true.
+5. Dev verify: ≥1 mail test vào inbox + ghi PASS vào GD1_SIGNOFF / TEST_MATRIX.
+6. Hạn xử lý đề xuất: trước nghiệm thu GĐ2 staging (tuần 8) — trừ khi phụ lục khác.
+7. Giai đoạn tiếp nhận nếu trễ: GĐ4 / phụ lục tích hợp (ghi rõ nếu đổi).
+
+Chữ ký Owner: ________  Ngày: ________
+Chữ ký Dev/PM: ________  Ngày: ________
+```
+
+**Phương án A (đủ SMTP):** bỏ phụ lục này — ghi “SMTP production PASS ngày ____ · evidence TEST_MATRIX”.

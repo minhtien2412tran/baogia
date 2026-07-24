@@ -1,7 +1,8 @@
 # UAT Checklist — GĐ2 staging
 
-> **Updated:** 2026-07-14 · **Status:** PACK READY (owner visual sign còn lại)  
-> Chạy trên https://www.minhtien.online + Admin. **Không PASS mail** nếu SMTP chưa thật.
+> **Updated:** 2026-07-24 · **Status:** **PACK READY — Owner sign ⬜** (chưa ký)  
+> Chạy trên https://www.minhtien.online + Admin. **Không PASS mail** nếu SMTP chưa thật.  
+> Plan UAT: [PLAN_GD1_GD2_EXECUTION.md](./PLAN_GD1_GD2_EXECUTION.md) Wave 6 · nguồn gap: [`note.md`](../note.md)
 
 | # | Case | Steps | Expected | Result |
 |---|------|-------|----------|--------|

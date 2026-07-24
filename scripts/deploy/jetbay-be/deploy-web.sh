@@ -38,14 +38,15 @@ NEXT_PUBLIC_SITE_URL=https://${DOMAIN_WWW}
 NEXT_PUBLIC_API_KEY=${API_KEY}
 NEXT_PUBLIC_APP_ENV=production
 NEXT_PUBLIC_PREFER_JETVINA_MEDIA=true
-NEXT_PUBLIC_ALLOW_JETVINA_REMOTE=true
+NEXT_PUBLIC_ALLOW_JETVINA_REMOTE=false
 JETVINA_MEDIA_PRODUCTION_ENABLED=true
-JETVINA_MEDIA_REMOTE_REVIEW_ENABLED=true
+JETVINA_MEDIA_LOCAL_MIRROR_ENABLED=true
+JETVINA_MEDIA_REMOTE_REVIEW_ENABLED=false
 PORT=${PORT}
 HOSTNAME=127.0.0.1
 EOF
 chmod 600 "${APP_ROOT}/.env.local"
-echo "[web] .env.local written (API_KEY len=${#API_KEY}, jetvina remote ON)"
+echo "[web] .env.local written (API_KEY len=${#API_KEY}, jetvina remote OFF — local mirror W4-04 option 2)"
 
 echo "[web] build i18n vendor..."
 cd "${APP_ROOT}/vendor/i18n"

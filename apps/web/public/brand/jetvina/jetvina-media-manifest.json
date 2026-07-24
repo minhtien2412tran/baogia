@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-18T04:00:41.002Z",
-  "rightsNote": "UNVERIFIED — CLIENT_DIRECTED staging review only. Not OWNED/LICENSED/CLIENT_PROVIDED. approvedForProduction=false.",
+  "generatedAt": "2026-07-24T02:57:23.537Z",
+  "rightsNote": "CLIENT_PROVIDED — Owner W4-04 option 2 (24/07/2026): mirror to JetBay storage with usage rights confirmed. Prefer localPath; disable hotlink in production (NEXT_PUBLIC_ALLOW_JETVINA_REMOTE=false).",
   "records": [
     {
       "id": "jv-c06de16a420d",
@@ -12,15 +12,15 @@
       "height": 900,
       "fileSize": 101573,
       "checksum": "c06de16a420d27371e05f6c0d3de32234c0d6434ea6fcc16372c3fa2eced3058",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.302Z",
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.451Z",
       "objectPositionDesktop": "center 40%",
       "objectPositionMobile": "center 35%",
       "focalPointX": 0.5,
@@ -35,15 +35,15 @@
       "height": 900,
       "fileSize": 292168,
       "checksum": "7c399d03553a6f0f5722665e82bec854f9859c1cf6a5f240e1b006f4f5db376d",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.312Z",
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.450Z",
       "objectPositionDesktop": "center 40%",
       "objectPositionMobile": "center 35%",
       "focalPointX": 0.5,
@@ -58,15 +58,15 @@
       "height": 900,
       "fileSize": 600252,
       "checksum": "c055e1502e28af7131ec8b813a2d9e3478172432c4d6a191ba7e1ebc31c96447",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.390Z",
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.452Z",
       "objectPositionDesktop": "center 40%",
       "objectPositionMobile": "center 35%",
       "focalPointX": 0.5,
@@ -81,15 +81,15 @@
       "height": 900,
       "fileSize": 244969,
       "checksum": "fe3618bb36a23157ae5f385ec8b7a215e30983396d67d6c951e848b44e8cbe98",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.343Z",
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.452Z",
       "objectPositionDesktop": "center 40%",
       "objectPositionMobile": "center 35%",
       "focalPointX": 0.5,
@@ -104,15 +104,15 @@
       "height": 900,
       "fileSize": 179180,
       "checksum": "cd9aa13b805cd98097da8d8756ac19a87184b19836cab73cc53d6a97ea588cb4",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.371Z",
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.453Z",
       "objectPositionDesktop": "center 40%",
       "objectPositionMobile": "center 35%",
       "focalPointX": 0.5,
@@ -127,15 +127,15 @@
       "height": 900,
       "fileSize": 242668,
       "checksum": "26bd887822fad6a7fd67ad243d39adb2b861c7dfa6122ac3e560d69585ffeaa9",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.402Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.453Z"
     },
     {
       "id": "jv-97e9c64ceadf",
@@ -146,15 +146,15 @@
       "height": 900,
       "fileSize": 72417,
       "checksum": "97e9c64ceadf318e1eec3d91913f38904ef1c17329abf7eec40d530cbfcc3c17",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.421Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.453Z"
     },
     {
       "id": "jv-add95020c071",
@@ -165,15 +165,15 @@
       "height": 900,
       "fileSize": 111510,
       "checksum": "add95020c071f03a10b4eb59539999e2dae1623f41913ddf6e7d7bd5328f9ed1",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.434Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.454Z"
     },
     {
       "id": "jv-7dbf37b4aaaa",
@@ -184,15 +184,15 @@
       "height": 900,
       "fileSize": 306155,
       "checksum": "7dbf37b4aaaa4fe195ca3795b70912adcebf4151dd3de900b4a4ca0de06c0929",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.455Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.454Z"
     },
     {
       "id": "jv-87a60c00b2d3",
@@ -203,14 +203,14 @@
       "height": 900,
       "fileSize": 104931,
       "checksum": "87a60c00b2d30acde7b63b2a09f2725b6ad4cf19ce2e30f7b66ea58bfe105f23",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "DESTINATION"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.468Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.455Z"
     },
     {
       "id": "jv-352669e55e72",
@@ -221,15 +221,15 @@
       "height": 900,
       "fileSize": 374569,
       "checksum": "352669e55e72b4239fe94e5034da252ae3f0f823e360c88c147fc7a9cd4778d5",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.490Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.455Z"
     },
     {
       "id": "jv-fe49967f4855",
@@ -240,14 +240,14 @@
       "height": 900,
       "fileSize": 267994,
       "checksum": "fe49967f48551a6bf405b6497572acfe35cd1f8f686fae65f3db6703cba04431",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "HERO"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.502Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.456Z"
     },
     {
       "id": "jv-da769b4f28d2",
@@ -258,14 +258,14 @@
       "height": 900,
       "fileSize": 81911,
       "checksum": "da769b4f28d222c206356aea4cb6ff014bda2bffb597d2b4da5f351851593691",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_CABIN"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.521Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.456Z"
     },
     {
       "id": "jv-e43546597456",
@@ -276,15 +276,15 @@
       "height": 900,
       "fileSize": 93908,
       "checksum": "e435465974563504f25884b614890d0f856b81cc839e7bb553963a0f249ce7ce",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.534Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.456Z"
     },
     {
       "id": "jv-55a31caa6a5a",
@@ -295,15 +295,15 @@
       "height": 900,
       "fileSize": 353867,
       "checksum": "55a31caa6a5a90e1b6b4a6cded95c0ee316d1642ad3fdc8c1a32160091f728e7",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.554Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.457Z"
     },
     {
       "id": "jv-db404b68cd34",
@@ -314,14 +314,14 @@
       "height": 900,
       "fileSize": 44820,
       "checksum": "db404b68cd3482399458d3df8273c5566f59f5da52a6c23821450157777de27c",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_CABIN"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.561Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.457Z"
     },
     {
       "id": "jv-7e3fd8f94129",
@@ -332,14 +332,14 @@
       "height": 900,
       "fileSize": 354402,
       "checksum": "7e3fd8f94129f7c06462e68d7fc15340431ab71a5c181bfec959222131fc456e",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_CABIN"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.590Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.457Z"
     },
     {
       "id": "jv-b30af2699331",
@@ -350,14 +350,14 @@
       "height": 900,
       "fileSize": 108379,
       "checksum": "b30af2699331d44a7250cdbb34ced27059a7b757ad0cb3f8d6a215048be7726d",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_CABIN"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.602Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.458Z"
     },
     {
       "id": "jv-dbbe9b7e5fd6",
@@ -368,15 +368,15 @@
       "height": 900,
       "fileSize": 427939,
       "checksum": "dbbe9b7e5fd69bf0556aed710a430a85eeabacf431a096f2b940a547be7a80f8",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.623Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.458Z"
     },
     {
       "id": "jv-2e5457a5a3c2",
@@ -387,14 +387,14 @@
       "height": 900,
       "fileSize": 58414,
       "checksum": "2e5457a5a3c2030c96dacaa2ef0e9cc10dec5fb61a3e3cc15bec2d0ca2ada606",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_CABIN"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.633Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.458Z"
     },
     {
       "id": "jv-fcd7484fd1ca",
@@ -405,14 +405,14 @@
       "height": 900,
       "fileSize": 604660,
       "checksum": "fcd7484fd1caf7ce928eb245c2dca052ac007499fa9816082914bb45c527c83d",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "DESTINATION"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.660Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.460Z"
     },
     {
       "id": "jv-7ee9e209c4ad",
@@ -423,14 +423,14 @@
       "height": 900,
       "fileSize": 620897,
       "checksum": "7ee9e209c4ade5e5b16f0e7b7a52c19161b985151105852690ec133fd34cb256",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "DESTINATION"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.689Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.462Z"
     },
     {
       "id": "jv-686fa9cbe8bb",
@@ -441,15 +441,15 @@
       "height": 900,
       "fileSize": 95667,
       "checksum": "686fa9cbe8bbe69dbd4ddcd468560a611a302f95a4f5005678355d766c38afba",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.692Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.463Z"
     },
     {
       "id": "jv-cb80213de451",
@@ -460,14 +460,14 @@
       "height": 900,
       "fileSize": 175762,
       "checksum": "cb80213de4518ec1037b31532ddd91629599b5a1ac12a479c294bc4f0eb33980",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "DESTINATION"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.717Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.464Z"
     },
     {
       "id": "jv-82bb3fe71220",
@@ -478,14 +478,14 @@
       "height": 900,
       "fileSize": 325709,
       "checksum": "82bb3fe712206a481a35b82ceaded77622bb7fb91d7c6ef6d5a3d0b04fa7baf5",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "DESTINATION"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.722Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.465Z"
     },
     {
       "id": "jv-a6e3f9b9acc5",
@@ -496,15 +496,15 @@
       "height": 900,
       "fileSize": 312780,
       "checksum": "a6e3f9b9acc56d4a2f15e3e1f3304dd891d69541462b0a8a5830a35fe363201b",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.746Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.466Z"
     },
     {
       "id": "jv-a0d9eee31c0b",
@@ -515,14 +515,14 @@
       "height": 900,
       "fileSize": 55046,
       "checksum": "a0d9eee31c0bce64f784097f8688daafdced7ad6dea7467c4b177099ce615b68",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "DESTINATION"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.754Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.467Z"
     },
     {
       "id": "jv-eec59d2466c4",
@@ -533,14 +533,14 @@
       "height": 900,
       "fileSize": 214394,
       "checksum": "eec59d2466c4efa5737e6f2f45d9e4905e0cd6fda438b8a05303350b41b5f0f5",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "DESTINATION"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.775Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.468Z"
     },
     {
       "id": "jv-a240162488b6",
@@ -551,14 +551,14 @@
       "height": 900,
       "fileSize": 167876,
       "checksum": "a240162488b6d81b99c02f849b8a458281dfd234b8baf59412b92b817d64b7d4",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "HERO"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.781Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.469Z"
     },
     {
       "id": "jv-e4cb20f5a9ac",
@@ -569,15 +569,15 @@
       "height": 900,
       "fileSize": 466630,
       "checksum": "e4cb20f5a9ac0ff8dfabbb82c892015ea6467da99f2b7fe82ec2d17f9da248be",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.805Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.470Z"
     },
     {
       "id": "jv-e9f43f98958d",
@@ -588,14 +588,14 @@
       "height": 900,
       "fileSize": 75905,
       "checksum": "e9f43f98958d5e24accd368f195c876647008755e6cc60d0615ceacf5b843627",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "NEWS"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.820Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.472Z"
     },
     {
       "id": "jv-b0121db12445",
@@ -606,14 +606,14 @@
       "height": 900,
       "fileSize": 115878,
       "checksum": "b0121db12445a8d11e9abfe2a73afe2565ece6e9ddb3529eb884df72ea311517",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "NEWS"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.830Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.473Z"
     },
     {
       "id": "jv-6fa8ba22ba0a",
@@ -624,15 +624,15 @@
       "height": 900,
       "fileSize": 57698,
       "checksum": "6fa8ba22ba0aae71e2be9514729548ef9bfef9bb4928e47a010be65f31441daa",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.852Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.474Z"
     },
     {
       "id": "jv-24f948a5976b",
@@ -643,14 +643,14 @@
       "height": 900,
       "fileSize": 170344,
       "checksum": "24f948a5976b397196bf81fedf7d66d0ccda870cc1a0bdb49a84b346216f3c28",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "NEWS"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.868Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.475Z"
     },
     {
       "id": "jv-53f09a5f4fcb",
@@ -661,15 +661,15 @@
       "height": 900,
       "fileSize": 187997,
       "checksum": "53f09a5f4fcb73c293a034c7328efedb8eca67291fe844e21923a8b973f101aa",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "SERVICE",
         "CARGO"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.887Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.476Z"
     },
     {
       "id": "jv-f56ca8f97cef",
@@ -680,15 +680,15 @@
       "height": 900,
       "fileSize": 176884,
       "checksum": "f56ca8f97cefb2974cfd16607253544b1195f57d8f3fe84aaf7131798abc7dbe",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.903Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.477Z"
     },
     {
       "id": "jv-27de25808bbc",
@@ -699,15 +699,15 @@
       "height": 900,
       "fileSize": 287732,
       "checksum": "27de25808bbc9be5521fe16d72add7823865570d7b4d8a402f78ceb7d9aac5b8",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "SERVICE",
         "CARGO"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.921Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.478Z"
     },
     {
       "id": "jv-986af1a2dee3",
@@ -718,14 +718,14 @@
       "height": 900,
       "fileSize": 125688,
       "checksum": "986af1a2dee3ba7510203991d8227e3de3dc7279110d044a2e39cdcce97d393c",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "DESTINATION"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.935Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.479Z"
     },
     {
       "id": "jv-61fed009933d",
@@ -736,15 +736,15 @@
       "height": 900,
       "fileSize": 67566,
       "checksum": "61fed009933d79732619668ad3327dc92ab476cdd506f9ce92dc398d3f18419b",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "AIRCRAFT_EXTERIOR",
         "EMPTY_LEG"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.952Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.480Z"
     },
     {
       "id": "jv-edf2503e980c",
@@ -755,14 +755,14 @@
       "height": 900,
       "fileSize": 21266,
       "checksum": "edf2503e980cdaaeea6ef3b4987acc024f23c7df2b3fdf1abc8b0396cc3de591",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "MEMBERSHIP"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.965Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.480Z"
     },
     {
       "id": "jv-dbc220d5e660",
@@ -773,14 +773,14 @@
       "height": 900,
       "fileSize": 231821,
       "checksum": "dbc220d5e660612455f3c58bb97765464d5375ecf96b562fce3f99d886cc8062",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "DESTINATION"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:40.990Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.481Z"
     },
     {
       "id": "jv-54df8f7208b8",
@@ -791,15 +791,15 @@
       "height": 900,
       "fileSize": 143069,
       "checksum": "54df8f7208b827732fc96d929f32df31955d14c410d9481df2eaba059697b662",
-      "altText": "JetVina media (UNVERIFIED staging)",
+      "altText": "JetVina media (CLIENT_PROVIDED mirror)",
       "usageContexts": [
         "SERVICE",
         "CARGO"
       ],
-      "rightsStatus": "UNVERIFIED",
+      "rightsStatus": "CLIENT_PROVIDED",
       "approvedForStaging": true,
-      "approvedForProduction": false,
-      "syncedAt": "2026-07-18T04:00:41.001Z"
+      "approvedForProduction": true,
+      "syncedAt": "2026-07-24T02:57:23.482Z"
     }
   ]
 }

@@ -2,14 +2,15 @@
 
 | Field | Value |
 |-------|--------|
-| Source | jetvina.com WP uploads |
+| Source | jetvina.com WP uploads (mirrored) |
 | Mirror | `/assets/jetvina/mirror/` |
 | Manifest | `/brand/jetvina/jetvina-media-manifest.json` |
-| rightsStatus | **UNVERIFIED** |
-| Staging remote review | allowed when flags on |
-| Production hotlink | **Forbidden** |
-| Production local publish | **Blocked** until OWNED\|LICENSED\|CLIENT_PROVIDED + approvedForProduction |
+| rightsStatus | **CLIENT_PROVIDED** |
+| Owner decision | W4-04 **option 2** — 24/07/2026 |
+| Staging remote review | optional |
+| Production hotlink | **Forbidden** (use local mirror) |
+| Production local publish | **Allowed** (approvedForProduction) |
 
-Synced: 2026-07-18T04:00:41.002Z
-Records: 42
-Mirrored this run: 42
+Synced/approved: 2026-07-24T02:57:23.537Z
+Records approved: 42
+Skipped (missing local/checksum): 0

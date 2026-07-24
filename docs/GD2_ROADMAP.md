@@ -1,9 +1,10 @@
 # GD2 Roadmap — Web staging nghiệm thu
 
-> **Updated:** 2026-07-14 · **Status:** ACTIVE  
+> **Updated:** 2026-07-24 · **Status:** DEV S1–S4 DONE (trừ SMTP) · **Waiting Owner** O1–O4 + CMS + UAT sign  
 > **DoD page groups:** [JETBAY_WEB_PAGE_DOD.md](./JETBAY_WEB_PAGE_DOD.md)  
 > **Surface:** [WEB_API_SURFACE_MAP.md](./WEB_API_SURFACE_MAP.md)  
-> **Plan chi tiết:** [NEXT_SPRINT_PLAN.md](./NEXT_SPRINT_PLAN.md)
+> **Plan chi tiết:** [NEXT_SPRINT_PLAN.md](./NEXT_SPRINT_PLAN.md)  
+> **Gap còn thiếu:** [GAP_GD1_GD2_BACKLOG.md](./GAP_GD1_GD2_BACKLOG.md) · [BAO_CAO_TIEN_DO_DAY_DU.md](./BAO_CAO_TIEN_DO_DAY_DU.md) §0 & §4
 
 ## Thứ tự ưu tiên trang (khuyến nghị)
 
@@ -48,4 +49,21 @@
 - Charter ×6: live + media brand; copy CMS hoặc chấp nhận static đã ghi.  
 - Account: login + dashboard quotes/bookings (payment còn BLOCKED nếu chưa keys).  
 - Smoke: `smoke-web-api` + `smoke-auth-booking` + manual Quote UI.  
-- Owner đã trả O1–O4.
+- Owner đã trả O1–O4.  
+- [UAT_CHECKLIST.md](./UAT_CHECKLIST.md) có chữ ký Owner.
+
+## Còn thiếu trước NT GĐ2 (24/07)
+
+| ID | Việc | Owner | Status |
+|----|------|-------|--------|
+| G2-01 | SMTP + inbox (T-S4-01) | Owner O4 | BLOCKED |
+| G2-02 | CMS ≥3–5 news + FP copy EN+VI | Owner O10 | OPEN |
+| G2-03 | Feedback UI ≤10 điểm | Owner O2 | OPEN |
+| G2-04 | Visual polish theo feedback | Dev | ONGOING |
+| G2-05 | Media hotlink decision | Owner O5 | OPEN |
+| G2-06 | Chốt thứ tự polish O1 | Owner | OPEN |
+| G2-07 | UAT sign U1–U15 | Owner | OPEN |
+| G2-08 | Smoke pre-NT | Dev | OPEN (chạy tuần 8) |
+| G2-09 | Biên bản NT staging | Hai bên | Tuần 8 |
+
+Chi tiết hạng mục trang: [BAO_CAO_TIEN_DO_DAY_DU.md](./BAO_CAO_TIEN_DO_DAY_DU.md) §4.2.

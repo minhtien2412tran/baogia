@@ -73,7 +73,7 @@ export function JetBayHeader({ locale, currency = 'USD' }: { locale: string; cur
           <div className="jb-header-actions">
             <LocaleCurrencySelector locale={locale} currency={currency} />
             <HeaderUserMenu locale={locale} />
-            <Link href={navHref(locale, '/private-jet-charter')} className="jb-btn-contact">
+            <Link href={navHref(locale, '/contact')} className="jb-btn-contact">
               <AppIcon name="phone" size="sm" aria-hidden />
               {t(locale, 'contactUs')}
             </Link>
