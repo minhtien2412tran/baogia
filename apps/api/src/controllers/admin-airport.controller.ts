@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   ParseIntPipe,
@@ -21,6 +22,7 @@ import { Prisma } from '@prisma/client';
 import { AirportService } from '../services/airport.service';
 import { CreateAirportDto, UpdateAirportDto } from '../dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { StaffGuard } from '../auth/staff.guard';
 import { PermissionGuard } from '../permissions/permission.guard';
 import { RequirePermissions } from '../permissions/require-permissions.decorator';
 import { PermissionService } from '../permissions/permission.service';
@@ -30,7 +32,7 @@ import type { AuthUser } from '../auth/auth.types';
 @ApiTags('Admin Airports')
 @ApiSecurity('X-API-Key')
 @Controller('admin/airports')
-@UseGuards(JwtAuthGuard, PermissionGuard)
+@UseGuards(JwtAuthGuard, StaffGuard, PermissionGuard)
 @ApiBearerAuth('bearer')
 export class AdminAirportController {
   constructor(
@@ -47,7 +49,7 @@ export class AdminAirportController {
   @ApiOperation({
     summary: 'List airports (scoped by user airport permissions)',
     description:
-      'SALES with COUNTRY=VN only sees VN airports. ADMIN sees all. Fees + canParkAircraft included for pricing.',
+      'Empty scopes = unrestricted (legacy). COUNTRY/CONTINENT/SELECTED restrict. ADMIN sees all.',
   })
   async list(
     @CurrentUser() user: AuthUser,
@@ -83,17 +85,33 @@ export class AdminAirportController {
   @Patch(':id')
   @RequirePermissions('airport.manage')
   @ApiOperation({ summary: 'Update airport' })
-  update(
+  async update(
+    @CurrentUser() user: AuthUser,
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateAirportDto,
   ) {
+    const ok = await this.permissions.assertAirportInScope(
+      user.userId,
+      user.role,
+      id,
+    );
+    if (!ok) throw new ForbiddenException('Airport is outside your scope');
     return this.airportService.update(id, body);
   }
 
   @Delete(':id')
   @RequirePermissions('airport.manage')
   @ApiOperation({ summary: 'Delete airport' })
-  remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(
+    @CurrentUser() user: AuthUser,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    const ok = await this.permissions.assertAirportInScope(
+      user.userId,
+      user.role,
+      id,
+    );
+    if (!ok) throw new ForbiddenException('Airport is outside your scope');
     return this.airportService.remove(id);
   }
 }

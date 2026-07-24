@@ -56,7 +56,8 @@
 2. ~~W5-10 SMTP~~ ✅ · **W5-11** chờ Owner · W5-12…14 sau đó  
 3. ~~R4 CMS/media PermissionGuard~~ ✅ DEPLOYED 24/07  
 4. ~~R4 settings/audit + brand settings.*~~ ✅ DEPLOYED 24/07  
-5. R5 scope · W5-12 **sau** Owner W5-11  
+5. ~~R5 scope core (quote/booking/airport) + remove AdminGuard~~ ✅ DEPLOYED 24/07  
+6. W5-12 **sau** Owner W5-11 · Operator portal epic riêng  
 
 **Handoff 1 trang:** [OWNER_HANDOFF_NEXT.md](./OWNER_HANDOFF_NEXT.md)  
 **Biên bản GĐ1 nháp:** [GD1_NT_BIEN_BAN.md](./GD1_NT_BIEN_BAN.md)

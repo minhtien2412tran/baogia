@@ -8,6 +8,12 @@ describe('PermissionService resolution order', () => {
     rolePermission: {
       findUnique: jest.fn(),
     },
+    userAirportScope: {
+      findMany: jest.fn(),
+    },
+    airport: {
+      findFirst: jest.fn(),
+    },
   };
 
   const service = new PermissionService(prisma as never);
@@ -60,5 +66,77 @@ describe('PermissionService resolution order', () => {
     await expect(
       service.hasPermission(2, 'SALES', 'permission.manage'),
     ).resolves.toBe(false);
+  });
+});
+
+describe('PermissionService airport scope (R5)', () => {
+  const prisma = {
+    userPermissionOverride: { findUnique: jest.fn() },
+    rolePermission: { findUnique: jest.fn() },
+    userAirportScope: { findMany: jest.fn() },
+    airport: { findFirst: jest.fn() },
+  };
+  const service = new PermissionService(prisma as never);
+
+  beforeEach(() => jest.clearAllMocks());
+
+  it('ADMIN → unrestricted null', async () => {
+    await expect(service.airportWhereForUser(1, 'ADMIN')).resolves.toBeNull();
+    expect(prisma.userAirportScope.findMany).not.toHaveBeenCalled();
+  });
+
+  it('empty scopes → unrestricted null (legacy)', async () => {
+    prisma.userAirportScope.findMany.mockResolvedValue([]);
+    await expect(service.airportWhereForUser(2, 'SALES')).resolves.toBeNull();
+  });
+
+  it('COUNTRY scope → OR filter', async () => {
+    prisma.userAirportScope.findMany.mockResolvedValue([
+      {
+        scopeType: 'COUNTRY',
+        countryCode: 'VN',
+        continentCode: null,
+        airportId: null,
+      },
+    ]);
+    await expect(service.airportWhereForUser(2, 'SALES')).resolves.toEqual({
+      OR: [{ countryCode: 'VN' }],
+    });
+  });
+
+  it('quoteRequestWhere wraps airport filter on legs', async () => {
+    prisma.userAirportScope.findMany.mockResolvedValue([
+      {
+        scopeType: 'COUNTRY',
+        countryCode: 'VN',
+        continentCode: null,
+        airportId: null,
+      },
+    ]);
+    const where = await service.quoteRequestWhereForUser(2, 'SALES');
+    expect(where).toEqual({
+      legs: {
+        some: {
+          OR: [
+            { fromAirport: { OR: [{ countryCode: 'VN' }] } },
+            { toAirport: { OR: [{ countryCode: 'VN' }] } },
+          ],
+        },
+      },
+    });
+  });
+
+  it('NONE only → impossible id=-1', async () => {
+    prisma.userAirportScope.findMany.mockResolvedValue([
+      {
+        scopeType: 'NONE',
+        countryCode: null,
+        continentCode: null,
+        airportId: null,
+      },
+    ]);
+    await expect(service.airportWhereForUser(2, 'SALES')).resolves.toEqual({
+      id: -1,
+    });
   });
 });

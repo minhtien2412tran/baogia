@@ -1,9 +1,11 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
 import { CustomerCareService } from './customer-care/customer-care.service';
@@ -11,6 +13,7 @@ import { FlightNotifyService, publicBookingRef } from './flight-notify.service';
 import { CreateBookingDto, UpdateBookingStatusDto } from '../dto';
 import { formatEmailItinerary } from '../utils/email-datetime';
 import { fireAndForget } from '../common/utils/safe-async';
+import { PermissionService } from '../permissions/permission.service';
 
 const BOOKING_STATUSES = [
   'draft',
@@ -49,6 +52,7 @@ export class BookingService {
     private readonly audit: AuditService,
     private readonly customerCare: CustomerCareService,
     private readonly flightNotify: FlightNotifyService,
+    private readonly permissions: PermissionService,
   ) {}
 
   private normalizeStatus(status: string): BookingStatus {
@@ -348,10 +352,25 @@ export class BookingService {
     }));
   }
 
-  async findById(id: number, userId?: number) {
+  async findById(id: number, userId?: number, opts?: { role?: string; asStaff?: boolean }) {
     const booking = await this.findBookingOrThrow(id);
-    if (userId && booking.userId !== userId) {
+    if (userId && !opts?.asStaff && booking.userId !== userId) {
       throw new NotFoundException(`Booking #${id} not found`);
+    }
+    if (opts?.asStaff && userId != null && opts.role) {
+      const scopeWhere = await this.permissions.bookingWhereForUser(
+        userId,
+        opts.role,
+      );
+      if (scopeWhere) {
+        const allowed = await this.prisma.booking.findFirst({
+          where: { AND: [{ id }, scopeWhere as Prisma.BookingWhereInput] },
+          select: { id: true },
+        });
+        if (!allowed) {
+          throw new ForbiddenException('Booking is outside your airport scope');
+        }
+      }
     }
     return this.formatBooking(booking);
   }
@@ -434,15 +453,28 @@ export class BookingService {
     status?: string;
     page?: number;
     limit?: number;
+    userId?: number;
+    role?: string;
   }) {
     const page = filters?.page ?? 1;
     const limit = Math.min(filters?.limit ?? 20, 100);
     const skip = (page - 1) * limit;
 
-    const where =
-      filters?.status && filters.status !== 'all'
-        ? { bookingStatus: STATUS_TO_DB[this.normalizeStatus(filters.status)] }
-        : {};
+    const parts: Prisma.BookingWhereInput[] = [];
+    if (filters?.status && filters.status !== 'all') {
+      parts.push({
+        bookingStatus: STATUS_TO_DB[this.normalizeStatus(filters.status)],
+      });
+    }
+    if (filters?.userId != null && filters.role) {
+      const scopeWhere = (await this.permissions.bookingWhereForUser(
+        filters.userId,
+        filters.role,
+      )) as Prisma.BookingWhereInput | null;
+      if (scopeWhere) parts.push(scopeWhere);
+    }
+    const where: Prisma.BookingWhereInput =
+      parts.length === 0 ? {} : parts.length === 1 ? parts[0]! : { AND: parts };
 
     const [total, bookings] = await Promise.all([
       this.prisma.booking.count({ where }),

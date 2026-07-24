@@ -24,6 +24,7 @@
 * BE error harden (filter · Prisma · fireAndForget): **DEPLOYED** · `jetbay-be-20260724-113424` · envelope smoke PASS
 * R4 CMS/media `PermissionGuard`: **DEPLOYED** · `jetbay-be-20260724-133626` · smoke-admin-crud 16/16
 * R4 settings/audit + brand `settings.*`: **DEPLOYED** · `jetbay-be-20260724-134852` · smoke PASS
+* R5 airport/quote/booking scope + remove `AdminGuard`: **DEPLOYED** · `jetbay-be-20260724-140317`
 * W5-11…14 — **chưa đóng** (chờ Owner inbox rồi Dev W5-12…)
 * W6-01 nháp biên bản GĐ1: **DONE**
 * W6-02 pack phương án A: **READY** (chờ lịch + ký)

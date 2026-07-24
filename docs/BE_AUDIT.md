@@ -33,7 +33,7 @@ Mỗi phần dùng cùng template: Mục tiêu · Routes · Models · Status · 
 | Local port | `4000` (`.env`) |
 | Prod port | `127.0.0.1:3010` (PM2 `jetbay-be`) |
 | Global guards | `ThrottlerGuard` → `ApiKeyGuard` |
-| Route guards | `JwtAuthGuard`, `AdminGuard`, `OptionalJwtAuthGuard` |
+| Route guards | `JwtAuthGuard`, `StaffGuard`, `PermissionGuard`, `OptionalJwtAuthGuard` |
 | Validation | `ValidationPipe` whitelist + `forbidNonWhitelisted` |
 | Delivery | G1 PASS · G3 PASS · G4 code sẵn, chờ keys KH |
 
@@ -181,8 +181,8 @@ Throttle: login 10/min · register/OTP/refresh 5/min (tier `auth`).
 | **Routes** | `/admin/permissions/*` (`AdminPermissionsController`) · guard `PermissionGuard` + `@RequirePermissions(...)` + `permission.catalog.ts` |
 | **Models** | `RolePermission`, `UserPermissionOverride`, `UserAirportScope` |
 | **Status** | **partial → ops-core migrated (21/07 local)** — engine + catalog + guard OK; **StaffGuard+PermissionGuard** trên dashboard, quotes (+status), bookings (đã có), users, aircraft, FP/EL/jet-card/travel-credit, partners; export `quote|booking|user|payment|contract.export` |
-| **Gaps** | Data scope R5 · orphan content_* catalog keys · deprecate/remove unused `AdminGuard` file. Re-seed SALES `content.*` / `settings.*` nếu staff cần CMS. |
-| **Smoke** | `permission.service.spec.ts` · `smoke-admin-crud` 16/16 · `smoke-r4-settings-audit.sh` **PASS** (audit/health/brand) |
+| **Gaps** | Orphan content_* catalog keys · Operator portal epic. Re-seed SALES scopes/`content.*` nếu staff cần. |
+| **Smoke** | `permission.service.spec.ts` 10/10 · `smoke-admin-crud` · `smoke-r4-settings-audit` |
 
 ---
 
@@ -244,7 +244,7 @@ Throttle: login 10/min · register/OTP/refresh 5/min (tier `auth`).
 |-----|------|-------|
 | **P1** | ~~Set prod `APP_ENV=production`~~ | ✅ 2026-07-10 |
 | **P1** | G4 keys từ KH | SMTP, OAuth, Stripe/OnePay/9Pay, SMS |
-| **P1** | ~~Đồng nhất guard admin R4~~ | ✅ CMS/media/settings/audit · `AdminGuard` unused · còn R5 scope |
+| **P1** | ~~Đồng nhất guard + R5 scope core~~ | ✅ R4 + quote/booking/airport scope · `AdminGuard` removed 24/07 |
 | **P2** | ~~Smoke HTTP domain mới~~ | ✅ 2026-07-20 `smoke-bao-gia-contracts.mjs` (quotes/locale · pricing · PDF/Word · contracts) |
 | **P2** | Nest feature modules | Auth + Quotes (phase 1) → xem BE_ARCHITECTURE; Commercial/Bookings/Content/Admin còn phẳng |
 | **P2** | Split `dto.ts` theo module | Sau khi modules ổn định |

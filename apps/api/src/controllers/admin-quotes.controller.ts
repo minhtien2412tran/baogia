@@ -40,6 +40,7 @@ export class AdminQuotesController {
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'limit', required: false })
   list(
+    @CurrentUser() user: AuthUser,
     @Query('status') status?: string,
     @Query('page') page?: string,
     @Query('limit') limit?: string,
@@ -48,14 +49,16 @@ export class AdminQuotesController {
       status,
       page: page ? Number(page) : 1,
       limit: limit ? Number(limit) : 20,
+      userId: user.userId,
+      role: user.role,
     });
   }
 
   @Get('quotes/:id')
   @RequirePermissions('quote.view')
   @ApiOperation({ summary: 'Get quote request detail with offers' })
-  getOne(@Param('id', ParseIntPipe) id: number) {
-    return this.quotes.getQuote(id);
+  getOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthUser) {
+    return this.quotes.getQuote(id, { userId: user.userId, role: user.role });
   }
 
   @Post('quotes/:id/offers')

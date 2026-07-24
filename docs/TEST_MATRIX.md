@@ -1,14 +1,14 @@
 # Test Matrix — JetBay
 
-> **Updated:** 2026-07-24 ~13:50 · Snapshot [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)
+> **Updated:** 2026-07-24 ~14:05 · Snapshot [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)
 
 ## Latest evidence (prefer these)
 
 ```text
-Session 24/07 ~13:50 ICT:
-R4 settings/audit PASS — smoke-r4-settings-audit (audit 200 · health 200 · brand 200)
-API backup jetbay-be-20260724-134852 · brand perms → settings.view/manage
-AdminGuard: unused (deprecated)
+Session 24/07 ~14:05 ICT:
+R5 airport/quote/booking scope DEPLOYED — jetbay-be-20260724-140317
+AdminGuard removed · permission.service.spec 10/10 PASS
+Policy: empty scopes = unrestricted (legacy); COUNTRY/CONTINENT/SELECTED filter
 W5-10 PASS · W5-11 PENDING_OWNER · W5-12 blocked until inbox
 ```
 

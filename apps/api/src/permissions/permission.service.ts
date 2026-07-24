@@ -143,8 +143,13 @@ export class PermissionService {
 
   /**
    * Build Prisma Airport where filter from user scopes.
-   * Empty scopes or ALL → no restriction (null).
-   * NONE → impossible filter.
+   *
+   * Policy (R5):
+   * - ADMIN → unrestricted (`null`)
+   * - Empty scopes → unrestricted (`null`) — legacy default; assign NONE/COUNTRY/… to restrict
+   * - ALL → unrestricted
+   * - NONE only → impossible filter `{ id: -1 }`
+   * - CONTINENT / COUNTRY / SELECTED_AIRPORTS → OR of those filters
    */
   async airportWhereForUser(
     userId: number,
@@ -173,6 +178,32 @@ export class PermissionService {
     }
     if (or.length === 0) return { id: -1 };
     return { OR: or };
+  }
+
+  /** QuoteRequest filter: any leg from/to airport in scope. `null` = unrestricted. */
+  async quoteRequestWhereForUser(
+    userId: number,
+    role: string,
+  ): Promise<object | null> {
+    const airportWhere = await this.airportWhereForUser(userId, role);
+    if (!airportWhere) return null;
+    return {
+      legs: {
+        some: {
+          OR: [{ fromAirport: airportWhere }, { toAirport: airportWhere }],
+        },
+      },
+    };
+  }
+
+  /** Booking filter via quoteRequest legs. `null` = unrestricted. */
+  async bookingWhereForUser(
+    userId: number,
+    role: string,
+  ): Promise<object | null> {
+    const quoteWhere = await this.quoteRequestWhereForUser(userId, role);
+    if (!quoteWhere) return null;
+    return { quoteRequest: quoteWhere };
   }
 
   async assertAirportInScope(

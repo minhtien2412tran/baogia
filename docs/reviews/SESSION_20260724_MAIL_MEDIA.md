@@ -24,6 +24,7 @@
 | BE error harden (filter + safe notify) | **DEPLOYED** | backup `jetbay-be-20260724-113424` · envelope PASS |
 | R4 CMS/media PermissionGuard | **DEPLOYED** | backup `jetbay-be-20260724-133626` · smoke-admin-crud 16/16 |
 | R4 settings/audit + brand settings.* | **DEPLOYED** | backup `jetbay-be-20260724-134852` · smoke-r4-settings-audit PASS |
+| R5 quote/booking/airport scope · AdminGuard removed | **DEPLOYED** | backup `jetbay-be-20260724-140317` · unit 10/10 |
 
 ## Deploy refs (VPS)
 
@@ -32,6 +33,7 @@
 - API error harden: `jetbay-be-20260724-113424`
 - API R4 CMS/media: `jetbay-be-20260724-133626`
 - API R4 settings/audit: `jetbay-be-20260724-134852`
+- API R5 scope: `jetbay-be-20260724-140317`
 
 ## Quy tắc agent (Owner yêu cầu 24/07)
 

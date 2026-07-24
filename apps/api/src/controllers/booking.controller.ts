@@ -136,6 +136,7 @@ export class AdminBookingController {
   @ApiOperation({ summary: 'List all bookings (admin)' })
   @ApiResponse({ status: 200, description: 'Paginated booking list.' })
   findAll(
+    @CurrentUser() user: AuthUser,
     @Query('status') status?: string,
     @Query('page') page?: string,
     @Query('limit') limit?: string,
@@ -144,6 +145,8 @@ export class AdminBookingController {
       status,
       page: page ? Number(page) : undefined,
       limit: limit ? Number(limit) : undefined,
+      userId: user.userId,
+      role: user.role,
     });
   }
 
@@ -151,8 +154,11 @@ export class AdminBookingController {
   @RequirePermissions('booking.view')
   @ApiOperation({ summary: 'Get booking by ID (admin)' })
   @ApiResponse({ status: 200, description: 'Booking details.' })
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.bookingService.findById(id);
+  findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthUser) {
+    return this.bookingService.findById(id, user.userId, {
+      role: user.role,
+      asStaff: true,
+    });
   }
 
   @Patch(':id/status')

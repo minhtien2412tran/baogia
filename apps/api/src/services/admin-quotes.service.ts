@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -9,6 +10,7 @@ import { AuditService } from './audit.service';
 import { CustomerCareService } from './customer-care/customer-care.service';
 import { CreateQuoteOfferDto } from '../dto';
 import { fireAndForget } from '../common/utils/safe-async';
+import { PermissionService } from '../permissions/permission.service';
 
 @Injectable()
 export class AdminQuotesService {
@@ -16,20 +18,32 @@ export class AdminQuotesService {
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
     private readonly customerCare: CustomerCareService,
+    private readonly permissions: PermissionService,
   ) {}
 
   async listQuotes(filters?: {
     status?: string;
     page?: number;
     limit?: number;
+    userId?: number;
+    role?: string;
   }) {
     const page = filters?.page ?? 1;
     const limit = Math.min(filters?.limit ?? 20, 100);
     const skip = (page - 1) * limit;
-    const where =
-      filters?.status && filters.status !== 'all'
-        ? { status: filters.status.toUpperCase() }
-        : {};
+    const parts: Prisma.QuoteRequestWhereInput[] = [];
+    if (filters?.status && filters.status !== 'all') {
+      parts.push({ status: filters.status.toUpperCase() });
+    }
+    if (filters?.userId != null && filters.role) {
+      const scopeWhere = (await this.permissions.quoteRequestWhereForUser(
+        filters.userId,
+        filters.role,
+      )) as Prisma.QuoteRequestWhereInput | null;
+      if (scopeWhere) parts.push(scopeWhere);
+    }
+    const where: Prisma.QuoteRequestWhereInput =
+      parts.length === 0 ? {} : parts.length === 1 ? parts[0]! : { AND: parts };
 
     const [total, quotes] = await Promise.all([
       this.prisma.quoteRequest.count({ where }),
@@ -67,7 +81,7 @@ export class AdminQuotesService {
     };
   }
 
-  async getQuote(id: number) {
+  async getQuote(id: number, opts?: { userId?: number; role?: string }) {
     const quote = await this.prisma.quoteRequest.findUnique({
       where: { id },
       include: {
@@ -86,6 +100,22 @@ export class AdminQuotesService {
       },
     });
     if (!quote) throw new NotFoundException(`Quote #${id} not found`);
+
+    if (opts?.userId != null && opts.role) {
+      const scopeWhere = await this.permissions.quoteRequestWhereForUser(
+        opts.userId,
+        opts.role,
+      );
+      if (scopeWhere) {
+        const allowed = await this.prisma.quoteRequest.findFirst({
+          where: { AND: [{ id }, scopeWhere as Prisma.QuoteRequestWhereInput] },
+          select: { id: true },
+        });
+        if (!allowed) {
+          throw new ForbiddenException('Quote is outside your airport scope');
+        }
+      }
+    }
 
     return {
       id: quote.id,
