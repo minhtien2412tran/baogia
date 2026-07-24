@@ -23,6 +23,10 @@
 | **Owner handoff (tiếp theo)** | [OWNER_HANDOFF_NEXT.md](./OWNER_HANDOFF_NEXT.md) | ✅ Canonical — News · UX · ký GĐ1 A · W5-11 |
 | **Owner paste forms** | [OWNER_INPUT_FORMS.md](./OWNER_INPUT_FORMS.md) | ✅ W5-11 rubric đầy đủ · W6-02 · OP-D · W2-05 |
 | **Mail automation SoT** | [ORDER_EMAIL_AUTOMATION.md](./ORDER_EMAIL_AUTOMATION.md) | ✅ W5-10 PASS · W5-12…13 DEV_API · W5-11 Owner |
+| **Status tổng hợp FE/BE/Admin** | [STATUS_CURRENT.md](./STATUS_CURRENT.md) | ✅ 24/07 — index + 3 file app |
+| **Status Web FE** | [STATUS_WEB_FE.md](./STATUS_WEB_FE.md) | ✅ Contact/i18n/media LIVE |
+| **Status API BE** | [STATUS_API_BE.md](./STATUS_API_BE.md) | ✅ SMTP · R4/R5 · mail W5 |
+| **Status Admin Dashboard** | [STATUS_ADMIN_DASHBOARD.md](./STATUS_ADMIN_DASHBOARD.md) | ✅ RBAC R4/R5 · Portal NOT STARTED |
 | **Operator Portal epic** | [OPERATOR_PORTAL_EPIC.md](./OPERATOR_PORTAL_EPIC.md) | ⬜ NOT STARTED — chờ OP-D* |
 | **Session 24/07 snapshot** | [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md) | ✅ không hỏi lại PASS |
 | **W6-02 signing pack** | [W6_02_GD1_SIGNING_PACK.md](./W6_02_GD1_SIGNING_PACK.md) | ✅ **Phương án A** · SMTP W5-10 PASS |

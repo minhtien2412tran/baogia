@@ -45,6 +45,7 @@
 | CMS inventory | [reviews/CMS_INVENTORY_20260724.md](./reviews/CMS_INVENTORY_20260724.md) |
 | Media audit | [reviews/MEDIA_AUDIT_20260724.md](./reviews/MEDIA_AUDIT_20260724.md) |
 | Mail automation SoT | [ORDER_EMAIL_AUTOMATION.md](./ORDER_EMAIL_AUTOMATION.md) |
+| Status FE/BE/Admin | [STATUS_CURRENT.md](./STATUS_CURRENT.md) |
 | Session snapshot 24/07 | [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md) |
 | Test evidence | [TEST_MATRIX.md](./TEST_MATRIX.md) |
 | SMTP prep | [SMTP_SETUP_GUIDE.md](./SMTP_SETUP_GUIDE.md) |

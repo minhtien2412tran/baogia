@@ -7,13 +7,14 @@ Chat sessions do **not** remember progress. Before coding, read and update the f
 
 ## Session start (agents)
 
-1. Read [docs/CONTINUE_AT_HOME.md](./docs/CONTINUE_AT_HOME.md) — progress SoT (do **not** invent status from chat).
+1. Read [docs/CONTINUE_AT_HOME.md](./docs/CONTINUE_AT_HOME.md) — progress SoT (do **not** invent status from chat). App snapshot: [docs/STATUS_CURRENT.md](./docs/STATUS_CURRENT.md).
 2. Default working branch: **`jetvina`** — `git checkout jetvina && git pull origin jetvina`. `main` is a sync mirror after alignment (see [docs/GIT_WORKFLOW.md](./docs/GIT_WORKFLOW.md)).
 3. Never commit `.env` / secrets; never paste production passwords into chat or `/baocaotiendo`.
 4. When touching API contracts: run `SYNC_MODE=prod-docs pnpm smoke:api-sync` (Basic auth from VPS `.env` only — see [docs/API_SYNC_SMOKE.md](./docs/API_SYNC_SMOKE.md)).
 5. Before claiming “uncommitted / residual”: run `git status` (do not trust stale doc lines).
 6. **After every meaningful code/deploy change (mandatory — do not wait for Owner to ask):** update status in markdown in the **same turn**:
    - Always: [docs/CONTINUE_AT_HOME.md](./docs/CONTINUE_AT_HOME.md) (“Việc tiếp theo” + short session log).
+   - App-level snapshot when FE/BE/Admin status changed: [docs/STATUS_CURRENT.md](./docs/STATUS_CURRENT.md) (+ matching STATUS_WEB_FE / STATUS_API_BE / STATUS_ADMIN_DASHBOARD).
    - If Owner-facing / W* tasks: [docs/OWNER_HANDOFF_NEXT.md](./docs/OWNER_HANDOFF_NEXT.md).
    - If mail/SMTP: [docs/ORDER_EMAIL_AUTOMATION.md](./docs/ORDER_EMAIL_AUTOMATION.md) + [docs/TEST_MATRIX.md](./docs/TEST_MATRIX.md).
    - If smoke/evidence: [docs/TEST_MATRIX.md](./docs/TEST_MATRIX.md).
@@ -25,6 +26,10 @@ Chat sessions do **not** remember progress. Before coding, read and update the f
 | Doc | Purpose |
 |-----|---------|
 | [docs/CONTINUE_AT_HOME.md](./docs/CONTINUE_AT_HOME.md) | **Where we left off** — start here on a new machine |
+| [docs/STATUS_CURRENT.md](./docs/STATUS_CURRENT.md) | **App status index** — FE · BE · Admin (24/07) |
+| [docs/STATUS_WEB_FE.md](./docs/STATUS_WEB_FE.md) | Web FE (`apps/web`) snapshot |
+| [docs/STATUS_API_BE.md](./docs/STATUS_API_BE.md) | API BE (`apps/api`) snapshot |
+| [docs/STATUS_ADMIN_DASHBOARD.md](./docs/STATUS_ADMIN_DASHBOARD.md) | Admin dashboard (`apps/admin`) snapshot |
 | [docs/OWNER_HANDOFF_NEXT.md](./docs/OWNER_HANDOFF_NEXT.md) | **Owner handoff** — W2-05 · W4-04 · W5 · W3-06 · NT GĐ1/GĐ2 (24/07) |
 | [docs/NEXT_SPRINT_PLAN.md](./docs/NEXT_SPRINT_PLAN.md) | **Sprint plan** — Web↔API · sync · docs · việc KH |
 | [docs/WEB_API_SURFACE_MAP.md](./docs/WEB_API_SURFACE_MAP.md) | Web/Admin ↔ API status matrix |
