@@ -32,14 +32,15 @@ URL: https://api.minhtien.online · https://docs.minhtien.online/swagger
 
 ## 3. Residual (chọn một)
 
-### ☐ Phương án A — SMTP đã PASS
+### ☑ Phương án A — SMTP đã PASS *(khuyến nghị 24/07)*
 
-- Ngày verify inbox: ________  
-- Evidence: TEST_MATRIX / screenshot inbox (không đính password)
+- Ngày verify kỹ thuật (API send): **2026-07-24** (~10:52 ICT)  
+- Evidence: [TEST_MATRIX.md](./TEST_MATRIX.md) · quote **#61** / **#62** · `EmailService` sent · `smtp=true` / `smtpCatcher=false`  
+- Owner xác nhận inbox (điền): ☐ SEEN · ☐ SPAM · ☐ NOT_SEEN — ngày: ________  
 
 ### ☐ Phương án B — SMTP chuyển giai đoạn sau (không chặn đóng GĐ1)
 
-Dùng nguyên văn phụ lục trong [GD1_SIGNOFF.md](./GD1_SIGNOFF.md) § Residual SMTP:
+> **Không dùng** khi đã tick A. Phụ lục cũ: [GD1_SIGNOFF.md](./GD1_SIGNOFF.md) (residual).
 
 - Chịu trách nhiệm cung cấp: Anh Tuấn Anh  
 - Hạn đề xuất: trước NT GĐ2 (tuần 8)  

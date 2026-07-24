@@ -10,24 +10,48 @@ const FALLBACK: Record<
   { subject: string; htmlBody: string; textBody: string }
 > = {
   operator_flight_notify: {
-    subject: '[JetVina] New charter request #{{bookingId}} — {{operatorName}}',
-    htmlBody: `<p>Hello <strong>{{operatorName}}</strong>,</p>
-<p>A new booking <strong>#{{bookingId}}</strong> requires operational confirmation.</p>
-<p><strong>Customer:</strong> {{customerName}} ({{customerEmail}})<br/>
-<strong>Status:</strong> {{bookingStatus}}<br/>
-<strong>Itinerary:</strong> {{itinerary}}</p>
-<p>Please confirm aircraft readiness within 2 hours.</p>`,
-    textBody:
-      'Booking #{{bookingId}} for {{customerName}}. Status: {{bookingStatus}}. Itinerary: {{itinerary}}',
+    subject: '[JetVina] New charter booking {{bookingReference}} — check departure time inside',
+    htmlBody: `<p>A new charter booking requires your review.</p>
+<p>
+  <strong>Booking:</strong> {{bookingReference}}<br/>
+  <strong>Customer:</strong> {{customerName}} · {{customerEmail}}<br/>
+  <strong>Aircraft:</strong> {{aircraftLabel}}<br/>
+  <strong>Passengers:</strong> {{passengerCount}}<br/>
+  <strong>Itinerary (each leg · origin local time):</strong><br/>{{itineraryHtml}}<br/>
+  <strong>First departure (origin airport local):</strong> {{departureDateTime}}<br/>
+  <strong>Timezone IANA:</strong> {{departureTimezone}}<br/>
+  <strong>Current status:</strong> {{bookingStatus}}
+</p>
+<p>Please review aircraft availability and respond through the approved JetVina operations channel.</p>`,
+    textBody: `A new charter booking requires your review.
+
+Booking: {{bookingReference}}
+Customer: {{customerName}} · {{customerEmail}}
+Aircraft: {{aircraftLabel}}
+Passengers: {{passengerCount}}
+Itinerary (each leg · origin local time):
+{{itinerary}}
+First departure (origin airport local): {{departureDateTime}}
+Timezone IANA: {{departureTimezone}}
+Current status: {{bookingStatus}}
+
+Please review aircraft availability and respond through the approved JetVina operations channel.`,
   },
   admin_flight_notify: {
-    subject: '[JetVina Admin] Booking #{{bookingId}} — {{bookingStatus}}',
-    htmlBody: `<p>Admin notification</p>
-<p>Booking <strong>#{{bookingId}}</strong> · Operator: {{operatorName}} · Status: {{bookingStatus}}</p>
-<p>Customer: {{customerName}} / {{customerEmail}}</p>
-<p>Itinerary: {{itinerary}}</p>`,
+    subject: '[JetVina Admin] {{bookingReference}} · {{bookingStatus}} · {{operatorName}}',
+    htmlBody: `<p>Admin / Sales notification</p>
+<p>
+  <strong>Booking:</strong> {{bookingReference}}<br/>
+  <strong>Operator:</strong> {{operatorName}}<br/>
+  <strong>Aircraft:</strong> {{aircraftLabel}} · Pax {{passengerCount}}<br/>
+  <strong>Customer:</strong> {{customerName}} / {{customerEmail}}<br/>
+  <strong>Status:</strong> {{bookingStatus}} ({{event}})<br/>
+  <strong>Itinerary:</strong><br/>{{itineraryHtml}}<br/>
+  <strong>First departure (origin local):</strong> {{departureDateTime}}<br/>
+  <strong>Timezone IANA:</strong> {{departureTimezone}}
+</p>`,
     textBody:
-      'Admin: Booking #{{bookingId}} operator={{operatorName}} status={{bookingStatus}} itinerary={{itinerary}}',
+      'Admin: {{bookingReference}} operator={{operatorName}} aircraft={{aircraftLabel}} status={{bookingStatus}}\n{{itinerary}}\nFirst departure: {{departureDateTime}} ({{departureTimezone}})',
   },
 };
 
@@ -119,6 +143,8 @@ export class EmailTemplateService {
     vars: TemplateVars;
     campaignKey?: string;
     referenceId?: string;
+    /** customer | operator | sales — for SoT idempotency / audit only */
+    recipientGroup?: string;
   }): Promise<{ sent: boolean; reason?: string }> {
     const tpl = await this.get(opts.key, opts.locale ?? 'en');
     const subject = this.render(tpl.subject, opts.vars);
@@ -130,25 +156,50 @@ export class EmailTemplateService {
 
     const campaignKey = opts.campaignKey ?? opts.key;
     const referenceId = opts.referenceId ?? '';
+    const email = opts.to.trim().toLowerCase();
 
     try {
+      const existing = await this.prisma.emailCampaignLog.findUnique({
+        where: {
+          campaignKey_email_referenceId: {
+            campaignKey,
+            email,
+            referenceId,
+          },
+        },
+      });
+      if (existing?.status === 'SENT') {
+        return { sent: true, reason: 'idempotent_skip' };
+      }
+
       await this.prisma.emailCampaignLog.upsert({
         where: {
           campaignKey_email_referenceId: {
             campaignKey,
-            email: opts.to,
+            email,
             referenceId,
           },
         },
         create: {
           campaignKey,
-          email: opts.to,
+          email,
           referenceId,
           locale: opts.locale ?? 'en',
           status: 'PENDING',
-          meta: opts.vars as object,
+          meta: {
+            ...opts.vars,
+            recipientGroup: opts.recipientGroup,
+          } as object,
         },
-        update: { status: 'PENDING', error: null },
+        update: {
+          // Do not reset SENT; only re-queue FAILED/PENDING
+          status: 'PENDING',
+          error: null,
+          meta: {
+            ...opts.vars,
+            recipientGroup: opts.recipientGroup,
+          } as object,
+        },
       });
     } catch (e) {
       this.logger.warn(`campaign log upsert failed: ${String(e)}`);
@@ -163,11 +214,11 @@ export class EmailTemplateService {
 
     await this.prisma.emailCampaignLog
       .updateMany({
-        where: { campaignKey, email: opts.to, referenceId },
+        where: { campaignKey, email, referenceId },
         data: {
           status: result.sent ? 'SENT' : 'FAILED',
           sentAt: result.sent ? new Date() : null,
-          error: result.reason ?? null,
+          error: result.reason ? String(result.reason).slice(0, 500) : null,
         },
       })
       .catch(() => undefined);

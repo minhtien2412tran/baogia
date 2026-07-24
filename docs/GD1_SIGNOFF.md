@@ -67,13 +67,25 @@ Thực hiện: `APP_ENV=production`, clear MinIO broken endpoint, `prisma migrat
 
 **Trạng thái chuẩn (24/07):** `TECHNICALLY DONE — PENDING CONTRACTUAL SIGN-OFF`
 
+### SMTP production (W5 / T-S4-01) — cập nhật 24/07 ~10:52
+
+```text
+Configuration: PASS · smtp=true · smtpCatcher=false · smtpDeliverable=true
+Provider meta: SMTP_HOST=smtp.gmail.com · PORT=465 · SECURE=true · ALLOW_CATCHER=false
+Evidence send: EmailService sent quote #61 + #62 (customer ACK + sales alert)
+Newsletter: emailDeliverable=true (smoke:newsletter-smtp)
+Retry: EmailCampaignLog attempts < 3 (code path verified)
+Sign-off path: phương án A — không cần residual SMTP
+```
+
 *GĐ1 kỹ thuật đạt — mở GĐ2 web polish theo [JETBAY_WORK_PLAN.md](./JETBAY_WORK_PLAN.md).*
 
 ---
 
-## Phụ lục — Residual SMTP (phương án B · copy vào biên bản họp)
+## Phụ lục — Residual SMTP (phương án B · **không dùng** nếu đã PASS ở trên)
 
-> Dùng khi Owner **chưa** cấu hình SMTP production nhưng hai bên vẫn muốn ký đóng GĐ1.
+> Chỉ dùng khi Owner **chưa** cấu hình SMTP production nhưng hai bên vẫn muốn ký đóng GĐ1.  
+> **24/07:** SMTP đã PASS → bỏ phụ lục này khi họp ký.
 
 ```text
 RESIDUAL — SMTP PRODUCTION (không chặn đóng GĐ1)

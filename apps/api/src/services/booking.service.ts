@@ -6,8 +6,9 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
 import { CustomerCareService } from './customer-care/customer-care.service';
-import { FlightNotifyService } from './flight-notify.service';
+import { FlightNotifyService, publicBookingRef } from './flight-notify.service';
 import { CreateBookingDto, UpdateBookingStatusDto } from '../dto';
+import { formatEmailItinerary } from '../utils/email-datetime';
 
 const BOOKING_STATUSES = [
   'draft',
@@ -270,12 +271,23 @@ export class BookingService {
     );
 
     if (booking.user) {
+      const legs = booking.quoteRequest?.legs ?? [];
+      const localeHint = booking.quoteRequest?.locale ?? 'en';
+      const { itinerary, departureDateTime, departureTimezone } = formatEmailItinerary(
+        legs,
+        localeHint.startsWith('vi') ? 'vi' : localeHint.startsWith('zh') ? 'zh-cn' : 'en',
+      );
       void this.customerCare.onBookingCreated({
         bookingId: booking.id,
+        bookingReference: publicBookingRef(booking),
         userId,
         email: booking.user.email,
         firstName: booking.user.firstName,
         locale: booking.quoteRequest?.locale ?? undefined,
+        passengerCount: booking.passengers?.length,
+        itinerary,
+        departureDateTime,
+        departureTimezone,
       });
     }
 

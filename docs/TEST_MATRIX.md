@@ -1,18 +1,18 @@
 # Test Matrix — JetBay
 
-> **Updated:** 2026-07-24 · **Status:** Wave 0–1 + Wave 2 Dev/3a/4/5a session DONE · Contact **200** · Owner SMTP/CMS/O5 still blocked · [reviews/GD2_PAGE_WALK_20260724.md](./reviews/GD2_PAGE_WALK_20260724.md)
+> **Updated:** 2026-07-24 ~11:20 · Snapshot [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)
 
 ## Latest evidence (prefer these)
 
 ```text
-Session 24/07 afternoon:
-Contact EN/VI: 200 (deployed)
-smoke-web-api: PASS quote #60
-smoke-auth-booking: PASS booking #13
-audit:i18n: fail=0 warn=10 (unchanged)
-CMS inventory: docs/reviews/CMS_INVENTORY_20260724.md
-Media audit: docs/reviews/MEDIA_AUDIT_20260724.md (jetvina hotlink 44)
-SMTP: catcher — T-S4-01 BLOCKED_OWNER
+Session 24/07 ~11:20 ICT:
+integrations: smtp=true · smtpCatcher=false · smtpDeliverable=true
+W5-10 PASS · Email datetime tz PASS (utils/email-datetime)
+W5-11 PENDING_OWNER (#61/#62 inbox)
+W5-12 contact #62 / quote #61 — API "Email sent" (logs)
+audit:i18n: fail=0 warn=0
+Media: jetvina hotlink=0 · Contact 200
+Mail SoT: ORDER_EMAIL_AUTOMATION.md
 ```
 
 | Test | Command | Environment | Result | PASS | FAIL | Ghi chú |
@@ -21,12 +21,14 @@ SMTP: catcher — T-S4-01 BLOCKED_OWNER
 | Contact pages | curl `/en-us/contact` `/vi/contact` | prod | **PASS** | 2 | 0 | was 404 |
 | smoke-web-api | `node …/smoke-web-api.mjs` | prod | **PASS** | 9 | 0 | quote **#60** |
 | smoke-auth-booking | `API_URL=https://api.minhtien.online …` | prod | **PASS** | 4 | 0 | booking **#13** |
-| audit:i18n | `pnpm audit:i18n` | local | PARTIAL | 35 | 0 | warn=10 |
+| audit:i18n | `pnpm audit:i18n` | local | **PASS** | 45 | 0 | warn=0 |
 | CMS inventory | `node scripts/cms-inventory-audit.mjs` | prod API | DONE | — | — | News n=1 |
-| Media audit | `node scripts/media-domain-audit.mjs` | prod HTML | DONE | — | 0 broken sample | O5 pending |
-| Page walk | [GD2_PAGE_WALK_20260724](./reviews/GD2_PAGE_WALK_20260724.md) | prod | PARTIAL | — | — | Contact fixed |
-| smoke:newsletter-smtp | `pnpm smoke:newsletter-smtp` | prod | PASS flag | — | — | deliverable=false |
-| CMS publish-cycle W2-09 | `node scripts/smoke-cms-publish-cycle.mjs` (VPS) | prod | **PASS** | — | 0 | draft→publish→unpublish→delete id=67 · 24/07 |
+| Media audit | `node scripts/media-domain-audit.mjs` | prod HTML | DONE | — | 0 hotlink | Option 2 |
+| Page walk | [GD2_PAGE_WALK_20260724](./reviews/GD2_PAGE_WALK_20260724.md) | prod | PASS+aliases | — | — | 308 redirects |
+| smoke:newsletter-smtp | `pnpm smoke:newsletter-smtp` | prod | **PASS** | — | 0 | deliverable=**true** |
+| smoke-quote-real-smtp | `node scripts/smoke-quote-real-smtp.mjs` | prod | **PASS** | — | 0 | quote **#61** sent |
+| smoke-contact-real-smtp | `node scripts/smoke-contact-real-smtp.mjs` | prod | **PASS** | — | 0 | quote **#62** sent |
+| CMS publish-cycle W2-09 | `node scripts/smoke-cms-publish-cycle.mjs` (VPS) | prod | **PASS** | — | 0 | id=67 · 24/07 |
 
 ## History quote IDs (not contradictions)
 
@@ -37,15 +39,22 @@ SMTP: catcher — T-S4-01 BLOCKED_OWNER
 | #40 / #41 | earlier quote-ui / web-api | 2026-07-15 |
 | #42 | latest smoke:quote-ui | 2026-07-15 |
 | #58 / #59 | Wave 1 smoke-web-api VPS / local | 2026-07-24 |
+| #61 / #62 | W5 real SMTP quote + contact | 2026-07-24 |
 
 ## T-S4-01 SMTP status (canonical)
 
 ```text
 Dev implementation: PASS
-Production SMTP configuration: BLOCKED_OWNER_SMTP
-Real inbox delivery verification: NOT RUN
-Overall task: BLOCKED_OWNER
+Production SMTP configuration: PASS (Gmail 465 · catcher OFF · 24/07 ~10:51)
+API send logs quote #61/#62: PASS (EmailService sent)
+Owner inbox verification (W5-11): PENDING_OWNER — confirm Inbox/Spam + screenshot
+W5-12 booking fan-out / W5-13 retry E2E: PENDING (after W5-11)
+W5-14 docs close: BLOCKED until 11–13 evidence
+Overall T-S4-01 config: PASS · full mail UAT: IN_PROGRESS
+Retry path (W5-13): code present — EmailCampaignLog attempts < 3 · idempotent skip SENT
 ```
+
+Mail SoT: [ORDER_EMAIL_AUTOMATION.md](./ORDER_EMAIL_AUTOMATION.md)
 
 ## API sync (canonical)
 

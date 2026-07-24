@@ -237,20 +237,32 @@ export class CustomerCareService implements OnModuleInit, OnModuleDestroy {
 
   async onBookingCreated(opts: {
     bookingId: number;
+    bookingReference: string;
     userId: number;
     email: string;
     firstName?: string | null;
     locale?: string;
+    aircraftLabel?: string;
+    passengerCount?: number;
+    itinerary?: string;
+    departureDateTime?: string;
+    departureTimezone?: string;
   }) {
     await this.scheduleCampaign({
       campaignKey: 'booking_created',
       email: opts.email,
       userId: opts.userId,
       locale: opts.locale,
-      referenceId: String(opts.bookingId),
+      referenceId: `${opts.bookingReference}:PENDING:created`,
       meta: {
         bookingId: opts.bookingId,
+        bookingReference: opts.bookingReference,
         firstName: opts.firstName ?? undefined,
+        aircraftLabel: opts.aircraftLabel,
+        passengerCount: opts.passengerCount,
+        itinerary: opts.itinerary,
+        departureDateTime: opts.departureDateTime,
+        departureTimezone: opts.departureTimezone,
       },
       immediate: true,
     });

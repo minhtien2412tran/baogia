@@ -277,24 +277,33 @@ export function renderEmailTemplate(
     }
 
     case 'booking_created': {
-      const bookingId = meta.bookingId ?? '';
+      const bookingReference = String(meta.bookingReference ?? meta.bookingId ?? '');
+      const aircraftLabel = String(meta.aircraftLabel ?? 'TBD');
+      const passengerCount = String(meta.passengerCount ?? '');
+      const itinerary = String(meta.itinerary ?? '').replace(/\n/g, '<br/>');
+      const departureDateTime = String(meta.departureDateTime ?? 'Chưa xác định / Not specified');
+      const departureTimezone = String(meta.departureTimezone ?? '');
+      const depLabel =
+        departureTimezone && !departureDateTime.includes(departureTimezone)
+          ? `${departureDateTime}`
+          : departureDateTime;
       const pack = pickPack(loc, {
         vi: {
-          subject: `Booking #${bookingId} đã tạo — JETVINA`,
-          text: `${greet}\n\nBooking #${bookingId} đã được tạo. Hoàn tất thanh toán và ký tài liệu charter tại: ${accountUrl}\n\n— JETVINA`,
-          body: `<p>${greet}</p><p>Booking <strong>#${bookingId}</strong> đã sẵn sàng. Vui lòng hoàn tất thanh toán và ký thỏa thuận charter trong My Account.</p>`,
+          subject: `JetVina đã tiếp nhận yêu cầu ${bookingReference}`,
+          text: `${greet}\n\nJetVina đã tiếp nhận yêu cầu của Quý khách.\n\nMã yêu cầu: ${bookingReference}\nMáy bay: ${aircraftLabel}\nSố hành khách: ${passengerCount}\nHành trình:\n${String(meta.itinerary ?? '')}\nKhởi hành (giờ địa phương sân bay đi): ${depLabel}\n\nĐội ngũ JetVina sẽ kiểm tra với hãng khai thác và phản hồi trong thời gian sớm nhất. Chuyến bay chưa được xác nhận cho đến khi hãng phản hồi.\n\n— JETVINA`,
+          body: `<p>${greet}</p><p>JetVina đã tiếp nhận yêu cầu của Quý khách.</p><p><strong>Mã yêu cầu:</strong> ${bookingReference}<br/><strong>Máy bay:</strong> ${aircraftLabel}<br/><strong>Số hành khách:</strong> ${passengerCount}<br/><strong>Hành trình:</strong><br/>${itinerary}<br/><strong>Khởi hành (giờ địa phương sân bay đi):</strong> ${depLabel}</p><p>Đội ngũ JetVina sẽ kiểm tra với hãng khai thác và phản hồi trong thời gian sớm nhất. <em>Chưa khẳng định chuyến đã được hãng xác nhận.</em></p>`,
           cta: 'Quản lý booking',
         },
         'zh-cn': {
-          subject: `订单 #${bookingId} 已创建 — JETVINA`,
-          text: `${greet}\n\n订单 #${bookingId} 已创建。请完成支付并签署包机文件：${accountUrl}\n\n— JETVINA`,
-          body: `<p>${greet}</p><p>订单 <strong>#${bookingId}</strong> 已就绪。请在账户中完成支付并签署包机协议。</p>`,
+          subject: `JetVina 已收到您的请求 ${bookingReference}`,
+          text: `${greet}\n\n我们已收到您的包机请求 ${bookingReference}。\n行程:\n${String(meta.itinerary ?? '')}\n起飞（出发机场当地时间）: ${depLabel}\n\n团队将与运营商确认后尽快回复。在运营商确认前，行程尚未最终确认。\n\n— JETVINA`,
+          body: `<p>${greet}</p><p>我们已收到您的请求 <strong>${bookingReference}</strong>。</p><p>机型：${aircraftLabel} · 乘客：${passengerCount}<br/><strong>行程：</strong><br/>${itinerary}<br/><strong>起飞（出发机场当地时间）：</strong> ${depLabel}</p><p>团队将与运营商确认后回复。<em>在运营商确认前，行程尚未最终确认。</em></p>`,
           cta: '管理订单',
         },
         en: {
-          subject: `Booking #${bookingId} created — JETVINA`,
-          text: `${greet}\n\nBooking #${bookingId} has been created. Complete payment and sign charter documents at: ${accountUrl}\n\n— JETVINA`,
-          body: `<p>${greet}</p><p>Booking <strong>#${bookingId}</strong> is ready. Please complete payment and sign your charter agreement in My Account.</p>`,
+          subject: `JetVina received your request ${bookingReference}`,
+          text: `${greet}\n\nJetVina has received your charter request.\n\nReference: ${bookingReference}\nAircraft: ${aircraftLabel}\nPassengers: ${passengerCount}\nItinerary:\n${String(meta.itinerary ?? '')}\nDeparture (origin airport local time): ${depLabel}\n\nOur team will check with the operating partner and reply shortly. Your flight is not confirmed until the operator responds.\n\n— JETVINA`,
+          body: `<p>${greet}</p><p>JetVina has received your charter request.</p><p><strong>Reference:</strong> ${bookingReference}<br/><strong>Aircraft:</strong> ${aircraftLabel}<br/><strong>Passengers:</strong> ${passengerCount}<br/><strong>Itinerary:</strong><br/>${itinerary}<br/><strong>Departure (origin airport local time):</strong> ${depLabel}</p><p>Our team will check with the operating partner and reply shortly. <em>This does not confirm operator acceptance yet.</em></p>`,
           cta: 'Manage booking',
         },
       });

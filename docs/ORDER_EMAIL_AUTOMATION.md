@@ -1,48 +1,133 @@
-# Order receive & auto / semi-auto email
+# JETVINA/JETBAY — MAIL AUTOMATION CHO QUOTE VÀ BOOKING
 
-> **Updated:** 2026-07-15 · **Status:** CURRENT (Mailpit catcher OK · real inbox still Owner)
+> **Ngày cập nhật:** 24/07/2026 ~11:20 ICT  
+> **SMTP production:** ENABLED (`smtp=true`, `catcher=false`)  
+> **Canonical SoT:** file này  
+> **Deploy datetime fix:** `jetbay-be-20260724-112005`  
+> **Trạng thái nghiệm thu W5:** W5-10 **PASS** · datetime/tz **PASS** · W5-11 **chờ Owner inbox** · W5-12…13 **sau W5-11** · W5-14 **chưa DONE**
 
-## Templates (HTML)
+## 1. Phạm vi nghiệp vụ đã triển khai
 
-- Shared chrome: `apps/api/src/services/customer-care/email-layout.ts` — charcoal + gold JETVINA, detail card, CTA.
-- Campaign copy: `email-templates.ts` (vi / zh-cn / en + greeting fallthrough).
-- Ops / sales + Jet Card / Travel Credit: `ops-email-templates.ts`.
-- Locale: UI `locale` trên quote / enquiry DTO; fallback `inferLocaleFromPhone` (`+84` → vi, `+86` → zh-cn…).
-
-## Flow
+Hệ thống phục vụ **charter/private jet quote–booking**, không phải bán vé chuyến lịch trình.
 
 ```text
-Customer → POST /quotes/request
-  ├── persist QuoteRequest
-  ├── AUTO customer: quote_received (+ followup_24h queued)
-  └── AUTO sales: [JetVina Quote] → SMTP_ENQUIRY_TO
+Khách gửi yêu cầu báo giá
+    ├── Gửi mail xác nhận cho khách
+    └── Gửi thông báo cho Sales/Admin
 
-Admin → POST /admin/quotes/:id/offers   (semi-auto)
-  ├── QuoteOffer + status OFFERED
-  └── AUTO customer: quote_offered
+Admin tạo Offer
+    ├── Chọn đúng Operator/hãng khai thác
+    ├── Chọn máy bay
+    └── Gửi báo giá cho khách
 
-Customer → POST /bookings
-  ├── AUTO customer: booking_created
-  └── AUTO operator + admin flight notify
+Khách xác nhận Booking
+    ├── Gửi booking_created cho khách (không khẳng định hãng đã xác nhận)
+    ├── Gửi yêu cầu chuyến đến Operator (+ OperatorUser fan-out)
+    └── Gửi thông báo cho Sales/Admin
 
-Cancel booking
-  ├── AUTO customer: booking_cancelled
-  └── AUTO operator/admin notify (event=cancelled)
-
-Jet Card / Travel Credit enquiry
-  └── AUTO customer + sales (EnquiryMailService)
+Booking thay đổi hoặc bị hủy
+    ├── Thông báo lại khách (khi sự kiện nghiệp vụ)
+    ├── Thông báo Operator
+    └── Thông báo Sales/Admin
 ```
 
-## Ops checklist
+Code: `FlightNotifyService` · `CustomerCareService` · `EnquiryMailService` · `EmailTemplateService`
 
-1. Keep Mailpit or real SMTP transport ready (`smtpTransportReady`).
-2. Set `SMTP_ENQUIRY_TO` (sales) on VPS `.env`.
-3. Admin Creates offer in `/dashboard/quotes` → customer gets `quote_offered`.
-4. Do **not** mark T-S4-01 PASS until real inbox provider (catcher ≠ customer inbox).
+## 2. Quy tắc xác định hãng nhận mail
 
-## Smoke
+1. `QuoteOffer.operator`
+2. Fallback `aircraft.operator`
+3. `Operator.contactEmail`
+4. Fan-out `OperatorUser.email`
+5. Sales/Admin luôn nhận (`SMTP_ENQUIRY_TO`)
 
-```bash
-node scripts/smoke-quote-order-mail.mjs
-# SSH tunnel Mailpit UI → see customer + sales subjects
+Nếu thiếu Operator / thiếu email:
+
+* **Không** gửi nhầm hãng khác
+* Sales/Admin nhận cảnh báo `operator_unassigned`
+* Log JSON: `bookingId`, `bookingReference`, `quoteOfferId`, `aircraftId`
+* Audit `FLIGHT_NOTIFY` với `needsManual: true`
+
+## 3–4. Nội dung mail + quy tắc ngày giờ
+
+**Ngày giờ không được viết tắt kiểu** `2026-07-24 07:30` (thiếu múi giờ → dễ nhầm UTC/local).
+
+Định dạng chuẩn (helper `utils/email-datetime.ts`):
+
+```text
+Friday, 24 July 2026 · 14:30 (GMT+7 · Asia/Ho_Chi_Minh)
+Thứ Sáu, 24 tháng 7 năm 2026 · 14:30 (GMT+7 · Asia/Ho_Chi_Minh)
 ```
+
+- Mỗi chặng: `Leg N: SGN (city) → HAN (city) · <full local datetime>`
+- Khởi hành = **giờ địa phương sân bay đi** (`Airport.timezone`)
+- Luôn kèm **IANA timezone** (`Asia/Ho_Chi_Minh`, …)
+- Subject Operator: không nhét cả itinerary dài — ghi “check departure time inside”
+
+- Operator / Admin: `bookingReference`, `itineraryHtml`, `departureDateTime`, `departureTimezone`, …
+- Khách (`booking_created`): không lộ email hãng; **không** khẳng định hãng đã confirm; label rõ “Khởi hành (giờ địa phương sân bay đi)”
+
+## 5. Gửi an toàn + idempotency
+
+Mỗi nhóm nhận email **riêng** (không chung To/Cc):
+
+| Group | campaignKey example | referenceId |
+|-------|---------------------|-------------|
+| customer | `booking_created` | `BK-000007:PENDING:created` |
+| operator | `booking_created:operator` | `BK-000007:PENDING:created` |
+| sales | `booking_created:sales` | `BK-000007:PENDING:created` |
+
+`EmailTemplateService.sendRendered` **skip** nếu log đã `SENT` (`idempotent_skip`).
+
+## 6. Sự kiện
+
+| Event | Khách | Operator | Sales |
+|-------|------:|---------:|------:|
+| quote request | ✅ | — | ✅ |
+| quote offer | ✅ | tùy NV | ✅ |
+| booking_created | ✅ | ✅ | ✅ |
+| booking status / cancel | ✅ | ✅ | ✅ |
+| operator_unassigned | — | — | ✅ cảnh báo |
+| mail_delivery_failed | — | — | ✅ cảnh báo (sanitize) |
+
+## 7. Admin Mail Operations
+
+**Chưa ship UI đầy đủ** (GĐ2+). Hiện có: `EmailCampaignLog` + Audit `FLIGHT_NOTIFY` / `MAIL_DELIVERY_FAILED`. Epic UI: xem lịch sử / retry / đổi Operator — backlog riêng.
+
+## 8. Operator cấu hình
+
+Trước vận hành thật: điền `contactEmail`, OperatorUser, active, gán đúng Operator trên mọi Quote Offer.
+
+## 9. Test W5-11…13
+
+| ID | Trạng thái | Ghi chú |
+|----|------------|---------|
+| W5-10 | **PASS** | smtp=true · catcher=false |
+| W5-11 | **OWNER** | Xác nhận inbox/Spam Quote #61/#62 + screenshot che PII |
+| W5-12 | **PENDING** | Booking fan-out sau W5-11 |
+| W5-12B/C | **PENDING** | Cancel + thiếu Operator |
+| W5-13 | **PENDING** | Retry/idempotency evidence |
+| W5-14 | **BLOCKED** | Chỉ DONE khi 11–13 có evidence |
+
+## 10. Evidence checklist
+
+```text
+W5-10 SMTP integration status: PASS
+Email datetime (IANA / origin local): PASS · deploy ~11:20 ICT
+W5-11 Quote #61 inbox: PENDING_OWNER
+W5-11 Quote #62 inbox: PENDING_OWNER
+W5-12 Booking customer/operator/sales mail: PENDING
+W5-12 Cancel/status + thiếu Operator: PENDING
+W5-13 Retry/log/idempotency: CODE_READY · E2E PENDING
+W5-14: BLOCKED until 11–13
+```
+
+## 11. Task tiếp theo
+
+**Owner:** W5-11 inbox · danh sách Operator email thật · (song song) News/UX/ký GĐ1  
+
+**Dev sau W5-11:** W5-12 fan-out · 12B/C · W5-13 · rồi W5-14  
+
+## 12. Phạm vi mở rộng — OPERATOR PORTAL
+
+Không ghi đã hoàn thành chỉ vì mail Operator đã chạy. Epic riêng: accept/decline, availability, giá hãng, SLA, audit, RBAC chỉ data của hãng.

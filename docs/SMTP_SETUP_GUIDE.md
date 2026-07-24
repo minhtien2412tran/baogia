@@ -1,8 +1,8 @@
 # SMTP Setup Guide
 
-> **Updated:** 2026-07-24 · **Status:** Mailpit catcher ON VPS · Real inbox **BLOCKED_OWNER_SMTP**  
+> **Updated:** 2026-07-24 ~10:52 · **Status:** Real Gmail SMTP **PASS** on VPS · T-S4-01 PASS  
 > **Vars:** `apps/api/.env.example` · Prod: VPS `/var/www/jetbay-be/.env` (never commit)  
-> **Wave 5a:** chuẩn bị xong — **không** gửi mail thật cho đến khi Owner set SMTP_* (W5-10+)
+> **Push helper:** `node scripts/push-smtp-env-to-vps.mjs` (meta only · sources `.env` into PM2)
 
 ## Modes
 
@@ -11,6 +11,22 @@
 | Real SMTP | Owner provider | true | false | true | PASS after inbox |
 | Mailpit catcher | `SMTP_ALLOW_CATCHER=true` + loopback | **false** | **true** | **true** | stays BLOCKED |
 | Broken loopback | localhost, no catcher flag | false | false | false | BLOCKED |
+
+## Wave 5 — DONE 24/07
+
+```text
+integrations.smtp=true · smtpCatcher=false · smtpDeliverable=true
+Quote #61 / Contact #62 — EmailService "Email sent"
+Newsletter smoke — emailDeliverable=true
+```
+
+**Ops note:** PM2 dump can override `.env`. After editing VPS `.env`, always:
+
+```bash
+set -a; source /var/www/jetbay-be/.env; set +a
+pm2 restart jetbay-be --update-env
+pm2 save
+```
 
 ## Wave 5a — Checklist Owner (điền trên VPS · không commit)
 
@@ -36,26 +52,28 @@ SMTP_ALLOW_CATCHER=false   # tắt khi dùng SMTP thật
 ### Cách đặt + restart + verify
 
 ```bash
+# From laptop (reads apps/api/.env, never prints password):
+node scripts/push-smtp-env-to-vps.mjs
+
+# Or on VPS:
 cd /var/www/jetbay-be
 nano .env
-pm2 restart jetbay-be --update-env
+set -a; source .env; set +a
+pm2 restart jetbay-be --update-env && pm2 save
 curl -sS https://api.minhtien.online/integrations/status
 # expect: integrations.smtp=true · smtpCatcher=false · smtpBlockedReason=null
 ```
 
-### Lệnh smoke sau khi cấu hình (W5b — AFTER_SMTP)
+### Lệnh smoke (W5b)
 
 ```bash
+node scripts/smoke-quote-real-smtp.mjs
+node scripts/smoke-contact-real-smtp.mjs
 pnpm smoke:newsletter-smtp
-pnpm smoke:quote-ui
-# optional on VPS:
-# node scripts/smoke-quote-order-mail.mjs
-# Mailpit UI (catcher only): ssh -L 8025:127.0.0.1:8025 … → http://127.0.0.1:8025
 ```
 
 - Status: `GET https://api.minhtien.online/integrations/status`  
-- Logs: `pm2 logs jetbay-be --lines 100`  
-- **Dừng trước W5-10** nếu chưa có credentials Owner.
+- Logs: `pm2 logs jetbay-be --lines 100` (look for `EmailService` / `Email sent`)  
 
 ## Mailpit on VPS (ops catcher)
 

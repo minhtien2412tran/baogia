@@ -20,8 +20,11 @@
 | **Báo cáo đầy đủ GĐ1–GĐ4** | [BAO_CAO_TIEN_DO_DAY_DU.md](./BAO_CAO_TIEN_DO_DAY_DU.md) | ✅ 24/07 — §0 đóng GĐ1→GĐ2 · checklist còn thiếu |
 | **Gap backlog GĐ1/GĐ2** | [GAP_GD1_GD2_BACKLOG.md](./GAP_GD1_GD2_BACKLOG.md) | ✅ việc còn thiếu + hạn · Owner/Dev |
 | **Plan task GĐ1→GĐ2** | [PLAN_GD1_GD2_EXECUTION.md](./PLAN_GD1_GD2_EXECUTION.md) | ✅ Wave 0–7 · từ `note.md` · SMTP Owner sau |
-| **Owner handoff (tiếp theo)** | [OWNER_HANDOFF_NEXT.md](./OWNER_HANDOFF_NEXT.md) | ✅ **Canonical 24/07** — W2-05 · W4-04 · W5 · W3-06 · W6 |
-| **W6-02 signing pack** | [W6_02_GD1_SIGNING_PACK.md](./W6_02_GD1_SIGNING_PACK.md) | ✅ đề xuất lịch · residual SMTP khuyến nghị |
+| **Owner handoff (tiếp theo)** | [OWNER_HANDOFF_NEXT.md](./OWNER_HANDOFF_NEXT.md) | ✅ Canonical — News · UX · ký GĐ1 A · W5-11 |
+| **Owner paste forms** | [OWNER_INPUT_FORMS.md](./OWNER_INPUT_FORMS.md) | ✅ W6-02 · W5-11 · W2-05 · W3-06 |
+| **Mail automation SoT** | [ORDER_EMAIL_AUTOMATION.md](./ORDER_EMAIL_AUTOMATION.md) | ✅ W5-10 PASS · datetime tz · fan-out |
+| **Session 24/07 snapshot** | [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md) | ✅ không hỏi lại PASS |
+| **W6-02 signing pack** | [W6_02_GD1_SIGNING_PACK.md](./W6_02_GD1_SIGNING_PACK.md) | ✅ **Phương án A** · SMTP W5-10 PASS |
 | **Media W4-04** | [OWNER_MEDIA_DECISION.md](./OWNER_MEDIA_DECISION.md) | ✅ **Option 2** · local mirror · remote OFF |
 | API | https://api.minhtien.online | ✅ |
 | Admin | https://admin.minhtien.online/login | ✅ |
@@ -41,11 +44,15 @@
 
 ## Việc tiếp theo (ưu tiên sản phẩm)
 
-> **Trạng thái GĐ:** GĐ1 `TECHNICALLY DONE — PENDING SIGN-OFF` · GĐ2 `PENDING CONTENT/POLISH/UAT` · SMTP = Owner unlock sau  
-> **Thực thi ngay:** [PLAN_GD1_GD2_EXECUTION.md](./PLAN_GD1_GD2_EXECUTION.md) — Wave 0–5a + hotlink scrub + **bugfix 404/i18n PASS** (24/07 ~10:15)  
-> Evidence: [reviews/GD2_PAGE_WALK_20260724.md](./reviews/GD2_PAGE_WALK_20260724.md) · [CMS_INVENTORY_20260724](./reviews/CMS_INVENTORY_20260724.md) · [MEDIA_AUDIT_20260724](./reviews/MEDIA_AUDIT_20260724.md) · [TEST_MATRIX.md](./TEST_MATRIX.md)  
-> **Owner next:** News 3–5 · UX feedback · SMTP thật · họp ký GĐ1  
-> **Plan khác:** [NEXT_SPRINT_PLAN.md](./NEXT_SPRINT_PLAN.md) · [note.md](../note.md)
+> **Cập nhật:** 24/07/2026 ~11:20 ICT · Snapshot: [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)  
+> **GĐ1:** `TECHNICALLY DONE — PENDING SIGN-OFF` · **GĐ2:** content/UX/UAT  
+> **Mail:** W5-10 **PASS** · datetime tz **PASS** · W5-11 **PENDING_OWNER** · W5-12…14 **PENDING**  
+> **Owner next (chỉ hỏi cái chưa PASS):** (1) `W5-11 INBOX` #61/#62 (2) News (3) UX (4) slot ký GĐ1 A  
+> **Dev next sau W5-11:** fan-out booking W5-12 / cancel / thiếu Operator / retry E2E → rồi W5-14  
+
+**Quy tắc:** agent xong code/deploy → **tự ghi** CONTINUE + SoT domain trong cùng turn (xem `AGENTS.md`).
+
+**Plan khác:** [NEXT_SPRINT_PLAN.md](./NEXT_SPRINT_PLAN.md) · [note.md](../note.md)
 
 **Admin ops waves (21/07 local — chưa deploy):** R1–R3 core + export + **RBAC/Settings/Audit UX**:
 - AuthGate + `PermissionContext`; nav + action `can()`; **kéo-thả reorder menu** + section toggles (Settings)

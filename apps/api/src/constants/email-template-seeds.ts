@@ -26,52 +26,87 @@ export const EMAIL_TEMPLATE_SEEDS: EmailTemplateSeed[] = [
   {
     key: 'operator_flight_notify',
     locale: 'en',
-    subject: '[JetVina] New charter request #{{bookingId}} — {{operatorName}}',
-    htmlBody: wrap(`<p>Hello <strong>{{operatorName}}</strong>,</p>
-<p>A new booking requires operational confirmation.</p>
-<table width="100%" style="margin:16px 0;border-collapse:collapse;font-size:14px;">
-<tr><td style="padding:6px 0;color:#9a9080;">Booking</td><td style="padding:6px 0;">#{{bookingId}}</td></tr>
-<tr><td style="padding:6px 0;color:#9a9080;">Status</td><td style="padding:6px 0;">{{bookingStatus}}</td></tr>
-<tr><td style="padding:6px 0;color:#9a9080;">Customer</td><td style="padding:6px 0;">{{customerName}} · {{customerEmail}}</td></tr>
-<tr><td style="padding:6px 0;color:#9a9080;">Itinerary</td><td style="padding:6px 0;">{{itinerary}}</td></tr>
-</table>
-<p>Please confirm aircraft readiness and crew within 2 hours.</p>`),
-    textBody:
-      'Booking #{{bookingId}} for {{operatorName}}. Customer {{customerName}} ({{customerEmail}}). Status {{bookingStatus}}. Itinerary: {{itinerary}}',
+    subject: '[JetVina] New charter booking {{bookingReference}} — check departure time inside',
+    htmlBody: wrap(`<p>A new charter booking requires your review.</p>
+<p>
+  <strong>Booking:</strong> {{bookingReference}}<br/>
+  <strong>Customer:</strong> {{customerName}} · {{customerEmail}}<br/>
+  <strong>Aircraft:</strong> {{aircraftLabel}}<br/>
+  <strong>Passengers:</strong> {{passengerCount}}<br/>
+  <strong>Itinerary (each leg · origin local time):</strong><br/>{{itineraryHtml}}<br/>
+  <strong>First departure (origin airport local):</strong> {{departureDateTime}}<br/>
+  <strong>Timezone IANA:</strong> {{departureTimezone}}<br/>
+  <strong>Current status:</strong> {{bookingStatus}}
+</p>
+<p>Please review aircraft availability and respond through the approved JetVina operations channel.</p>`),
+    textBody: `A new charter booking requires your review.
+
+Booking: {{bookingReference}}
+Customer: {{customerName}} · {{customerEmail}}
+Aircraft: {{aircraftLabel}}
+Passengers: {{passengerCount}}
+Itinerary (each leg · origin local time):
+{{itinerary}}
+First departure (origin airport local): {{departureDateTime}}
+Timezone IANA: {{departureTimezone}}
+Current status: {{bookingStatus}}
+
+Please review aircraft availability and respond through the approved JetVina operations channel.`,
   },
   {
     key: 'operator_flight_notify',
     locale: 'vi',
-    subject: '[JetVina] Yêu cầu charter mới #{{bookingId}} — {{operatorName}}',
-    htmlBody: wrap(`<p>Xin chào <strong>{{operatorName}}</strong>,</p>
-<p>Có booking mới cần xác nhận khai thác.</p>
-<p><strong>Booking:</strong> #{{bookingId}}<br/>
-<strong>Trạng thái:</strong> {{bookingStatus}}<br/>
-<strong>Khách:</strong> {{customerName}} · {{customerEmail}}<br/>
-<strong>Hành trình:</strong> {{itinerary}}</p>
-<p>Vui lòng xác nhận máy bay &amp; tổ bay trong vòng 2 giờ.</p>`),
+    subject: '[JetVina] Booking charter mới {{bookingReference}} — xem giờ khởi hành trong mail',
+    htmlBody: wrap(`<p>Có booking charter mới cần hãng xem xét.</p>
+<p>
+  <strong>Booking:</strong> {{bookingReference}}<br/>
+  <strong>Khách:</strong> {{customerName}} · {{customerEmail}}<br/>
+  <strong>Máy bay:</strong> {{aircraftLabel}}<br/>
+  <strong>Hành khách:</strong> {{passengerCount}}<br/>
+  <strong>Hành trình (từng chặng · giờ địa phương sân bay đi):</strong><br/>{{itineraryHtml}}<br/>
+  <strong>Khởi hành chặng 1 (giờ địa phương sân bay đi):</strong> {{departureDateTime}}<br/>
+  <strong>Múi giờ IANA:</strong> {{departureTimezone}}<br/>
+  <strong>Trạng thái:</strong> {{bookingStatus}}
+</p>
+<p>Vui lòng kiểm tra sẵn sàng máy bay và phản hồi qua kênh vận hành JetVina đã thống nhất.</p>`),
     textBody:
-      'Booking #{{bookingId}} — {{operatorName}}. Khách {{customerName}}. {{bookingStatus}}. {{itinerary}}',
+      'Booking {{bookingReference}} — {{aircraftLabel}}.\n{{itinerary}}\nKhởi hành: {{departureDateTime}} ({{departureTimezone}})',
   },
   {
     key: 'admin_flight_notify',
     locale: 'en',
-    subject: '[JetVina Admin] Booking #{{bookingId}} · {{bookingStatus}}',
-    htmlBody: wrap(`<p>Admin alert</p>
-<p>Booking <strong>#{{bookingId}}</strong> assigned to <strong>{{operatorName}}</strong>.</p>
-<p>Customer: {{customerName}} / {{customerEmail}}<br/>Status: {{bookingStatus}}<br/>Itinerary: {{itinerary}}</p>`),
+    subject: '[JetVina Admin] {{bookingReference}} · {{bookingStatus}} · {{operatorName}}',
+    htmlBody: wrap(`<p>Admin / Sales notification</p>
+<p>
+  <strong>Booking:</strong> {{bookingReference}}<br/>
+  <strong>Operator:</strong> {{operatorName}}<br/>
+  <strong>Aircraft:</strong> {{aircraftLabel}} · Pax {{passengerCount}}<br/>
+  <strong>Customer:</strong> {{customerName}} / {{customerEmail}}<br/>
+  <strong>Status:</strong> {{bookingStatus}} ({{event}})<br/>
+  <strong>Itinerary:</strong><br/>{{itineraryHtml}}<br/>
+  <strong>First departure (origin local):</strong> {{departureDateTime}}<br/>
+  <strong>Timezone IANA:</strong> {{departureTimezone}}
+</p>`),
     textBody:
-      'Admin: #{{bookingId}} operator={{operatorName}} status={{bookingStatus}} {{itinerary}}',
+      'Admin: {{bookingReference}} operator={{operatorName}} aircraft={{aircraftLabel}} status={{bookingStatus}}\n{{itinerary}}\nFirst departure: {{departureDateTime}} ({{departureTimezone}})',
   },
   {
     key: 'admin_flight_notify',
     locale: 'vi',
-    subject: '[JetVina Admin] Booking #{{bookingId}} · {{bookingStatus}}',
-    htmlBody: wrap(`<p>Thông báo quản trị</p>
-<p>Booking <strong>#{{bookingId}}</strong> — hãng <strong>{{operatorName}}</strong>.</p>
-<p>Khách: {{customerName}} / {{customerEmail}}<br/>Trạng thái: {{bookingStatus}}<br/>Hành trình: {{itinerary}}</p>`),
+    subject: '[JetVina Admin] {{bookingReference}} · {{bookingStatus}} · {{operatorName}}',
+    htmlBody: wrap(`<p>Thông báo Sales / Admin</p>
+<p>
+  <strong>Booking:</strong> {{bookingReference}}<br/>
+  <strong>Hãng:</strong> {{operatorName}}<br/>
+  <strong>Máy bay:</strong> {{aircraftLabel}} · Pax {{passengerCount}}<br/>
+  <strong>Khách:</strong> {{customerName}} / {{customerEmail}}<br/>
+  <strong>Trạng thái:</strong> {{bookingStatus}} ({{event}})<br/>
+  <strong>Hành trình:</strong><br/>{{itineraryHtml}}<br/>
+  <strong>Khởi hành chặng 1 (giờ địa phương):</strong> {{departureDateTime}}<br/>
+  <strong>Múi giờ IANA:</strong> {{departureTimezone}}
+</p>`),
     textBody:
-      'Admin: #{{bookingId}} hãng={{operatorName}} {{bookingStatus}} {{itinerary}}',
+      'Admin: {{bookingReference}} hãng={{operatorName}} {{aircraftLabel}} {{bookingStatus}}\n{{itinerary}}\nKhởi hành: {{departureDateTime}} ({{departureTimezone}})',
   },
   {
     key: 'quote_received_customer',
