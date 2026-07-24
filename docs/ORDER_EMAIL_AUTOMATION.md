@@ -103,12 +103,12 @@ Trước vận hành thật: điền `contactEmail`, OperatorUser, active, gán 
 | ID | Trạng thái | Ghi chú |
 |----|------------|---------|
 | W5-10 | **PASS** | smtp=true · catcher=false |
-| W5-11 | **OWNER** | Xác nhận inbox/Spam Quote #61/#62 + screenshot che PII |
+| W5-11 | **OWNER** | Form: [OWNER_INPUT_FORMS.md](./OWNER_INPUT_FORMS.md) · #61/#62 Inbox+Spam · screenshot che PII |
 | W5-12 | **DEV_API PASS** | BK-000014 · customer + operator (+fan-out) + sales **SENT** · `smoke-w5-12-booking-fanout.mjs` |
 | W5-12B | **DEV_API PASS** | cancel → `booking_cancelled:operator` + `:sales` SENT |
 | W5-12C | **DEV_API PASS** | BK-000016 · `operator_unassigned:sales` + `booking_created`/`booking_created:sales` · không leak `:operator` · `smoke-w5-12c-operator-unassigned.mjs` |
-| W5-13 | **CODE_READY** | idempotent SENT skip · E2E optional |
-| W5-14 | **BLOCKED** | Chỉ DONE khi W5-11 Owner + 12/12B/12C evidence (12* đã có) |
+| W5-13 | **CODE_READY** | idempotent SENT skip · unit/code — Owner yêu cầu đạt trước khi đóng W5-14 |
+| W5-14 | **BLOCKED** | Đóng **PASS** chỉ khi: #61+#62 `SEEN` · mọi tiêu chí YES · 12/12B/12C PASS · W5-13 đạt. `SPAM` → `DELIVERED — SPAM PLACEMENT` (+ SPF/DKIM). `NOT_SEEN` → không đóng |
 
 ## 10. Evidence checklist
 
@@ -127,9 +127,9 @@ Operator Portal: NOT STARTED — docs/OPERATOR_PORTAL_EPIC.md
 
 ## 11. Task tiếp theo
 
-**Owner:** W5-11 inbox (#61/#62) · (tuỳ chọn) xác nhận mail booking BK-000014/016 · OP-D1…D4 Portal · News/UX/ký GĐ1  
+**Owner:** điền block `W5-11 INBOX` (form đầy đủ trong [OWNER_INPUT_FORMS.md](./OWNER_INPUT_FORMS.md)) · (tuỳ chọn) OP-D* · News/UX/ký GĐ1  
 
-**Dev:** sau W5-11 đóng W5-14 · **không** code Operator Portal trước Owner OP-D*
+**Dev:** nhận form đã điền → áp dụng quy tắc W5-14 ở mục 9 · **không** code Operator Portal trước Owner OP-D*
 
 ## 12. Phạm vi mở rộng — OPERATOR PORTAL
 

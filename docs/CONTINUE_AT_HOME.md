@@ -21,7 +21,7 @@
 | **Gap backlog GĐ1/GĐ2** | [GAP_GD1_GD2_BACKLOG.md](./GAP_GD1_GD2_BACKLOG.md) | ✅ việc còn thiếu + hạn · Owner/Dev |
 | **Plan task GĐ1→GĐ2** | [PLAN_GD1_GD2_EXECUTION.md](./PLAN_GD1_GD2_EXECUTION.md) | ✅ Wave 0–7 · từ `note.md` · SMTP Owner sau |
 | **Owner handoff (tiếp theo)** | [OWNER_HANDOFF_NEXT.md](./OWNER_HANDOFF_NEXT.md) | ✅ Canonical — News · UX · ký GĐ1 A · W5-11 |
-| **Owner paste forms** | [OWNER_INPUT_FORMS.md](./OWNER_INPUT_FORMS.md) | ✅ W6-02 · W5-11 · W2-05 · W3-06 |
+| **Owner paste forms** | [OWNER_INPUT_FORMS.md](./OWNER_INPUT_FORMS.md) | ✅ W5-11 rubric đầy đủ · W6-02 · OP-D · W2-05 |
 | **Mail automation SoT** | [ORDER_EMAIL_AUTOMATION.md](./ORDER_EMAIL_AUTOMATION.md) | ✅ W5-10 PASS · W5-12/12B/12C DEV_API · W5-11 Owner |
 | **Operator Portal epic** | [OPERATOR_PORTAL_EPIC.md](./OPERATOR_PORTAL_EPIC.md) | ⬜ NOT STARTED — chờ OP-D* |
 | **Session 24/07 snapshot** | [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md) | ✅ không hỏi lại PASS |

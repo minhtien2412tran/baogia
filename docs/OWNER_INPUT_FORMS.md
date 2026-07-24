@@ -6,9 +6,18 @@
 
 ---
 
-## W5-11 — Xác nhận inbox Quote #61 / #62
+## W5-11 — OWNER INBOX VERIFICATION (#61 / #62)
 
-Mở hộp thư nhận mail quote (inbox + Spam). Chọn đúng 1 giá trị mỗi dòng.
+**Mail cần tìm** (mailbox = `SMTP_ENQUIRY_TO` / `SMOKE_MAIL_TO` · Inbox + Promotions + Spam):
+
+| ID | Loại | Subject dự kiến | Dấu hiệu |
+|----|------|-----------------|----------|
+| #61 | Quote SMTP smoke | `JETVINA Quote Request #61 Received` (hoặc VI) | `#61` · `Quote Request` · `SMTP Smoke` |
+| #62 | Contact SMTP smoke | `JETVINA Quote Request #62 Received` | `#62` · `[Website Contact]` trong body |
+
+Ngoài ACK khách, cùng mailbox có thể có thêm mail cảnh báo Sales (smoke dùng chung enquiry).
+
+**Điền 1 giá trị mỗi dòng + gửi lại:**
 
 ```text
 W5-11 INBOX
@@ -19,10 +28,28 @@ Subject OK: YES|NO
 Reply-To OK: YES|NO
 Links OK: YES|NO
 No internal leak: YES|NO
-Screenshot: (che PII) attached|link|none
+Screenshot: ATTACHED|LINK|NONE
+Screenshot/link:
+Ghi chú:
 ```
 
-Sau khi Owner gửi block này → Dev đóng W5-14 (W5-12/12B/12C đã **DEV_API PASS**).
+**Cách đánh giá**
+
+| Giá trị | Nghĩa |
+|---------|--------|
+| `SEEN` | Thấy ở Inbox / Primary / Promotions |
+| `SPAM` | Chỉ thấy ở Spam / Junk |
+| `NOT_SEEN` | Không thấy ở Inbox, Promotions **và** Spam |
+| Sender / Subject / Reply-To / Links OK | Đúng thương hiệu · đúng ref · Reply → Sales · link prod mở được |
+| No internal leak | Không lộ secret, DB id nội bộ, OperatorUser, email hãng khác |
+
+**Quy tắc đóng W5-14** (SoT: [ORDER_EMAIL_AUTOMATION.md](./ORDER_EMAIL_AUTOMATION.md))
+
+- **PASS** nếu: #61 + #62 đều `SEEN` · mọi tiêu chí `YES` · W5-12/12B/12C **DEV_API PASS** · W5-13 retry/log/idempotency đạt.
+- **`SPAM`:** ghi `DELIVERED — SPAM PLACEMENT` → Dev check SPF/DKIM/DMARC/reputation/subject trước khi claim deliverability đủ.
+- **`NOT_SEEN`:** **không** đóng W5-14 → Dev check delivery log, recipient, provider/message-id, bounce, queue, `SMTP_ENQUIRY_TO`/`SMOKE_MAIL_TO`, quarantine.
+
+Hiện Dev: 12/12B/12C đã PASS · W5-13 **CODE_READY** (idempotent SENT skip) · W5-11 vẫn **PENDING**.
 
 ---
 
