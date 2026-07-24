@@ -68,7 +68,7 @@ export default function SettingsAdminPage() {
   }, []);
 
   useEffect(() => {
-    if (tab !== 'brand' || !can('settings.manage')) return;
+    if (tab !== 'brand' || !can('settings.view')) return;
     adminApi
       .getBrandSettings()
       .then((data) => {

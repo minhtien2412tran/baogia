@@ -16,6 +16,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { StaffGuard } from '../auth/staff.guard';
 import { PermissionGuard } from '../permissions/permission.guard';
 import { RequirePermissions } from '../permissions/require-permissions.decorator';
 import { CurrentUser } from '../auth/current-user.decorator';
@@ -338,17 +339,19 @@ export class ContentSyncController {
   }
 
   @Get('admin/site-settings/brand')
-  @UseGuards(JwtAuthGuard, PermissionGuard)
-  @RequirePermissions('content_source.manage')
+  @UseGuards(JwtAuthGuard, StaffGuard, PermissionGuard)
+  @RequirePermissions('settings.view', 'content_source.view', 'content_source.manage')
   @ApiBearerAuth('bearer')
+  @ApiOperation({ summary: 'Admin brand settings (Settings tab)' })
   adminBrand() {
     return this.sync.getBrandSettings();
   }
 
   @Patch('admin/site-settings/brand')
-  @UseGuards(JwtAuthGuard, PermissionGuard)
-  @RequirePermissions('content_source.manage')
+  @UseGuards(JwtAuthGuard, StaffGuard, PermissionGuard)
+  @RequirePermissions('settings.manage', 'content_source.manage')
   @ApiBearerAuth('bearer')
+  @ApiOperation({ summary: 'Update brand settings' })
   patchBrand(
     @Body() body: Record<string, unknown>,
     @CurrentUser() user: AuthUser,

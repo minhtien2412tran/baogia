@@ -1,16 +1,15 @@
 # Test Matrix — JetBay
 
-> **Updated:** 2026-07-24 ~13:38 · Snapshot [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)
+> **Updated:** 2026-07-24 ~13:50 · Snapshot [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)
 
 ## Latest evidence (prefer these)
 
 ```text
-Session 24/07 ~13:38 ICT:
-BE harden DEPLOYED — jetbay-be-20260724-113424
-R4 CMS/media PermissionGuard DEPLOYED — jetbay-be-20260724-133626
-smoke-admin-crud.mjs prod: pass=16 fail=0 (CMS pages + media path via ADMIN)
-smoke-error-envelope: VALIDATION_FAILED + requestId PASS
-W5-10 PASS · W5-11 PENDING_OWNER
+Session 24/07 ~13:50 ICT:
+R4 settings/audit PASS — smoke-r4-settings-audit (audit 200 · health 200 · brand 200)
+API backup jetbay-be-20260724-134852 · brand perms → settings.view/manage
+AdminGuard: unused (deprecated)
+W5-10 PASS · W5-11 PENDING_OWNER · W5-12 blocked until inbox
 ```
 
 | Test | Command | Environment | Result | PASS | FAIL | Ghi chú |

@@ -23,6 +23,7 @@
 | Admin Mail Ops UI / Operator Portal | **NOT STARTED** | epic riêng — không ghi DONE |
 | BE error harden (filter + safe notify) | **DEPLOYED** | backup `jetbay-be-20260724-113424` · envelope PASS |
 | R4 CMS/media PermissionGuard | **DEPLOYED** | backup `jetbay-be-20260724-133626` · smoke-admin-crud 16/16 |
+| R4 settings/audit + brand settings.* | **DEPLOYED** | backup `jetbay-be-20260724-134852` · smoke-r4-settings-audit PASS |
 
 ## Deploy refs (VPS)
 
@@ -30,6 +31,7 @@
 - API SMTP sourced + mail SoT + datetime: `jetbay-be-20260724-112005` (và trước đó `111559`, `110205`)
 - API error harden: `jetbay-be-20260724-113424`
 - API R4 CMS/media: `jetbay-be-20260724-133626`
+- API R4 settings/audit: `jetbay-be-20260724-134852`
 
 ## Quy tắc agent (Owner yêu cầu 24/07)
 

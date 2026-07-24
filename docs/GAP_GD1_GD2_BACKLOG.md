@@ -55,7 +55,8 @@
 1. ~~Wave 0–4 Dev~~ ✅ · Media Option 2 ✅ · Contact ✅  
 2. ~~W5-10 SMTP~~ ✅ · **W5-11** chờ Owner · W5-12…14 sau đó  
 3. ~~R4 CMS/media PermissionGuard~~ ✅ DEPLOYED 24/07  
-4. R4 settings/audit (nếu còn) · R5 scope  
+4. ~~R4 settings/audit + brand settings.*~~ ✅ DEPLOYED 24/07  
+5. R5 scope · W5-12 **sau** Owner W5-11  
 
 **Handoff 1 trang:** [OWNER_HANDOFF_NEXT.md](./OWNER_HANDOFF_NEXT.md)  
 **Biên bản GĐ1 nháp:** [GD1_NT_BIEN_BAN.md](./GD1_NT_BIEN_BAN.md)
