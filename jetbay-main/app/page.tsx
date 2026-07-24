@@ -15,8 +15,20 @@ import { ExploreWorld } from '@/components/ExploreWorld';
 import { LogoStrip } from '@/components/LogoStrip';
 import { Stats } from '@/components/Stats';
 import { Footer } from '@/components/Footer';
+import { api, loadApi } from '@/lib/api';
+import { mapEmptyLegs, mapFixedRoutes, mapJetPlans } from '@/lib/mappers';
 
-export default function Home() {
+export default async function Home() {
+  const [emptyLoad, routesLoad, plansLoad] = await Promise.all([
+    loadApi(() => api.getEmptyLegs(), { emptyLegs: [] }),
+    loadApi(() => api.getFixedPriceRoutes(), { routes: [] }),
+    loadApi(() => api.getJetCardPlans(), { plans: [] }),
+  ]);
+
+  const emptyLegs = mapEmptyLegs(emptyLoad.data.emptyLegs as Array<Record<string, unknown>>);
+  const routes = mapFixedRoutes(routesLoad.data.routes as Array<Record<string, unknown>>);
+  const plans = mapJetPlans(plansLoad.data.plans as Array<Record<string, unknown>>);
+
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-[#0B1121] transition-colors">
       <Topbar />
@@ -25,11 +37,11 @@ export default function Home() {
         <main className="flex-1 flex flex-col min-w-0 w-full overflow-hidden">
           <Hero />
           <PromoBanner />
-          <EmptyLegs />
-          <FixedPriceRoutes />
+          <EmptyLegs legs={emptyLegs} loadError={emptyLoad.ok ? null : emptyLoad.error} />
+          <FixedPriceRoutes routes={routes} loadError={routesLoad.ok ? null : routesLoad.error} />
           <CuratedFlights />
           <MedicalAssistance />
-          <JetCard />
+          <JetCard plans={plans} loadError={plansLoad.ok ? null : plansLoad.error} />
           <PartnerProgram />
           <MobileApp />
           <WhyCharter />

@@ -42,6 +42,14 @@
 3. **Polish theo JetVina** (ongoing) — so [jetvina.com](https://jetvina.com/) (+ `scratch/` khi cần layout)
 4. **G4 keys** — SMTP / OAuth / payment / SMS **chờ KH** → [KH_G4_KEYS_CHECKLIST.md](./KH_G4_KEYS_CHECKLIST.md)
 
+### FE clone `jetbay-main` ↔ API Swagger (2026-07-24)
+
+- Nhánh: `cursor/jetbay-main-api-swagger-d664`
+- Client: `jetbay-main/lib/api.ts` → prod `api.minhtien.online` + `X-API-Key`
+- Wired: Empty Legs · Fixed Price · Jet Card plans · Hero airport search + `search-aircraft` · empty-leg alerts subscribe
+- Setup: `jetbay-main/.env.example` · [jetbay-main/README.md](../jetbay-main/README.md)
+- **Chưa** thay `apps/web` (vẫn là demo product SoT)
+
 **Trạng thái phiên 15/07 (evening audit):** **GĐ2 Dev complete · Repository pack committed · Waiting for Owner SMTP**
 
 **Bổ sung audit 18/07:** BE typecheck PASS; local runtime còn blocked bởi Docker/Postgres. Admin/RBAC đã re-matrix tại [ADMIN_RBAC_FUNCTION_MATRIX.md](./ADMIN_RBAC_FUNCTION_MATRIX.md): menu Admin chưa permission-aware, controller còn trộn `AdminGuard`/`PermissionGuard`, triển khai theo waves R1–R5.

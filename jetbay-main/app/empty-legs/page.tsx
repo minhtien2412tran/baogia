@@ -9,17 +9,22 @@ import { EmptyLegsInfo } from '@/components/EmptyLegsInfo';
 import { EmptyLegsStats } from '@/components/EmptyLegsStats';
 import { EmptyLegsBanner } from '@/components/EmptyLegsBanner';
 import { EmptyLegsFAQ } from '@/components/EmptyLegsFAQ';
+import { api, loadApi } from '@/lib/api';
+import { mapEmptyLegs } from '@/lib/mappers';
 
-export default function EmptyLegsPage() {
+export default async function EmptyLegsPage() {
+  const emptyLoad = await loadApi(() => api.getEmptyLegs(), { emptyLegs: [] });
+  const deals = mapEmptyLegs(emptyLoad.data.emptyLegs as Array<Record<string, unknown>>);
+
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-[#0B1121] transition-colors font-sans selection:bg-[#13B2A6]/20">
       <Topbar />
       <div className="flex flex-1 max-w-full">
         <Sidebar />
-        
+
         <main className="flex-1 flex flex-col min-w-0 w-full overflow-hidden">
           <EmptyLegsHero />
-          <EmptyLegsLiveDeals />
+          <EmptyLegsLiveDeals deals={deals} loadError={emptyLoad.ok ? null : emptyLoad.error} />
           <EmptyLegsWhyChoose />
           <EmptyLegsInfo />
           <EmptyLegsStats />
@@ -27,7 +32,6 @@ export default function EmptyLegsPage() {
           <EmptyLegsFAQ />
           <Footer />
         </main>
-        
       </div>
     </div>
   );

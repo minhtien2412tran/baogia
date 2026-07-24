@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { ArrowRight, Plane, Users, Tag } from 'lucide-react';
+import { ArrowRight, Plane, Tag } from 'lucide-react';
 
 const europeRoutes = [
   {
@@ -256,46 +256,128 @@ const RouteCard = ({ route }: { route: any }) => {
   );
 };
 
-export const FixedPriceRoutesGrid = () => {
+import type { UiFixedRoute } from '@/lib/mappers';
+
+function toCardRoute(r: UiFixedRoute) {
+  return {
+    id: r.id,
+    from: r.from,
+    to: r.to,
+    image: r.image,
+    classes: r.classes ?? [
+      { name: 'Light Jets', price: `USD ${r.priceLight}`, pax: `Up to ${r.paxLight ?? 8} passengers` },
+      {
+        name: 'Midsize to Heavy Jets',
+        price: `USD ${r.priceMid}`,
+        pax: `Up to ${r.paxMid ?? 16} passengers`,
+      },
+    ],
+  };
+}
+
+function regionMatch(region: string | undefined, needle: string) {
+  if (!region) return false;
+  return region.toLowerCase().includes(needle.toLowerCase());
+}
+
+export function FixedPriceRoutesGrid({
+  routes,
+  loadError,
+}: {
+  routes?: UiFixedRoute[];
+  loadError?: string | null;
+}) {
+  const live = routes && routes.length > 0;
+  const eu = live
+    ? routes.filter((r) => regionMatch(r.region, 'europe') || regionMatch(r.region, 'eu')).map(toCardRoute)
+    : europeRoutes;
+  const na = live
+    ? routes.filter((r) => regionMatch(r.region, 'america') || regionMatch(r.region, 'na')).map(toCardRoute)
+    : naRoutes;
+  const other = live
+    ? routes
+        .filter(
+          (r) =>
+            !regionMatch(r.region, 'europe') &&
+            !regionMatch(r.region, 'eu') &&
+            !regionMatch(r.region, 'america') &&
+            !regionMatch(r.region, 'na'),
+        )
+        .map(toCardRoute)
+    : [];
+
+  const euList = eu.length ? eu : live ? [] : europeRoutes;
+  const naList = na.length ? na : live ? [] : naRoutes;
+
   return (
     <div className="w-full max-w-[1440px] mx-auto px-4 lg:px-8 py-16 flex flex-col items-center">
-      
-      {/* Europe Section */}
-      <div className="w-full flex flex-col items-center mb-24">
-        <div className="px-4 py-1.5 bg-gray-50 border border-gray-200 dark:bg-gray-800/50 dark:border-gray-700 rounded-full flex items-center gap-2 mb-6">
-          <Tag size={14} className="text-gray-500" />
-          <span className="text-[12px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase">Premium Corridors</span>
-        </div>
-        <h2 className="text-[36px] md:text-[42px] font-bold text-[#0B1F3A] dark:text-white mb-4 tracking-[-0.02em]">Europe</h2>
-        <p className="text-[16px] text-gray-500 text-center max-w-2xl mb-12">
-          Linking financial capitals, cultural centers, and Mediterranean leisure destinations with seamless private access.
+      {loadError ? (
+        <p className="mb-8 w-full text-[14px] text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl px-4 py-3">
+          Could not load live routes: {loadError}. Showing sample corridors.
         </p>
-        
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {europeRoutes.map(route => (
-            <RouteCard key={route.id} route={route} />
-          ))}
-        </div>
-      </div>
+      ) : null}
 
-      {/* North America Section */}
-      <div className="w-full flex flex-col items-center mb-16">
-        <div className="px-4 py-1.5 bg-[#E6F7F6]/50 border border-[#13B2A6]/20 dark:bg-[#13B2A6]/10 dark:border-[#13B2A6]/20 rounded-full flex items-center gap-2 mb-6">
-          <Plane size={14} className="text-[#13B2A6]" />
-          <span className="text-[12px] font-bold text-[#13B2A6] tracking-wide uppercase">Popular Routes</span>
-        </div>
-        <h2 className="text-[36px] md:text-[42px] font-bold text-[#0B1F3A] dark:text-white mb-4 tracking-[-0.02em]">North America</h2>
-        <p className="text-[16px] text-gray-500 text-center max-w-2xl mb-12">
-          Connecting major business hubs and high-demand executive corridors across the United States and Canada.
-        </p>
-        
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {naRoutes.map(route => (
-            <RouteCard key={route.id} route={route} />
-          ))}
-        </div>
-      </div>
+      {live ? (
+        <p className="mb-8 text-[13px] text-[#13B2A6] font-medium">Live from JetBay API · {routes.length} routes</p>
+      ) : null}
 
+      {(euList.length > 0 || !live) && (
+        <div className="w-full flex flex-col items-center mb-24">
+          <div className="px-4 py-1.5 bg-gray-50 border border-gray-200 dark:bg-gray-800/50 dark:border-gray-700 rounded-full flex items-center gap-2 mb-6">
+            <Tag size={14} className="text-gray-500" />
+            <span className="text-[12px] font-bold text-gray-600 dark:text-gray-300 tracking-wide uppercase">
+              Premium Corridors
+            </span>
+          </div>
+          <h2 className="text-[36px] md:text-[42px] font-bold text-[#0B1F3A] dark:text-white mb-4 tracking-[-0.02em]">
+            Europe
+          </h2>
+          <p className="text-[16px] text-gray-500 text-center max-w-2xl mb-12">
+            Linking financial capitals, cultural centers, and Mediterranean leisure destinations with seamless private
+            access.
+          </p>
+
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {(euList.length ? euList : europeRoutes).map((route) => (
+              <RouteCard key={route.id} route={route} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {(naList.length > 0 || !live) && (
+        <div className="w-full flex flex-col items-center mb-16">
+          <div className="px-4 py-1.5 bg-[#E6F7F6]/50 border border-[#13B2A6]/20 dark:bg-[#13B2A6]/10 dark:border-[#13B2A6]/20 rounded-full flex items-center gap-2 mb-6">
+            <Plane size={14} className="text-[#13B2A6]" />
+            <span className="text-[12px] font-bold text-[#13B2A6] tracking-wide uppercase">Popular Routes</span>
+          </div>
+          <h2 className="text-[36px] md:text-[42px] font-bold text-[#0B1F3A] dark:text-white mb-4 tracking-[-0.02em]">
+            North America
+          </h2>
+          <p className="text-[16px] text-gray-500 text-center max-w-2xl mb-12">
+            Connecting major business hubs and high-demand executive corridors across the United States and Canada.
+          </p>
+
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {(naList.length ? naList : naRoutes).map((route) => (
+              <RouteCard key={route.id} route={route} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {other.length > 0 ? (
+        <div className="w-full flex flex-col items-center mb-16">
+          <h2 className="text-[36px] md:text-[42px] font-bold text-[#0B1F3A] dark:text-white mb-4 tracking-[-0.02em]">
+            More Routes
+          </h2>
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {other.map((route) => (
+              <RouteCard key={route.id} route={route} />
+            ))}
+          </div>
+        </div>
+      ) : null}
     </div>
   );
-};
+}
