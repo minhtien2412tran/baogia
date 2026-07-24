@@ -18,6 +18,7 @@ import {
   RequestQuoteDto,
   SearchAircraftDto,
 } from '../dto';
+import { fireAndForget } from '../common/utils/safe-async';
 import { PricingService } from '../pricing/pricing.service';
 import { haversineKm } from '../pricing/flight-math';
 import { toDbLocale } from '@jetbay/i18n';
@@ -369,27 +370,32 @@ export class QuoteService {
       )
       .join(' · ');
 
-    void this.customerCare.onQuoteReceived({
-      quoteId: quote.id,
-      email: body.email,
-      firstName: body.firstName,
-      userId: opts?.userId,
-      locale,
-      tripSummary,
-    });
+    fireAndForget(
+      'customerCare.onQuoteReceived',
+      this.customerCare.onQuoteReceived({
+        quoteId: quote.id,
+        email: body.email,
+        firstName: body.firstName,
+        userId: opts?.userId,
+        locale,
+        tripSummary,
+      }),
+    );
     // Auto: sales/admin inbox (semi-auto ops review continues in Admin → Quotes)
-    void this.enquiryMail.notifyNewQuote({
-      quoteId: quote.id,
-      email: body.email,
-      firstName: body.firstName,
-      lastName: body.lastName,
-      phone: body.phone,
-      message: body.message,
-      tripSummary,
-      sourcePage: opts?.sourcePage ?? 'WEB_QUOTE_FORM',
-      locale,
-    });
-    return {
+    fireAndForget(
+      'enquiryMail.notifyNewQuote',
+      this.enquiryMail.notifyNewQuote({
+        quoteId: quote.id,
+        email: body.email,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        phone: body.phone,
+        message: body.message,
+        tripSummary,
+        sourcePage: opts?.sourcePage ?? 'WEB_QUOTE_FORM',
+        locale,
+      }),
+    );    return {
       requestId: quote.id,
       status: 'PENDING',
       message:
@@ -563,7 +569,10 @@ export class QuoteService {
     });
 
     await this.audit.log('PAYMENT_CONFIRMED', { paymentId: updated.id });
-    void this.customerCare.onPaymentConfirmed(updated.id);
+    fireAndForget(
+      'customerCare.onPaymentConfirmed',
+      this.customerCare.onPaymentConfirmed(updated.id),
+    );
 
     return {
       paymentIntentId: String(updated.id),
@@ -713,7 +722,10 @@ export class QuoteService {
       paymentId: payment.id,
       orderRef,
     });
-    void this.customerCare.onPaymentConfirmed(payment.id);
+    fireAndForget(
+      'customerCare.onPaymentConfirmed.gateway',
+      this.customerCare.onPaymentConfirmed(payment.id),
+    );
   }
 
   async handleStripeWebhook(payload: Buffer, signature: string) {
@@ -737,7 +749,10 @@ export class QuoteService {
           paymentId,
           intentId: intent.id,
         });
-        void this.customerCare.onPaymentConfirmed(paymentId);
+        fireAndForget(
+          'customerCare.onPaymentConfirmed.stripe',
+          this.customerCare.onPaymentConfirmed(paymentId),
+        );
       }
     }
 

@@ -14,6 +14,7 @@ import { OtpService } from './otp.service';
 import { LoginDto, RegisterDto, UpdateProfileDto } from '../dto';
 import { StorageService } from './storage.service';
 import type { JwtPayload } from '../auth/auth.types';
+import { fireAndForget } from '../common/utils/safe-async';
 
 @Injectable()
 export class AuthService {
@@ -92,12 +93,14 @@ export class AuthService {
       },
     });
     await this.audit.log('USER_REGISTERED', { userId: user.id }, user.id);
-    void this.customerCare.onUserRegistered({
-      userId: user.id,
-      email: user.email,
-      locale: body.locale,
-    });
-    return {
+    fireAndForget(
+      'customerCare.onUserRegistered',
+      this.customerCare.onUserRegistered({
+        userId: user.id,
+        email: user.email,
+        locale: body.locale,
+      }),
+    );    return {
       message: 'User successfully registered',
       user: {
         id: user.id,
@@ -354,12 +357,14 @@ export class AuthService {
         { provider: profile.provider },
         user.id,
       );
-      void this.customerCare.onUserRegistered({
-        userId: user.id,
-        email: user.email,
-        firstName: user.firstName,
-      });
-    }
+      fireAndForget(
+        'customerCare.onUserRegistered.oauth',
+        this.customerCare.onUserRegistered({
+          userId: user.id,
+          email: user.email,
+          firstName: user.firstName,
+        }),
+      );    }
 
     await this.prisma.userAuthProvider.create({
       data: {
@@ -435,11 +440,13 @@ export class AuthService {
       },
     });
     await this.audit.log('USER_REGISTERED_OTP', { phone: normalized }, user.id);
-    void this.customerCare.onUserRegistered({
-      userId: user.id,
-      email: userEmail,
-    });
-    return {
+    fireAndForget(
+      'customerCare.onUserRegistered.otp',
+      this.customerCare.onUserRegistered({
+        userId: user.id,
+        email: userEmail,
+      }),
+    );    return {
       message: 'User successfully registered',
       user: {
         id: user.id,

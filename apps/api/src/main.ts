@@ -119,7 +119,11 @@ async function bootstrap() {
       ) {
         res.status(413).json({
           statusCode: 413,
+          code: 'PAYLOAD_TOO_LARGE',
           message: 'Request body too large',
+          error: 'Payload Too Large',
+          path: _req.originalUrl ?? _req.url,
+          timestamp: new Date().toISOString(),
         });
         return;
       }

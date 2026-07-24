@@ -140,17 +140,27 @@ export class PricingService {
       airports.map((a) => [a.id, this.toAirportFees(a)]),
     );
 
-    const breakdown = buildPricingEstimate({
-      aircraft: this.toAircraftRate(aircraft),
-      airportsById,
-      passengerRoute: {
-        fromAirportId: params.fromAirportId,
-        toAirportId: params.toAirportId,
-        passengerCount: params.passengerCount,
-        departureAt: params.departureAt,
-      },
-      tripType: params.tripType,
-    });
+    const breakdown = (() => {
+      try {
+        return buildPricingEstimate({
+          aircraft: this.toAircraftRate(aircraft),
+          airportsById,
+          passengerRoute: {
+            fromAirportId: params.fromAirportId,
+            toAirportId: params.toAirportId,
+            passengerCount: params.passengerCount,
+            departureAt: params.departureAt,
+          },
+          tripType: params.tripType,
+        });
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'Pricing estimate failed';
+        throw new BadRequestException({
+          code: 'BAD_REQUEST',
+          message: msg,
+        });
+      }
+    })();
 
     const snapshot = freezePricingSnapshot(breakdown);
     let estimateId: number | undefined;

@@ -1,18 +1,17 @@
 # Test Matrix — JetBay
 
-> **Updated:** 2026-07-24 ~11:20 · Snapshot [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)
+> **Updated:** 2026-07-24 ~11:36 · Snapshot [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)
 
 ## Latest evidence (prefer these)
 
 ```text
-Session 24/07 ~11:20 ICT:
-integrations: smtp=true · smtpCatcher=false · smtpDeliverable=true
-W5-10 PASS · Email datetime tz PASS (utils/email-datetime)
+Session 24/07 ~11:36 ICT:
+BE harden DEPLOYED — backup /root/backups/jetbay-be-20260724-113424
+health: ok · env=production · smtp=true · catcher=false · deliverable=true
+smoke-error-envelope: HTTP 400 VALIDATION_FAILED + requestId PASS
+W5-10 PASS · Email datetime tz PASS
 W5-11 PENDING_OWNER (#61/#62 inbox)
-W5-12 contact #62 / quote #61 — API "Email sent" (logs)
-audit:i18n: fail=0 warn=0
-Media: jetvina hotlink=0 · Contact 200
-Mail SoT: ORDER_EMAIL_AUTOMATION.md
+Mail SoT: ORDER_EMAIL_AUTOMATION.md · BE_AUDIT.md §1
 ```
 
 | Test | Command | Environment | Result | PASS | FAIL | Ghi chú |

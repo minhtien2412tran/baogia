@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AppController } from './app.controller';
 import { PrismaModule } from './prisma/prisma.module';
 import { ApiKeyGuard } from './auth/api-key.guard';
+import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { IntegrationsModule } from './modules/integrations/integrations.module';
 import { I18nModule } from './modules/i18n/i18n.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -122,6 +123,7 @@ import { RealtimeModule } from './realtime/realtime.module';
     AccountController,
   ],
   providers: [
+    { provide: APP_FILTER, useClass: AllExceptionsFilter },
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useClass: ApiKeyGuard },
     ApiGatewayService,

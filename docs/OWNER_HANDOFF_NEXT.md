@@ -1,9 +1,10 @@
 # JETVINA/JETBAY — OWNER HANDOFF VÀ CÔNG VIỆC TIẾP THEO
 
-> **Ngày cập nhật:** 24/07/2026 ~11:20 ICT  
+> **Ngày cập nhật:** 24/07/2026 ~11:36 ICT  
 > **GĐ1:** `TECHNICALLY DONE — PENDING SIGN-OFF`  
 > **GĐ2:** `DEV BASELINE DONE — PENDING OWNER INPUT (News/UX), POLISH AND UAT`  
 > **SMTP W5-10:** `PASS` · **W5-11:** PENDING_OWNER · **datetime mail:** PASS (IANA tz)  
+> **BE harden:** DEPLOYED `jetbay-be-20260724-113424`  
 > **Canonical:** file này · snapshot [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)  
 > **Rule:** Dev xong code → tự cập nhật markdown; **không** hỏi lại Owner mục đã PASS
 
@@ -20,6 +21,7 @@
 * W5-10 SMTP Gmail prod: **PASS** (`smtp=true` · catcher=false)
 * Mail automation SoT (operator fan-out, idempotent SENT, unassigned alert): **DEPLOYED**
 * Email datetime rõ (không ISO cắt cụt): **PASS** · `utils/email-datetime.ts` · deploy ~11:20
+* BE error harden (filter · Prisma · fireAndForget): **DEPLOYED** · `jetbay-be-20260724-113424` · envelope smoke PASS
 * W5-11…14 — **chưa đóng** (chờ Owner inbox rồi Dev W5-12…)
 * W6-01 nháp biên bản GĐ1: **DONE**
 * W6-02 pack phương án A: **READY** (chờ lịch + ký)

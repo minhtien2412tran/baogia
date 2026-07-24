@@ -44,11 +44,12 @@
 
 ## Việc tiếp theo (ưu tiên sản phẩm)
 
-> **Cập nhật:** 24/07/2026 ~11:20 ICT · Snapshot: [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)  
+> **Cập nhật:** 24/07/2026 ~11:36 ICT · Snapshot: [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)  
 > **GĐ1:** `TECHNICALLY DONE — PENDING SIGN-OFF` · **GĐ2:** content/UX/UAT  
 > **Mail:** W5-10 **PASS** · datetime tz **PASS** · W5-11 **PENDING_OWNER** · W5-12…14 **PENDING**  
+> **BE harden:** **DEPLOYED** · backup `jetbay-be-20260724-113424` · health OK · envelope smoke `VALIDATION_FAILED` + `requestId`  
 > **Owner next (chỉ hỏi cái chưa PASS):** (1) `W5-11 INBOX` #61/#62 (2) News (3) UX (4) slot ký GĐ1 A  
-> **Dev next sau W5-11:** fan-out booking W5-12 / cancel / thiếu Operator / retry E2E → rồi W5-14  
+> **Dev next:** sau W5-11 chạy fan-out E2E · (optional) CommercialModule extract  
 
 **Quy tắc:** agent xong code/deploy → **tự ghi** CONTINUE + SoT domain trong cùng turn (xem `AGENTS.md`).
 

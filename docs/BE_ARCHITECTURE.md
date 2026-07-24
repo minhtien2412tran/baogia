@@ -1,7 +1,7 @@
 # Backend Architecture — JetBay API
 
 **Target design** for `apps/api`. Không đổi public URL/contract khi refactor.  
-**Audit hiện trạng:** [BE_AUDIT.md](./BE_AUDIT.md) · **Cập nhật:** 2026-07-10
+**Audit hiện trạng:** [BE_AUDIT.md](./BE_AUDIT.md) · **Cập nhật:** 2026-07-24
 
 ---
 
@@ -86,6 +86,7 @@ Global: `ThrottlerGuard`, `ApiKeyGuard`, `JwtModule`, `ThrottlerModule`, `Prisma
 | Phase | Work | Status |
 |-------|------|--------|
 | **1** | Docs audit + Integrations/Auth/Quotes modules + DTO sweep content | done (2026-07-10) |
+| **1b** | Global `AllExceptionsFilter` + `fireAndForget` + Prisma/HTTP error map | done (2026-07-24) |
 | **2** | `CommercialModule` (FP/EL/JetCard/TC) | planned |
 | **3** | `BookingsModule` + payment routes ownership | planned |
 | **4** | `ContentModule` + Media | planned |

@@ -273,6 +273,7 @@ ssh root@103.200.20.100 'bash /tmp/smoke-all.sh'
 |------|------------|---------|
 | 2026-07-10 | prod full retest | 16+11+16+8 pass, jest 9/9 |
 | 2026-07-10 | **GĐ1 đóng prod** | 55/55 pass · `APP_ENV=production` · [GD1_SIGNOFF.md](./GD1_SIGNOFF.md) |
+| 2026-07-24 | prod BE harden | health OK · smtp deliverable · `smoke-error-envelope.sh` → `VALIDATION_FAILED`+`requestId` PASS · backup `jetbay-be-20260724-113424` |
 
 ---
 

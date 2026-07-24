@@ -14,6 +14,7 @@ import { AuditService } from './audit.service';
 import { CustomerCareService } from './customer-care/customer-care.service';
 import { LocaleService } from '../modules/i18n/locale.service';
 import { CANONICAL_LOCALE } from '@jetbay/i18n';
+import { fireAndForget } from '../common/utils/safe-async';
 import {
   ContentTranslationDto,
   CreateContentArticleDto,
@@ -441,7 +442,10 @@ export class ContentService {
         details: { email: body.email, locale },
       },
     });
-    void this.customerCare.onNewsletterSubscribe(body.email, locale);
+    fireAndForget(
+      'customerCare.onNewsletterSubscribe',
+      this.customerCare.onNewsletterSubscribe(body.email, locale),
+    );
     const smtpOk = isSmtpDeliverableConfigured();
     return {
       status: 'SUBSCRIBED',

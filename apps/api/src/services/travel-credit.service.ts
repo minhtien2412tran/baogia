@@ -12,6 +12,7 @@ import {
   TravelCreditEnquiryDto,
   UpdateTravelCreditPackageDto,
 } from '../dto';
+import { fireAndForget } from '../common/utils/safe-async';
 
 @Injectable()
 export class TravelCreditService {
@@ -138,19 +139,21 @@ export class TravelCreditService {
       },
     });
 
-    void this.enquiryMail.notifyEnquiry({
-      enquiryId: record.id,
-      kind: 'travel_credit',
-      firstName: body.firstName,
-      lastName: body.lastName,
-      email: body.email,
-      phone: body.phone,
-      message: body.message,
-      packageName: pkg.name,
-      attachmentUrls: body.attachmentUrls,
-      locale: body.locale,
-    });
-
+    fireAndForget(
+      'enquiryMail.travel_credit',
+      this.enquiryMail.notifyEnquiry({
+        enquiryId: record.id,
+        kind: 'travel_credit',
+        firstName: body.firstName,
+        lastName: body.lastName,
+        email: body.email,
+        phone: body.phone,
+        message: body.message,
+        packageName: pkg.name,
+        attachmentUrls: body.attachmentUrls,
+        locale: body.locale,
+      }),
+    );
     return {
       enquiryId: record.id,
       packageId: body.packageId,

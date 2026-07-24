@@ -8,6 +8,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from './audit.service';
 import { CustomerCareService } from './customer-care/customer-care.service';
 import { CreateQuoteOfferDto } from '../dto';
+import { fireAndForget } from '../common/utils/safe-async';
 
 @Injectable()
 export class AdminQuotesService {
@@ -203,18 +204,20 @@ export class AdminQuotesService {
     );
 
     const aircraftLabel = `${offer.aircraftModel.manufacturer} ${offer.aircraftModel.model}`;
-    void this.customerCare.onQuoteOffered({
-      quoteId,
-      offerId: offer.id,
-      email: quote.email,
-      firstName: quote.firstName,
-      userId: quote.userId,
-      locale: quote.locale,
-      price: Number(offer.price),
-      currency: 'USD',
-      aircraft: aircraftLabel,
-    });
-
+    fireAndForget(
+      'customerCare.onQuoteOffered',
+      this.customerCare.onQuoteOffered({
+        quoteId,
+        offerId: offer.id,
+        email: quote.email,
+        firstName: quote.firstName,
+        userId: quote.userId,
+        locale: quote.locale,
+        price: Number(offer.price),
+        currency: 'USD',
+        aircraft: aircraftLabel,
+      }),
+    );
     return {
       id: offer.id,
       quoteRequestId: quoteId,

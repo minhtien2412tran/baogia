@@ -21,11 +21,13 @@
 | W5-14 | **BLOCKED** | cần 11–13 |
 | News / UX / ký GĐ1 | **PENDING_OWNER** | [OWNER_INPUT_FORMS.md](../OWNER_INPUT_FORMS.md) |
 | Admin Mail Ops UI / Operator Portal | **NOT STARTED** | epic riêng — không ghi DONE |
+| BE error harden (filter + safe notify) | **DEPLOYED** | backup `jetbay-be-20260724-113424` · envelope PASS |
 
 ## Deploy refs (VPS)
 
 - Web hotlink/Contact/i18n: backups `jetbay-web-20260724-10*`
 - API SMTP sourced + mail SoT + datetime: `jetbay-be-20260724-112005` (và trước đó `111559`, `110205`)
+- API error harden: `jetbay-be-20260724-113424`
 
 ## Quy tắc agent (Owner yêu cầu 24/07)
 

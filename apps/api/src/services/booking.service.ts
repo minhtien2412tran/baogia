@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
@@ -9,6 +10,7 @@ import { CustomerCareService } from './customer-care/customer-care.service';
 import { FlightNotifyService, publicBookingRef } from './flight-notify.service';
 import { CreateBookingDto, UpdateBookingStatusDto } from '../dto';
 import { formatEmailItinerary } from '../utils/email-datetime';
+import { fireAndForget } from '../common/utils/safe-async';
 
 const BOOKING_STATUSES = [
   'draft',
@@ -40,6 +42,8 @@ const STATUS_FROM_DB: Record<string, BookingStatus> = {
 
 @Injectable()
 export class BookingService {
+  private readonly logger = new Logger(BookingService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
@@ -277,22 +281,29 @@ export class BookingService {
         legs,
         localeHint.startsWith('vi') ? 'vi' : localeHint.startsWith('zh') ? 'zh-cn' : 'en',
       );
-      void this.customerCare.onBookingCreated({
-        bookingId: booking.id,
-        bookingReference: publicBookingRef(booking),
-        userId,
-        email: booking.user.email,
-        firstName: booking.user.firstName,
-        locale: booking.quoteRequest?.locale ?? undefined,
-        passengerCount: booking.passengers?.length,
-        itinerary,
-        departureDateTime,
-        departureTimezone,
-      });
+      fireAndForget(
+        'customerCare.onBookingCreated',
+        this.customerCare.onBookingCreated({
+          bookingId: booking.id,
+          bookingReference: publicBookingRef(booking),
+          userId,
+          email: booking.user.email,
+          firstName: booking.user.firstName,
+          locale: booking.quoteRequest?.locale ?? undefined,
+          passengerCount: booking.passengers?.length,
+          itinerary,
+          departureDateTime,
+          departureTimezone,
+        }),
+        this.logger,
+      );
     }
 
-    void this.flightNotify.notifyOperatorAndAdmin(booking.id, 'created');
-
+    fireAndForget(
+      'flightNotify.created',
+      this.flightNotify.notifyOperatorAndAdmin(booking.id, 'created'),
+      this.logger,
+    );
     return this.formatBooking(booking);
   }
 
@@ -399,16 +410,23 @@ export class BookingService {
     );
 
     if (updated.user?.email) {
-      void this.customerCare.onBookingCancelled({
-        bookingId: id,
-        email: updated.user.email,
-        userId: updated.userId,
-        firstName: updated.user.firstName,
-        locale: updated.quoteRequest?.locale ?? undefined,
-      });
+      fireAndForget(
+        'customerCare.onBookingCancelled',
+        this.customerCare.onBookingCancelled({
+          bookingId: id,
+          email: updated.user.email,
+          userId: updated.userId,
+          firstName: updated.user.firstName,
+          locale: updated.quoteRequest?.locale ?? undefined,
+        }),
+        this.logger,
+      );
     }
-    void this.flightNotify.notifyOperatorAndAdmin(id, 'cancelled');
-
+    fireAndForget(
+      'flightNotify.cancelled',
+      this.flightNotify.notifyOperatorAndAdmin(id, 'cancelled'),
+      this.logger,
+    );
     return this.formatBooking(updated);
   }
 
@@ -495,7 +513,11 @@ export class BookingService {
       ipAddress,
     );
 
-    void this.flightNotify.notifyOperatorAndAdmin(id, status);
+    fireAndForget(
+      `flightNotify.${status}`,
+      this.flightNotify.notifyOperatorAndAdmin(id, status),
+      this.logger,
+    );
 
     return this.formatBooking(updated);
   }

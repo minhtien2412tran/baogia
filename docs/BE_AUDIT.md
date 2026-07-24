@@ -1,6 +1,6 @@
 # Backend Audit — JetBay API
 
-**Canonical BE audit.** Cập nhật: **2026-07-20** (báo giá/hợp đồng smoke + locale/Word; trước đó re-matrix 2026-07-18)
+**Canonical BE audit.** Cập nhật: **2026-07-24** (global exception filter + fireAndForget mail; trước: báo giá/hợp đồng 2026-07-20)
 **Code:** `apps/api` · **Prod:** https://api.minhtien.online · **Swagger:** https://docs.minhtien.online/swagger  
 **Kiến trúc mục tiêu:** [BE_ARCHITECTURE.md](./BE_ARCHITECTURE.md)
 
@@ -54,6 +54,14 @@ Mỗi phần dùng cùng template: Mục tiêu · Routes · Models · Status · 
 | **Smoke** | `smoke-prod.sh` **16/16** · `smoke-docs.sh` **11/11** · `smoke-admin-crud.mjs` **16/16** · `smoke-web-api.mjs` **8/8** (2026-07-10) |
 
 Guards order: Throttler → ApiKey. JWT/Admin gắn per-controller. Boot `assertProductionSecrets()` khi `APP_ENV=production`.
+
+**Error control (2026-07-24):**
+- Global `AllExceptionsFilter` (`APP_FILTER`) — envelope `{ statusCode, code, message, error, path, timestamp, requestId }` · header `X-Request-Id`
+- Prod ẩn message 500 · map Prisma `P2002→409` / `P2025→404` / `P2003→400`
+- `fireAndForget()` cho mail/notify (booking/quote/auth/…) — không unhandledRejection
+- Storage thiếu config → `503 SERVICE_UNAVAILABLE` · pricing engine miss airport → `400` (không còn 500 generic)
+- Unit: `all-exceptions.filter.spec.ts`
+- **Deploy prod:** `jetbay-be-20260724-113424` · health `ok` · `integrations.smtp=true` · smoke `smoke-error-envelope.sh` → `VALIDATION_FAILED` + `requestId` **PASS**
 
 ---
 
@@ -240,11 +248,13 @@ Throttle: login 10/min · register/OTP/refresh 5/min (tier `auth`).
 | **P2** | ~~Smoke HTTP domain mới~~ | ✅ 2026-07-20 `smoke-bao-gia-contracts.mjs` (quotes/locale · pricing · PDF/Word · contracts) |
 | **P2** | Nest feature modules | Auth + Quotes (phase 1) → xem BE_ARCHITECTURE; Commercial/Bookings/Content/Admin còn phẳng |
 | **P2** | Split `dto.ts` theo module | Sau khi modules ổn định |
+| **P2** | ~~Global exception filter + safe notify~~ | ✅ 2026-07-24 |
 | **P2** | ~~Admin FP options UI~~ | ✅ 2026-07-10 |
 | **P3** | Company / SavedSearch APIs | Schema sẵn (`Company`, `SavedSearch`), chưa có API |
 
 **Đã đóng (2026-07-10):** booking JWT spoof · OTP CSPRNG · SMS APP_ENV · CORS admin · FP DTO validators · QuoteOffer admin · Redis connect-once.  
-**Đã đóng (2026-07-20):** `QuoteRequest.locale` persist · Word export charter · smoke báo giá/hợp đồng prod PASS.
+**Đã đóng (2026-07-20):** `QuoteRequest.locale` persist · Word export charter · smoke báo giá/hợp đồng prod PASS.  
+**Đã đóng (2026-07-24):** `AllExceptionsFilter` · Prisma map · `fireAndForget` mail · storage/pricing HTTP errors.
 
 ---
 

@@ -11,6 +11,7 @@ import {
   JetCardEnquiryDto,
   UpdateJetCardPlanDto,
 } from '../dto';
+import { fireAndForget } from '../common/utils/safe-async';
 
 @Injectable()
 export class JetCardService {
@@ -66,18 +67,20 @@ export class JetCardService {
       },
     });
 
-    void this.enquiryMail.notifyEnquiry({
-      enquiryId: record.id,
-      kind: 'jet_card',
-      firstName: body.firstName,
-      lastName: body.lastName,
-      email: body.email,
-      phone: body.phone,
-      message: body.message,
-      attachmentUrls: body.attachmentUrls,
-      locale: body.locale,
-    });
-
+    fireAndForget(
+      'enquiryMail.jet_card',
+      this.enquiryMail.notifyEnquiry({
+        enquiryId: record.id,
+        kind: 'jet_card',
+        firstName: body.firstName,
+        lastName: body.lastName,
+        email: body.email,
+        phone: body.phone,
+        message: body.message,
+        attachmentUrls: body.attachmentUrls,
+        locale: body.locale,
+      }),
+    );
     return {
       enquiryId: record.id,
       status: 'PENDING',

@@ -1,4 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import * as Minio from 'minio';
 import { randomUUID } from 'crypto';
 import { createReadStream, promises as fs } from 'fs';
@@ -93,7 +97,12 @@ export class StorageService {
   }
 
   private localPath(key: string): string {
-    if (!this.localRoot) throw new Error('Local upload path is not configured');
+    if (!this.localRoot) {
+      throw new ServiceUnavailableException({
+        code: 'SERVICE_UNAVAILABLE',
+        message: 'Local upload path is not configured',
+      });
+    }
     return path.join(this.localRoot, key);
   }
 
@@ -132,9 +141,10 @@ export class StorageService {
       };
     }
 
-    throw new Error(
-      'No storage configured. Set MINIO_ENDPOINT or UPLOAD_PATH.',
-    );
+    throw new ServiceUnavailableException({
+      code: 'SERVICE_UNAVAILABLE',
+      message: 'No storage configured. Set MINIO_ENDPOINT or UPLOAD_PATH.',
+    });
   }
 
   async list(prefix = 'media/'): Promise<StoredObject[]> {
@@ -233,7 +243,10 @@ export class StorageService {
       };
     }
 
-    throw new Error('Storage is not configured');
+    throw new ServiceUnavailableException({
+      code: 'SERVICE_UNAVAILABLE',
+      message: 'Storage is not configured',
+    });
   }
 
   async delete(key: string): Promise<void> {
@@ -245,12 +258,19 @@ export class StorageService {
       await fs.unlink(this.localPath(key));
       return;
     }
-    throw new Error('Storage is not configured');
+    throw new ServiceUnavailableException({
+      code: 'SERVICE_UNAVAILABLE',
+      message: 'Storage is not configured',
+    });
   }
 
   private async ensureBucket() {
-    if (!this.client) throw new Error('MinIO is not configured');
-    const exists = await this.client.bucketExists(this.bucket);
+    if (!this.client) {
+      throw new ServiceUnavailableException({
+        code: 'SERVICE_UNAVAILABLE',
+        message: 'MinIO is not configured',
+      });
+    }    const exists = await this.client.bucketExists(this.bucket);
     if (!exists) await this.client.makeBucket(this.bucket, 'us-east-1');
   }
 }
