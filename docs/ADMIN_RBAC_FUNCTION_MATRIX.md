@@ -1,8 +1,10 @@
 # Admin · User · RBAC Function Matrix
 
-**Source of truth:** code audit nhánh `jetvina` · cập nhật **2026-07-20 late**
+**Source of truth:** code audit nhánh `jetvina` · cập nhật **2026-07-24** (R4/R5 deploy) · snapshot [STATUS_ADMIN_DASHBOARD.md](./STATUS_ADMIN_DASHBOARD.md)  
 **Phạm vi:** `apps/admin` UI ↔ `apps/api` guards/routes ↔ Prisma RBAC  
 **Liên quan:** [BE_AUDIT.md](./BE_AUDIT.md) · [BE_TEST.md](./BE_TEST.md) · [WEB_API_SURFACE_MAP.md](./WEB_API_SURFACE_MAP.md)
+
+> **24/07:** `AdminGuard` **đã xóa** · CMS/media/settings/audit/brand dùng `PermissionGuard` · R5 scope quote/booking/airport **DEPLOYED**. Bảng §5 dưới đây còn một số dòng lịch sử ghi `AdminGuard` — ưu tiên **§ waves R1–R5** + STATUS_ADMIN khi mâu thuẫn.
 
 ## 1. Mục tiêu tổ chức
 

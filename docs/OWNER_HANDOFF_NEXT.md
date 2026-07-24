@@ -1,11 +1,11 @@
 # JETVINA/JETBAY — OWNER HANDOFF VÀ CÔNG VIỆC TIẾP THEO
 
-> **Ngày cập nhật:** 24/07/2026 ~11:36 ICT  
+> **Ngày cập nhật:** 24/07/2026 ~16:45 ICT  
 > **GĐ1:** `TECHNICALLY DONE — PENDING SIGN-OFF`  
-> **GĐ2:** `DEV BASELINE DONE — PENDING OWNER INPUT (News/UX), POLISH AND UAT`  
-> **SMTP W5-10:** `PASS` · **W5-11:** PENDING_OWNER · **datetime mail:** PASS (IANA tz)  
-> **BE harden:** DEPLOYED `jetbay-be-20260724-113424`  
-> **Canonical:** file này · snapshot [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)  
+> **GĐ2:** `DEV BASELINE DONE — PENDING OWNER INPUT (News/UX/W5-11), POLISH AND UAT`  
+> **SMTP W5-10:** `PASS` · **W5-11:** PENDING_OWNER · **W5-12…13:** DEV_API PASS · **datetime mail:** PASS  
+> **BE harden + R4/R5:** DEPLOYED  
+> **Canonical:** file này · snapshot [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md) · [STATUS_CURRENT.md](./STATUS_CURRENT.md)  
 > **Rule:** Dev xong code → tự cập nhật markdown; **không** hỏi lại Owner mục đã PASS
 
 ## 1. Phần Dev đã hoàn thành

@@ -1,13 +1,15 @@
 # Web ↔ API Surface Map
 
-> **Updated:** 2026-07-14 · **Status:** CURRENT · **Evidence:** code audit + prod smoke  
+> **Updated:** 2026-07-24 · **Status:** CURRENT · **Evidence:** code audit + prod smoke + STATUS_* pack  
+> **App snapshot:** [STATUS_CURRENT.md](./STATUS_CURRENT.md) · [STATUS_WEB_FE.md](./STATUS_WEB_FE.md) · [STATUS_API_BE.md](./STATUS_API_BE.md) · [STATUS_ADMIN_DASHBOARD.md](./STATUS_ADMIN_DASHBOARD.md)  
 > **Verify:** `node scripts/deploy/jetbay-be/smoke-web-api.mjs` · `pnpm smoke:api-sync` (needs local API)  
 > **Owner:** Dev · **Reviewer:** Project owner (priorities only)
 
 Legend — Data status: `DONE` | `PARTIAL` | `MOCK` | `BLOCKED` | `NOT_STARTED` | `NEEDS_VERIFY` | `PROD_ONLY_ISSUE`
 
----
+> **24/07 delta (đọc trước bảng cũ):** Contact **LIVE** · Media Option 2 **PASS** · SMTP W5-10 **PASS** · Mail W5-12…13 **DEV_API PASS** · W5-11 **PENDING_OWNER** · R4/R5 AdminGuard **REMOVED** · Operator Portal **NOT STARTED**.
 
+---
 ## Public Web (apps/web)
 
 | Module | Web route | Admin route | API endpoint | Method | Auth | API client | Data status | Loading | Error | Empty | Test | Production status | Ghi chú |
@@ -32,9 +34,9 @@ Legend — Data status: `DONE` | `PARTIAL` | `MOCK` | `BLOCKED` | `NOT_STARTED` 
 | Airports search | Quote / EL widgets | airports | `/airports/search` `/nearby` | GET | API key | `AirportInput` | DONE | dropdown | msg | no-results i18n | smoke-web-api | PROD | |
 | Quote search | hero widget | quotes | `/quotes/search-aircraft` | POST | API key | `searchAircraft` | DONE | skeleton | form | empty results | **PASS 2026-07-14** legs DTO | PROD | Body must use `legs[]` |
 | Quote request | hero widget | quotes | `/quotes/request` | POST | API key | `requestQuote` | DONE | form | form | — | smoke-web-api + E2E | PROD creates quote | Phone **required** (T-S1-03); no `+10000000000` fake |
-| Quote email notify | — | email-templates | SMTP | — | — | EmailService | BLOCKED | — | — | — | NOT_RUN prod mail | SMTP stub | Code OK, deliver FAIL |
-| Newsletter | footer | — | `/newsletter/subscribe` | POST | API key | `NewsletterForm` | DONE | form | form | — | 201 prod | PARTIAL | Mail deliver blocked |
-| Contact | (no dedicated page) | — | enquiries variants | — | — | forms | PARTIAL | — | — | — | — | — | Contact = quote/enquiry forms |
+| Quote email notify | — | email-templates | SMTP | — | — | EmailService / FlightNotify | DONE | — | — | — | W5-10…13 | PROD smtp=true | W5-11 Owner inbox còn PENDING |
+| Newsletter | footer | — | `/newsletter/subscribe` | POST | API key | `NewsletterForm` | DONE | form | form | — | smoke newsletter | PROD deliverable=true | |
+| Contact | `/{locale}/contact` | — | quote/enquiry | POST | API key | Contact page + forms | DONE | form | form | — | curl 200 EN/VI | **LIVE 24/07** | |
 | Auth login/register | `/login` `/register` | — | `/auth/*` | POST | public+key | pages | DONE | form | form | — | smoke-auth-booking | PROD | OTP/OAuth env-gated |
 | OAuth Google/Apple | login buttons | — | `/auth/oauth/*` | POST | — | buttons | BLOCKED | — | NOT_CONFIGURED | — | — | integrations false | Need client IDs |
 | OTP SMS | login/register | — | `/auth/otp/*` | POST | — | pages | BLOCKED | — | — | — | — | sms=false | Dev logs code |
@@ -60,39 +62,43 @@ Legend — Data status: `DONE` | `PARTIAL` | `MOCK` | `BLOCKED` | `NOT_STARTED` 
 | Users 360 | — | `/dashboard/users` `[id]` | `/admin/users*` | GET/PATCH | Staff + `user.manage` | adminApi | DONE | — | — | — | NEEDS_VERIFY | PROD · structured edit local | |
 | Airports/Aircraft | — | airports/aircraft | `/admin/airports` `/admin/aircraft/*` | CRUD | Staff + `aircraft.*` / `airport.*` | adminApi | DONE | — | — | — | smoke-admin-crud | PROD · fleet create/location UI | |
 | FP / EL / JC / TC | — | commercial pages | `/admin/fixed-price|empty-legs|jet-card|travel-credits` | CRUD | Staff + `*.view/manage` | adminApi | DONE | — | — | — | smoke-admin-crud | PROD · guards local 21/07 | |
-| Content CMS | — | content/* | `/admin/content/*` | CRUD | Admin | adminApi | PARTIAL | — | — | — | NEEDS_VERIFY | PROD | Locale body thiếu · R4 |
-| Media | — | media / media-review | `/admin/media*` `/admin/media-assets*` | CRUD | Admin | adminApi | PARTIAL | — | — | — | media tests | PROD | Hotlink JetVina staging · R4 |
-| Operators / Templates | — | operators / email-templates | `/admin/operators` `/admin/email-templates` | CRUD | Admin | adminApi | DONE | — | — | — | hist 200 | PROD | Samples seeded · R3 lag |
-| Audit | — | audit-logs | `/admin/audit-logs` | GET | Staff + `audit.view` | adminApi | DONE | — | — | — | NEEDS_VERIFY | PROD | dashboard controller |
-| Permissions | — | permissions | `/admin/permissions*` | GET/PUT | Staff JWT + `permission.manage` where required | adminApi | PARTIAL | — | 403 stays in-session | — | NEEDS_VERIFY | PROD | PermissionContext + AuthGate 21/07 |
-| Contracts | — | contracts `[id]` | `/admin/contracts*` · export | workflow | PermissionGuard `contract.*` | adminApi | DONE | — | — | — | bao-gia-contracts | DocuSign mock | create/detail UI local |
-| Export | — | (buttons on lists) | `/admin/export/*` | GET file | Staff + `*.export` | downloadExport | DONE | — | — | — | NEEDS_DEPLOY | local 21/07 | PDF + CSV |
-| Settings / brand | — | settings | `/admin/site-settings/brand` | GET/PATCH | Admin | adminApi | PARTIAL | — | — | — | — | PROD | |
+| Content CMS | — | content/* | `/admin/content/*` | CRUD | Staff + content perms | adminApi | PARTIAL | — | — | — | smoke CMS publish | PROD · R4 PermissionGuard | News mỏng Owner |
+| Media | — | media / media-review | `/admin/media*` `/admin/media-assets*` | CRUD | Staff + media perms | adminApi | DONE | — | — | — | media audit | PROD · Option 2 · R4 | |
+| Operators / Templates | — | operators / email-templates | `/admin/operators` `/admin/email-templates` | CRUD | Staff JWT | adminApi | DONE | — | — | — | hist 200 | PROD | Fan-out mail dùng OperatorUser |
+| Audit | — | audit-logs | `/admin/audit-logs` | GET | Staff + `audit.view` | adminApi | DONE | — | — | — | smoke-r4 | PROD R4 | |
+| Permissions | — | permissions | `/admin/permissions*` | GET/PUT | Staff JWT + `permission.manage` | adminApi | DONE | — | 403 stays in-session | — | NEEDS_VERIFY | PROD | AuthGate + PermissionContext |
+| Contracts | — | contracts `[id]` | `/admin/contracts*` · export | workflow | PermissionGuard `contract.*` | adminApi | DONE | — | — | — | bao-gia-contracts | DocuSign mock | |
+| Export | — | (buttons on lists) | `/admin/export/*` | GET file | Staff + `*.export` | downloadExport | DONE | — | — | — | smoke | PROD | PDF + CSV |
+| Settings / brand | — | settings | `/admin/site-settings/brand` | GET/PATCH | `settings.view/manage` | adminApi | DONE | — | — | — | smoke-r4 | PROD R4 | |
 | Revenue demo | — | dashboard | `/admin/dashboard/revenue-demo` | GET | Staff + `dashboard.view` | adminApi | MOCK | — | — | — | — | Demo metric | Labelled demo |
+| Mail Ops UI | — | — | EmailCampaignLog / audit | — | — | — | NOT_STARTED | — | — | — | — | backlog GĐ2+ | Không claim DONE vì fan-out |
+| Operator Portal | — | — | — | — | — | — | NOT_STARTED | — | — | — | — | epic | [OPERATOR_PORTAL_EPIC.md](./OPERATOR_PORTAL_EPIC.md) |
 
 ---
 
 ## System / contract
 
-| Check | Status | Evidence 2026-07-14 |
+| Check | Status | Evidence 2026-07-24 |
 |-------|--------|---------------------|
 | Prod health | DONE | `GET /health` → `ok` `production` |
-| Integrations | PARTIAL | `smtp=false` · catcher Mailpit · pay/oauth/sms=false · **T-S4-01 BLOCKED_OWNER_SMTP** |
+| Integrations | PARTIAL | `smtp=true` · catcher=false · pay/oauth/sms=false (G4) · W5-11 Owner inbox |
 | OpenAPI public | PROD_ONLY_ISSUE | `/openapi.json` → **401** (Swagger Basic on) — sync via Basic or VPS |
-| Local↔prod path sync | PASS remote | Remote VPS `prod-docs` **173=173** · Local convenience: NEEDS_LOCAL_ENV_REFRESH |
-| Web↔API commercial smoke | DONE | `smoke-web-api.mjs` **RESULT pass** (quote #41) |
-| Auth+booking smoke | DONE | `smoke-auth-booking.mjs` **RESULT pass** (booking #7) |
-| Media unit | DONE | `pnpm test:media` pass |
+| Local↔prod path sync | PASS remote | Remote VPS `prod-docs` **173=173** |
+| Web↔API commercial smoke | DONE | `smoke-web-api.mjs` PASS |
+| Auth+booking smoke | DONE | `smoke-auth-booking.mjs` PASS |
+| Mail fan-out / idempotency | DONE | W5-12…13 DEV_API PASS · W5-14 BLOCKED on Owner |
+| Media unit | DONE | Option 2 · 0 hotlink |
+| R4/R5 RBAC | DONE | PermissionGuard · AdminGuard removed |
 
 ---
 
 ## Priority findings (surface)
 
-1. **P2** — remaining `safeApi` call sites (blogs/destinations/CMS detail) still swallow errors; news + commercial/home fixed.
-2. **P2** — Fleet showcase is labelled SAMPLE (T-S2-02); public live fleet GET still optional later.
-3. **P0** — SMTP deliver still blocked (Owner O4).
-4. **P2** — Charter copy still primarily static; CMS slugs mapped — Owner publish optional (T-S3-01).
-5. **P1** — Pay/OAuth/SMS keys false on `/integrations/status` (G4).
-6. **P2** — OpenAPI/docs anonymous 401 — sync scripts need `SWAGGER_BASIC_*` (T-S1-04 supports this).
+1. **P0** — Owner W5-11 inbox (#61/#62) để đóng W5-14.
+2. **P0** — Owner News (W2-05) · UX (W3-06) · slot ký GĐ1 (W6-02).
+3. **P1** — Pay/OAuth/SMS keys false (G4).
+4. **P2** — Fleet showcase SAMPLE; live inventory optional.
+5. **P2** — Mail Ops UI / Operator Portal (sau OP-D*).
+6. **P2** — OpenAPI anonymous 401 — sync cần `SWAGGER_BASIC_*`.
 
-Next map updates: after Owner CMS charter pages and public fleet API (if product requires live inventory).
+Next map updates: after Owner W5-11 / CMS News / OP-D*.

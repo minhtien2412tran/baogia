@@ -1,8 +1,8 @@
 # Gap backlog — đóng GĐ1 & hoàn tất GĐ2
 
-> **Updated:** 2026-07-24 · SMTP W5-10 **PASS** · Media Option 2 **PASS** · R4 CMS/media **DEPLOYED**  
+> **Updated:** 2026-07-24 · SMTP W5-10 **PASS** · W5-12…13 **DEV_API PASS** · Media Option 2 **PASS** · R4/R5 **DEPLOYED**  
 > **Canonical Owner note:** [`note.md`](../note.md) · **Plan task:** [PLAN_GD1_GD2_EXECUTION.md](./PLAN_GD1_GD2_EXECUTION.md)  
-> **Báo cáo:** [BAO_CAO_TIEN_DO_DAY_DU.md](./BAO_CAO_TIEN_DO_DAY_DU.md)
+> **Báo cáo:** [BAO_CAO_TIEN_DO_DAY_DU.md](./BAO_CAO_TIEN_DO_DAY_DU.md) · **Status app:** [STATUS_CURRENT.md](./STATUS_CURRENT.md)
 
 ---
 
@@ -16,7 +16,8 @@
 | GĐ4 | `BLOCKED BY EXTERNAL KEYS` |
 
 **Owner SoT:** [OWNER_HANDOFF_NEXT.md](./OWNER_HANDOFF_NEXT.md)  
-**SMTP:** W5-10 **PASS** · W5-11 Owner inbox · W5-12…14 Dev sau đó.
+**SMTP:** W5-10 **PASS** · W5-11 Owner inbox · W5-12…13 **DEV_API PASS** · W5-14 **BLOCKED**  
+**Mail nhóm:** GD2-MAIL — Dev xong 12–13; đóng 14 sau Owner W5-11.
 
 ---
 
@@ -39,7 +40,7 @@
 
 | Nhóm | Mã note | Wave plan | Unlock |
 |------|---------|-----------|--------|
-| Mail | GD2-MAIL-01…05 | W5 | W5-11 Owner · rồi Dev 12–14 |
+| Mail | GD2-MAIL-01…05 | W5 | W5-11 Owner · 12–13 ✅ · W5-14 sau inbox |
 | CMS | GD2-CMS-01…07 | W2 | OWNER News (W2-05) · publish cycle PASS |
 | UX | GD2-UX-01…09 | W3 | OWNER feedback W3-06 |
 | Media | GD2-MEDIA-01…07 | W4 | ✅ Option 2 |

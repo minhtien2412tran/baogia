@@ -49,25 +49,24 @@
 
 ## Việc tiếp theo (ưu tiên sản phẩm)
 
-> **Cập nhật:** 24/07/2026 ~16:30 ICT · Snapshot: [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)  
+> **Cập nhật:** 24/07/2026 ~16:45 ICT · Snapshot: [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md) · [STATUS_CURRENT.md](./STATUS_CURRENT.md)  
 > **GĐ1:** `TECHNICALLY DONE — PENDING SIGN-OFF` · **GĐ2:** content/UX/UAT  
 > **Mail:** W5-10 **PASS** · W5-11 **PENDING_OWNER** · W5-12/12B/12C/13 **DEV_API PASS** · W5-14 **BLOCKED** (chỉ còn Owner inbox)  
 > **Operator Portal:** [OPERATOR_PORTAL_EPIC.md](./OPERATOR_PORTAL_EPIC.md) = **NOT STARTED** (chờ Owner OP-D1…D4)  
 > **Owner next:** (1) `W5-11 INBOX` (2) News (3) UX (4) slot ký GĐ1 · (5 optional) OP-D* Portal  
-> **Dev next:** nhận W5-11 → đóng W5-14 · **không** scaffold Portal trước OP-D*  
+> **Dev next:** nhận W5-11 → đóng W5-14 · SoT surface đã sync 24/07 · **không** scaffold Portal trước OP-D*  
 
 **Quy tắc:** agent xong code/deploy → **tự ghi** CONTINUE + SoT domain trong cùng turn (xem `AGENTS.md`).
 
 **Plan khác:** [NEXT_SPRINT_PLAN.md](./NEXT_SPRINT_PLAN.md) · [note.md](../note.md)
 
-**Admin ops waves (21/07 local — chưa deploy):** R1–R3 core + export + **RBAC/Settings/Audit UX**:
-- AuthGate + `PermissionContext`; nav + action `can()`; **kéo-thả reorder menu** + section toggles (Settings)
-- Permissions tabs: role transfer · group ticks · per-user · scope; **menu cha–con** (Operations / Commercial / Fleet / Legal / Content / System); fix Next16 `params` + hydration console
-- **Flight calendar** trên Dashboard + `/dashboard/schedule` — API `GET /admin/dashboard/flight-schedule` (booking/quote/empty-leg giờ bay)
-- **Deploy 21/07 ~01:32 ICT:** sync+deploy `jetbay-be` + `jetbay-admin` · health OK · `/dashboard/schedule` 200 · backup `/root/backups/jetbay-be-20260721-013135` · `jetbay-admin-20260721-013244`
-- Audit workflow filters; Settings section toggles
-- Còn R4 CMS AdminGuard · re-seed SALES perms nếu staff thiếu quyền mới · commit local dirty tree khi Owner yêu cầu
+**Admin ops waves (RBAC — cập nhật 24/07):**
+- R1–R3 core + export + PermissionContext / schedule — **DEPLOYED**
+- R4 CMS/media + settings/audit + brand `settings.*` — **DEPLOYED** (`133626` / `134852`)
+- R5 quote/booking/airport scope · `AdminGuard` **removed** — **DEPLOYED** (`140317`)
+- Còn: Mail Ops UI · Operator Portal (OP-D*) · re-seed SALES perms nếu staff thiếu quyền mới
 
+Snapshot app: [STATUS_CURRENT.md](./STATUS_CURRENT.md)
 1. **CR Wave1–5 BE + Empty Leg FE filter (2026-07-12)** — nhánh `feat/api-cr-wave3-contracts-rbac-docusign`: fleet/pricing/HĐ/RBAC/DocuSign mock · web `/empty-leg` lọc continent/IATA/date · smoke `smoke-cr-wave1/3` — live DocuSign/Admin UI chờ phụ lục
 2. **CR sau họp** — kịch bản họp tiến độ: [KH_KICH_BAN_HOP_TIENDO.md](./KH_KICH_BAN_HOP_TIENDO.md) (đã gộp từ `main` 19/07) · biên bản `JETBAY_CR_2026_01` / `KH_KICH_BAN_SAU_HOP_CR` *(bổ sung khi có file)* · báo cáo tiến độ **không** ghi CR = đã hoàn thành GĐ
 3. **Polish theo JetVina** (ongoing) — so [jetvina.com](https://jetvina.com/) (+ `scratch/` khi cần layout)
