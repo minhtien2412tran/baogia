@@ -19,7 +19,7 @@
 | W5-11 Owner inbox confirm | **PENDING_OWNER** | form `W5-11 INBOX` |
 | W5-12/12B fan-out | **DEV_API PASS** | BK-000014/015 |
 | W5-12C operator_unassigned | **DEV_API PASS** | BK-000016 · smoke-w5-12c |
-| W5-13 E2E | **CODE_READY** | sau W5-11 optional |
+| W5-13 E2E idempotency | **DEV_API PASS** | BK-000019 · sentAt stable · unit skip |
 | W5-14 | **BLOCKED** | cần W5-11 |
 | News / UX / ký GĐ1 | **PENDING_OWNER** | [OWNER_INPUT_FORMS.md](../OWNER_INPUT_FORMS.md) |
 | Admin Mail Ops UI / Operator Portal | **NOT STARTED** | epic riêng — không ghi DONE |
@@ -29,6 +29,7 @@
 | R5 quote/booking/airport scope · AdminGuard removed | **DEPLOYED** | backup `jetbay-be-20260724-140317` · unit 10/10 |
 | W5-12/12B booking fan-out | **DEV_API PASS** | BK-000014/015 · smoke-w5-12-booking-fanout |
 | W5-12C operator_unassigned | **DEV_API PASS** | BK-000016 · smoke-w5-12c-operator-unassigned |
+| W5-13 idempotency | **DEV_API PASS** | BK-000019 · smoke-w5-13-idempotency |
 | Operator Portal | **NOT STARTED** | [OPERATOR_PORTAL_EPIC.md](../OPERATOR_PORTAL_EPIC.md) |
 
 ## Deploy refs (VPS)

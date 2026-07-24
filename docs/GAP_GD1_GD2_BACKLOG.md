@@ -59,8 +59,9 @@
 5. ~~R5 scope core (quote/booking/airport) + remove AdminGuard~~ ✅ DEPLOYED 24/07  
 6. ~~W5-12/12B fan-out DEV_API~~ ✅ BK-000014/015 · Owner W5-11 vẫn mở  
 7. ~~W5-12C operator_unassigned DEV_API~~ ✅ BK-000016  
-8. Operator Portal = NOT STARTED — chờ OP-D* ([OPERATOR_PORTAL_EPIC.md](./OPERATOR_PORTAL_EPIC.md))  
-9. Sau W5-11 → W5-14  
+8. ~~W5-13 idempotency DEV_API~~ ✅ BK-000019  
+9. Operator Portal = NOT STARTED — chờ OP-D* ([OPERATOR_PORTAL_EPIC.md](./OPERATOR_PORTAL_EPIC.md))  
+10. Sau W5-11 → W5-14  
 
 **Handoff 1 trang:** [OWNER_HANDOFF_NEXT.md](./OWNER_HANDOFF_NEXT.md)  
 **Biên bản GĐ1 nháp:** [GD1_NT_BIEN_BAN.md](./GD1_NT_BIEN_BAN.md)

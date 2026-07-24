@@ -21,6 +21,7 @@ const p = new PrismaClient();
         id: r.id,
         key: r.campaignKey,
         status: r.status,
+        sentAt: r.sentAt ? new Date(r.sentAt).toISOString() : null,
         email: String(r.email || '').replace(/(.{2}).+(@.+)/, '$1***$2'),
       })),
     }),

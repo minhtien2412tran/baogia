@@ -45,11 +45,11 @@ Ghi chú:
 
 **Quy tắc đóng W5-14** (SoT: [ORDER_EMAIL_AUTOMATION.md](./ORDER_EMAIL_AUTOMATION.md))
 
-- **PASS** nếu: #61 + #62 đều `SEEN` · mọi tiêu chí `YES` · W5-12/12B/12C **DEV_API PASS** · W5-13 retry/log/idempotency đạt.
+- **PASS** nếu: #61 + #62 đều `SEEN` · mọi tiêu chí `YES` · W5-12/12B/12C/13 **DEV_API PASS**.
 - **`SPAM`:** ghi `DELIVERED — SPAM PLACEMENT` → Dev check SPF/DKIM/DMARC/reputation/subject trước khi claim deliverability đủ.
 - **`NOT_SEEN`:** **không** đóng W5-14 → Dev check delivery log, recipient, provider/message-id, bounce, queue, `SMTP_ENQUIRY_TO`/`SMOKE_MAIL_TO`, quarantine.
 
-Hiện Dev: 12/12B/12C đã PASS · W5-13 **CODE_READY** (idempotent SENT skip) · W5-11 vẫn **PENDING**.
+Hiện Dev: 12/12B/12C/13 đã **DEV_API PASS** · W5-11 vẫn **PENDING** · W5-14 chỉ còn Owner inbox.
 
 ---
 

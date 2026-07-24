@@ -111,12 +111,32 @@ function fingerprint(logs) {
     .map((h) => h.id)
     .sort((a, b) => a - b)
     .join(',');
+  const sentAts = confirmed
+    .map((h) => h.sentAt || '')
+    .sort()
+    .join(',');
+  const allSent =
+    confirmed.length > 0 && confirmed.every((h) => h.status === 'SENT');
   return {
     n: hit.length,
     confirmedN: confirmed.length,
     confirmedIds: ids,
+    confirmedSentAts: sentAts,
+    allSent,
     confirmedKeys: confirmed.map((h) => `${h.key}:${h.status}`).join('|'),
   };
+}
+
+async function waitConfirmedSent(bookingRef, { tries = 8, delayMs = 2500 } = {}) {
+  let last = null;
+  for (let i = 0; i < tries; i++) {
+    await new Promise((r) => setTimeout(r, delayMs));
+    last = queryCampaignLogs(bookingRef);
+    const fp = fingerprint(last);
+    if (fp.allSent) return { logs: last, fp };
+    console.log(`… wait SENT try=${i + 1} keys=${fp.confirmedKeys || 'none'}`);
+  }
+  return { logs: last, fp: fingerprint(last) };
 }
 
 console.log(`API_URL=${BASE}`);
@@ -157,7 +177,7 @@ ok(
   `id=${bookingId} ref=${bookingRef}`,
 );
 
-await new Promise((r) => setTimeout(r, 3500));
+await new Promise((r) => setTimeout(r, 2000));
 
 const patch1 = await req(`/admin/bookings/${bookingId}/status`, {
   method: 'PATCH',
@@ -169,13 +189,12 @@ ok(
   patch1.status === 200 || patch1.status === 201,
   `http=${patch1.status}`,
 );
-await new Promise((r) => setTimeout(r, 4000));
 
-const after1 = queryCampaignLogs(bookingRef);
-const fp1 = fingerprint(after1);
+const waited1 = await waitConfirmedSent(bookingRef);
+const fp1 = waited1.fp;
 ok(
-  'confirmed campaign logs after 1st notify',
-  fp1.confirmedN > 0,
+  'confirmed campaign logs SENT after 1st notify',
+  fp1.allSent && fp1.confirmedN > 0,
   fp1.confirmedKeys || 'none',
 );
 
@@ -204,10 +223,14 @@ ok(
   `ids=${fp2.confirmedIds}`,
 );
 ok(
-  'no duplicate SENT rows for confirmed keys',
-  fp2.confirmedN === new Set((after2?.hit || []).filter((h) => String(h.key).includes('booking_confirmed')).map((h) => `${h.key}|${h.email || ''}`)).size ||
-    fp2.confirmedN === fp1.confirmedN,
-  `n=${fp2.confirmedN}`,
+  'idempotent: sentAt unchanged (no re-send)',
+  fp2.confirmedSentAts === fp1.confirmedSentAts && !!fp1.confirmedSentAts,
+  `sentAt=${fp2.confirmedSentAts}`,
+);
+ok(
+  'still SENT after 2nd notify',
+  fp2.allSent,
+  fp2.confirmedKeys || 'none',
 );
 
 console.log(

@@ -1,9 +1,9 @@
 # JETVINA/JETBAY — MAIL AUTOMATION CHO QUOTE VÀ BOOKING
 
-> **Ngày cập nhật:** 24/07/2026 ~15:55 ICT  
+> **Ngày cập nhật:** 24/07/2026 ~16:30 ICT  
 > **SMTP production:** ENABLED (`smtp=true`, `catcher=false`)  
 > **Canonical SoT:** file này  
-> **Trạng thái nghiệm thu W5:** W5-10 **PASS** · datetime/tz **PASS** · W5-11 **PENDING_OWNER** · W5-12/12B/12C **DEV_API PASS** (BK-000014/015/016) · W5-13 CODE_READY · W5-14 **BLOCKED** (cần W5-11)  
+> **Trạng thái nghiệm thu W5:** W5-10 **PASS** · datetime/tz **PASS** · W5-11 **PENDING_OWNER** · W5-12/12B/12C/13 **DEV_API PASS** (BK-000014…019) · W5-14 **BLOCKED** (cần W5-11)  
 > **Operator Portal:** [OPERATOR_PORTAL_EPIC.md](./OPERATOR_PORTAL_EPIC.md) = **NOT STARTED**
 
 ## 1. Phạm vi nghiệp vụ đã triển khai
@@ -107,8 +107,8 @@ Trước vận hành thật: điền `contactEmail`, OperatorUser, active, gán 
 | W5-12 | **DEV_API PASS** | BK-000014 · customer + operator (+fan-out) + sales **SENT** · `smoke-w5-12-booking-fanout.mjs` |
 | W5-12B | **DEV_API PASS** | cancel → `booking_cancelled:operator` + `:sales` SENT |
 | W5-12C | **DEV_API PASS** | BK-000016 · `operator_unassigned:sales` + `booking_created`/`booking_created:sales` · không leak `:operator` · `smoke-w5-12c-operator-unassigned.mjs` |
-| W5-13 | **CODE_READY** | idempotent SENT skip · unit/code — Owner yêu cầu đạt trước khi đóng W5-14 |
-| W5-14 | **BLOCKED** | Đóng **PASS** chỉ khi: #61+#62 `SEEN` · mọi tiêu chí YES · 12/12B/12C PASS · W5-13 đạt. `SPAM` → `DELIVERED — SPAM PLACEMENT` (+ SPF/DKIM). `NOT_SEEN` → không đóng |
+| W5-13 | **DEV_API PASS** | BK-000019 · PATCH confirmed ×2 → `booking_confirmed:sales` cùng id · `sentAt` không đổi · unit `idempotent_skip` · `smoke-w5-13-idempotency.mjs` |
+| W5-14 | **BLOCKED** | Đóng **PASS** chỉ khi: #61+#62 `SEEN` · mọi tiêu chí YES · 12/12B/12C/13 PASS. `SPAM` → `DELIVERED — SPAM PLACEMENT` (+ SPF/DKIM). `NOT_SEEN` → không đóng |
 
 ## 10. Evidence checklist
 
@@ -120,7 +120,7 @@ W5-11 Quote #62 inbox: PENDING_OWNER
 W5-12 Booking customer/operator/sales mail: DEV_API PASS (BK-000014 · 24/07 ~14:45)
 W5-12B Cancel mail: DEV_API PASS
 W5-12C operator_unassigned: DEV_API PASS (BK-000016 · 24/07 ~15:55)
-W5-13 Retry/log/idempotency: CODE_READY
+W5-13 Retry/log/idempotency: DEV_API PASS (BK-000019 · sentAt stable · 24/07 ~16:30)
 W5-14: BLOCKED until Owner W5-11
 Operator Portal: NOT STARTED — docs/OPERATOR_PORTAL_EPIC.md
 ```
@@ -129,7 +129,7 @@ Operator Portal: NOT STARTED — docs/OPERATOR_PORTAL_EPIC.md
 
 **Owner:** điền block `W5-11 INBOX` (form đầy đủ trong [OWNER_INPUT_FORMS.md](./OWNER_INPUT_FORMS.md)) · (tuỳ chọn) OP-D* · News/UX/ký GĐ1  
 
-**Dev:** nhận form đã điền → áp dụng quy tắc W5-14 ở mục 9 · **không** code Operator Portal trước Owner OP-D*
+**Dev:** nhận form đã điền → đóng W5-14 theo mục 9 · **không** code Operator Portal trước Owner OP-D* · API deploy **không** cần cho W5-13 (logic đã live)
 
 ## 12. Phạm vi mở rộng — OPERATOR PORTAL
 
