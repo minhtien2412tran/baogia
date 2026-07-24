@@ -25,6 +25,8 @@
 | R4 CMS/media PermissionGuard | **DEPLOYED** | backup `jetbay-be-20260724-133626` · smoke-admin-crud 16/16 |
 | R4 settings/audit + brand settings.* | **DEPLOYED** | backup `jetbay-be-20260724-134852` · smoke-r4-settings-audit PASS |
 | R5 quote/booking/airport scope · AdminGuard removed | **DEPLOYED** | backup `jetbay-be-20260724-140317` · unit 10/10 |
+| W5-12/12B booking fan-out | **DEV_API PASS** | BK-000014/015 · smoke-w5-12-booking-fanout |
+| Operator Portal | **NOT STARTED** | [OPERATOR_PORTAL_EPIC.md](../OPERATOR_PORTAL_EPIC.md) |
 
 ## Deploy refs (VPS)
 

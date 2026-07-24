@@ -1,15 +1,16 @@
 # Test Matrix — JetBay
 
-> **Updated:** 2026-07-24 ~14:05 · Snapshot [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)
+> **Updated:** 2026-07-24 ~14:50 · Snapshot [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)
 
 ## Latest evidence (prefer these)
 
 ```text
-Session 24/07 ~14:05 ICT:
-R5 airport/quote/booking scope DEPLOYED — jetbay-be-20260724-140317
-AdminGuard removed · permission.service.spec 10/10 PASS
-Policy: empty scopes = unrestricted (legacy); COUNTRY/CONTINENT/SELECTED filter
-W5-10 PASS · W5-11 PENDING_OWNER · W5-12 blocked until inbox
+Session 24/07 ~14:50 ICT:
+W5-12/12B DEV_API PASS — smoke-w5-12-booking-fanout.mjs
+BK-000014/015: booking_created + :operator (+fan-out) + :sales SENT; cancel SENT
+Operator Portal: NOT STARTED — OPERATOR_PORTAL_EPIC.md
+W5-11 PENDING_OWNER · W5-14 BLOCKED
+R5 scope DEPLOYED · R4 DONE
 ```
 
 | Test | Command | Environment | Result | PASS | FAIL | Ghi chú |

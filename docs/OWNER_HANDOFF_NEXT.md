@@ -25,7 +25,9 @@
 * R4 CMS/media `PermissionGuard`: **DEPLOYED** · `jetbay-be-20260724-133626` · smoke-admin-crud 16/16
 * R4 settings/audit + brand `settings.*`: **DEPLOYED** · `jetbay-be-20260724-134852` · smoke PASS
 * R5 airport/quote/booking scope + remove `AdminGuard`: **DEPLOYED** · `jetbay-be-20260724-140317`
-* W5-11…14 — **chưa đóng** (chờ Owner inbox rồi Dev W5-12…)
+* W5-12/12B booking fan-out: **DEV_API PASS** (BK-000014/015) — Owner W5-11 vẫn cần trước W5-14
+* Operator Portal: **NOT STARTED** — [OPERATOR_PORTAL_EPIC.md](./OPERATOR_PORTAL_EPIC.md)
+* W5-11…14 — **W5-11 PENDING_OWNER** · W5-14 **BLOCKED**
 * W6-01 nháp biên bản GĐ1: **DONE**
 * W6-02 pack phương án A: **READY** (chờ lịch + ký)
 

@@ -22,7 +22,8 @@
 | **Plan task GĐ1→GĐ2** | [PLAN_GD1_GD2_EXECUTION.md](./PLAN_GD1_GD2_EXECUTION.md) | ✅ Wave 0–7 · từ `note.md` · SMTP Owner sau |
 | **Owner handoff (tiếp theo)** | [OWNER_HANDOFF_NEXT.md](./OWNER_HANDOFF_NEXT.md) | ✅ Canonical — News · UX · ký GĐ1 A · W5-11 |
 | **Owner paste forms** | [OWNER_INPUT_FORMS.md](./OWNER_INPUT_FORMS.md) | ✅ W6-02 · W5-11 · W2-05 · W3-06 |
-| **Mail automation SoT** | [ORDER_EMAIL_AUTOMATION.md](./ORDER_EMAIL_AUTOMATION.md) | ✅ W5-10 PASS · datetime tz · fan-out |
+| **Mail automation SoT** | [ORDER_EMAIL_AUTOMATION.md](./ORDER_EMAIL_AUTOMATION.md) | ✅ W5-10 PASS · W5-12 DEV_API · W5-11 Owner |
+| **Operator Portal epic** | [OPERATOR_PORTAL_EPIC.md](./OPERATOR_PORTAL_EPIC.md) | ⬜ NOT STARTED — chờ OP-D* |
 | **Session 24/07 snapshot** | [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md) | ✅ không hỏi lại PASS |
 | **W6-02 signing pack** | [W6_02_GD1_SIGNING_PACK.md](./W6_02_GD1_SIGNING_PACK.md) | ✅ **Phương án A** · SMTP W5-10 PASS |
 | **Media W4-04** | [OWNER_MEDIA_DECISION.md](./OWNER_MEDIA_DECISION.md) | ✅ **Option 2** · local mirror · remote OFF |
@@ -44,12 +45,12 @@
 
 ## Việc tiếp theo (ưu tiên sản phẩm)
 
-> **Cập nhật:** 24/07/2026 ~14:05 ICT · Snapshot: [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)  
+> **Cập nhật:** 24/07/2026 ~14:50 ICT · Snapshot: [reviews/SESSION_20260724_MAIL_MEDIA.md](./reviews/SESSION_20260724_MAIL_MEDIA.md)  
 > **GĐ1:** `TECHNICALLY DONE — PENDING SIGN-OFF` · **GĐ2:** content/UX/UAT  
-> **Mail:** W5-10 **PASS** · W5-11 **PENDING_OWNER** · W5-12…14 **PENDING**  
-> **RBAC:** R4 **DONE** · R5 scope **DEPLOYED** (`140317`) — quote/booking/airport filter · `AdminGuard` **removed** · unit scope 10/10  
-> **Owner next:** (1) `W5-11 INBOX` (2) News (3) UX (4) slot ký GĐ1 A  
-> **Dev next:** W5-12 fan-out **sau W5-11** · Operator portal epic (riêng)  
+> **Mail:** W5-10 **PASS** · W5-11 **PENDING_OWNER** · W5-12/12B **DEV_API PASS** (BK-000014/015) · W5-14 **BLOCKED**  
+> **Operator Portal:** [OPERATOR_PORTAL_EPIC.md](./OPERATOR_PORTAL_EPIC.md) = **NOT STARTED** (chờ Owner OP-D1…D4)  
+> **Owner next:** (1) `W5-11 INBOX` (2) News (3) UX (4) slot ký GĐ1 · (5 optional) OP-D* Portal  
+> **Dev next:** sau W5-11 → W5-14 · W5-12C optional · **không** scaffold Portal trước OP-D*  
 
 **Quy tắc:** agent xong code/deploy → **tự ghi** CONTINUE + SoT domain trong cùng turn (xem `AGENTS.md`).
 
